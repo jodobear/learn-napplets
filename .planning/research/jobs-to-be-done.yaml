@@ -1,0 +1,72 @@
+schemaVersion: 1
+recordType: audience-jobs-to-be-done
+status: provisional
+purpose: Evidence-scoped learning inputs; not curriculum acceptance or upstream protocol claims.
+sharedEvidence:
+  sources: [SRC-POLICY-001, SRC-POLICY-002]
+  claims: [CLM-UPSTREAM-BASELINE-001]
+  compatibility: [CMP-BASELINE-001]
+  openQuestions: [OQ-UPSTREAM-BASELINE-001]
+  uncertainty: Material: current protocol, runtime, domain, example, and comparator evidence remains blocked.
+  approval: content-learning and protocol-technical human review before reuse in accepted curriculum.
+audiences:
+  - id: AUD-NEW-NOSTR-001
+    name: developers new to Nostr
+    prerequisites: Basic web application concepts; no assumed Nostr or napplet knowledge.
+    goal: Explain the recurring note journey and why a focused guest delegates authority to a trusted host.
+    misconception: A focused napplet is a complete client or directly owns signing, relays, storage, and policy.
+    analogy: A storefront asks a building service for controlled access.
+    analogyLimitation: The analogy is conceptual and does not establish any current protocol or runtime behavior.
+    representation: Story and System views with an owns/does-not-own table and conceptual simulation label.
+    assessmentTask: Choose the owner of a proposed note operation and explain one denied direct-authority path.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-UPSTREAM-BASELINE-001], drift: [DRF-DISCOVERY-001, DRF-HANDSHAKE-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
+  - id: AUD-NOSTR-DEVELOPER-001
+    name: existing Nostr developers
+    prerequisites: Event, relay, and signer concepts.
+    goal: Distinguish familiar application responsibilities from host-mediated authority.
+    misconception: Existing Nostr client conventions automatically define napplet domains or host behavior.
+    analogy: A plug-in boundary is narrower than an application integration boundary.
+    analogyLimitation: It is a comparison prompt, not evidence that any particular integration mechanism exists.
+    representation: Wire/Code placeholders only when source-pinned; otherwise source-status and comparison table.
+    assessmentTask: Mark a proposed operation as evidenced, blocked, or needing a source refresh.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-UPSTREAM-BASELINE-001], drift: [DRF-MANIFEST-001, DRF-EGRESS-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
+  - id: AUD-WEB-DEVELOPER-001
+    name: general web and application developers
+    prerequisites: Browser security boundaries, messaging, and web deployment basics.
+    goal: Reason about trusted host versus untrusted guest without assuming browser policy is protocol policy.
+    misconception: An iframe, package import, or simulated UI proves a runtime guarantee.
+    analogy: A browser sandbox is a building boundary with separate keys.
+    analogyLimitation: Actual sandbox, injection, and source-window behavior require a named measured fixture.
+    representation: Trust Map plus static transcript and browser-observation status badge.
+    assessmentTask: Separate an observed browser result, project policy, and an unverified protocol statement.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-UPSTREAM-BASELINE-001], drift: [DRF-EGRESS-001, DRF-UNKNOWN-MESSAGES-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
+  - id: AUD-RUNTIME-IMPLEMENTER-001
+    name: runtime implementers
+    prerequisites: Host architecture, loaders, policy enforcement, and test fixtures.
+    goal: Identify which host responsibilities need pinned evidence before an architecture recommendation.
+    misconception: Archived runtime diagrams or candidate package names define required behavior.
+    analogy: A checklist is a test plan, not an approved building blueprint.
+    analogyLimitation: The checklist does not select a runtime architecture or conformance baseline.
+    representation: Runtime X-ray classifications: required behavior to investigate, possible architecture, host policy, external adapter.
+    assessmentTask: Classify a proposed component and name the missing immutable source or measurement.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-CMP-RUNTIME-001], drift: [DRF-HANDSHAKE-001, DRF-INTENT-001, DRF-CONFORMANCE-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
+  - id: AUD-PROTOCOL-CONTRIBUTOR-001
+    name: protocol contributors
+    prerequisites: Reading specifications, proposals, and implementation evidence.
+    goal: Route a missing behavior to specification, runtime, content, or application research without inventing a winner.
+    misconception: A proposal, issue, archive, or observed implementation settles normative behavior.
+    analogy: A case file keeps witness statements separate from a ruling.
+    analogyLimitation: The analogy does not rank sources beyond the recorded authority and maturity fields.
+    representation: Specification Map with parallel normative/observed records and drift links.
+    assessmentTask: Identify an invented assumption and create the appropriate unresolved-question route.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-UPSTREAM-BASELINE-001], drift: [DRF-DISCOVERY-001, DRF-METADATA-001, DRF-INTENT-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
+  - id: AUD-LLM-AGENT-001
+    name: LLMs and coding agents
+    prerequisites: Structured-record retrieval and explicit provenance handling.
+    goal: Return evidence IDs and uncertainty instead of generating unsupported protocol or curriculum claims.
+    misconception: A plausible synthesis or graph relationship is evidence authority.
+    analogy: A research assistant cites its packet rather than writing a source from memory.
+    analogyLimitation: Retrieval does not substitute for human approval or immutable upstream evidence.
+    representation: Common YAML-derived IDs, status fields, and static source-status tables.
+    assessmentTask: Answer a scope question with source/claim/drift/OQ IDs and a safe fallback when blocked.
+    evidence: {sources: [SRC-POLICY-001, SRC-POLICY-002], claims: [CLM-POLICY-001, CLM-UPSTREAM-BASELINE-001], drift: [DRF-DISCOVERY-001, DRF-CONFORMANCE-001], openQuestions: [OQ-UPSTREAM-BASELINE-001]}
