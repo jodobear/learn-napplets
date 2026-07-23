@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "OWS-001",
+  "retrievedAt": "2026-07-24T00:00:00Z",
+  "classification": "directional-evidence",
+  "status": "blocked",
+  "sourceRefs": ["SRC-POLICY-001", "SRC-POLICY-002"],
+  "items": [
+    {
+      "id": "OW-NIP5D-001",
+      "surface": "NIP-5D",
+      "kind": "issue-pr-discussion-metadata",
+      "candidateId": "CAND-NIP-5D",
+      "immutableReference": null,
+      "retrievalOutcome": "unavailable",
+      "relatedDriftIds": ["DRF-HANDSHAKE-001", "DRF-MANIFEST-001", "DRF-IDENTITY-001", "DRF-EGRESS-001"]
+    },
+    {
+      "id": "OW-NAP-001",
+      "surface": "NAP registry/projection/governance",
+      "kind": "issue-pr-discussion-metadata",
+      "candidateId": "CAND-NAP-REGISTRY",
+      "immutableReference": null,
+      "retrievalOutcome": "unavailable",
+      "relatedDriftIds": ["DRF-DISCOVERY-001", "DRF-METADATA-001", "DRF-INTENT-001"]
+    },
+    {
+      "id": "OW-NAPPLET-WEB-001",
+      "surface": "napplet/web",
+      "kind": "issue-pr-discussion-metadata",
+      "candidateId": "CAND-NAPPLET-WEB-PACKAGE",
+      "immutableReference": null,
+      "retrievalOutcome": "unavailable",
+      "relatedDriftIds": ["DRF-ARTIFACT-001", "DRF-CONFORMANCE-001"]
+    },
+    {
+      "id": "OW-RUNTIME-001",
+      "surface": "credible runtime implementation",
+      "kind": "issue-pr-discussion-metadata",
+      "candidateId": "CAND-RUNTIME-IMPLEMENTATION",
+      "immutableReference": null,
+      "retrievalOutcome": "unavailable",
+      "relatedDriftIds": ["DRF-UNKNOWN-MESSAGES-001", "DRF-CONFORMANCE-001"]
+    }
+  ],
+  "revisitTrigger": "Run bounded official-source acquisition when immutable references are available; do not treat this snapshot as shipped-behavior proof."
+}

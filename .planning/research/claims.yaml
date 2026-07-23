@@ -63,3 +63,238 @@ claims:
       approver: project-owner
       date: 2026-07-24
       revisitCriterion: An official candidate is resolved to a reviewed immutable source record.
+  - &normative_claim
+    id: CLM-DRF-DISCOVERY-NORMATIVE
+    kind: claim
+    statement: Project policy requires immutable source evidence before protocol meaning is concluded.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    state: provisional
+    stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+    uncertainty: &drf_uncertainty
+      state: material
+      reason: A current immutable upstream baseline is absent.
+    impacts: &drf_impacts
+      requirements: [EVID-02, EVID-03]
+      phases: ['01']
+    sourceRelations: &normative_relation
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Freshness
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    review: &drf_review
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, content-learning]
+    blocking: false
+  - &observed_claim
+    id: CLM-DRF-DISCOVERY-OBSERVED
+    kind: claim
+    statement: The preserved planning archive identifies a discovery comparison question but is not current upstream proof.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    state: provisional
+    stateReason: The archived question is directional planning context only.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations: &observed_relation
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: primary
+        locator: Known high-risk drift to re-verify
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review: *drf_review
+    blocking: false
+  - <<: *normative_claim
+    id: CLM-DRF-HANDSHAKE-NORMATIVE
+    statement: Project policy requires immutable NIP-5D evidence before bootstrap behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-HANDSHAKE-OBSERVED
+    statement: The preserved planning archive names handshake comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-MANIFEST-NORMATIVE
+    statement: Project policy requires immutable manifest evidence before kind behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-MANIFEST-OBSERVED
+    statement: The preserved planning archive names manifest-kind comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-IDENTITY-NORMATIVE
+    statement: Project policy requires immutable identity evidence before dTag behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-IDENTITY-OBSERVED
+    statement: The preserved planning archive names identity comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-METADATA-NORMATIVE
+    statement: Project policy requires immutable registry evidence before archetype or convention metadata is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-METADATA-OBSERVED
+    statement: The preserved planning archive names metadata comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-INTENT-NORMATIVE
+    statement: Project policy requires immutable catalog evidence before handler assumptions are concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-INTENT-OBSERVED
+    statement: The preserved planning archive names intent-handler comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-UNKNOWN-NORMATIVE
+    statement: Project policy requires immutable evidence before unknown-message behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-UNKNOWN-OBSERVED
+    statement: The preserved planning archive names unknown-message behavior as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-ARTIFACT-NORMATIVE
+    statement: Project policy requires immutable public release evidence before artifact behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-ARTIFACT-OBSERVED
+    statement: The preserved planning archive names artifact-versus-build comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-EGRESS-NORMATIVE
+    statement: Project policy requires immutable source and measurement evidence before browser egress behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-EGRESS-OBSERVED
+    statement: The preserved planning archive names browser egress comparison as a research question, not a protocol fact.
+  - <<: *normative_claim
+    id: CLM-DRF-CONFORMANCE-NORMATIVE
+    statement: Project policy requires immutable public conformance evidence before retired behavior is concluded.
+  - <<: *observed_claim
+    id: CLM-DRF-CONFORMANCE-OBSERVED
+    statement: The preserved planning archive names conformance comparison as a research question, not a protocol fact.
+  - id: CLM-CMP-PACKAGE-001
+    kind: claim
+    statement: No immutable public napplet/web release or export baseline is available for compatibility assessment.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: unknown
+    state: blocked
+    stateReason: The public package candidate remains an unpinned discovery pointer.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations:
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Freshness
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: independent-corroboration
+        locator: Research completion standard
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review: *drf_review
+    blocking: true
+    blockedDetails:
+      scope: Package export compatibility only.
+      safeFallback: Do not infer behavior from a private path or unpublished build.
+      approver: project-owner
+      date: 2026-07-24
+      revisitCriterion: Collect a public immutable release and public export evidence.
+  - id: CLM-CMP-RUNTIME-001
+    kind: claim
+    statement: No immutable credible runtime baseline is available for compatibility assessment.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: unknown
+    state: blocked
+    stateReason: Runtime candidates remain unpinned discovery pointers.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations:
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Freshness
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: independent-corroboration
+        locator: Research completion standard
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review: *drf_review
+    blocking: true
+    blockedDetails:
+      scope: Runtime compatibility only.
+      safeFallback: Do not infer runtime behavior.
+      approver: project-owner
+      date: 2026-07-24
+      revisitCriterion: Collect public immutable runtime evidence.
+  - id: CLM-CMP-EXAMPLE-001
+    kind: claim
+    statement: No immutable example napplet baseline is available for compatibility assessment.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: unknown
+    state: blocked
+    stateReason: Example candidates remain unpinned discovery pointers.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations:
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Freshness
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: independent-corroboration
+        locator: Research completion standard
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review: *drf_review
+    blocking: true
+    blockedDetails:
+      scope: Example compatibility only.
+      safeFallback: Do not present an example as conformant.
+      approver: project-owner
+      date: 2026-07-24
+      revisitCriterion: Collect public immutable example evidence.
+  - id: CLM-CMP-FIXTURE-001
+    kind: claim
+    statement: No immutable conformance fixture baseline is available for compatibility assessment.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: unknown
+    state: blocked
+    stateReason: No public fixture has been acquired.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations:
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Freshness
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: independent-corroboration
+        locator: Research completion standard
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review: *drf_review
+    blocking: true
+    blockedDetails:
+      scope: Fixture and conformance compatibility only.
+      safeFallback: Do not claim conformance.
+      approver: project-owner
+      date: 2026-07-24
+      revisitCriterion: Collect public immutable fixture evidence.
+  - id: CLM-CMP-TEST-001
+    kind: claim
+    statement: Current compatibility status is an explicit blocked baseline, not a successful conformance result.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    state: provisional
+    stateReason: The validation tool can prove record consistency but cannot establish upstream compatibility.
+    uncertainty: *drf_uncertainty
+    impacts: *drf_impacts
+    sourceRelations: *normative_relation
+    review: *drf_review
+    blocking: false

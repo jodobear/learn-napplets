@@ -1,0 +1,36 @@
+schemaVersion: 1
+questions:
+  - id: OQ-UPSTREAM-BASELINE-001
+    kind: open-question
+    question: Which official immutable NIP-5D, NAP, package, and runtime sources resolve the recorded blocked compatibility and drift questions?
+    status: blocked
+    sourceRefs:
+      - SRC-POLICY-001
+      - SRC-POLICY-002
+      - CLM-UPSTREAM-BASELINE-001
+      - DRF-DISCOVERY-001
+      - DRF-HANDSHAKE-001
+      - DRF-MANIFEST-001
+      - DRF-IDENTITY-001
+      - DRF-METADATA-001
+      - DRF-INTENT-001
+      - DRF-UNKNOWN-MESSAGES-001
+      - DRF-ARTIFACT-001
+      - DRF-EGRESS-001
+      - DRF-CONFORMANCE-001
+    impacts:
+      requirements: [EVID-02, EVID-03, OPER-01]
+      phases: ['01']
+    blockedDecisions: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006, ADR-0008, ADR-0009]
+    resolutionCriteria:
+      - Record official identity, resolved commit, revision:path locator, digest, retrieval time, authority, evidence class, maturity, and review state for each relevant source.
+      - Compare released public export/package/runtime evidence separately from current default-branch or open-work evidence.
+      - Record conflicts as parallel `DRF-*` evidence and obtain the required human review before any claim becomes verified.
+    owner: research-owner
+    review:
+      status: pending
+      requiredRoles: [protocol-technical, content-learning]
+    history:
+      - at: '2026-07-24T00:00:00Z'
+        status: blocked
+        reason: All relevant candidates remain discovery pointers without immutable current evidence.

@@ -1,0 +1,213 @@
+schemaVersion: 1
+drift:
+  - id: DRF-DISCOVERY-001
+    kind: drift
+    topic: discovery model
+    status: blocked
+    statusReason: No immutable official discovery or registry baseline has been collected.
+    normative: &policy_normative
+      claimId: CLM-DRF-DISCOVERY-NORMATIVE
+      sourceId: SRC-POLICY-002
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Freshness
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      statement: Project policy requires an immutable source baseline before a protocol conclusion.
+      authorityTier: project-policy
+      maturity: accepted
+      evidenceClass: project-policy
+    observed: &archive_observed
+      claimId: CLM-DRF-DISCOVERY-OBSERVED
+      sourceId: SRC-POLICY-001
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Known high-risk drift to re-verify
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      statement: The preserved research question identifies discovery comparison work but is not current upstream proof.
+      authorityTier: planning-archive
+      maturity: accepted
+      evidenceClass: project-policy
+    impacts: &impacts
+      content: [LES-001]
+      code: [SPK-C-BROWSER-001]
+      knowledge: [protocol-map]
+      requirements: [EVID-02, EVID-03]
+      phases: ['01']
+    uncertainty: &uncertainty
+      state: material
+      reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+    history: &blocked_history
+      - at: '2026-07-24T00:00:00Z'
+        state: blocked
+        reason: Recorded as a parallel research question without inferring an upstream fact.
+    review: &review
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, content-learning]
+    dependentDecisionDisposition: &blocked_disposition
+      decisionIds: [ADR-0001]
+      disposition: blocked
+      safeFallback: Defer dependent architecture and teaching claims.
+      revisitTrigger: Collect and review the official immutable baseline.
+  - id: DRF-HANDSHAKE-001
+    kind: drift
+    topic: NAP-SHELL handshake
+    status: blocked
+    statusReason: No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-HANDSHAKE-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-HANDSHAKE-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0005]
+  - id: DRF-MANIFEST-001
+    kind: drift
+    topic: manifest kinds
+    status: blocked
+    statusReason: Current manifest-kind sources are absent from the immutable registry.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-MANIFEST-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-MANIFEST-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0005]
+  - id: DRF-IDENTITY-001
+    kind: drift
+    topic: dTag identity
+    status: blocked
+    statusReason: No immutable manifest or aggregate-identity source has been collected.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-IDENTITY-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-IDENTITY-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0006]
+  - id: DRF-METADATA-001
+    kind: drift
+    topic: archetype/convention metadata
+    status: blocked
+    statusReason: No immutable registry or projection baseline has been collected.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-METADATA-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-METADATA-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0003]
+  - id: DRF-INTENT-001
+    kind: drift
+    topic: NAP-INTENT handler/catalog assumptions
+    status: blocked
+    statusReason: Handler and catalog sources lack immutable released and current-work baselines.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-INTENT-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-INTENT-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0004]
+  - id: DRF-UNKNOWN-MESSAGES-001
+    kind: drift
+    topic: unknown message/source behavior
+    status: blocked
+    statusReason: No immutable protocol or runtime record defines the current behavior.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-UNKNOWN-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-UNKNOWN-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0004]
+  - id: DRF-ARTIFACT-001
+    kind: drift
+    topic: exact artifact versus build output
+    status: blocked
+    statusReason: No public package release or exact build-output evidence has been pinned.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-ARTIFACT-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-ARTIFACT-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0002]
+  - id: DRF-EGRESS-001
+    kind: drift
+    topic: browser egress versus mediated access
+    status: blocked
+    statusReason: No named browser measurement or immutable mediated-access source has been collected.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-EGRESS-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-EGRESS-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0008]
+  - id: DRF-CONFORMANCE-001
+    kind: drift
+    topic: conformance/private-or-retired behavior
+    status: blocked
+    statusReason: No public conformance fixture or immutable package/runtime observation has been collected.
+    normative:
+      <<: *policy_normative
+      claimId: CLM-DRF-CONFORMANCE-NORMATIVE
+    observed:
+      <<: *archive_observed
+      claimId: CLM-DRF-CONFORMANCE-OBSERVED
+    impacts: *impacts
+    uncertainty: *uncertainty
+    history: *blocked_history
+    review: *review
+    dependentDecisionDisposition:
+      <<: *blocked_disposition
+      decisionIds: [ADR-0009]

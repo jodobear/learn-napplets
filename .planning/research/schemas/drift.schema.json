@@ -1,1 +1,65 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://learn-napplets.local/schemas/drift.schema.json","title":"Parallel drift or conflict record","type":"object","additionalProperties":false,"required":["id","kind","topic","status","statusReason","normative","observed","impacts","uncertainty","history","review"],"properties":{"id":{"type":"string","pattern":"^DRF-[A-Z0-9][A-Z0-9-]*$"},"kind":{"const":"drift"},"topic":{"type":"string","minLength":1},"status":{"enum":["verified","disputed","provisional","blocked","stale"]},"statusReason":{"type":"string","minLength":1},"normative":{"$ref":"#/$defs/side"},"observed":{"$ref":"#/$defs/side"},"impacts":{"$ref":"#/$defs/impacts"},"uncertainty":{"$ref":"#/$defs/uncertainty"},"history":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["at","state","reason"],"properties":{"at":{"type":"string","format":"date-time"},"state":{"enum":["verified","disputed","provisional","blocked","stale"]},"reason":{"type":"string","minLength":1}}}},"review":{"$ref":"#/$defs/review"}},"$defs":{"side":{"type":"object","additionalProperties":false,"required":["claimId","sourceId","commitSha","path","locator","contentSha256","statement","authorityTier","maturity","evidenceClass"],"properties":{"claimId":{"type":"string","pattern":"^CLM-[A-Z0-9][A-Z0-9-]*$"},"sourceId":{"type":"string","pattern":"^SRC-[A-Z0-9][A-Z0-9-]*$"},"commitSha":{"type":"string","pattern":"^[0-9a-f]{40,64}$"},"path":{"type":"string","minLength":1},"locator":{"type":"string","minLength":1},"contentSha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"statement":{"type":"string","minLength":1},"authorityTier":{"type":"string","minLength":1},"maturity":{"type":"string","minLength":1},"evidenceClass":{"type":"string","minLength":1}}},"impacts":{"type":"object","additionalProperties":false,"required":["content","code","knowledge","requirements","phases"],"properties":{"content":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},"code":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},"knowledge":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},"requirements":{"type":"array","minItems":1,"items":{"type":"string","pattern":"^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}},"phases":{"type":"array","minItems":1,"items":{"type":"string","pattern":"^\\d{2}$"}}}},"uncertainty":{"type":"object","additionalProperties":false,"required":["state","reason"],"properties":{"state":{"enum":["none","limited","material"]},"reason":{"type":"string","minLength":1}}},"review":{"type":"object","additionalProperties":false,"required":["owner","status","requiredRoles"],"properties":{"owner":{"type":"string","minLength":1},"status":{"enum":["pending","reviewed","approved"]},"requiredRoles":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}}}}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-napplets.local/schemas/drift.schema.json",
+  "title": "Parallel drift or conflict record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "topic", "status", "statusReason", "normative", "observed", "impacts", "uncertainty", "history", "review"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^DRF-[A-Z0-9][A-Z0-9-]*$"},
+    "kind": {"const": "drift"},
+    "topic": {"type": "string", "minLength": 1},
+    "status": {"enum": ["verified", "disputed", "provisional", "blocked", "stale"]},
+    "statusReason": {"type": "string", "minLength": 1},
+    "normative": {"$ref": "#/$defs/side"},
+    "observed": {"$ref": "#/$defs/side"},
+    "impacts": {"$ref": "#/$defs/impacts"},
+    "uncertainty": {"$ref": "#/$defs/uncertainty"},
+    "history": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "additionalProperties": false, "required": ["at", "state", "reason"], "properties": {"at": {"type": "string", "format": "date-time"}, "state": {"enum": ["verified", "disputed", "provisional", "blocked", "stale"]}, "reason": {"type": "string", "minLength": 1}}}
+    },
+    "review": {"$ref": "#/$defs/review"},
+    "dependentDecisionDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decisionIds", "disposition", "safeFallback", "revisitTrigger"],
+      "properties": {
+        "decisionIds": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "disposition": {"enum": ["blocked", "defer", "review-required"]},
+        "safeFallback": {"type": "string", "minLength": 1},
+        "revisitTrigger": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "$defs": {
+    "side": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claimId", "sourceId", "commitSha", "path", "locator", "contentSha256", "statement", "authorityTier", "maturity", "evidenceClass"],
+      "properties": {
+        "claimId": {"type": "string", "pattern": "^CLM-[A-Z0-9][A-Z0-9-]*$"},
+        "sourceId": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"},
+        "commitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "path": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "statement": {"type": "string", "minLength": 1},
+        "authorityTier": {"type": "string", "minLength": 1},
+        "maturity": {"type": "string", "minLength": 1},
+        "evidenceClass": {"type": "string", "minLength": 1}
+      }
+    },
+    "impacts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["content", "code", "knowledge", "requirements", "phases"],
+      "properties": {
+        "content": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "code": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "knowledge": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "requirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}},
+        "phases": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^\\d{2}$"}}
+      }
+    },
+    "uncertainty": {"type": "object", "additionalProperties": false, "required": ["state", "reason"], "properties": {"state": {"enum": ["none", "limited", "material"]}, "reason": {"type": "string", "minLength": 1}}},
+    "review": {"type": "object", "additionalProperties": false, "required": ["owner", "status", "requiredRoles"], "properties": {"owner": {"type": "string", "minLength": 1}, "status": {"enum": ["pending", "reviewed", "approved"]}, "requiredRoles": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}
+  }
+}
