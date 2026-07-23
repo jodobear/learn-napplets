@@ -154,6 +154,50 @@ def validate_claims(claims: list[dict[str, Any]], source_ids: set[str], sources:
     return errors
 
 
+def load_optional_records(root: Path, filename: str, key: str, schema: str) -> tuple[list[dict[str, Any]], list[str]]:
+    path = root / filename
+    if not path.exists():
+        return [], []
+    document = load_yaml(path)
+    records = document.get(key, [])
+    if not isinstance(records, list) or not all(isinstance(item, dict) for item in records):
+        return [], [f"ERROR IO002: {filename} {key} must be a list of records"]
+    return records, schema_errors(root / "schemas" / schema, records)
+
+
+def validate_drift(records: list[dict[str, Any]], source_ids: set[str], claim_ids: set[str]) -> list[str]:
+    errors: list[str] = []
+    for record in records:
+        record_id = record.get("id", "<unknown>")
+        for side in (record.get("normative", {}), record.get("observed", {})):
+            if not isinstance(side, dict):
+                continue
+            if side.get("sourceId") not in source_ids:
+                errors.append(f"ERROR SEM008: {record_id} references unknown source {side.get('sourceId')}")
+            if side.get("claimId") not in claim_ids:
+                errors.append(f"ERROR SEM009: {record_id} references unknown claim {side.get('claimId')}")
+    return errors
+
+
+def validate_compatibility(records: list[dict[str, Any]], source_index: dict[str, dict[str, Any]], known_ids: set[str]) -> list[str]:
+    errors: list[str] = []
+    for record in records:
+        record_id = record.get("id", "<unknown>")
+        for field in ("packages", "runtimes", "examples", "fixtures", "knownDrift", "testEvidence"):
+            for reference in record.get(field, []):
+                if reference not in known_ids:
+                    errors.append(f"ERROR SEM010: {record_id} references unknown {field} ID {reference}")
+        for pin in [*record.get("sourceBaseline", []), record.get("releaseState", {}), record.get("currentWork", {})]:
+            if not isinstance(pin, dict):
+                continue
+            source = source_index.get(pin.get("sourceId"))
+            if source is None:
+                errors.append(f"ERROR SEM011: {record_id} references unknown baseline source {pin.get('sourceId')}")
+            elif any(pin.get(key) != source.get(key) for key in ("commitSha", "path", "contentSha256")):
+                errors.append(f"ERROR SEM012: {record_id} baseline conflicts with source {pin.get('sourceId')} commitSha/path/contentSha256")
+    return errors
+
+
 def report_text(source_records: list[dict[str, Any]], claim_records: list[dict[str, Any]], errors: list[str]) -> str:
     lines = ["# Research Validation Report", "", "This deterministic report records structural and semantic checks; it does not grant human approval.", "", "## Result", "", f"- Status: {'invalid' if errors else 'valid'}", "- Traceability mappings: " + ("invalid" if any(error.startswith("ERROR TRC") for error in errors) else "valid"), "", "## Source records", ""]
     for record in sorted(source_records, key=lambda item: item.get("id", "")):
@@ -194,6 +238,18 @@ def main() -> int:
                 raise ValueError("claims.yaml claims must be a list of records")
             errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
             errors.extend(validate_claims(claims, source_ids, source_index))
+        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json")
+        questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
+        compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json")
+        errors.extend(drift_errors + question_errors + compatibility_errors)
+        claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+        drift_ids, drift_id_errors = record_ids(drift, "DRF-")
+        question_ids, question_id_errors = record_ids(questions, "OQ-")
+        compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
+        errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
+        errors.extend(validate_drift(drift, source_ids, claim_ids))
+        known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
+        errors.extend(validate_compatibility(compatibility, source_index, known_ids))
         errors.extend(validate_traceability())
     except ValueError as exc:
         errors.append(f"ERROR IO001: {exc}")
