@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-07-23T22:45:03.894Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-07-23T23:02:06.709Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 4 of 28
+Plan: 5 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█░░░░░░░░░] 11%
+Progress: [█░░░░░░░░░] 14%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [█░░░░░░░░░] 11%
 | Phase 01 P01 | 45m | 3 tasks | 7 files |
 | Phase 01 P02 | 25m | 2 tasks | 8 files |
 | Phase 01 P03 | 8m | 2 tasks | 6 files |
+| Phase 01 P04 | 14m | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Evidence validation may prepare review work but cannot automatically verify a claim without dated reviewer approval.
 - [Phase ?]: Conflicts retain parallel pinned normative and observed DRF sides rather than a forced winner.
 - [Phase ?]: Compatibility baseline pins must match referenced source commit, path, and content digest.
+- [Phase ?]: Pre-run spike contracts omit observations; completed spikes require measured, digest-pinned replay evidence.
+- [Phase ?]: Automated validation prepares evidence but cannot replace dated human approval or accept an ADR.
+- [Phase ?]: Spike impact fragments pin metadata, reports, sources, and measurements with SHA-256 before consolidation.
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T22:45:03.887Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-07-23T23:02:06.700Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
