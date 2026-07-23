@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-07-23T22:39:18.627Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-07-23T22:45:03.894Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 3 of 28
+Plan: 4 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█░░░░░░░░░] 7%
+Progress: [█░░░░░░░░░] 11%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [█░░░░░░░░░] 7%
 |------|----------|-------|-------|
 | Phase 01 P01 | 45m | 3 tasks | 7 files |
 | Phase 01 P02 | 25m | 2 tasks | 8 files |
+| Phase 01 P03 | 8m | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Phase 1 verification and replay commands must use tools/phase1-python, which checks the recorded isolated interpreter version and SHA-256.
 - [Phase ?]: Preserved source-pack records remain provisional collection seeds and cannot serve as current upstream proof.
 - [Phase ?]: Evidence validation may prepare review work but cannot automatically verify a claim without dated reviewer approval.
+- [Phase ?]: Conflicts retain parallel pinned normative and observed DRF sides rather than a forced winner.
+- [Phase ?]: Compatibility baseline pins must match referenced source commit, path, and content digest.
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T22:39:18.620Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-07-23T22:45:03.887Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
