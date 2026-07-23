@@ -55,7 +55,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 27 plans
+**Plans**: 28 plans
 
 Plans:
 - [ ] 01-01-PLAN.md — Approve and isolate the Phase 1 research toolchain.
@@ -67,24 +67,25 @@ Plans:
 - [ ] 01-07-PLAN.md — Build ecosystem/domain/archetype/example catalogs.
 - [ ] 01-26-PLAN.md — Synthesize audience, pedagogy, delivery, and first teaching scope.
 - [ ] 01-08-PLAN.md — Create the shared index and LES-01 through LES-04 packets.
-- [ ] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
 - [ ] 01-09-PLAN.md — Run SPK-A independent-workspace evidence.
 - [ ] 01-10-PLAN.md — Run SPK-B static-framework evidence behind package approval.
-- [ ] 01-11-PLAN.md — Run SPK-C real browser boundary-harness evidence.
-- [ ] 01-12-PLAN.md — Run SPK-D verified-loader feasibility evidence.
+- [ ] 01-11-PLAN.md — Run SPK-C browser evidence and preserve its immutable local impact fragment.
+- [ ] 01-12-PLAN.md — Run SPK-D verified-loader evidence and preserve its immutable local impact fragment.
 - [ ] 01-13-PLAN.md — Run SPK-E shared-content rendering evidence.
 - [ ] 01-14-PLAN.md — Run SPK-F portable Workbench/course feasibility evidence.
-- [ ] 01-15-PLAN.md — Run SPK-G public package/conformance evidence.
-- [ ] 01-16-PLAN.md — Run SPK-H browser egress and CSP evidence.
+- [ ] 01-15-PLAN.md — Run SPK-G package/conformance evidence and preserve its immutable local impact fragment.
+- [ ] 01-16-PLAN.md — Run SPK-H browser egress/CSP evidence and preserve its immutable local impact fragment.
 - [ ] 01-17-PLAN.md — Run SPK-I diagram/motion accessibility evidence.
 - [ ] 01-18-PLAN.md — Run SPK-J least-authority code-editing evidence.
 - [ ] 01-19-PLAN.md — Run SPK-K local/authorized deployment evidence.
 - [ ] 01-20-PLAN.md — Run SPK-L source-freshness evidence.
-- [ ] 01-21-PLAN.md — Draft proposed ADR 0001–0004.
-- [ ] 01-22-PLAN.md — Draft proposed ADR 0005–0008.
-- [ ] 01-23-PLAN.md — Draft proposed ADR 0009–0011 and decision summaries.
+- [ ] 01-28-PLAN.md — Serially consolidate all spike reports and impact fragments into canonical evidence.
+- [ ] 01-21-PLAN.md — Draft proposed ADR 0001–0004 from consolidated evidence.
+- [ ] 01-22-PLAN.md — Draft proposed ADR 0005–0008 from consolidated evidence.
+- [ ] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
 - [ ] 01-25-PLAN.md — Complete LES-10 through LES-13 and the exact inventory.
-- [ ] 01-24-PLAN.md — Enforce the Phase 1 gate and stop for human closeout.
+- [ ] 01-23-PLAN.md — Draft proposed ADR 0009–0011 and decision summaries from consolidated evidence.
+- [ ] 01-24-PLAN.md — Enforce the Phase 1 gate after consolidation and stop for human closeout.
 
 ### Phase 2: Product and Content Contract
 **Source phase crosswalk**: Source Phase 1 — Product and Content Contract
@@ -337,7 +338,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 0/TBD | Not started — pending discussion and convergence | - |
+| 1. Research and Truth Baseline | 0/28 | Not started — pending discussion and convergence | - |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
