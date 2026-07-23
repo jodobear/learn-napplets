@@ -1,0 +1,88 @@
+schemaVersion: 1
+id: SPK-B-STATIC-FRAMEWORK
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  In an isolated disposable environment, exact approved releases of Astro and
+  VitePress can be compared against the static-first criteria without selecting
+  an accepted framework or creating a production scaffold.
+variables:
+  independent: [candidate framework release]
+  dependent: [prerendering, content handling, lab integration, multi-entry support, test support, bundle isolation, accessibility evidence, static deployment output]
+  controlled: [SPK-B-local ignored experiment path, no production markers, declared fixture, tools/phase1-python replay]
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-b-static-framework --contract
+  - Do not execute either candidate install command until its per-candidate human approval status is approved.
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    relation: measures
+    plan: 01-10
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    plan: 01-10
+successThreshold: >-
+  After per-candidate human approval, five replayable isolated measurements
+  record all declared criteria and leave zero repository-root production markers;
+  any recommendation remains proposed evidence for ADR-0002.
+failureOutcome: >-
+  If a candidate cannot satisfy the declared local fixture or creates a
+  production marker outside SPK-B, record failure and do not retain its output.
+blockedOutcome: >-
+  If approval is blocked or reproducible evidence cannot be collected, retain
+  the exact package record and an impact-scoped blocker for EVID-04 and ADR-0002.
+replay:
+  input: fixture.md
+  command: >-
+    After approval only, execute each exact isolated command, run the declared
+    fixture comparison five times, preserve digests and environment facts, then
+    validate the completed spike and planning boundary.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: >-
+    Registry release metadata is a provenance input, not measured framework
+    behavior or an accepted architecture decision; package approval is pending.
+recommendation: >-
+  Present both candidates as proposed SPK-B inputs only; do not select or
+  initialize a production framework before measured evidence and ADR review.
+disposition: delete-spike
+packageApproval:
+  reviewedAt: null
+  reviewer: null
+  status: pending-human-review
+  candidates:
+    - name: astro
+      version: 7.1.3
+      registryUrl: https://registry.npmjs.org/astro/7.1.3
+      projectUrl: https://astro.build
+      repositoryUrl: https://github.com/withastro/astro
+      license: MIT
+      releaseTarball: https://registry.npmjs.org/astro/-/astro-7.1.3.tgz
+      integrity: sha512-4dhPyAAXthf3xLEYnG8SeL7yr/nTPPABfY7e9YF0yuO+vK9Xp+8Q5j4xzsmL3GueukQv4oNwGNTBepLOiDGeJA==
+      shasum: f80d8459c10fff08b2c457e9171547f32761582c
+      provenanceRetrievedAt: 2026-07-24
+      provenanceSource: https://registry.npmjs.org/astro/latest
+      hashSourceDecision: pending human review of registry integrity and source provenance
+      approval: pending
+      isolationPath: .planning/spikes/spk-b-static-framework/.experiment/astro-7.1.3
+      installCommand: npm --prefix .planning/spikes/spk-b-static-framework/.experiment/astro-7.1.3 install --ignore-scripts --package-lock=false astro@7.1.3
+    - name: vitepress
+      version: 1.6.4
+      registryUrl: https://registry.npmjs.org/vitepress/1.6.4
+      projectUrl: https://vitepress.dev/
+      repositoryUrl: https://github.com/vuejs/vitepress
+      license: MIT
+      releaseTarball: https://registry.npmjs.org/vitepress/-/vitepress-1.6.4.tgz
+      integrity: sha512-+2ym1/+0VVrbhNyRoFFesVvBvHAVMZMK0rw60E3X/5349M1GuVdKeazuksqopEdvkKwKGs21Q729jX81/bkBJg==
+      shasum: 1b6c68fede541a3f401a66263dce0c985e2d8d92
+      provenanceRetrievedAt: 2026-07-24
+      provenanceSource: https://registry.npmjs.org/vitepress/latest
+      hashSourceDecision: pending human review of registry integrity and source provenance
+      approval: pending
+      isolationPath: .planning/spikes/spk-b-static-framework/.experiment/vitepress-1.6.4
+      installCommand: npm --prefix .planning/spikes/spk-b-static-framework/.experiment/vitepress-1.6.4 install --ignore-scripts --package-lock=false vitepress@1.6.4
