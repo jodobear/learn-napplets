@@ -13,3 +13,4 @@ This deterministic report records structural and semantic checks; it does not gr
 
 ## Claim records
 
+- CLM-POLICY-001: provisional

@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = ROOT / "tools" / "validate-research.py"
 SOURCE_SCHEMA = ROOT / ".planning" / "research" / "schemas" / "source.schema.json"
+CLAIM_SCHEMA = ROOT / ".planning" / "research" / "schemas" / "claim.schema.json"
 
 VALID_SOURCE = {
     "id": "SRC-POLICY-001",
@@ -95,6 +96,64 @@ class SourceEvidenceTests(unittest.TestCase):
         result = self.run_validator(ROOT / ".planning" / "research", report)
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
         self.assertIn("Traceability mappings: valid", report.read_text())
+
+    def write_claim_root(self, claim: dict) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
+        root, temp = self.write_root(copy.deepcopy(VALID_SOURCE))
+        shutil.copy2(CLAIM_SCHEMA, root / "schemas" / "claim.schema.json")
+        (root / "claims.yaml").write_text("schemaVersion: 1\nclaims:\n  - " + "\n    ".join(
+            f"{key}: {value}" for key, value in claim.items()
+        ) + "\n")
+        return root, temp
+
+    def test_valid_source_linked_provisional_claim_passes(self) -> None:
+        claim = {
+            "id": "CLM-POLICY-001", "kind": "claim", "statement": "A project-policy seed requires review.",
+            "rawOrigin": "project-policy", "assertionKind": "project-policy", "evidenceClass": "project-policy",
+            "maturity": "accepted", "state": "provisional", "stateReason": "Awaiting technical review.",
+            "uncertainty": {"state": "limited", "reason": "Policy seed."},
+            "impacts": {"requirements": ["EVID-01"], "phases": ["01"]},
+            "sourceRelations": [{"sourceId": "SRC-POLICY-001", "relation": "supports", "role": "primary", "locator": "Required fields", "excerptSha256": "b" * 64}],
+            "review": {"owner": "research-owner", "status": "pending", "requiredRoles": ["protocol-technical"]}, "blocking": False,
+        }
+        root, temp = self.write_claim_root(claim)
+        with temp:
+            result = self.run_validator(root, root / "report.md")
+            self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_blocking_claim_requires_distinct_corroboration(self) -> None:
+        claim = {
+            "id": "CLM-POLICY-003", "kind": "claim", "statement": "Blocking evidence requires independent corroboration.",
+            "rawOrigin": "project-policy", "assertionKind": "project-policy", "evidenceClass": "project-policy",
+            "maturity": "accepted", "state": "blocked", "stateReason": "Corroboration is unavailable.",
+            "uncertainty": {"state": "material", "reason": "One source only."}, "impacts": {"requirements": ["EVID-01"], "phases": ["01"]},
+            "sourceRelations": [
+                {"sourceId": "SRC-POLICY-001", "relation": "supports", "role": "primary", "locator": "Required fields", "excerptSha256": "b" * 64},
+                {"sourceId": "SRC-POLICY-001", "relation": "supports", "role": "independent-corroboration", "locator": "Required fields", "excerptSha256": "b" * 64},
+            ],
+            "review": {"owner": "research-owner", "status": "pending", "requiredRoles": ["protocol-technical"]}, "blocking": True,
+            "blockedDetails": {"scope": "This claim only.", "safeFallback": "Defer it.", "approver": "project-owner", "date": "2026-07-24", "revisitCriterion": "A distinct source is available."},
+        }
+        root, temp = self.write_claim_root(claim)
+        with temp:
+            result = self.run_validator(root, root / "report.md")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("requires distinct primary and independent corroborating sources", result.stdout)
+
+    def test_claim_semantic_failures_are_rejected(self) -> None:
+        claim = {
+            "id": "CLM-POLICY-002", "kind": "claim", "statement": "An invalid claim must be rejected.",
+            "rawOrigin": "inference", "assertionKind": "inference", "evidenceClass": "inference", "maturity": "unknown",
+            "state": "verified", "stateReason": "Automation-only transition.",
+            "uncertainty": {"state": "material", "reason": "No review."}, "impacts": {"requirements": ["EVID-01"], "phases": ["01"]},
+            "sourceRelations": [{"sourceId": "SRC-MISSING-001", "relation": "invented", "role": "primary", "locator": "none", "excerptSha256": "b" * 64}],
+            "review": {"owner": "research-owner", "status": "pending", "requiredRoles": ["protocol-technical"]}, "blocking": False,
+        }
+        root, temp = self.write_claim_root(claim)
+        with temp:
+            result = self.run_validator(root, root / "report.md")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("references unknown source SRC-MISSING-001", result.stdout)
+            self.assertIn("cannot be verified without reviewer approval evidence", result.stdout)
 
 
 if __name__ == "__main__":

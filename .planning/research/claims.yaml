@@ -1,0 +1,28 @@
+schemaVersion: 1
+claims:
+  - id: CLM-POLICY-001
+    kind: claim
+    statement: The Phase 1 evidence policy requires immutable source identity and human review before a claim can be verified.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    state: provisional
+    stateReason: This policy seed is structurally validated but awaits the required technical reviewer evidence.
+    uncertainty:
+      state: limited
+      reason: It constrains project process and does not prove an upstream protocol fact.
+    impacts:
+      requirements: [EVID-01, OPER-03]
+      phases: ['01']
+    sourceRelations:
+      - sourceId: SRC-POLICY-001
+        relation: supports
+        role: primary
+        locator: Source and claim record model
+        excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical]
+    blocking: false
