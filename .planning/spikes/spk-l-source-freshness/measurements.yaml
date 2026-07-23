@@ -1,0 +1,12 @@
+schemaVersion: 1
+spikeId: SPK-L-SOURCE-FRESHNESS
+replayDate: '2026-07-24'
+canonicalRecordsUnchanged: true
+scenarios:
+  - {id: unchanged, exitCode: 0, outcome: unchanged, reportSha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989, reviewWork: none}
+  - {id: changed-digest, exitCode: 0, outcome: changed, reportSha256: 24fd699daf1dcad8e67b2f8b14321865271f9c3893dcfdb9b2c48c31f69b90d2, reviewWork: stable-review-required}
+  - {id: moved-path-replacement, exitCode: 0, outcome: changed, reportSha256: b50559ef62c2067a82aa5488503e5242759819cc74fc5c9cd226b2e1e65e877a, reviewWork: stable-review-required-with-old-pointer}
+  - {id: unavailable, exitCode: 0, outcome: unavailable, reportSha256: 498b1ac134a59c7e0014c496e353fd66597b46d3482a47d5493e6a0f21b1fb55, reviewWork: blocked-review-required}
+  - {id: ambiguous, exitCode: 0, outcome: ambiguous, reportSha256: a6d8924f401f1f708873938edf46b72ceb1c35625d24e793b02d2f8647089f24, reviewWork: blocked-review-required}
+  - {id: repeated-run, exitCode: 0, outcome: unchanged, reportSha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989, reviewWork: no-duplicate, identicalReplay: true}
+  - {id: concurrent-refresh, exitCode: 1, outcome: bounded-lock-conflict, reportWritten: false, canonicalRecordsUnchanged: true, error: 'refresh report lock is busy'}

@@ -34,3 +34,25 @@ uncertainty:
   reason: Fixture evidence proves local routing semantics only, not the meaning of changed upstream content.
 recommendation: Retain this non-production fixture as ADR 0011 freshness-tier/cadence input; require human review for every non-unchanged outcome.
 disposition: retain-as-fixture
+environmentFacts:
+  runner: tools/phase1-python Python 3.14.3
+  fixture: local-only deterministic source identity observations
+measurements:
+  - name: scenario-exit-code
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+rawOutputDigests:
+  - path: measurements.yaml
+    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+replayResult:
+  status: passed
+  outputDigest: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+evidenceLinks:
+  - kind: measurement
+    path: measurements.yaml
+    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+  - kind: report
+    path: report.md
+    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
