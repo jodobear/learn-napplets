@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 9/28 plans executed
+**Plans**: 10/28 plans executed
 
 Plans:
 **Wave 1**
@@ -94,7 +94,7 @@ Plans:
 
 **Wave 8** *(blocked on Wave 7 completion, including Plan 01-20 source-freshness evidence)*
 
-- [ ] 01-08-PLAN.md — Create the shared index and LES-01 through LES-04 packets.
+- [x] 01-08-PLAN.md — Create the shared index and LES-01 through LES-04 packets.
 - [ ] 01-09-PLAN.md — Run SPK-A independent-workspace evidence.
 - [ ] 01-10-PLAN.md — Run SPK-B static-framework evidence behind package approval.
 - [ ] 01-11-PLAN.md — Run SPK-C browser evidence and preserve its immutable local impact fragment.
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 9/28 | In Progress|  |
+| 1. Research and Truth Baseline | 10/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

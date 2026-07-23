@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-26-PLAN.md
-last_updated: "2026-07-23T23:35:14.929Z"
+stopped_at: Completed 01-08-PLAN.md
+last_updated: "2026-07-23T23:43:23.320Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 10 of 28
+Plan: 11 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [███░░░░░░░] 32%
+Progress: [████░░░░░░] 36%
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [███░░░░░░░] 32%
 | Phase 01 P07 | 8m | 1 tasks | 5 files |
 | Phase 01 P20 | 12m | 2 tasks | 6 files |
 | Phase 01 P26 | 175s | 2 tasks | 5 files |
+| Phase 01 P08 | 309s | 1 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: All six audiences retain source, claim, drift, and open-question IDs rather than settling protocol behavior.
 - [Phase ?]: Learn FIPS, MDN Learning, and The Odin Project are excluded until complete immutable comparator records exist.
 - [Phase ?]: The first real-lab operation and teaching-host profile are blocked with a deterministic static fallback.
+- [Phase ?]: Lesson index fixes all thirteen IDs and descriptive filenames while staged validation requires files only for present entries.
+- [Phase ?]: LES-001 through LES-004 remain conceptual/static research packets until immutable evidence and human review support any runtime or protocol claim.
 
 ### Pending Todos
 
@@ -117,6 +120,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T23:35:14.921Z
-Stopped at: Completed 01-26-PLAN.md
+Last session: 2026-07-23T23:43:23.309Z
+Stopped at: Completed 01-08-PLAN.md
 Resume file: None
