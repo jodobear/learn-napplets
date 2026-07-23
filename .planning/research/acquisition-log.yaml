@@ -1,0 +1,21 @@
+schemaVersion: 1
+retrievals:
+  - id: ACQ-001
+    date: 2026-07-24
+    action: local-policy-pin
+    sourceIds: [SRC-POLICY-001, SRC-POLICY-002]
+    result: collected
+    scope: Project policy and preserved research-question seed only.
+    retry: Recalculate revision:path digests when local policy/archive inputs change.
+failures:
+  - id: ACQ-FAIL-001
+    date: 2026-07-24
+    result: blocked
+    scope: All current upstream protocol, registry, package, runtime, and pedagogy candidates listed in candidate-source-manifest.yaml.
+    reason: No official upstream identity, resolved commit, revision:path blob, exact-byte digest, and authenticity review were established in this bounded run.
+    affectedClaims: [CLM-UPSTREAM-BASELINE-001]
+    affectedAdrs: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006, ADR-0007, ADR-0008, ADR-0009, ADR-0010, ADR-0011]
+    affectedSpikes: [SPK-REPOSITORY-001, SPK-FRAMEWORK-001]
+    safeFallback: Defer protocol conclusions and first-lab selection; do not substitute preserved-pack content or model memory.
+    approver: project-owner
+    retry: Use the bounded collector with an official HTTPS candidate, existing read-only clone, resolved commit, and exact revision:path blob.

@@ -1,0 +1,62 @@
+schemaVersion: 1
+items:
+  - id: ECO-NIP-5D
+    candidateId: CAND-NIP-5D
+    disposition: blocked
+    sourceId: null
+    reason: Awaiting immutable official source record.
+  - id: ECO-NIP-5A
+    candidateId: CAND-NIP-5A
+    disposition: blocked
+    sourceId: null
+    reason: Awaiting immutable official source record.
+  - id: ECO-NAP-REGISTRY
+    candidateId: CAND-NAP-REGISTRY
+    disposition: blocked
+    sourceId: null
+    reason: Awaiting immutable official source record.
+  - id: ECO-NAP-PROJECTION
+    candidateId: CAND-NAP-PROJECTION
+    disposition: blocked
+    sourceId: null
+    reason: Awaiting immutable official source record.
+  - id: ECO-NAP-GOVERNANCE
+    candidateId: CAND-NAP-GOVERNANCE
+    disposition: blocked
+    sourceId: null
+    reason: Awaiting immutable official source record.
+  - id: ECO-DOMAINS
+    candidateId: CAND-DOMAINS
+    disposition: deferred
+    sourceId: null
+    reason: Domain selection depends on pinned registry and projection evidence.
+  - id: ECO-NAPPLET-WEB-PACKAGE
+    candidateId: CAND-NAPPLET-WEB-PACKAGE
+    disposition: blocked
+    sourceId: null
+    reason: Package identity and release bytes are not pinned.
+  - id: ECO-NAPPLET-WEB-REPOSITORY
+    candidateId: CAND-NAPPLET-WEB-REPOSITORY
+    disposition: blocked
+    sourceId: null
+    reason: Repository identity and revision:path evidence are not pinned.
+  - id: ECO-RUNTIME
+    candidateId: CAND-RUNTIME-IMPLEMENTATION
+    disposition: deferred
+    sourceId: null
+    reason: Runtime comparison cannot begin before a protocol baseline exists.
+  - id: ECO-LEARN-FIPS
+    candidateId: CAND-LEARN-FIPS
+    disposition: deferred
+    sourceId: null
+    reason: Pedagogy comparison is non-blocking until an evidence-backed first-lab candidate exists.
+  - id: ECO-MDN
+    candidateId: CAND-MDN-LEARNING
+    disposition: deferred
+    sourceId: null
+    reason: Pedagogy comparison is non-blocking until an evidence-backed first-lab candidate exists.
+  - id: ECO-ODIN
+    candidateId: CAND-ODIN-PROJECT
+    disposition: deferred
+    sourceId: null
+    reason: Pedagogy comparison is non-blocking until an evidence-backed first-lab candidate exists.

@@ -1,0 +1,99 @@
+schemaVersion: 1
+boundary:
+  discovery: Authoritative references, imports, and manifests no more than one hop from these candidates.
+  collection: Public read-only HTTPS and local Git object resolution only; cache is .research/upstreams/.
+  closeout: A candidate becomes collected only after official identity, commit, revision:path blob, digest, retrieval time, and authority/evidence/maturity fields are recorded.
+candidates:
+  - id: CAND-NIP-5D
+    name: NIP-5D draft
+    officialHost: github.com
+    officialRepository: https://github.com/nostr-protocol/nips
+    role: protocol specification
+    discoveryPointer: https://github.com/nostr-protocol/nips
+    acquisitionState: blocked
+  - id: CAND-NIP-5A
+    name: NIP-5A draft
+    officialHost: github.com
+    officialRepository: https://github.com/nostr-protocol/nips
+    role: protocol specification
+    discoveryPointer: https://github.com/nostr-protocol/nips
+    acquisitionState: blocked
+  - id: CAND-NAP-REGISTRY
+    name: NAP registry
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: registry authority candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-NAP-PROJECTION
+    name: NAP projection
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: taxonomy/projection candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-NAP-GOVERNANCE
+    name: NAP governance
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: governance candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-DOMAINS
+    name: selected candidate domains
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: domain taxonomy candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-NAPPLET-WEB-PACKAGE
+    name: napplet/web public package
+    officialHost: npmjs.com
+    officialRepository: https://www.npmjs.com/
+    role: package release candidate
+    discoveryPointer: https://www.npmjs.com/
+    acquisitionState: blocked
+  - id: CAND-NAPPLET-WEB-REPOSITORY
+    name: napplet/web repository surface
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: implementation candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-RUNTIME-IMPLEMENTATION
+    name: credible runtime implementations
+    officialHost: github.com
+    officialRepository: https://github.com/nap-ecosystem
+    role: observed implementation candidate
+    discoveryPointer: https://github.com/nap-ecosystem
+    acquisitionState: blocked
+  - id: CAND-LEARN-FIPS
+    name: Learn FIPS
+    officialHost: learnfips.com
+    officialRepository: https://learnfips.com/
+    role: pedagogy comparison
+    discoveryPointer: https://learnfips.com/
+    acquisitionState: blocked
+  - id: CAND-MDN-LEARNING
+    name: MDN Learning
+    officialHost: developer.mozilla.org
+    officialRepository: https://developer.mozilla.org/
+    role: pedagogy comparison
+    discoveryPointer: https://developer.mozilla.org/
+    acquisitionState: blocked
+  - id: CAND-ODIN-PROJECT
+    name: The Odin Project
+    officialHost: theodinproject.com
+    officialRepository: https://www.theodinproject.com/
+    role: pedagogy comparison
+    discoveryPointer: https://www.theodinproject.com/
+    acquisitionState: blocked
+blockedDisposition:
+  authenticityLimitation: Each discovery pointer is mutable or unverified and cannot serve as immutable evidence.
+  affectedClaims: [CLM-UPSTREAM-BASELINE-001]
+  affectedAdrs: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006, ADR-0007, ADR-0008, ADR-0009, ADR-0010, ADR-0011]
+  affectedSpikes: [SPK-REPOSITORY-001, SPK-FRAMEWORK-001]
+  fallback: Keep dependent protocol conclusions, compatibility choices, and first-lab selection blocked.
+  approver: project-owner
+  date: 2026-07-24
+  refreshTrigger: Re-run bounded official-source acquisition when an official repository/path/ref is confirmed.

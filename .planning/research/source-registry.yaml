@@ -2,9 +2,9 @@ schemaVersion: 1
 sources:
   - id: SRC-POLICY-001
     kind: source
-    collectionStatus: seed
-    rawOrigin: proposal
-    repository: learn-napplets
+    collectionStatus: collected
+    rawOrigin: project-policy
+    repository: jodobear/learn-napplets
     officialUrl: https://github.com/jodobear/learn-napplets
     immutableUrl: https://github.com/jodobear/learn-napplets/blob/c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0/docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
     ref: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
@@ -14,17 +14,46 @@ sources:
     contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
     retrievedAt: 2026-07-24T00:00:00Z
     authorityTier: planning-archive
-    evidenceClass: proposal
-    maturity: draft
+    evidenceClass: project-policy
+    maturity: accepted
     uncertainty:
       state: material
-      reason: Preserved source-pack seed; it is not current upstream protocol proof.
+      reason: Preserved source-pack policy seed; it is not current upstream protocol proof.
     impacts:
-      requirements: [EVID-01, OPER-03]
+      requirements: [EVID-01, EVID-02]
       phases: ['01']
     freshness:
       state: provisional
-      refreshTrigger: Evidence policy revision or digest change.
+      refreshTrigger: Refresh if the archive revision or its digest changes.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical]
+  - id: SRC-POLICY-002
+    kind: source
+    collectionStatus: collected
+    rawOrigin: project-policy
+    repository: jodobear/learn-napplets
+    officialUrl: https://github.com/jodobear/learn-napplets
+    immutableUrl: https://github.com/jodobear/learn-napplets/blob/b534103068be8c07e6869bfb7290fb60fdd87c8c/.planning/governance/evidence-policy.md
+    ref: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Required fields and verification rule
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    retrievedAt: 2026-07-24T00:00:00Z
+    authorityTier: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    uncertainty:
+      state: limited
+      reason: This controls project handling of evidence but does not establish an upstream fact.
+    impacts:
+      requirements: [EVID-01, EVID-02]
+      phases: ['01']
+    freshness:
+      state: current
+      refreshTrigger: Refresh if the policy revision or digest changes.
     review:
       owner: research-owner
       status: pending
