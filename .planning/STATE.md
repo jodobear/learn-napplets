@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-08-PLAN.md
-last_updated: "2026-07-23T23:43:23.320Z"
+stopped_at: Completed 01-09-PLAN.md
+last_updated: "2026-07-23T23:49:28.824Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 11 of 28
+Plan: 12 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [████░░░░░░] 36%
+Progress: [████░░░░░░] 39%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [████░░░░░░] 36%
 | Phase 01 P20 | 12m | 2 tasks | 6 files |
 | Phase 01 P26 | 175s | 2 tasks | 5 files |
 | Phase 01 P08 | 309s | 1 tasks | 7 files |
+| Phase 01 P09 | 20m | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,7 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: The first real-lab operation and teaching-host profile are blocked with a deterministic static fallback.
 - [Phase ?]: Lesson index fixes all thirteen IDs and descriptive filenames while staged validation requires files only for present entries.
 - [Phase ?]: LES-001 through LES-004 remain conceptual/static research packets until immutable evidence and human review support any runtime or protocol claim.
+- [Phase ?]: SPK-A retains Candidate A as a proposed public-site-first workspace boundary model; ADR-0001 remains pending human review.
 
 ### Pending Todos
 
@@ -120,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T23:43:23.309Z
-Stopped at: Completed 01-08-PLAN.md
+Last session: 2026-07-23T23:49:28.815Z
+Stopped at: Completed 01-09-PLAN.md
 Resume file: None
