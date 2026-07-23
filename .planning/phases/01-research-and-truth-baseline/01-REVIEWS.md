@@ -136,8 +136,15 @@ None.
 
 None.
 
+### Execution authorization
+
+- Decision: authorized
+- Authorized date: 2026-07-24
+- Authorization event: the project operator explicitly invoked `/gsd-execute-phase 1` after reviewing the completed convergence result.
+- Successful reviewer: Codex (`CONVERGED; HIGH=0; actionable=0`)
+- Scope: authorize Phase 1 plan execution subject to every package, browser-binary, external-action, ADR, security, and human-UAT checkpoint remaining blocking as declared in the plans.
+
 ### Deferred or execution-gated conditions
 
-- Human authorization of the recorded convergence decision is still required by the planned execution preflight; this review does not grant it.
 - Future claims relying on external NIP, browser, package, adapter, editor, or pedagogy sources remain blocked until their required immutable source records exist.
 - Plan 01-02 must repair the explicitly identified broken preserved-pack paths before execution relies on that map.
