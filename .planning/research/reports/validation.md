@@ -10,7 +10,9 @@ This deterministic report records structural and semantic checks; it does not gr
 ## Source records
 
 - SRC-POLICY-001: valid
+- SRC-POLICY-002: valid
 
 ## Claim records
 
 - CLM-POLICY-001: provisional
+- CLM-UPSTREAM-BASELINE-001: blocked

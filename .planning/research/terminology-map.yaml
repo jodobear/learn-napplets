@@ -1,0 +1,32 @@
+schemaVersion: 1
+terms:
+  - term: immutable source record
+    classification: project-policy
+    sourceIds: [SRC-POLICY-001, SRC-POLICY-002]
+    state: provisional
+    definition: A project record retaining official identity, revision, locator, digest, retrieval timestamp, classification, uncertainty, impacts, and refresh trigger.
+  - term: NIP-5D
+    classification: unresolved-upstream-term
+    sourceIds: []
+    state: blocked
+    definition: No current authoritative definition is recorded; do not infer scope, transport, sandbox, sender, manifest, or identity behavior.
+  - term: NIP-5A
+    classification: unresolved-upstream-term
+    sourceIds: []
+    state: blocked
+    definition: No current authoritative definition is recorded; do not infer protocol behavior.
+  - term: NAP registry
+    classification: unresolved-upstream-term
+    sourceIds: []
+    state: blocked
+    definition: Registry role awaits a pinned official source record.
+  - term: NAP projection
+    classification: unresolved-upstream-term
+    sourceIds: []
+    state: blocked
+    definition: Projection/taxonomy role awaits a pinned official source record.
+  - term: capability bootstrap
+    classification: project-policy
+    sourceIds: [SRC-POLICY-002]
+    state: blocked
+    definition: Treat as an unresolved protocol question, not a verified protocol fact.

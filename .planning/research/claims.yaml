@@ -2,18 +2,44 @@ schemaVersion: 1
 claims:
   - id: CLM-POLICY-001
     kind: claim
-    statement: The Phase 1 evidence policy requires immutable source identity and human review before a claim can be verified.
+    statement: Phase 1 policy requires immutable source identity and human review before a claim can be verified.
     rawOrigin: project-policy
     assertionKind: project-policy
     evidenceClass: project-policy
     maturity: accepted
     state: provisional
-    stateReason: This policy seed is structurally validated but awaits the required technical reviewer evidence.
+    stateReason: Policy is structurally validated; it does not itself approve a protocol-sensitive claim.
     uncertainty:
       state: limited
-      reason: It constrains project process and does not prove an upstream protocol fact.
+      reason: This constrains project process and does not prove an upstream protocol fact.
     impacts:
       requirements: [EVID-01, OPER-03]
+      phases: ['01']
+    sourceRelations:
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: primary
+        locator: Required fields and verification rule
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical]
+    blocking: false
+  - id: CLM-UPSTREAM-BASELINE-001
+    kind: claim
+    statement: No current upstream NAP/NIP protocol conclusion or first-lab recommendation is established until an official immutable source record is collected and reviewed.
+    rawOrigin: project-policy
+    assertionKind: project-policy
+    evidenceClass: project-policy
+    maturity: accepted
+    state: blocked
+    stateReason: Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review.
+    uncertainty:
+      state: material
+      reason: The absence of a pinned source does not establish protocol behavior.
+    impacts:
+      requirements: [EVID-01, EVID-02]
       phases: ['01']
     sourceRelations:
       - sourceId: SRC-POLICY-001
@@ -21,8 +47,19 @@ claims:
         role: primary
         locator: Source and claim record model
         excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      - sourceId: SRC-POLICY-002
+        relation: supports
+        role: independent-corroboration
+        locator: Required fields and verification rule
+        excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
     review:
       owner: research-owner
       status: pending
-      requiredRoles: [protocol-technical]
-    blocking: false
+      requiredRoles: [protocol-technical, content-learning]
+    blocking: true
+    blockedDetails:
+      scope: Current upstream protocol, implementation, and first-lab selection conclusions only.
+      safeFallback: Defer dependent decisions and teach no asserted protocol behavior.
+      approver: project-owner
+      date: 2026-07-24
+      revisitCriterion: An official candidate is resolved to a reviewed immutable source record.
