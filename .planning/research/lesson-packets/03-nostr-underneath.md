@@ -83,4 +83,4 @@ No current tested code example is available. A data-only, non-executable fixture
 
 - Fulfil `OQ-UPSTREAM-BASELINE-001` with official immutable Nostr and napplet-related sources before promoting any event, relay, identity, or publication statement.
 - Acquire separate source and measurement evidence for `DRF-IDENTITY-001`, `DRF-MANIFEST-001`, and `DRF-EGRESS-001`; retain normative and observed sides separately.
-- Replace the conceptual wire/code placeholders only with validated source-linked fixtures and the required human review.
+- Replace the conceptual wire/code markers only with validated source-linked fixtures and the required human review.
