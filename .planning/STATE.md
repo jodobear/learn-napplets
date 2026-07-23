@@ -5,8 +5,8 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-07-PLAN.md
-last_updated: "2026-07-23T23:25:25.082Z"
+stopped_at: Completed 01-20-PLAN.md
+last_updated: "2026-07-23T23:30:46.264Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
@@ -28,7 +28,7 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 8 of 28
+Plan: 9 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
@@ -64,6 +64,7 @@ Progress: [███░░░░░░░] 25%
 | Phase 01 P05 | 289 | 2 tasks | 10 files |
 | Phase 01 P06 | 10m | 2 tasks | 12 files |
 | Phase 01 P07 | 8m | 1 tasks | 5 files |
+| Phase 01 P20 | 12m | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,7 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Unpinned ecosystem candidates remain blocked catalog records, not inferred protocol or implementation facts.
 - [Phase ?]: napplet/web requires distinct public release and repository/public-export evidence before a consume, wrap, or avoid decision.
 - [Phase ?]: Runtime dimensions are a source-acquisition checklist, not a selected teaching-host architecture.
+- [Phase ?]: SPK-L uses deterministic local refresh fixtures to route stable review work while retaining canonical evidence history.
 
 ### Pending Todos
 
@@ -111,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T23:25:25.074Z
-Stopped at: Completed 01-07-PLAN.md
+Last session: 2026-07-23T23:30:46.254Z
+Stopped at: Completed 01-20-PLAN.md
 Resume file: None
