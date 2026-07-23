@@ -156,5 +156,22 @@ class SourceEvidenceTests(unittest.TestCase):
             self.assertIn("cannot be verified without reviewer approval evidence", result.stdout)
 
 
+class BoundedCollectorTests(unittest.TestCase):
+    def test_collector_rejects_non_allowlisted_url_without_writing(self) -> None:
+        collector = ROOT / "tools" / "acquire-sources.py"
+        with tempfile.TemporaryDirectory() as temporary:
+            cache = Path(temporary) / "cache"
+            result = subprocess.run(
+                [sys.executable, str(collector), "--validate-url", "https://example.invalid/not-allowed", "--cache-root", str(cache)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("not allowlisted", result.stderr)
+            self.assertFalse(cache.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
