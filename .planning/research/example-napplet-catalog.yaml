@@ -1,0 +1,39 @@
+schemaVersion: 1
+catalog: example-napplet
+records:
+  - id: EXAMPLE-CANDIDATE-001
+    title: Public napplet/example candidates
+    candidateId: CAND-NAPPLET-WEB-REPOSITORY
+    state: blocked
+    repository: null
+    manifestPointer: null
+    revision: null
+    sourceRevision: null
+    userJob: Unestablished; no public example has immutable provenance.
+    domains: []
+    archetypes: []
+    conventions: []
+    runtimesTested: []
+    conformanceEvidence: []
+    license:
+      state: blocked
+      value: null
+      reason: No immutable public example source or license file is recorded.
+    adaptationPolicy: link-only-until-license-and-provenance-review
+    lessonRelevance: Blocked for real-example lessons; no example may be represented as conformant.
+    knownDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001]
+    compatibilityRefs: [CMP-BASELINE-001]
+    evidence:
+      candidateSource: CAND-NAPPLET-WEB-REPOSITORY
+      claim: CLM-CMP-EXAMPLE-001
+      policySources: [SRC-POLICY-001, SRC-POLICY-002]
+    blocker:
+      reason: Candidate examples lack public immutable repository, manifest, release/conformance, and license evidence.
+      impact: No example is suitable for adaptation, execution, or a v1 lesson.
+      openQuestion: OQ-UPSTREAM-BASELINE-001
+      refreshTrigger: Collect a public immutable example revision, manifest locator, license file, and conformance evidence.
+    observedAt: '2026-07-24T00:00:00Z'
+    review:
+      owner: research-owner
+      requiredRoles: [protocol-technical, content-learning]
+      status: pending

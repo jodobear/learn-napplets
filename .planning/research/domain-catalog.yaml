@@ -1,0 +1,28 @@
+schemaVersion: 1
+catalog: domain
+records:
+  - id: DOM-CANDIDATE-001
+    name: selected candidate domains
+    candidateId: CAND-DOMAINS
+    state: blocked
+    sourceRevision: null
+    maturity: unknown
+    operationsOrRole: Candidate taxonomy for later first-lab scope; no domain is selected.
+    implementationEvidence: []
+    compatibilityRefs: [CMP-BASELINE-001]
+    knownDrift: [DRF-METADATA-001, DRF-INTENT-001, DRF-CONFORMANCE-001]
+    v1LessonRelevance: Blocked for real-lab teaching; later scope synthesis may use only this disposition.
+    suitability: blocked
+    blocker:
+      reason: Candidate-source manifest has no immutable official registry/projection record.
+      impact: No real domain, teaching-host profile, or first lab may be selected.
+      openQuestion: OQ-UPSTREAM-BASELINE-001
+      refreshTrigger: Collect and review an official registry/projection revision:path record and compatibility evidence.
+    evidence:
+      candidateSource: CAND-DOMAINS
+      policySources: [SRC-POLICY-001, SRC-POLICY-002]
+      claim: CLM-UPSTREAM-BASELINE-001
+    review:
+      owner: research-owner
+      requiredRoles: [protocol-technical, content-learning]
+      status: pending

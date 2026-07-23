@@ -1,0 +1,28 @@
+schemaVersion: 1
+catalog: archetype-convention
+records:
+  - id: ARC-CANDIDATE-001
+    name: NAP registry/projection archetypes and conventions
+    candidateIds: [CAND-NAP-REGISTRY, CAND-NAP-PROJECTION, CAND-NAP-GOVERNANCE]
+    state: blocked
+    sourceRevision: null
+    maturity: unknown
+    operationsOrRole: Candidate taxonomy and app-to-app convention surface; labels and behavior are not concluded.
+    implementationEvidence: []
+    compatibilityRefs: [CMP-BASELINE-001]
+    knownDrift: [DRF-DISCOVERY-001, DRF-METADATA-001, DRF-INTENT-001]
+    v1LessonRelevance: Suitable only as an explicitly unresolved comparison topic, not as a teaching assertion.
+    suitability: blocked
+    blocker:
+      reason: Registry, projection, and governance candidates remain discovery pointers without immutable evidence.
+      impact: No archetype, convention, composition behavior, or capability mapping may be chosen.
+      openQuestion: OQ-UPSTREAM-BASELINE-001
+      refreshTrigger: Acquire official immutable registry/projection/governance records and separate normative from observed behavior.
+    evidence:
+      candidates: [CAND-NAP-REGISTRY, CAND-NAP-PROJECTION, CAND-NAP-GOVERNANCE]
+      policySources: [SRC-POLICY-001, SRC-POLICY-002]
+      claims: [CLM-DRF-METADATA-NORMATIVE, CLM-DRF-METADATA-OBSERVED]
+    review:
+      owner: research-owner
+      requiredRoles: [protocol-technical, content-learning]
+      status: pending
