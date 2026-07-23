@@ -93,6 +93,20 @@ All declared new artifacts, report outputs, schemas, fixtures, IDs, and planned 
 
 10. **Plan 01-28 does not prove concurrent consolidation is staged, locked, and atomically published.** `01-28-PLAN.md:105,119-121` sorts and reruns fragments, but does not require an exclusive lock, immutable input snapshot/staging directory, atomic replacement of all canonical outputs plus audit, or a failure-injection proof that a mid-merge error exposes neither partial canonical state nor a mismatched audit. Add those mechanics and a two-process contention test; the test must prove one process blocks or exits deterministically, a failed staged merge leaves every target byte-identical, and a successful merge publishes the full canonical set and audit together.
 
+11. **Plan 01-08 declares a downstream lesson as its own required artifact.** `01-08-PLAN.md:22-29,80-87` declares `LES-09`, while `01-27-PLAN.md:7-14` is its later-wave producer. Remove it from Plan 01-08's own required artifacts or label it explicitly as `produced_by: 01-27`; add a lint that each declared artifact is locally created or explicitly external/deferred.
+
+12. **Pre-execution spike validation can deadlock on evidence that exists only after execution.** `01-04-PLAN.md:85-92`, `01-15-PLAN.md:68-74,91-97`, and `01-17-PLAN.md:63-79` require measurement/raw-output completeness before the corresponding setup task creates it. Define `validate-spike --contract` for pre-run contracts and `validate-spike --complete` only after environment, output, digests, measurements, and replay evidence exist; change every setup task to use the contract mode.
+
+13. **Phase 2 has a circular ADR admission condition.** `phase-gates.yaml:53-56`, `ROADMAP.md:146`, `01-21-PLAN.md:15-17`, and `01-24-PLAN.md:159-164` require accepted/deferred ADRs before Phase 2 even though acceptance belongs to Phase 2. Require a passed Phase 1 baseline plus evidence-backed proposed ADRs at entry, then make an approval checkpoint block production scaffolding; add an ADR handoff with owner, approver, evidence IDs, deadline, interim restriction, and impact.
+
+14. **All-spike replay is claimed at closeout but not executable from the closeout verification.** `01-24-PLAN.md:145-151` requires replay but its verification command does not run any replay runner, contrary to `01-VALIDATION.md:29-34`. Have Plan 01-28 create a versioned `replay-manifest.yaml` for SPK-A–SPK-L and have Plan 01-24 run every applicable replay, failing on missing, stale, or threshold-failing evidence.
+
+15. **SPK-J/K/L can influence ADRs without crossing the canonical evidence boundary.** `01-18-PLAN.md:99-102`, `01-19-PLAN.md:103-106`, `01-20-PLAN.md:92-95`, `01-28-PLAN.md:110-121`, and `01-21-PLAN.md:57-65` allow raw report consumption while consolidation records report-only inputs as no-impact. Require typed schema-validated decision-evidence fragments for SPK-J/K/L and require Plans 01-21 through 01-23 to consume consolidation-issued canonical IDs only.
+
+16. **The canonical requirement-source map contains broken preserved-pack paths.** `.planning/traceability/requirement-source-map.yaml:8,10-12,18,22` references a nonexistent `03-LEARNING-AND-INTERACTION-DESIGN.md`, while the pinned pack manifest lists different files. Correct the mappings before execution and add a Plan 01-02 or Plan 01-24 traceability test that resolves every mapped immutable-pack path and digest.
+
+17. **Core-concept and ecosystem-inventory exit criteria are not mechanically enforced.** The preserved requirements at `docs/learn-napplets-codex-pack-v3/docs/04-RESEARCH-PLAN.md:50-58,432-449` demand concept source packs and ecosystem dispositions, but `01-05-PLAN.md:77-85`, `01-25-PLAN.md:93-100`, and `01-24-PLAN.md:125-140` do not enforce them. Add a revision-pinned ecosystem inventory and core-concept map; require every concept to resolve to pinned `SRC-*`/`CLM-*` records and every discovered item to have an inventory disposition before closeout.
+
 ### Current actionable non-HIGH concerns
 
 1. **Toolchain provenance is below the evidence floor.** `01-01-PLAN.md:73-77,85,95,97`, `01-02-PLAN.md:90`, and `01-05-PLAN.md:85` must require release-artifact URL plus SHA-256/integrity and license source for PyYAML/jsonschema/Playwright; browser vendor/version or Playwright browser-revision provenance; the explicit Draft 2020-12 `$schema` URI and parser/validator record IDs; and Git executable version, commit OID, blob OID, and `revision:path` for acquisition-log entries.
@@ -101,6 +115,28 @@ All declared new artifacts, report outputs, schemas, fixtures, IDs, and planned 
 
 3. **Plan 01-28 lacks an SPK-H output-provenance negative test.** `01-28-PLAN.md:105,117,119` validates SPK-H input provenance but does not prove that a generated `security-egress-findings.md` with a missing, altered, or mismatched upstream-fact/browser-observation/policy/question source binding is rejected. Add a failing fixture and acceptance criterion that validates every output claim's typed link back to the immutable SPK-H fragment, report, and canonical source/claim record, and fails before publication on a broken link.
 
+4. **The stated Wave-7 barrier is missing from executable dependencies.** `ROADMAP.md:90-109`, `01-09-PLAN.md:3-6`, and `01-20-PLAN.md:3-6` describe Wave 8 as blocked on all Wave-7 work but omit Plan 01-20 from the dependencies. Add `01-20` to each Wave-8 plan or amend the roadmap to describe independent tracks and why source-freshness work need only precede consolidation.
+
+5. **SPK-H may not test SPK-C's selected boundary model.** `01-16-PLAN.md:68-83` and `01-11-PLAN.md:69-85` run concurrently although H claims the selected iframe/loading model. Make Plan 01-16 depend on Plan 01-11, establish an earlier shared versioned loading-model contract, or rerun SPK-H under the model selected by SPK-C.
+
+6. **Verification commands can escape the approved isolated research toolchain.** `01-01-PLAN.md:81-98`, `01-02-PLAN.md:91,107`, `01-24-PLAN.md:139,149,162`, and `01-VALIDATION.md:23-32` create an isolated environment but later use ambient `python3`. Emit a stable approved interpreter wrapper and require it in every verification/replay command with recorded version/hash.
+
+7. **Evidence and maturity vocabularies lack a validated lossless mapping.** `evidence-policy.md:9-18`, `AGENTS.md:94-120`, `01-02-PLAN.md:81-108`, and `01-05-PLAN.md:95-102` can collapse upstream proposal or implementation observation into a generic fact. Preserve raw source labels and validate mappings to canonical `assertionKind`, `evidenceClass`, and `maturity`; render both source origin and maturity.
+
+8. **ADR, lesson-packet, and teaching-scope checks remain mostly structural.** `01-21-PLAN.md:75-87`, `01-22-PLAN.md:77-89`, `01-23-PLAN.md:79-85`, `01-25-PLAN.md:92-100`, and `01-26-PLAN.md:63-77` need validated contracts and negative fixtures for required semantic fields, canonical IDs, uncertainty, impacts, alternatives, approvals, revisit triggers, audience coverage, and safe fallback.
+
+9. **Impact-fragment semantic validation arrives after fragments are produced.** `01-15-PLAN.md:91-98`, `01-16-PLAN.md:77-84`, and `01-28-PLAN.md:96-107` use early string-presence checks. Move the fragment schema, parser, cross-record/digest validator, and negative fixtures to Plan 01-04 or another prerequisite before the parallel spike wave.
+
+10. **Blocking-claim corroboration and fallback policy are not machine-verifiable.** `01-CONTEXT.md:31-38,47-50`, `01-02-PLAN.md:101-108`, and `01-24-PLAN.md:130-151` must require typed primary and independent corroboration links; every unresolved blocker accepted in a passed outcome must contain approved safe fallback/defer path, scope, approver, date, and revisit criterion.
+
+11. **SPK-I/J omit required cross-browser and adversarial coverage.** `01-CONTEXT.md:64-67`, `01-17-PLAN.md:64-79`, and `01-18-PLAN.md:65-70,87-93` must add candidate × Chromium × Firefox evidence, keyboard/reduced-motion/screen-reader/static-equivalence checks, and hostile-input tests proving learner content cannot reach dynamic execution, script injection, or a trusted-host sentinel.
+
+12. **The final lesson count is directory-wide rather than index-defined.** `01-25-PLAN.md:93-110` should treat indexed LES filenames as the only authoritative inventory and constrain or remove raw `*.md` counting. (LOW)
+
+13. **Phase/source terminology is easy to misread during approvals.** `phase-crosswalk.md:3-17` and `01-01-PLAN.md:2-5` should add `gsd_phase: 1`, `source_phase: 0`, and `adr_status_limit: proposed` to every Phase 1 plan frontmatter. (LOW)
+
+14. **SPK-K needs an explicit sandbox-write exception decision.** `01-19-PLAN.md:74-98` conflicts with the read-only live-probe preference in `01-CONTEXT.md:25-27,40-44`; make it dry-run/local only or record named target, classification, cleanup, retention, and sign-off controls. (LOW)
+
 ## Consensus Summary
 
-Only the requested Codex lane was selected, and it failed before producing review content; therefore no cross-AI agreement can be claimed. The source-grounding pass independently verifies the listed evidence-provenance defects against the effective drift guard. The Phase 1 baseline validator passes with the expected pending-deliverables warning, but that does not resolve any of the concerns above or authorize execution.
+Only the requested Codex lane was selected, and it failed before producing review content; therefore no cross-AI agreement can be claimed. The source-grounding pass and independent all-plan audit verify the listed evidence-provenance, lifecycle, dependency, replay, consolidation, and gate defects against canonical planning and the effective drift guard. The Phase 1 baseline validator passes with the expected pending-deliverables warning, but that does not resolve any concern above or authorize execution.
