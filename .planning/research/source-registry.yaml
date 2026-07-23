@@ -1,0 +1,31 @@
+schemaVersion: 1
+sources:
+  - id: SRC-POLICY-001
+    kind: source
+    collectionStatus: seed
+    rawOrigin: proposal
+    repository: learn-napplets
+    officialUrl: https://github.com/jodobear/learn-napplets
+    immutableUrl: https://github.com/jodobear/learn-napplets/blob/c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0/docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    ref: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Source and claim record model
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    retrievedAt: 2026-07-24T00:00:00Z
+    authorityTier: planning-archive
+    evidenceClass: proposal
+    maturity: draft
+    uncertainty:
+      state: material
+      reason: Preserved source-pack seed; it is not current upstream protocol proof.
+    impacts:
+      requirements: [EVID-01, OPER-03]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: Evidence policy revision or digest change.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical]

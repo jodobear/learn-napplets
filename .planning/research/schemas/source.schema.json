@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-napplets.local/schemas/source.schema.json",
+  "title": "Phase 1 immutable source record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "collectionStatus", "rawOrigin", "repository", "officialUrl", "immutableUrl", "ref", "commitSha", "path", "locator", "contentSha256", "retrievedAt", "authorityTier", "evidenceClass", "maturity", "uncertainty", "impacts", "freshness", "review"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"},
+    "kind": {"const": "source"},
+    "collectionStatus": {"enum": ["seed", "collected", "unavailable"]},
+    "rawOrigin": {"enum": ["upstream-fact", "proposal", "observed-implementation", "project-policy", "inference"]},
+    "repository": {"type": "string", "minLength": 1},
+    "officialUrl": {"type": "string", "format": "uri"},
+    "immutableUrl": {"type": "string", "format": "uri"},
+    "ref": {"type": "string", "minLength": 1},
+    "commitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "path": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "retrievedAt": {"type": "string", "format": "date-time"},
+    "authorityTier": {"type": "string", "minLength": 1},
+    "evidenceClass": {"enum": ["specification", "proposal", "implementation", "measurement", "project-policy", "inference"]},
+    "maturity": {"enum": ["accepted", "draft", "experimental", "implementation-specific", "unknown"]},
+    "uncertainty": {"type": "object", "additionalProperties": false, "required": ["state", "reason"], "properties": {"state": {"enum": ["none", "limited", "material"]}, "reason": {"type": "string", "minLength": 1}}},
+    "impacts": {"type": "object", "additionalProperties": false, "required": ["requirements", "phases"], "properties": {"requirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}}, "phases": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^\\d{2}$"}}}},
+    "freshness": {"type": "object", "additionalProperties": false, "required": ["state", "refreshTrigger"], "properties": {"state": {"enum": ["current", "provisional", "stale", "unavailable"]}, "refreshTrigger": {"type": "string", "minLength": 1}}},
+    "review": {"type": "object", "additionalProperties": false, "required": ["owner", "status", "requiredRoles"], "properties": {"owner": {"type": "string", "minLength": 1}, "status": {"enum": ["pending", "reviewed", "approved"]}, "requiredRoles": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}
+  }
+}
