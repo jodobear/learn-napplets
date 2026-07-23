@@ -1,0 +1,37 @@
+schemaVersion: 1
+id: SPK-A-WORKSPACE
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: A public-site-first repository with isolated shared content, host-only tooling, and multiple guest entry candidates can be compared reproducibly as text fixtures without creating a production workspace.
+variables:
+  independent: [candidate workspace structure]
+  dependent: [criteria score, blocked-marker count, deployment compatibility disposition]
+  controlled: [text-only fixture, repository-root marker gate, approved Phase 1 Python runner, public-site and host/guest criteria]
+commands:
+  - tools/phase1-python -c "from pathlib import Path; text=Path('.planning/spikes/spk-a-workspace/fixture.md').read_text(); assert 'Candidate A' in text and 'productionMarkersBlockedBeforePhase3' in text; print('fixture-contract-ok')"
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-a-workspace --complete
+  - tools/phase1-python tools/validate-planning.py
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    relation: measures
+    plan: 01-09
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    plan: 01-09
+successThreshold: Five identical local fixture evaluations identify a candidate that keeps public-site, shared-content, host-only, and multi-guest boundaries explicit; records zero repository-root production markers; and leaves an ADR 0001 recommendation proposed.
+failureOutcome: If no candidate preserves the declared boundaries or the marker gate detects a production marker, reject the candidate and do not initialize a workspace.
+blockedOutcome: If the text fixture cannot establish a decision-relevant boundary or deployment comparison, record an impact-scoped blocker for EVID-04 and ADR-0001 without creating a scaffold.
+replay:
+  input: fixture.md
+  command: Run the declared local fixture assertion five times, compare its output digest, then run the complete spike and planning validators.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: This text-only comparison measures declared repository boundaries, not package-manager, framework, bundle, or deployed-runtime behavior.
+recommendation: Compare Candidate A, Candidate B, and Candidate C only as non-production fixture text; use the scored outcome as proposed ADR-0001 evidence pending human review.
+disposition: retain-as-fixture
