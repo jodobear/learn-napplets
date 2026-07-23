@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-20-PLAN.md
-last_updated: "2026-07-23T23:30:46.264Z"
+stopped_at: Completed 01-26-PLAN.md
+last_updated: "2026-07-23T23:35:14.929Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 7
+  completed_plans: 9
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 9 of 28
+Plan: 10 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [███░░░░░░░] 25%
+Progress: [███░░░░░░░] 32%
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Progress: [███░░░░░░░] 25%
 | Phase 01 P06 | 10m | 2 tasks | 12 files |
 | Phase 01 P07 | 8m | 1 tasks | 5 files |
 | Phase 01 P20 | 12m | 2 tasks | 6 files |
+| Phase 01 P26 | 175s | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: napplet/web requires distinct public release and repository/public-export evidence before a consume, wrap, or avoid decision.
 - [Phase ?]: Runtime dimensions are a source-acquisition checklist, not a selected teaching-host architecture.
 - [Phase ?]: SPK-L uses deterministic local refresh fixtures to route stable review work while retaining canonical evidence history.
+- [Phase ?]: All six audiences retain source, claim, drift, and open-question IDs rather than settling protocol behavior.
+- [Phase ?]: Learn FIPS, MDN Learning, and The Odin Project are excluded until complete immutable comparator records exist.
+- [Phase ?]: The first real-lab operation and teaching-host profile are blocked with a deterministic static fallback.
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T23:30:46.254Z
-Stopped at: Completed 01-20-PLAN.md
+Last session: 2026-07-23T23:35:14.921Z
+Stopped at: Completed 01-26-PLAN.md
 Resume file: None

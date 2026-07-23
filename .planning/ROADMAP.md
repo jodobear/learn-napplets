@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 7/28 plans executed
+**Plans**: 9/28 plans executed
 
 Plans:
 **Wave 1**
@@ -89,8 +89,8 @@ Plans:
 
 **Wave 7** *(blocked on Wave 6 completion)*
 
-- [ ] 01-26-PLAN.md — Synthesize audience, pedagogy, delivery, and first teaching scope.
-- [ ] 01-20-PLAN.md — Run SPK-L source-freshness evidence.
+- [x] 01-26-PLAN.md — Synthesize audience, pedagogy, delivery, and first teaching scope.
+- [x] 01-20-PLAN.md — Run SPK-L source-freshness evidence.
 
 **Wave 8** *(blocked on Wave 7 completion, including Plan 01-20 source-freshness evidence)*
 
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 7/28 | In Progress|  |
+| 1. Research and Truth Baseline | 9/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
