@@ -1,0 +1,21 @@
+schemaVersion: 1
+spikeId: SPK-A-WORKSPACE
+replayDate: '2026-07-24'
+fixtureSha256: eac2a8b0ffebcba4e38466f0a3ed60414d00ae40ff88d9c2eaf0a068085b5319
+samplesRequired: 5
+summaryStatistic: median
+replay:
+  command: fixture assertion from metadata.yaml
+  values:
+    - {sample: 1, exitCode: 0, output: fixture-contract-ok, candidateAScore: 7, rootProductionMarkers: 0}
+    - {sample: 2, exitCode: 0, output: fixture-contract-ok, candidateAScore: 7, rootProductionMarkers: 0}
+    - {sample: 3, exitCode: 0, output: fixture-contract-ok, candidateAScore: 7, rootProductionMarkers: 0}
+    - {sample: 4, exitCode: 0, output: fixture-contract-ok, candidateAScore: 7, rootProductionMarkers: 0}
+    - {sample: 5, exitCode: 0, output: fixture-contract-ok, candidateAScore: 7, rootProductionMarkers: 0}
+  outputSha256: ed0763689e41050886b0624fa0f872fc176950850b88a605e262dc624f24c196
+candidateScores:
+  candidateA: 7
+  candidateB: 0
+  candidateC: 7
+result: passed
+conclusion: Candidate A is the narrowest qualifying text-only boundary model; Candidate C remains a broader equivalent future-workspace hypothesis and Candidate B fails the declared criteria.

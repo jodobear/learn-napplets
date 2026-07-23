@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "ENV-SPK-A-WORKSPACE",
+  "kind": "environment",
+  "os": "Fedora Linux 43 (Server Edition), Linux 7.1.3-101.fc43.x86_64 x86_64",
+  "container": "not detected",
+  "browsers": [
+    {"family": "Chromium", "version": "150.0.7871.124", "executableSha256": "aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec"},
+    {"family": "Firefox", "version": "152.0.4", "executableSha256": "12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e"}
+  ],
+  "runtimes": {"python": "3.14.3", "node": "v22.22.0"},
+  "packageManager": {"name": "npm", "version": "10.9.4"},
+  "dependencies": [
+    {"name": "PyYAML", "version": "6.0.3", "sha256": "c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5"},
+    {"name": "jsonschema", "version": "4.26.0", "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce"}
+  ],
+  "environmentFlags": ["no network probe", "no package installation", "no production workspace initialization"],
+  "commandHashes": [
+    {"command": "fixture assertion", "sha256": "eb70defaed3c2ecae98a9571f91e87b952910e0b65c69586fb01b487f061decb"},
+    {"command": "tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-a-workspace --complete", "sha256": "53cb86f880b2f97161adb6f12206b78c6987b248fb3ba936a3d71616045ed1d2"},
+    {"command": "tools/phase1-python tools/validate-planning.py", "sha256": "3e69fef33bc7c804ab785dd0b5bae84208adb70d54512472d01b1f0ff1d08a8d"}
+  ]
+}

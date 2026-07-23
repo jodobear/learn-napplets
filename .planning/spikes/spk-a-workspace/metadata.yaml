@@ -35,3 +35,30 @@ uncertainty:
   reason: This text-only comparison measures declared repository boundaries, not package-manager, framework, bundle, or deployed-runtime behavior.
 recommendation: Compare Candidate A, Candidate B, and Candidate C only as non-production fixture text; use the scored outcome as proposed ADR-0001 evidence pending human review.
 disposition: retain-as-fixture
+environmentFacts:
+  runner: tools/phase1-python Python 3.14.3
+  fixture: local-only text comparison; no layout is materialized
+measurements:
+  - name: candidate-a-boundary-score
+    nondeterministic: false
+    rawValues: [7, 7, 7, 7, 7]
+    range: {min: 7, max: 7}
+    median: 7
+  - name: root-production-marker-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+rawOutputDigests:
+  - path: measurements.yaml
+    sha256: aa24ff4fec4f52c4bcdb7e28c62b0357e386472b36fdc581425e5a546af2a44e
+replayResult:
+  status: passed
+  outputDigest: ed0763689e41050886b0624fa0f872fc176950850b88a605e262dc624f24c196
+evidenceLinks:
+  - kind: measurement
+    path: measurements.yaml
+    sha256: aa24ff4fec4f52c4bcdb7e28c62b0357e386472b36fdc581425e5a546af2a44e
+  - kind: report
+    path: report.md
+    sha256: 5a3d445a81ceb49c1335abbd6ee5abb33b6027b6327763d20fba273608e90e4b
