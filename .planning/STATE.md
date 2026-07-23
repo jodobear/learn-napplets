@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-06-PLAN.md
-last_updated: "2026-07-23T23:21:43.197Z"
+stopped_at: Completed 01-07-PLAN.md
+last_updated: "2026-07-23T23:25:25.082Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 7 of 28
+Plan: 8 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [██░░░░░░░░] 21%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [██░░░░░░░░] 21%
 | Phase 01 P04 | 14m | 2 tasks | 10 files |
 | Phase 01 P05 | 289 | 2 tasks | 10 files |
 | Phase 01 P06 | 10m | 2 tasks | 12 files |
+| Phase 01 P07 | 8m | 1 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Project policy controls evidence handling but does not prove upstream protocol behavior.
 - [Phase ?]: All mandatory drift checks remain blocked until official immutable upstream baselines are collected; archived planning questions never become protocol facts.
 - [Phase ?]: Refresh comparison emits stable review work and preserves canonical evidence records for human interpretation.
+- [Phase ?]: Unpinned ecosystem candidates remain blocked catalog records, not inferred protocol or implementation facts.
+- [Phase ?]: napplet/web requires distinct public release and repository/public-export evidence before a consume, wrap, or avoid decision.
+- [Phase ?]: Runtime dimensions are a source-acquisition checklist, not a selected teaching-host architecture.
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T23:21:43.190Z
-Stopped at: Completed 01-06-PLAN.md
+Last session: 2026-07-23T23:25:25.074Z
+Stopped at: Completed 01-07-PLAN.md
 Resume file: None
