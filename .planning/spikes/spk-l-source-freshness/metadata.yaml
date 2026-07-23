@@ -1,0 +1,36 @@
+schemaVersion: 1
+id: SPK-L-SOURCE-FRESHNESS
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: Local immutable-identity comparisons can deterministically create scoped human review work without rewriting canonical evidence.
+variables:
+  independent: [fixture scenario and observed source identity]
+  dependent: [comparison outcome, stable review-work ID, impacted record IDs, canonical-record digest]
+  controlled: [local fixture inputs, source registry, claims, drift register, open questions, refresh tool]
+commands:
+  - tools/phase1-python tools/refresh-sources.py --registry .planning/research/source-registry.yaml --claims .planning/research/claims.yaml --drift .planning/research/drift-register.yaml --questions .planning/research/open-questions.yaml --comparison <scenario>.json --report <scenario>.md
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-l-source-freshness --complete
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    relation: measures
+    plan: 01-20
+  - sourceId: SRC-POLICY-002
+    relation: measures
+    plan: 01-20
+successThreshold: All seven scenarios produce declared deterministic outcomes; changed, moved, unavailable, ambiguous, and concurrent cases preserve prior identity and route only review work.
+failureOutcome: Any canonical claim, classification, maturity, approval, or ADR rewrite rejects the refresh design.
+blockedOutcome: If fixture replay cannot retain history or surface a bounded concurrent conflict, ADR 0011 remains proposed and blocked for operational adoption.
+replay:
+  input: fixture.yaml
+  command: tools/phase1-python tools/refresh-sources.py against each local fixture comparison input
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: limited
+  reason: Fixture evidence proves local routing semantics only, not the meaning of changed upstream content.
+recommendation: Retain this non-production fixture as ADR 0011 freshness-tier/cadence input; require human review for every non-unchanged outcome.
+disposition: retain-as-fixture

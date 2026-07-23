@@ -1,0 +1,35 @@
+schemaVersion: 1
+spikeId: SPK-L-SOURCE-FRESHNESS
+localOnly: true
+canonicalInputs:
+  registry: .planning/research/source-registry.yaml
+  claims: .planning/research/claims.yaml
+  drift: .planning/research/drift-register.yaml
+  questions: .planning/research/open-questions.yaml
+sources:
+  SRC-POLICY-001:
+    affected: [CLM-POLICY-001, CLM-UPSTREAM-BASELINE-001, DRF-DISCOVERY-001, OQ-UPSTREAM-BASELINE-001, LES-001, SPK-L-SOURCE-FRESHNESS, ADR-0011, '01']
+  SRC-POLICY-002:
+    affected: [CLM-POLICY-001, CLM-DRF-DISCOVERY-NORMATIVE, DRF-DISCOVERY-001, OQ-UPSTREAM-BASELINE-001, LES-001, SPK-L-SOURCE-FRESHNESS, ADR-0011, '01']
+scenarios:
+  - id: unchanged
+    comparison: [{id: SRC-POLICY-001, commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0, path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md, contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb}]
+    expected: {outcome: unchanged, reviewWork: none, staleOrBlocked: retained, history: retained, idempotent: true, adr0011: proposed-no-change}
+  - id: changed-digest
+    comparison: [{id: SRC-POLICY-001, commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0, path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md, contentSha256: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff}]
+    expected: {outcome: changed, reviewWork: stable-RFW, staleOrBlocked: stale-pending-review, history: retained, adr0011: proposed-review-required}
+  - id: moved-path-replacement
+    comparison: [{id: SRC-POLICY-001, commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0, path: moved/02-UPSTREAM-TRUTH-AND-DRIFT.md, contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb}]
+    expected: {outcome: changed, reviewWork: stable-RFW-with-old-pointer, staleOrBlocked: stale-pending-review, history: old-identity-and-replacement-retained, adr0011: proposed-review-required}
+  - id: unavailable
+    comparison: [{id: SRC-POLICY-002, outcome: unavailable}]
+    expected: {outcome: unavailable, reviewWork: stable-RFW, staleOrBlocked: blocked-pending-review, history: retained, adr0011: proposed-blocked}
+  - id: ambiguous
+    comparison: [{id: SRC-POLICY-001, outcome: ambiguous}]
+    expected: {outcome: ambiguous, reviewWork: stable-RFW, staleOrBlocked: blocked-pending-review, history: retained, adr0011: proposed-blocked}
+  - id: repeated-run
+    comparison: [{id: SRC-POLICY-001, commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0, path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md, contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb}]
+    expected: {outcome: unchanged, reviewWork: no-duplicate, staleOrBlocked: retained, history: retained, idempotent: true, adr0011: proposed-no-change}
+  - id: concurrent-refresh
+    comparison: [{id: SRC-POLICY-001, outcome: ambiguous}]
+    expected: {outcome: bounded-lock-conflict, reviewWork: none-until-retry, staleOrBlocked: canonical-records-uncorrupted, history: retained, concurrency: visible-conflict, adr0011: proposed-blocked}
