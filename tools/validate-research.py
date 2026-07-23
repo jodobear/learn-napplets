@@ -348,24 +348,34 @@ def validate_lessons(index: Path, required_present: int) -> list[str]:
     if not isinstance(lessons, list) or not all(isinstance(item, dict) for item in lessons):
         return ["ERROR LES002: lesson index requires a lessons record list"]
     errors: list[str] = []
-    seen: set[str] = set()
+    seen_ids: set[str] = set()
+    seen_filenames: set[str] = set()
+    present = 0
     for lesson in lessons:
         lesson_id = lesson.get("id")
         filename = lesson.get("filename")
+        status = lesson.get("status", "present")
         if not isinstance(lesson_id, str) or not re.fullmatch(r"LES-\d{3}", lesson_id):
             errors.append("ERROR LES003: lesson index requires canonical LES-* ID")
             continue
-        if lesson_id in seen:
+        if lesson_id in seen_ids:
             errors.append(f"ERROR LES004: duplicate lesson ID {lesson_id}")
-        seen.add(lesson_id)
-        expected_filename = f"{lesson_id}.md"
-        if filename != expected_filename:
-            errors.append(f"ERROR LES005: filename for {lesson_id} must be {expected_filename}")
-        elif not (index.parent / "packets" / expected_filename).is_file() and not (index.parent / expected_filename).is_file():
-            errors.append(f"ERROR LES006: indexed lesson file is missing: {expected_filename}")
-    present = len(list(index.parent.rglob("LES-*.md")))
+        seen_ids.add(lesson_id)
+        if not isinstance(filename, str) or Path(filename).name != filename or not filename.endswith(".md"):
+            errors.append(f"ERROR LES005: filename for {lesson_id} must be a local Markdown filename")
+            continue
+        if filename in seen_filenames:
+            errors.append(f"ERROR LES005: duplicate lesson filename {filename}")
+        seen_filenames.add(filename)
+        if status not in {"present", "planned"}:
+            errors.append(f"ERROR LES006: lesson {lesson_id} status must be present or planned")
+            continue
+        if status == "present":
+            present += 1
+            if not (index.parent / "packets" / filename).is_file() and not (index.parent / filename).is_file():
+                errors.append(f"ERROR LES007: present lesson file is missing: {filename}")
     if present != required_present:
-        errors.append(f"ERROR LES007: required-present {required_present} does not equal {present} packets on disk")
+        errors.append(f"ERROR LES008: required-present {required_present} does not equal {present} indexed present packets")
     return errors
 
 

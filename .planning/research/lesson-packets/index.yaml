@@ -1,0 +1,42 @@
+schemaVersion: 1
+inventoryStatus: staged
+lessons:
+  - id: LES-001
+    filename: 01-nostr-client-taken-apart.md
+    status: present
+  - id: LES-002
+    filename: 02-cast-and-mental-model.md
+    status: present
+  - id: LES-003
+    filename: 03-nostr-underneath.md
+    status: present
+  - id: LES-004
+    filename: 04-sandbox-boundary.md
+    status: present
+  - id: LES-005
+    filename: 05-one-request-across-boundary.md
+    status: planned
+  - id: LES-006
+    filename: 06-capabilities-not-ambient-authority.md
+    status: planned
+  - id: LES-007
+    filename: 07-identity-and-distribution.md
+    status: planned
+  - id: LES-008
+    filename: 08-apps-that-cooperate.md
+    status: planned
+  - id: LES-009
+    filename: 09-designing-a-good-napplet.md
+    status: planned
+  - id: LES-010
+    filename: 10-anatomy-of-a-napplet.md
+    status: planned
+  - id: LES-011
+    filename: 11-build-test-and-publish.md
+    status: planned
+  - id: LES-012
+    filename: 12-inside-a-runtime.md
+    status: planned
+  - id: LES-013
+    filename: 13-evolving-the-protocol.md
+    status: planned

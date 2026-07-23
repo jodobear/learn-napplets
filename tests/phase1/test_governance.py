@@ -83,23 +83,26 @@ class GovernanceValidationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("ERROR RPT005", result.stdout)
 
-    def test_lesson_index_rejects_duplicate_ids_filename_mismatch_and_bad_required_count(self) -> None:
+    def test_lesson_index_validates_staged_inventory_and_present_count(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             packets = root / "packets"
             packets.mkdir()
-            (packets / "LES-001.md").write_text("# Lesson 1\n", encoding="utf-8")
+            (packets / "01-nostr-client-taken-apart.md").write_text("# Lesson 1\n", encoding="utf-8")
             index = root / "index.yaml"
-            index.write_text(yaml.safe_dump({"lessons": [{"id": "LES-001", "filename": "LES-001.md"}]}), encoding="utf-8")
+            index.write_text(yaml.safe_dump({"lessons": [
+                {"id": "LES-001", "filename": "01-nostr-client-taken-apart.md", "status": "present"},
+                {"id": "LES-002", "filename": "02-cast-and-mental-model.md", "status": "planned"},
+            ]}), encoding="utf-8")
             self.assertEqual(self.run_cli("validate-lessons", "--index", str(index), "--required-present", "1").returncode, 0)
-            index.write_text(yaml.safe_dump({"lessons": [{"id": "LES-001", "filename": "LES-001.md"}, {"id": "LES-001", "filename": "wrong.md"}]}), encoding="utf-8")
+            index.write_text(yaml.safe_dump({"lessons": [{"id": "LES-001", "filename": "01-nostr-client-taken-apart.md"}, {"id": "LES-001", "filename": "wrong.md"}]}), encoding="utf-8")
             result = self.run_cli("validate-lessons", "--index", str(index), "--required-present", "1")
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("duplicate", result.stdout)
-            index.write_text(yaml.safe_dump({"lessons": [{"id": "LES-001", "filename": "wrong.md"}]}), encoding="utf-8")
+            index.write_text(yaml.safe_dump({"lessons": [{"id": "LES-001", "filename": "wrong.md", "status": "unknown"}]}), encoding="utf-8")
             result = self.run_cli("validate-lessons", "--index", str(index), "--required-present", "2")
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("filename", result.stdout)
+            self.assertIn("status", result.stdout)
 
     def test_breaking_schema_change_requires_versioned_deterministic_migration_notes(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
