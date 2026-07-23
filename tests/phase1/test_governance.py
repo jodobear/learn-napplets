@@ -67,10 +67,21 @@ class GovernanceValidationTests(unittest.TestCase):
             self.assertEqual(self.run_cli("validate-report", str(path)).returncode, 0)
             for heading in HEADINGS:
                 with self.subTest(heading=heading):
-                    path.write_text(report_text().replace(f"## {heading}\n\nEvidence for {heading}.\n\n", ""), encoding="utf-8")
+                    path.write_text(report_text().replace(f"## {heading}", "# Removed heading"), encoding="utf-8")
                     result = self.run_cli("validate-report", str(path))
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn(heading, result.stdout)
+
+    def test_spike_report_rejects_mismatched_declared_and_metadata_id(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp) / "spk-test-001"
+            directory.mkdir()
+            (directory / "metadata.yaml").write_text("id: SPK-OTHER-001\n", encoding="utf-8")
+            report = directory / "report.md"
+            report.write_text(report_text("SPK-TEST-001"), encoding="utf-8")
+            result = self.run_cli("validate-report", str(report))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("ERROR RPT005", result.stdout)
 
     def test_lesson_index_rejects_duplicate_ids_filename_mismatch_and_bad_required_count(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -89,6 +100,14 @@ class GovernanceValidationTests(unittest.TestCase):
             result = self.run_cli("validate-lessons", "--index", str(index), "--required-present", "2")
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("filename", result.stdout)
+
+    def test_breaking_schema_change_requires_versioned_deterministic_migration_notes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "migration.md"
+            path.write_text("Schema: spike.schema.json\nVersion: 1 -> 2\n", encoding="utf-8")
+            result = self.run_cli("validate-migration", str(path))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Deterministic migration", result.stdout)
 
     def test_adr_requires_proposed_status_and_resolvable_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -267,6 +268,213 @@ def validate_spike(directory: Path, mode: str) -> list[str]:
     return errors
 
 
+REPORT_CONTRACT = ROOT / ".planning/research/schemas/report-contract.yaml"
+
+
+def report_contract() -> dict[str, Any]:
+    return load_yaml(REPORT_CONTRACT)
+
+
+def validate_report(path: Path, planning_root: Path | None = None) -> list[str]:
+    """Check only H2 headings and, for spikes, the declared metadata identity."""
+    errors: list[str] = []
+    try:
+        contract = report_contract()
+        text = path.read_text(encoding="utf-8")
+    except (OSError, ValueError) as exc:
+        return [f"ERROR RPT001: cannot read report contract or report: {exc}"]
+    headings = re.findall(r"^## (.+?)\s*$", text, flags=re.MULTILINE)
+    required = contract.get("canonicalHeadings", [])
+    if headings != required:
+        for index, heading in enumerate(required):
+            if index >= len(headings) or headings[index] != heading:
+                errors.append(f"ERROR RPT002: required H2 heading {heading!r} is missing, duplicated, or out of order")
+                break
+        if len(headings) > len(required):
+            errors.append("ERROR RPT003: report has non-canonical or duplicate H2 headings")
+    if path.name == "report.md" and path.parent.name.startswith("spk-"):
+        match = re.search(r"^SPK ID:\s*(SPK-[A-Z0-9][A-Z0-9-]*)\s*$", text, flags=re.MULTILINE)
+        metadata_path = re.search(r"^Metadata path:\s*(.+?)\s*$", text, flags=re.MULTILINE)
+        if match is None or metadata_path is None or metadata_path.group(1) != "metadata.yaml":
+            errors.append("ERROR RPT004: spike report requires SPK ID and Metadata path: metadata.yaml declarations")
+        else:
+            try:
+                metadata = load_yaml(path.parent / metadata_path.group(1))
+                if metadata.get("id") != match.group(1) or path.parent.name != match.group(1).lower():
+                    errors.append("ERROR RPT005: spike report SPK ID, metadata ID, and directory must match")
+                errors.extend(validate_spike(path.parent, "complete"))
+            except ValueError as exc:
+                errors.append(f"ERROR RPT006: spike metadata does not resolve: {exc}")
+    return errors
+
+
+def validate_reports(planning_root: Path) -> list[str]:
+    try:
+        contract = report_contract()
+    except ValueError as exc:
+        return [f"ERROR RPT007: cannot load report contract: {exc}"]
+    errors: list[str] = []
+    discovery = contract.get("reportDiscovery", {})
+    for pattern in discovery.get("researchPatterns", []):
+        for path in sorted(planning_root.glob(pattern)):
+            errors.extend(validate_report(path, planning_root))
+    spike_pattern = discovery.get("spikePattern")
+    if isinstance(spike_pattern, str):
+        for path in sorted(planning_root.glob(spike_pattern)):
+            errors.extend(validate_report(path, planning_root))
+    return errors
+
+
+def validate_governance(path: Path) -> list[str]:
+    try:
+        record = load_yaml(path)
+    except ValueError as exc:
+        return [f"ERROR GOV001: {exc}"]
+    errors = schema_errors(ROOT / ".planning/research/schemas/phase-governance.schema.json", [record])
+    approval = record.get("approval", {})
+    if record.get("phaseResult") == "passed" and isinstance(approval, dict) and approval.get("status") != "approved":
+        errors.append("ERROR GOV002: a passed phase result requires separate dated human approval; validation alone is insufficient")
+    if record.get("owner") == record.get("requiredApprover"):
+        errors.append("ERROR GOV003: responsible owner and required approver must be separate roles")
+    return errors
+
+
+def validate_lessons(index: Path, required_present: int) -> list[str]:
+    try:
+        document = load_yaml(index)
+    except ValueError as exc:
+        return [f"ERROR LES001: {exc}"]
+    lessons = document.get("lessons")
+    if not isinstance(lessons, list) or not all(isinstance(item, dict) for item in lessons):
+        return ["ERROR LES002: lesson index requires a lessons record list"]
+    errors: list[str] = []
+    seen: set[str] = set()
+    for lesson in lessons:
+        lesson_id = lesson.get("id")
+        filename = lesson.get("filename")
+        if not isinstance(lesson_id, str) or not re.fullmatch(r"LES-\d{3}", lesson_id):
+            errors.append("ERROR LES003: lesson index requires canonical LES-* ID")
+            continue
+        if lesson_id in seen:
+            errors.append(f"ERROR LES004: duplicate lesson ID {lesson_id}")
+        seen.add(lesson_id)
+        expected_filename = f"{lesson_id}.md"
+        if filename != expected_filename:
+            errors.append(f"ERROR LES005: filename for {lesson_id} must be {expected_filename}")
+        elif not (index.parent / "packets" / expected_filename).is_file() and not (index.parent / expected_filename).is_file():
+            errors.append(f"ERROR LES006: indexed lesson file is missing: {expected_filename}")
+    present = len(list(index.parent.rglob("LES-*.md")))
+    if present != required_present:
+        errors.append(f"ERROR LES007: required-present {required_present} does not equal {present} packets on disk")
+    return errors
+
+
+def validate_migration(path: Path) -> list[str]:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        return [f"ERROR MIG001: cannot read migration notes: {exc}"]
+    changes = re.findall(r"^Version:\s*(\d+)\s*->\s*(\d+)\s*$", text, flags=re.MULTILINE)
+    if not changes:
+        return []
+    errors: list[str] = []
+    for old, new in changes:
+        if int(new) <= int(old):
+            errors.append("ERROR MIG002: breaking schema evolution requires an incremented version")
+    for label in ("Schema:", "Deterministic migration:", "Fixtures:", "Change notes:", "Rollback:"):
+        if label not in text:
+            errors.append(f"ERROR MIG003: breaking schema evolution requires {label}")
+    return errors
+
+
+def validate_adr(path: Path) -> list[str]:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        return [f"ERROR ADR001: cannot read ADR: {exc}"]
+    errors: list[str] = []
+    required_labels = ("Status: proposed", "Evidence IDs:", "Uncertainty:", "Impacts:", "Alternatives:", "Required approver:", "Revisit trigger:")
+    for label in required_labels:
+        if label not in text:
+            errors.append(f"ERROR ADR002: ADR requires {label}")
+    evidence = re.findall(r"SRC-[A-Z0-9][A-Z0-9-]*", text)
+    if not evidence:
+        errors.append("ERROR ADR003: ADR requires at least one canonical immutable source ID")
+        return errors
+    try:
+        registry = load_yaml(ROOT / ".planning/research/source-registry.yaml")
+        sources = {item.get("id"): item for item in registry.get("sources", []) if isinstance(item, dict)}
+        for source_id in evidence:
+            source = sources.get(source_id)
+            if not isinstance(source, dict):
+                errors.append(f"ERROR ADR004: ADR evidence ID does not resolve: {source_id}")
+            elif any(not source.get(field) for field in ("commitSha", "path", "contentSha256", "immutableUrl")):
+                errors.append(f"ERROR ADR005: ADR evidence ID lacks immutable source fields: {source_id}")
+    except ValueError as exc:
+        errors.append(f"ERROR ADR006: immutable source registry cannot be resolved: {exc}")
+    return errors
+
+
+def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
+    try:
+        fragment = load_yaml(path)
+    except ValueError as exc:
+        return [f"ERROR IMP001: {exc}"]
+    errors = [error.replace("ERROR SCH", "ERROR IMP") for error in schema_errors(ROOT / ".planning/research/schemas/spike-impact-fragment.schema.json", [fragment])]
+    spike_id = fragment.get("spikeId")
+    expected_directory = str(spike_id).lower()
+    metadata_path = fragment.get("metadataPath")
+    report_path = fragment.get("reportPath")
+    if not isinstance(metadata_path, str) or not isinstance(report_path, str):
+        return errors + ["ERROR IMP002: fragment requires metadata and report paths"]
+    metadata_file = planning_root / metadata_path
+    report_file = planning_root / report_path
+    if metadata_file.parent.name != expected_directory or report_file.parent.name != expected_directory:
+        errors.append("ERROR IMP003: fragment identity must match the SPK metadata and report directory")
+    try:
+        metadata = load_yaml(metadata_file)
+        if metadata.get("id") != spike_id:
+            errors.append("ERROR IMP004: fragment spikeId does not match metadata ID")
+    except ValueError as exc:
+        errors.append(f"ERROR IMP005: metadata link does not resolve: {exc}")
+    if metadata_file.is_file() and fragment.get("metadataSha256") != hashlib.sha256(metadata_file.read_bytes()).hexdigest():
+        errors.append("ERROR IMP006: metadata path has an altered SHA-256")
+    if not report_file.is_file():
+        errors.append("ERROR IMP007: report link does not resolve")
+    elif fragment.get("reportSha256") != hashlib.sha256(report_file.read_bytes()).hexdigest():
+        errors.append("ERROR IMP008: report path has an altered SHA-256")
+    source_registry = planning_root / "research/source-registry.yaml"
+    try:
+        source_document = load_yaml(source_registry)
+        source_ids = {item.get("id") for item in source_document.get("sources", []) if isinstance(item, dict)}
+    except ValueError as exc:
+        source_ids = set()
+        errors.append(f"ERROR IMP009: source registry does not resolve: {exc}")
+    for link in fragment.get("sourceLinks", []):
+        if not isinstance(link, dict):
+            continue
+        source_file = planning_root / str(link.get("path", ""))
+        if link.get("sourceId") not in source_ids:
+            errors.append(f"ERROR IMP010: dangling source link {link.get('sourceId')}")
+        if not source_file.is_file():
+            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
+        elif link.get("sha256") != hashlib.sha256(source_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
+    for link in fragment.get("measurementLinks", []):
+        if not isinstance(link, dict):
+            continue
+        measurement_file = planning_root / str(link.get("path", ""))
+        if not measurement_file.is_file():
+            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
+        elif link.get("sha256") != hashlib.sha256(measurement_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
+    expected_patterns = {"requirement": r"^[A-Z][A-Z0-9]{3,4}-\d{2}$", "adr": r"^ADR-\d{4}$", "phase": r"^\d{2}$", "lesson": r"^LES-\d{3}$"}
+    for impact in fragment.get("proposedImpacts", []):
+        if isinstance(impact, dict) and not re.fullmatch(expected_patterns.get(impact.get("type"), r"$^"), str(impact.get("id", ""))):
+            errors.append("ERROR IMP013: proposed impact type and canonical ID do not match")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     command = parser.add_subparsers(dest="command", required=True)
@@ -278,10 +486,43 @@ def main() -> int:
     spike_mode = spike.add_mutually_exclusive_group(required=True)
     spike_mode.add_argument("--contract", action="store_true")
     spike_mode.add_argument("--complete", action="store_true")
+    governance = command.add_parser("validate-governance")
+    governance.add_argument("path", type=Path)
+    report = command.add_parser("validate-report")
+    report.add_argument("path", type=Path)
+    reports = command.add_parser("validate-reports")
+    reports.add_argument("--root", type=Path, required=True)
+    lessons = command.add_parser("validate-lessons")
+    lessons.add_argument("--index", type=Path, required=True)
+    lessons.add_argument("--required-present", type=int, required=True)
+    adr = command.add_parser("validate-adr")
+    adr.add_argument("path", type=Path)
+    migration = command.add_parser("validate-migration")
+    migration.add_argument("path", type=Path)
+    fragment = command.add_parser("validate-impact-fragment")
+    fragment.add_argument("path", type=Path)
+    fragment.add_argument("--root", type=Path, required=True)
     args = parser.parse_args()
 
     if args.command == "validate-spike":
         errors = validate_spike(args.directory.resolve(), "contract" if args.contract else "complete")[:100]
+    elif args.command == "validate-governance":
+        errors = validate_governance(args.path)[:100]
+    elif args.command == "validate-report":
+        errors = validate_report(args.path)[:100]
+    elif args.command == "validate-reports":
+        errors = validate_reports(args.root)[:100]
+    elif args.command == "validate-lessons":
+        errors = validate_lessons(args.index, args.required_present)[:100]
+    elif args.command == "validate-adr":
+        errors = validate_adr(args.path)[:100]
+    elif args.command == "validate-migration":
+        errors = validate_migration(args.path)[:100]
+    elif args.command == "validate-impact-fragment":
+        errors = validate_impact_fragment(args.path, args.root)[:100]
+    else:
+        errors = []
+    if args.command != "validate":
         for error in errors:
             print(error)
         return 1 if errors else 0
@@ -319,6 +560,10 @@ def main() -> int:
         errors.extend(validate_drift(drift, source_ids, claim_ids))
         known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
         errors.extend(validate_compatibility(compatibility, source_index, known_ids))
+        errors.extend(validate_reports(root.parent))
+        migration_notes = root / "schemas/migration-notes.md"
+        if migration_notes.exists():
+            errors.extend(validate_migration(migration_notes))
         errors.extend(validate_traceability())
     except ValueError as exc:
         errors.append(f"ERROR IO001: {exc}")

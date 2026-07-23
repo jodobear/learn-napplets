@@ -22,7 +22,9 @@ FRAGMENT = {
     "kind": "spike-impact-fragment",
     "spikeId": "SPK-TEST-001",
     "metadataPath": "spikes/spk-test-001/metadata.yaml",
+    "metadataSha256": SHA,
     "reportPath": "spikes/spk-test-001/report.md",
+    "reportSha256": SHA,
     "sourceLinks": [{"sourceId": "SRC-POLICY-001", "relation": "measures", "path": "research/source-registry.yaml", "sha256": SHA}],
     "measurementLinks": [{"path": "spikes/spk-test-001/raw.txt", "sha256": SHA}],
     "uncertainty": {"state": "limited", "reason": "Fixture-only result."},
@@ -43,13 +45,17 @@ class SpikeConsolidationTests(unittest.TestCase):
         metadata.write_text("id: SPK-TEST-001\n", encoding="utf-8")
         report = spike / "report.md"
         report.write_text("# Spike report\n", encoding="utf-8")
+        fragment["metadataSha256"] = hashlib.sha256(metadata.read_bytes()).hexdigest()
+        fragment["reportSha256"] = hashlib.sha256(report.read_bytes()).hexdigest()
         raw = spike / "raw.txt"
         raw.write_text("raw measurement\n", encoding="utf-8")
         source = planning / "research" / "source-registry.yaml"
         source.parent.mkdir()
         source.write_text("sources:\n  - id: SRC-POLICY-001\n", encoding="utf-8")
-        fragment["sourceLinks"][0]["sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
-        fragment["measurementLinks"][0]["sha256"] = hashlib.sha256(raw.read_bytes()).hexdigest()
+        if fragment.get("sourceLinks"):
+            fragment["sourceLinks"][0]["sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+        if fragment.get("measurementLinks"):
+            fragment["measurementLinks"][0]["sha256"] = hashlib.sha256(raw.read_bytes()).hexdigest()
         fragment_path = planning / "spikes" / "spk-test-001" / "impact.yaml"
         fragment_path.write_text(yaml.safe_dump(fragment), encoding="utf-8")
         return fragment_path, planning, temp
@@ -65,13 +71,15 @@ class SpikeConsolidationTests(unittest.TestCase):
             "missing": lambda value: value.pop("measurementLinks"),
             "semantic": lambda value: value.update({"spikeId": "SPK-OTHER-001"}),
             "dangling": lambda value: value["sourceLinks"][0].update({"sourceId": "SRC-MISSING-001"}),
-            "altered": lambda value: value["measurementLinks"][0].update({"sha256": "b" * 64}),
+            "altered": lambda value: None,
         }
         for name, mutate in cases.items():
             with self.subTest(case=name):
                 fragment = copy.deepcopy(FRAGMENT)
                 mutate(fragment)
                 fragment_path, planning, temp = self.write_fixture_root(fragment)
+                if name == "altered":
+                    (planning / "spikes" / "spk-test-001" / "raw.txt").write_text("altered measurement\n", encoding="utf-8")
                 with temp:
                     result = self.run_fragment(fragment_path, planning)
                     self.assertNotEqual(result.returncode, 0)
