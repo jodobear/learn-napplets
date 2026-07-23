@@ -1,0 +1,58 @@
+# Pack Manifest
+
+**Version:** 3  
+**Files:** 41
+
+## Root
+
+- `AGENTS.md`
+- `AUDIT-REPORT.md`
+- `CODEX-MASTER-PROMPT.md`
+- `README.md`
+
+## Docs
+
+- `docs/01-PROJECT-CHARTER.md`
+- `docs/02-UPSTREAM-TRUTH-AND-DRIFT.md`
+- `docs/03-DELIVERY-MODES.md`
+- `docs/04-RESEARCH-PLAN.md`
+- `docs/05-CURRICULUM-AND-EXPERIENCE.md`
+- `docs/06-TECHNICAL-ARCHITECTURE.md`
+- `docs/07-CONTENT-AND-KNOWLEDGE-MODEL.md`
+- `docs/08-PHASED-IMPLEMENTATION-PLAN.md`
+- `docs/09-QUALITY-SECURITY-ACCESSIBILITY.md`
+- `docs/10-DECISIONS-AND-ADRS.md`
+
+## Prompts
+
+- `prompts/00-PHASE-0-RESEARCH.md`
+- `prompts/01-PHASE-1-PRODUCT-CONTRACT.md`
+- `prompts/02-PHASE-2-FOUNDATION.md`
+- `prompts/03-PHASE-3-VISUAL-CONTENT-PRIMITIVES.md`
+- `prompts/04-PHASE-4-REAL-VERTICAL-SLICE.md`
+- `prompts/05-PHASE-5-CORE-EXPANSION.md`
+- `prompts/06-PHASE-6-COMPOSITION.md`
+- `prompts/07-PHASE-7-BUILD-RUNTIME-CONTRIBUTE.md`
+- `prompts/08-PHASE-8-PORTABLE-NAPPLET.md`
+- `prompts/09-PHASE-9-KNOWLEDGE.md`
+- `prompts/10-PHASE-10-LAUNCH.md`
+
+## Templates
+
+- `templates/ADR-TEMPLATE.md`
+- `templates/LESSON-RESEARCH-PACKET-TEMPLATE.md`
+- `templates/PHASE-REPORT-TEMPLATE.md`
+- `templates/RESEARCH-REPORT-TEMPLATE.md`
+- `templates/claim.example.yaml`
+- `templates/compatibility-matrix.example.yaml`
+- `templates/concept.example.yaml`
+- `templates/drift.example.yaml`
+- `templates/example-napplet-catalog.example.yaml`
+- `templates/lab.example.yaml`
+- `templates/lesson.example.yaml`
+- `templates/open-question.example.yaml`
+- `templates/source-registry.example.yaml`
+
+## Scripts
+
+- `scripts/validate-pack.py`

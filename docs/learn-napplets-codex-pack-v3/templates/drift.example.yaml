@@ -1,0 +1,17 @@
+items:
+  - id: drift.example
+    topic: Replace with drift topic
+    claims:
+      - sourceRef: source-a
+        statement: ""
+      - sourceRef: source-b
+        statement: ""
+    impact:
+      content: []
+      code: []
+      knowledge: []
+    decision: ""
+    status: open
+    owner:
+    verifiedAt: REPLACE_DURING_RESEARCH
+    resolutionEvidence: []

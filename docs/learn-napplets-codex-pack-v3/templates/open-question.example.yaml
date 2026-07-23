@@ -1,0 +1,12 @@
+questions:
+  - id: question.example
+    question: ""
+    whyItMatters: ""
+    sourceRefs: []
+    affectedConcepts: []
+    affectedLessons: []
+    blockedDecisions: []
+    currentEvidence: []
+    resolutionCriteria: []
+    status: open
+    lastVerified: REPLACE_DURING_RESEARCH

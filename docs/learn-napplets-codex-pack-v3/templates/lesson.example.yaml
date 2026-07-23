@@ -1,0 +1,16 @@
+id: lesson.example
+slug: example
+title: Example lesson
+chapter: example
+order: 1
+summary: ""
+audiences:
+  - new-to-nostr
+prerequisites: []
+learningObjectives: []
+concepts: []
+claims: []
+labs: []
+assessments: []
+sourceRefs: []
+lastVerified: REPLACE_DURING_RESEARCH

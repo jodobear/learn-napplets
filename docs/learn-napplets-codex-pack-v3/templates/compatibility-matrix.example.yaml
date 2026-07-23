@@ -1,0 +1,17 @@
+records:
+  - id: compatibility.example
+    sourceBaseline:
+      nip5dCommit: REPLACE_DURING_RESEARCH
+      napsCommit: REPLACE_DURING_RESEARCH
+    packages:
+      - name: "@napplet/example"
+        version: REPLACE_DURING_RESEARCH
+        publicExports: []
+    runtimes:
+      - name: example-runtime
+        commitSha: REPLACE_DURING_RESEARCH
+    domains: []
+    fixtures: []
+    knownDrift: []
+    tests: []
+    observedAt: REPLACE_DURING_RESEARCH

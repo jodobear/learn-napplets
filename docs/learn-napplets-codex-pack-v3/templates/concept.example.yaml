@@ -1,0 +1,17 @@
+id: concept.example
+label: Example
+aliases: []
+oneSentence: ""
+definition: ""
+owns: []
+doesNotOwn: []
+trustZone: untrusted
+layer: application
+oftenConfusedWith: []
+whereAnalogyBreaks: []
+related: []
+evidenceClass: conceptual-model
+maturity: unknown
+sourceRefs: []
+lastVerified: REPLACE_DURING_RESEARCH
+deprecatedBy:

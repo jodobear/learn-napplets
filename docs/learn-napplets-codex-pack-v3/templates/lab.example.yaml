@@ -1,0 +1,13 @@
+id: lab.example
+title: Example lab
+lesson: lesson.example
+implementation: conceptual-simulation
+hostProfile: none
+objective: ""
+states: []
+failureModes: []
+sourceRefs: []
+transcript: ""
+staticFallback: ""
+reducedMotion: ""
+compatibilityRef:

@@ -1,0 +1,17 @@
+examples:
+  - id: example.napplet
+    title: ""
+    repository:
+    manifestPointer:
+    revision:
+    userJob: ""
+    domains: []
+    archetypes: []
+    conventions: []
+    runtimesTested: []
+    conformanceEvidence: []
+    license:
+    adaptationPolicy: link-only
+    lessonRelevance: []
+    knownDrift: []
+    observedAt: REPLACE_DURING_RESEARCH

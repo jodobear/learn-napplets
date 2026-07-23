@@ -1,0 +1,23 @@
+sources:
+  - id: nip-5d
+    title: NIP-5D — Nostr Web Applets
+    authority: current-nip-draft
+    maturity: draft
+    repository: nostr-protocol/nips
+    path: 5D.md
+    livingUrl: https://github.com/nostr-protocol/nips/pull/2303
+    immutableUrl: REPLACE_DURING_RESEARCH
+    ref: refs/pull/2303/head
+    commitSha: REPLACE_DURING_RESEARCH
+    contentSha256: REPLACE_DURING_RESEARCH
+    pullRequest: 2303
+    observedAt: REPLACE_DURING_RESEARCH
+    lastCheckedAt: REPLACE_DURING_RESEARCH
+    scope:
+      - web projection
+      - loading
+      - sandbox
+      - transport
+      - identity
+      - manifest
+    notes: Living upstream source; use the current file, not stale PR-summary text.
