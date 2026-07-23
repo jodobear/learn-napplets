@@ -1,2 +1,6 @@
 *.zip
 
+# Isolated Phase 1 research environments, package caches, and Python bytecode.
+.research/
+__pycache__/
+

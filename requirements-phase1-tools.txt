@@ -1,0 +1,8 @@
+# Phase 1 research-only tooling. Do not use this file for production dependencies.
+# Approved artifact URLs and SHA-256 values are recorded in
+# .planning/research/toolchain-approval.yaml; resolver dependencies are captured
+# in the reproducibility manifest after installation.
+--only-binary=:all:
+PyYAML==6.0.3
+jsonschema==4.26.0
+playwright==1.61.0

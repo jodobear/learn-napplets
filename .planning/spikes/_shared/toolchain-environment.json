@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "recordId": "ENV-TOOLCHAIN-01",
+  "recordType": "phase-1-toolchain-environment",
+  "recordedDate": "2026-07-24",
+  "approvalRecord": {
+    "path": ".planning/research/toolchain-approval.yaml",
+    "blobOid": "f14dd36448e7abafad5f26317ac7128157fb8ff6",
+    "status": "approved",
+    "approver": "project operator via Phase 1 blocking-human checkpoint"
+  },
+  "environment": {
+    "os": "Fedora Linux 43 (Server Edition)",
+    "kernel": "Linux 7.1.3-101.fc43.x86_64 x86_64",
+    "architecture": "x86_64",
+    "container": "not detected"
+  },
+  "python": {
+    "implementation": "CPython",
+    "version": "3.14.3",
+    "isolatedInterpreter": ".research/phase1-tools/bin/python",
+    "resolvedExecutable": "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.3_1/bin/python3.14",
+    "executableSha256": "eca90b668424db6f2105504128f02cac91c2805de9a928abcc272d1444abfde0",
+    "packageManager": {
+      "name": "pip",
+      "version": "26.0"
+    }
+  },
+  "requirements": {
+    "path": "requirements-phase1-tools.txt",
+    "blobOid": "85bc08cd72ab72e17a1319824f9a303050581145",
+    "sha256": "038c756057d9f1765a6582361d9469f5782bdcd0403b0d6f91b648dc2acf61a0",
+    "topLevelPins": [
+      "PyYAML==6.0.3",
+      "jsonschema==4.26.0",
+      "playwright==1.61.0"
+    ]
+  },
+  "packages": [
+    {
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "requested": true,
+      "artifactUrl": "https://files.pythonhosted.org/packages/88/f9/16491d7ed2a919954993e48aa941b200f38040928474c9e85ea9e64222c3/pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "artifactSha256": "c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "requested": true,
+      "artifactUrl": "https://files.pythonhosted.org/packages/69/90/f63fb5873511e014207a475e2bb4e8b2e570d655b00ac19a9a0ca0a385ee/jsonschema-4.26.0-py3-none-any.whl",
+      "artifactSha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce"
+    },
+    {
+      "name": "playwright",
+      "version": "1.61.0",
+      "requested": true,
+      "artifactUrl": "https://files.pythonhosted.org/packages/ab/f8/a35bf179e4ba2522c1893635094a64e407572547bd61528820fc0abc87fe/playwright-1.61.0-py3-none-manylinux1_x86_64.whl",
+      "artifactSha256": "54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl",
+      "artifactSha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309"
+    },
+    {
+      "name": "greenlet",
+      "version": "3.5.4",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/15/4a/2a82a1e3f8aaca020853ac8d12211280ca2b231aa08ea39f636f1060c319/greenlet-3.5.4-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+      "artifactSha256": "9c53ff01a5c53a40f2c16820ebc56d7c61a77f5fbe009dadd96292d5682f80f8"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/41/45/1a4ed80516f02155c51f51e8cedb3c1902296743db0bbc66608a0db2814f/jsonschema_specifications-2025.9.1-py3-none-any.whl",
+      "artifactSha256": "98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe"
+    },
+    {
+      "name": "pyee",
+      "version": "13.0.1",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/a0/c4/b4d4827c93ef43c01f599ef31453ccc1c132b353284fc6c87d535c233129/pyee-13.0.1-py3-none-any.whl",
+      "artifactSha256": "af2f8fede4171ef667dfded53f96e2ed0d6e6bd7ee3bb46437f77e3b57689228"
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/2c/58/ca301544e1fa93ed4f80d724bf5b194f6e4b945841c5bfd555878eea9fcb/referencing-0.37.0-py3-none-any.whl",
+      "artifactSha256": "381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231"
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.6.3",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/d1/9c/0d1fdc2e7aba23e290d603bc494e97bd205bae262ce33c6b32a69768ed5e/rpds_py-2026.6.3-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "artifactSha256": "dc319e5a1de4b6913aac94bf6a2f9e847371e0a140a43dd4991db1a09bc2d504"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "requested": false,
+      "artifactUrl": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "artifactSha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    }
+  ],
+  "git": {
+    "version": "2.51.2",
+    "repositoryCommitOid": "a5724e66f17ac5fc0da2d86f8e41be926582b171",
+    "acquisitionConvention": "Resolve an immutable commit with git rev-parse --verify --end-of-options <revision>^{commit}; resolve <commit>:<path> to a blob OID before reading; record the blob SHA-256 alongside the immutable revision:path locator."
+  },
+  "node": {
+    "version": "v22.22.0",
+    "packageManager": {
+      "name": "npm",
+      "version": "10.9.4"
+    }
+  },
+  "browsers": [
+    {
+      "family": "Chromium",
+      "vendor": "Google Chrome",
+      "executable": "/usr/bin/google-chrome",
+      "version": "150.0.7871.124"
+    },
+    {
+      "family": "Firefox",
+      "vendor": "Mozilla Firefox",
+      "executable": "/usr/bin/firefox",
+      "version": "152.0.4"
+    }
+  ],
+  "browserRunner": {
+    "route": "direct-installed-browsers",
+    "browserFlags": [],
+    "managedBinaryDownloads": "not-requested",
+    "browsers": [
+      {
+        "family": "Chromium",
+        "vendor": "Google Chrome",
+        "executable": "/usr/bin/google-chrome",
+        "resolvedExecutable": "/opt/google/chrome/google-chrome",
+        "version": "150.0.7871.124",
+        "executableSha256": "aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec",
+        "systemPackage": "google-chrome-stable 150.0.7871.124-1.x86_64"
+      },
+      {
+        "family": "Firefox",
+        "vendor": "Mozilla Firefox",
+        "executable": "/usr/bin/firefox",
+        "resolvedExecutable": "/usr/bin/firefox",
+        "version": "152.0.4",
+        "executableSha256": "12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e",
+        "systemPackage": "firefox 152.0.4-1.fc43.x86_64"
+      }
+    ]
+  },
+  "samplesRequired": 5,
+  "summaryStatistic": "median"
+}

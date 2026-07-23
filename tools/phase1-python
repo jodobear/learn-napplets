@@ -1,0 +1,41 @@
+#!/bin/sh
+# Run Phase 1 tooling only through its approved, isolated interpreter.
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+INTERPRETER="$ROOT/.research/phase1-tools/bin/python"
+MANIFEST="$ROOT/.planning/spikes/_shared/toolchain-environment.json"
+
+if [ ! -x "$INTERPRETER" ]; then
+  printf '%s\n' "phase1-python: approved isolated interpreter is unavailable: $INTERPRETER" >&2
+  exit 1
+fi
+if [ ! -r "$MANIFEST" ]; then
+  printf '%s\n' "phase1-python: reproducibility manifest is unavailable: $MANIFEST" >&2
+  exit 1
+fi
+
+exec "$INTERPRETER" -c '
+import hashlib
+import json
+import os
+from pathlib import Path
+import sys
+
+manifest_path = Path(sys.argv[1])
+expected_interpreter = Path(sys.argv[2]).absolute()
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+python = manifest["python"]
+actual_interpreter = Path(sys.executable).absolute()
+if actual_interpreter != expected_interpreter:
+    raise SystemExit("phase1-python: refusing ambient interpreter")
+if Path(sys.prefix).absolute() != expected_interpreter.parent.parent:
+    raise SystemExit("phase1-python: refusing interpreter outside approved environment")
+if sys.version.split()[0] != python["version"]:
+    raise SystemExit("phase1-python: interpreter version differs from manifest")
+resolved = actual_interpreter.resolve()
+digest = hashlib.sha256(resolved.read_bytes()).hexdigest()
+if str(resolved) != python["resolvedExecutable"] or digest != python["executableSha256"]:
+    raise SystemExit("phase1-python: interpreter hash differs from manifest")
+os.execv(str(actual_interpreter), [str(actual_interpreter), *sys.argv[3:]])
+' "$MANIFEST" "$INTERPRETER" "$@"
