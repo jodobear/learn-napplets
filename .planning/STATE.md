@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-07-23T21:37:10.302Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-07-23T22:39:18.627Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 2 of 28
+Plan: 3 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [░░░░░░░░░░] 4%
+Progress: [█░░░░░░░░░] 7%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 4%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 45m | 3 tasks | 7 files |
+| Phase 01 P02 | 25m | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Phase 1 research tooling uses project-operator-approved PyYAML 6.0.3, jsonschema 4.26.0, and Playwright 1.61.0 only in .research/phase1-tools.
 - [Phase ?]: Phase 1 browser runner uses direct installed Google Chrome 150.0.7871.124 and Firefox 152.0.4; Playwright-managed browser downloads are not requested.
 - [Phase ?]: Phase 1 verification and replay commands must use tools/phase1-python, which checks the recorded isolated interpreter version and SHA-256.
+- [Phase ?]: Preserved source-pack records remain provisional collection seeds and cannot serve as current upstream proof.
+- [Phase ?]: Evidence validation may prepare review work but cannot automatically verify a claim without dated reviewer approval.
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T21:42:25.347Z
-Stopped at: Session resumed, proceeding to Phase 1 Wave 2 Plan 01-02
-Resume file: .planning/phases/01-research-and-truth-baseline/01-02-PLAN.md
+Last session: 2026-07-23T22:39:18.620Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: None

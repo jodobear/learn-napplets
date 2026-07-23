@@ -7,7 +7,7 @@
 
 ### Research and Evidence Integrity
 
-- [ ] **EVID-01**: Maintainers can trace every blocking protocol-sensitive claim to an immutable upstream revision, path/locator, digest, retrieval date, authority tier, evidence class, and maturity label.
+- [x] **EVID-01**: Maintainers can trace every blocking protocol-sensitive claim to an immutable upstream revision, path/locator, digest, retrieval date, authority tier, evidence class, and maturity label.
 - [ ] **EVID-02**: Maintainers can see conflicts, uncertainty, known drift, affected requirements/phases, and refresh triggers for each volatile claim.
 - [ ] **EVID-03**: Maintainers can review compatibility across selected protocol sources, packages, runtimes, examples, and current work before architecture is accepted.
 - [x] **EVID-04**: Decision makers can review measurable mandatory-spike evidence before accepting repository, framework, deployment, content, teaching-host, fixture, or portable-target recommendations.
@@ -72,7 +72,7 @@ Each v1 requirement has exactly one owning phase. Supporting work in other phase
 
 | Requirement | Owning Phase | Status |
 |-------------|--------------|--------|
-| EVID-01 | Phase 1 | Pending |
+| EVID-01 | Phase 1 | Complete |
 | EVID-02 | Phase 1 | Pending |
 | EVID-03 | Phase 1 | Pending |
 | EVID-04 | Phase 1 | Complete |
