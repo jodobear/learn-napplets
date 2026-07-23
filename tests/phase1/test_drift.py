@@ -78,5 +78,55 @@ class DriftSchemas(unittest.TestCase):
             self.assertTrue(question['blockedDecisions'])
 
 
+class RefreshComparisonTests(unittest.TestCase):
+    script = ROOT / 'tools' / 'refresh-sources.py'
+
+    def run_refresh(self, comparison, report):
+        comparison_path = report.parent / 'comparison.json'
+        comparison_path.write_text(json.dumps(comparison))
+        return __import__('subprocess').run(
+            [
+                __import__('sys').executable, str(self.script),
+                '--registry', str(SOURCES), '--claims', str(CLAIMS), '--drift', str(REGISTER),
+                '--questions', str(QUESTIONS), '--comparison', str(comparison_path), '--report', str(report),
+            ],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+
+    def test_unchanged_refresh_is_idempotent_and_does_not_mutate_claims(self):
+        source = yaml.safe_load(SOURCES.read_text())['sources'][0]
+        comparison = [{key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}]
+        before = CLAIMS.read_bytes()
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            report = Path(temporary) / 'refresh-review-work.md'
+            first = self.run_refresh(comparison, report)
+            self.assertEqual(first.returncode, 0, first.stderr + first.stdout)
+            first_report = report.read_bytes()
+            second = self.run_refresh(comparison, report)
+            self.assertEqual(second.returncode, 0, second.stderr + second.stdout)
+            self.assertEqual(report.read_bytes(), first_report)
+            self.assertIn('unchanged', report.read_text())
+        self.assertEqual(CLAIMS.read_bytes(), before)
+
+    def test_changed_unavailable_and_ambiguous_sources_create_scoped_review_work(self):
+        source = yaml.safe_load(SOURCES.read_text())['sources'][0]
+        changed = {key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}
+        changed['contentSha256'] = 'f' * 64
+        comparison = [changed, {'id': 'SRC-POLICY-002', 'outcome': 'unavailable'}, {'id': 'SRC-POLICY-001', 'outcome': 'ambiguous'}]
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            report = Path(temporary) / 'refresh-review-work.md'
+            result = self.run_refresh(comparison, report)
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            text = report.read_text()
+            for expected in ('changed', 'unavailable', 'ambiguous', 'old pointer/digest', 'review-required'):
+                self.assertIn(expected, text)
+            headings = [line[3:] for line in text.splitlines() if line.startswith('## ')]
+            self.assertEqual(headings, [
+                'Research question', 'Sources and immutable revisions', 'Observations', 'Conflicts',
+                'Inference', 'Prototype or measurement', 'Recommendation', 'Uncertainty',
+                'Affected phases and requirements', 'Owner and required approval',
+            ])
+
+
 if __name__ == '__main__':
     unittest.main()
