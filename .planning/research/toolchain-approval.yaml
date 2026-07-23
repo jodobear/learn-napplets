@@ -1,0 +1,99 @@
+schemaVersion: 1
+recordId: APR-TOOLCHAIN-01
+recordType: phase-1-toolchain-approval
+status: approved
+approver: project operator via Phase 1 blocking-human checkpoint
+approvedDate: 2026-07-24
+scope: >-
+  Research-only Python YAML/schema/browser tooling below .research/phase1-tools;
+  no production dependency manifest, framework scaffold, or browser-binary download.
+preconditionEvidence:
+  command: python3 tools/validate-planning.py --phase-1-execution-preflight
+  result: passed
+  reviewRecord: .planning/phases/01-research-and-truth-baseline/01-REVIEWS.md
+pythonPackages:
+  - name: PyYAML
+    version: 6.0.3
+    status: approved
+    registryUrl: https://pypi.org/project/PyYAML/6.0.3/
+    projectUrl: https://pyyaml.org/
+    releaseArtifact:
+      filename: pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      url: https://files.pythonhosted.org/packages/88/f9/16491d7ed2a919954993e48aa941b200f38040928474c9e85ea9e64222c3/pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      sha256: c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5
+    license:
+      identifier: MIT
+      decision: approved
+      evidence: https://pypi.org/pypi/PyYAML/6.0.3/json
+  - name: jsonschema
+    version: 4.26.0
+    status: approved
+    registryUrl: https://pypi.org/project/jsonschema/4.26.0/
+    projectUrl: https://github.com/python-jsonschema/jsonschema
+    releaseArtifact:
+      filename: jsonschema-4.26.0-py3-none-any.whl
+      url: https://files.pythonhosted.org/packages/69/90/f63fb5873511e014207a475e2bb4e8b2e570d655b00ac19a9a0ca0a385ee/jsonschema-4.26.0-py3-none-any.whl
+      sha256: d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce
+    license:
+      identifier: MIT
+      decision: approved
+      evidence: https://pypi.org/pypi/jsonschema/4.26.0/json
+  - name: playwright
+    version: 1.61.0
+    status: approved
+    registryUrl: https://pypi.org/project/playwright/1.61.0/
+    projectUrl: https://github.com/microsoft/playwright-python
+    releaseArtifact:
+      filename: playwright-1.61.0-py3-none-manylinux1_x86_64.whl
+      url: https://files.pythonhosted.org/packages/ab/f8/a35bf179e4ba2522c1893635094a64e407572547bd61528820fc0abc87fe/playwright-1.61.0-py3-none-manylinux1_x86_64.whl
+      sha256: 54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e
+    license:
+      identifier: Apache-2.0
+      decision: approved
+      evidence: https://pypi.org/pypi/playwright/1.61.0/json
+browserRunner:
+  route: direct-installed-browsers
+  status: approved
+  rationale: >-
+    Drive the approved system Chrome and Firefox executables directly. Do not
+    acquire Playwright-managed binaries for this Phase 1 environment.
+  browserFlags: []
+  installedBrowsers:
+    - family: Chromium
+      vendor: Google Chrome
+      executable: /usr/bin/google-chrome
+      resolvedExecutable: /opt/google/chrome/google-chrome
+      version: 150.0.7871.124
+      executableSha256: aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec
+      officialUrl: https://www.google.com/chrome/
+      licenseDecision: approved for local browser observation under Google Chrome Terms of Service
+      status: approved
+    - family: Firefox
+      vendor: Mozilla Firefox
+      executable: /usr/bin/firefox
+      resolvedExecutable: /usr/bin/firefox
+      version: 152.0.4
+      executableSha256: 12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e
+      officialUrl: https://www.mozilla.org/firefox/
+      licenseDecision: approved for local browser observation under MPL-2.0
+      status: approved
+  managedBrowserDownloads:
+    - browser: Chromium
+      status: not-requested
+      reason: final user decision selected direct-installed-browsers
+      officialUrl: https://playwright.dev/docs/browsers
+    - browser: Firefox
+      status: not-requested
+      reason: final user decision selected direct-installed-browsers
+      officialUrl: https://playwright.dev/docs/browsers
+approvedInstallation:
+  command: >-
+    python3 -m venv .research/phase1-tools &&
+    .research/phase1-tools/bin/python -m pip install --disable-pip-version-check
+    -r requirements-phase1-tools.txt
+  constraints:
+    - Run only from the repository root after this approval record is committed.
+    - Install only the three approved top-level pins in requirements-phase1-tools.txt.
+    - Capture the resolver's complete installed-distribution inventory in the reproducibility manifest.
+    - Do not run playwright install or acquire browser binaries.
+    - Do not create package.json or any production dependency manifest.
