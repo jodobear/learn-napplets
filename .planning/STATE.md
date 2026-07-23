@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 1
-current_phase_name: Research and Truth Baseline; source stage 0
-status: planning
-stopped_at: Phase 1 plans verified; pending deep plan-review convergence
-last_updated: "2026-07-24T00:00:00Z"
+current_phase: 01
+current_phase_name: research-and-truth-baseline
+status: executing
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-07-23T21:37:10.302Z"
 last_activity: 2026-07-24
-last_activity_desc: Phase 1 plans revised for current review findings; machine-checkable convergence gate remains required before execution.
+last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 **Core value:** Learners can accurately understand and exercise the boundary where focused, untrusted napplet code delegates dangerous or repetitive authority to a trusted host.
-**Current focus:** Phase 1 — Research and Truth Baseline (source stage 0); 28 plans verified, pending deep plan-review convergence.
+**Current focus:** Phase 01 — research-and-truth-baseline
 
 ## Current Position
 
-Phase: 1 of 11 (Research and Truth Baseline; source stage 0)
-Plan: 0 of 28 in current phase
-Status: Planned — pending deep plan-review convergence before execution
-Last activity: 2026-07-24 — Phase 1 plans revised for actionable review findings; convergence gate remains pending.
+Phase: 01 (research-and-truth-baseline) — EXECUTING
+Plan: 2 of 28
+Status: Ready to execute
+Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░] 4%
 
 ## Performance Metrics
 
@@ -53,6 +53,12 @@ Progress: [░░░░░░░░░░] 0%
 - Last 5 plans: None
 - Trend: N/A
 
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P01 | 45m | 3 tasks | 7 files |
+
 ## Accumulated Context
 
 ### Decisions
@@ -63,6 +69,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - No source-stage research evidence exists, no ADR is accepted, and no production application scaffold is authorized.
 - Phase 1 requires deep plan-review convergence before research execution.
 - ADR 0007 controls whether Phase 9 is executed, narrowed, or skipped; it cannot block the public-site sequence.
+- [Phase ?]: Phase 1 research tooling uses project-operator-approved PyYAML 6.0.3, jsonschema 4.26.0, and Playwright 1.61.0 only in .research/phase1-tools.
+- [Phase ?]: Phase 1 browser runner uses direct installed Google Chrome 150.0.7871.124 and Firefox 152.0.4; Playwright-managed browser downloads are not requested.
+- [Phase ?]: Phase 1 verification and replay commands must use tools/phase1-python, which checks the recorded isolated interpreter version and SHA-256.
 
 ### Pending Todos
 
@@ -82,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-23T17:26:05Z
-Stopped at: Phase 1 plans verified; pending deep plan-review convergence
-Resume file: .planning/phases/01-research-and-truth-baseline/01-01-PLAN.md
+Last session: 2026-07-23T21:37:10.293Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None

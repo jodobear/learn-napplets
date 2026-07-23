@@ -59,12 +59,12 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 28 plans
+**Plans**: 1/28 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Approve and isolate the Phase 1 research toolchain.
+- [x] 01-01-PLAN.md — Approve and isolate the Phase 1 research toolchain.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 0/28 | Not started — pending discussion and convergence | - |
+| 1. Research and Truth Baseline | 1/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
