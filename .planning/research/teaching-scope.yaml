@@ -1,0 +1,41 @@
+schemaVersion: 1
+id: TSCOPE-001
+status: blocked
+outcome: blocked
+proposalStatus: proposed
+operation:
+  id: OP-FIRST-REAL-LAB-001
+  name: one real-lab operation
+  disposition: not-selected
+  reason: No official immutable domain, protocol, package, runtime, example, or browser-boundary evidence establishes a safe operation.
+hostProfile:
+  id: HOST-PROFILE-001
+  name: one teaching-host profile
+  disposition: not-selected
+  reason: Runtime and browser evidence cannot select boundary-harness, verified-loader, selected-domain, or composition behavior.
+evidence:
+  sources: [SRC-POLICY-001, SRC-POLICY-002]
+  domain: [DOM-CANDIDATE-001]
+  compatibility: [CMP-BASELINE-001]
+  claims: [CLM-UPSTREAM-BASELINE-001, CLM-CMP-RUNTIME-001, CLM-CMP-PACKAGE-001, CLM-CMP-EXAMPLE-001]
+  drift: [DRF-DISCOVERY-001, DRF-HANDSHAKE-001, DRF-MANIFEST-001, DRF-EGRESS-001, DRF-CONFORMANCE-001]
+  openQuestions: [OQ-UPSTREAM-BASELINE-001]
+blocker:
+  reason: Candidate sources remain mutable discovery pointers and records lack the immutable identity, locator, digest, evidence classification, compatibility comparison, measurement, and human review needed for a real lab.
+  impacts:
+    requirements: [EVID-03, EVID-04]
+    phases: ['01', '02', '05']
+    decisions: [ADR-0005, ADR-0007, ADR-0008]
+  requiredLaterApproval: Separate dated product, protocol-technical, security, accessibility, and content-learning approvals as applicable; ADRs remain proposed in Phase 1.
+  refreshTrigger: Acquire and review official immutable domain/protocol/runtime/package/example records and required browser or conformance measurements.
+safeFallback:
+  mode: static-public-content
+  description: Use source-status-rich conceptual simulations, inspectable transcripts, and reasoning assessments; do not claim a real domain operation, host profile, or protocol behavior.
+  constraints: [deterministic-required-path, no-real-secrets, no-live-external-dependency, label-simulations]
+uncertainty:
+  state: material
+  statement: This blocked outcome is a scope-control record, not a finding that no operation or host profile exists.
+review:
+  owner: research-owner
+  status: pending
+  requiredRoles: [protocol-technical, content-learning, security, accessibility, product]
