@@ -55,7 +55,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 25 plans
+**Plans**: 27 plans
 
 Plans:
 - [ ] 01-01-PLAN.md — Approve and isolate the Phase 1 research toolchain.
@@ -64,8 +64,10 @@ Plans:
 - [ ] 01-04-PLAN.md — Define reproducible spike and phase-governance contracts.
 - [ ] 01-05-PLAN.md — Acquire bounded immutable sources and derive source-linked claims.
 - [ ] 01-06-PLAN.md — Record drift, compatibility, current work, and refresh review work.
-- [ ] 01-07-PLAN.md — Build ecosystem catalogs and recommend first teaching scope.
-- [ ] 01-08-PLAN.md — Create the first nine lesson research packets and shared index.
+- [ ] 01-07-PLAN.md — Build ecosystem/domain/archetype/example catalogs.
+- [ ] 01-26-PLAN.md — Synthesize audience, pedagogy, delivery, and first teaching scope.
+- [ ] 01-08-PLAN.md — Create the shared index and LES-01 through LES-04 packets.
+- [ ] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
 - [ ] 01-09-PLAN.md — Run SPK-A independent-workspace evidence.
 - [ ] 01-10-PLAN.md — Run SPK-B static-framework evidence behind package approval.
 - [ ] 01-11-PLAN.md — Run SPK-C real browser boundary-harness evidence.
@@ -81,8 +83,8 @@ Plans:
 - [ ] 01-21-PLAN.md — Draft proposed ADR 0001–0004.
 - [ ] 01-22-PLAN.md — Draft proposed ADR 0005–0008.
 - [ ] 01-23-PLAN.md — Draft proposed ADR 0009–0011 and decision summaries.
+- [ ] 01-25-PLAN.md — Complete LES-10 through LES-13 and the exact inventory.
 - [ ] 01-24-PLAN.md — Enforce the Phase 1 gate and stop for human closeout.
-- [ ] 01-25-PLAN.md — Complete the remaining indexed lesson research packets.
 
 ### Phase 2: Product and Content Contract
 **Source phase crosswalk**: Source Phase 1 — Product and Content Contract
