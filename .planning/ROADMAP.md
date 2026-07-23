@@ -92,7 +92,7 @@ Plans:
 - [ ] 01-26-PLAN.md — Synthesize audience, pedagogy, delivery, and first teaching scope.
 - [ ] 01-20-PLAN.md — Run SPK-L source-freshness evidence.
 
-**Wave 8** *(blocked on Wave 7 completion)*
+**Wave 8** *(blocked on Wave 7 completion, including Plan 01-20 source-freshness evidence)*
 
 - [ ] 01-08-PLAN.md — Create the shared index and LES-01 through LES-04 packets.
 - [ ] 01-09-PLAN.md — Run SPK-A independent-workspace evidence.
@@ -102,27 +102,30 @@ Plans:
 - [ ] 01-13-PLAN.md — Run SPK-E shared-content rendering evidence.
 - [ ] 01-14-PLAN.md — Run SPK-F portable Workbench/course feasibility evidence.
 - [ ] 01-15-PLAN.md — Run SPK-G package/conformance evidence and preserve its immutable local impact fragment.
-- [ ] 01-16-PLAN.md — Run SPK-H browser egress/CSP evidence and preserve its immutable local impact fragment.
 - [ ] 01-17-PLAN.md — Run SPK-I diagram/motion accessibility evidence.
 - [ ] 01-18-PLAN.md — Run SPK-J least-authority code-editing evidence.
 - [ ] 01-19-PLAN.md — Run SPK-K local/authorized deployment evidence.
 
-**Wave 9** *(blocked on Wave 8 completion)*
+**Wave 9** *(blocked on SPK-C's selected boundary model)*
+
+- [ ] 01-16-PLAN.md — Run SPK-H browser egress/CSP evidence using the selected SPK-C model.
+
+**Wave 10** *(blocked on all spike evidence, including SPK-H)*
 
 - [ ] 01-28-PLAN.md — Serially consolidate all spike reports and impact fragments into canonical evidence.
 
-**Wave 10** *(blocked on Wave 9 completion)*
+**Wave 11** *(blocked on consolidation)*
 
 - [ ] 01-21-PLAN.md — Draft proposed ADR 0001–0004 from consolidated evidence.
 - [ ] 01-22-PLAN.md — Draft proposed ADR 0005–0008 from consolidated evidence.
 - [ ] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
 
-**Wave 11** *(blocked on Wave 10 completion)*
+**Wave 12** *(blocked on the Wave 11 proposal and lesson inputs)*
 
 - [ ] 01-25-PLAN.md — Complete LES-10 through LES-13 and the exact inventory.
 - [ ] 01-23-PLAN.md — Draft proposed ADR 0009–0011 and decision summaries from consolidated evidence.
 
-**Wave 12** *(blocked on Wave 11 completion)*
+**Wave 13** *(blocked on the completed evidence baseline)*
 
 - [ ] 01-24-PLAN.md — Enforce the Phase 1 gate after consolidation and stop for human closeout.
 
