@@ -1,0 +1,25 @@
+schemaVersion: 1
+canonicalHeadings:
+  - Research question
+  - Sources and immutable revisions
+  - Observations
+  - Conflicts
+  - Inference
+  - Prototype or measurement
+  - Recommendation
+  - Uncertainty
+  - Affected phases and requirements
+  - Owner and required approval
+reportDiscovery:
+  researchPatterns:
+    - research/reports/research-*.md
+  excludedPatterns:
+    - research/reports/validation.md
+  spikePattern: spikes/spk-*/report.md
+spikeMetadataLink:
+  idDeclaration: 'SPK ID: SPK-*'
+  metadataPathDeclaration: 'Metadata path: metadata.yaml'
+  metadataFilename: metadata.yaml
+authority:
+  canonicalHeadingAuthority: .planning/governance/evidence-policy.md#reports
+  structuralAidOnly: docs/learn-napplets-codex-pack-v3/templates/RESEARCH-REPORT-TEMPLATE.md
