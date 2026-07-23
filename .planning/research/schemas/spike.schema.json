@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-napplets.local/schemas/spike.schema.json",
+  "title": "Phase 1 disposable SPK evidence envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "kind", "nonProduction", "status", "hypothesis", "variables", "commands", "environmentManifest", "sourceBindings", "successThreshold", "failureOutcome", "blockedOutcome", "replay", "safety", "uncertainty", "recommendation", "disposition"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "string", "pattern": "^SPK-[A-Z0-9][A-Z0-9-]*$"},
+    "kind": {"const": "spike"},
+    "nonProduction": {"const": true},
+    "status": {"enum": ["planned", "passed", "failed", "blocked"]},
+    "hypothesis": {"type": "string", "minLength": 1},
+    "variables": {"type": "object", "additionalProperties": false, "required": ["independent", "dependent", "controlled"], "properties": {"independent": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "dependent": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "controlled": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}},
+    "commands": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "environmentManifest": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*\\.json$"},
+    "sourceBindings": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["sourceId", "relation", "plan"], "properties": {"sourceId": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"}, "relation": {"enum": ["supports", "contradicts", "measures", "affects", "recommends", "supersedes"]}, "plan": {"type": "string", "minLength": 1}}}},
+    "successThreshold": {"type": "string", "minLength": 1},
+    "failureOutcome": {"type": "string", "minLength": 1},
+    "blockedOutcome": {"type": "string", "minLength": 1},
+    "replay": {"type": "object", "additionalProperties": false, "required": ["input", "command"], "properties": {"input": {"type": "string", "minLength": 1}, "command": {"type": "string", "minLength": 1}}},
+    "safety": {"type": "object", "additionalProperties": false, "required": ["noSecrets", "noDestructiveState", "liveProbe"], "properties": {"noSecrets": {"const": true}, "noDestructiveState": {"const": true}, "liveProbe": {"enum": ["not-used", "read-only-sandboxed"]}, "essential": {"const": true}}},
+    "uncertainty": {"type": "object", "additionalProperties": false, "required": ["state", "reason"], "properties": {"state": {"enum": ["none", "limited", "material"]}, "reason": {"type": "string", "minLength": 1}}},
+    "recommendation": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["delete-spike", "retain-as-fixture", "promote-later", "blocked"]},
+    "environmentFacts": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "minLength": 1}},
+    "measurements": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["name", "nondeterministic", "rawValues"], "properties": {"name": {"type": "string", "minLength": 1}, "nondeterministic": {"type": "boolean"}, "rawValues": {"type": "array", "minItems": 1, "items": {"type": "number"}}, "range": {"type": "object", "additionalProperties": false, "required": ["min", "max"], "properties": {"min": {"type": "number"}, "max": {"type": "number"}}}, "median": {"type": "number"}}}},
+    "rawOutputDigests": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
+    "replayResult": {"type": "object", "additionalProperties": false, "required": ["status", "outputDigest"], "properties": {"status": {"enum": ["passed", "failed", "blocked"]}, "outputDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "evidenceLinks": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"], "properties": {"kind": {"enum": ["measurement", "source", "report"]}, "path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
+    "blocked": {"type": "object", "additionalProperties": false, "required": ["reason", "affectedRequirements", "affectedAdrs"], "properties": {"reason": {"type": "string", "minLength": 1}, "affectedRequirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}}, "affectedAdrs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^ADR-\\d{4}$"}}}}
+  },
+  "allOf": [
+    {"if": {"properties": {"safety": {"properties": {"liveProbe": {"const": "read-only-sandboxed"}}}}}, "then": {"properties": {"safety": {"required": ["essential"]}}}},
+    {"if": {"properties": {"status": {"const": "blocked"}}}, "then": {"required": ["blocked"]}}
+  ]
+}

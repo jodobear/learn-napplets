@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import subprocess
 import sys
 import tempfile
@@ -54,6 +55,20 @@ BASE_SPIKE = {
     "disposition": "delete-spike",
 }
 
+VALID_ENVIRONMENT = {
+    "schemaVersion": 1,
+    "id": "ENV-TEST-001",
+    "kind": "environment",
+    "os": "Linux test fixture",
+    "container": "not detected",
+    "browsers": [{"family": "Firefox", "version": "152", "executableSha256": "c" * 64}],
+    "runtimes": {"python": "3.14"},
+    "packageManager": {"name": "pip", "version": "26"},
+    "dependencies": [],
+    "environmentFlags": [],
+    "commandHashes": [{"command": "tools/phase1-python run.py --fixture fixture.json", "sha256": "d" * 64}],
+}
+
 
 class SpikeValidationTests(unittest.TestCase):
     def write_spike(self, metadata: dict, environment: dict | None = None) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
@@ -62,7 +77,7 @@ class SpikeValidationTests(unittest.TestCase):
         directory.mkdir(parents=True)
         (directory / "metadata.yaml").write_text(yaml.safe_dump(metadata, sort_keys=False), encoding="utf-8")
         if environment is not None:
-            (directory / "environment.json").write_text(__import__("json").dumps(environment), encoding="utf-8")
+            (directory / "environment.json").write_text(json.dumps(environment), encoding="utf-8")
         return directory, temp
 
     def run_spike(self, directory: Path, mode: str) -> subprocess.CompletedProcess[str]:
@@ -120,7 +135,7 @@ class SpikeValidationTests(unittest.TestCase):
                 "evidenceLinks": [{"kind": "measurement", "path": "raw.txt", "sha256": "a" * 64}],
             }
         )
-        directory, temp = self.write_spike(metadata, {"os": "Linux", "browsers": ["Firefox 152"]})
+        directory, temp = self.write_spike(metadata, VALID_ENVIRONMENT)
         with temp:
             result = self.run_spike(directory, "--complete")
             self.assertNotEqual(result.returncode, 0)
@@ -137,13 +152,13 @@ class SpikeValidationTests(unittest.TestCase):
                     "affectedAdrs": ["ADR-0005"],
                 },
                 "environmentFacts": {"browser": "Chrome 150", "runtime": "CPython 3.14"},
-                "measurements": [{"name": "fixture-result", "nondeterministic": False, "rawValues": [1]}],
+                "measurements": [{"name": "fixture-result", "nondeterministic": True, "rawValues": [1, 1, 1, 1, 1], "range": {"min": 1, "max": 1}, "median": 1}],
                 "rawOutputDigests": [{"path": "raw.txt", "sha256": "a" * 64}],
                 "replayResult": {"status": "blocked", "outputDigest": "b" * 64},
                 "evidenceLinks": [{"kind": "measurement", "path": "raw.txt", "sha256": "a" * 64}],
             }
         )
-        directory, temp = self.write_spike(metadata, {"os": "Linux", "browsers": ["Chrome 150"]})
+        directory, temp = self.write_spike(metadata, VALID_ENVIRONMENT)
         with temp:
             result = self.run_spike(directory, "--complete")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

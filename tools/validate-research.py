@@ -210,13 +210,82 @@ def report_text(source_records: list[dict[str, Any]], claim_records: list[dict[s
     return "\n".join(lines) + "\n"
 
 
+def validate_spike(directory: Path, mode: str) -> list[str]:
+    """Validate one disposable SPK envelope without executing its command."""
+    errors: list[str] = []
+    try:
+        metadata = load_yaml(directory / "metadata.yaml")
+    except ValueError as exc:
+        return [f"ERROR SPK001: {exc}"]
+
+    errors.extend(schema_errors(ROOT / ".planning/research/schemas/spike.schema.json", [metadata]))
+    expected_directory = str(metadata.get("id", "")).lower()
+    if directory.name != expected_directory or directory.parent.name != "spikes" or directory.parent.parent.name != ".planning":
+        errors.append("ERROR SPK002: spike directory must be .planning/spikes/spk-*/ and match its SPK ID")
+    if mode == "contract":
+        return errors
+
+    required_complete = ("environmentFacts", "measurements", "rawOutputDigests", "replayResult", "evidenceLinks")
+    for field in required_complete:
+        if not metadata.get(field):
+            errors.append(f"ERROR SPK003: completed spike requires {field}")
+    manifest_name = metadata.get("environmentManifest")
+    environment: dict[str, Any] = {}
+    if isinstance(manifest_name, str):
+        try:
+            environment = load_json(directory / manifest_name)
+            errors.extend(schema_errors(ROOT / ".planning/research/schemas/environment.schema.json", [environment]))
+        except ValueError as exc:
+            errors.append(f"ERROR SPK004: completed spike requires valid environment facts: {exc}")
+
+    browser_run = bool(environment.get("browsers")) or "browser" in metadata.get("environmentFacts", {})
+    for measurement in metadata.get("measurements", []):
+        if not isinstance(measurement, dict):
+            continue
+        values = measurement.get("rawValues", [])
+        if measurement.get("nondeterministic") is True or browser_run:
+            if not isinstance(values, list) or len(values) != 5:
+                errors.append("ERROR SPK005: browser or nondeterministic measurement requires exactly five rawValues")
+                continue
+            if not all(isinstance(value, (int, float)) for value in values):
+                errors.append("ERROR SPK006: rawValues must be numeric")
+                continue
+            observed_range = measurement.get("range")
+            if observed_range != {"min": min(values), "max": max(values)}:
+                errors.append("ERROR SPK007: measurement range must equal the rawValues minimum and maximum")
+            ordered = sorted(values)
+            observed_median = (ordered[2] if len(ordered) % 2 else (ordered[len(ordered) // 2 - 1] + ordered[len(ordered) // 2]) / 2)
+            if measurement.get("median") != observed_median:
+                errors.append("ERROR SPK008: measurement median must equal the rawValues median")
+    if metadata.get("status") == "blocked":
+        blocked = metadata.get("blocked")
+        if not isinstance(blocked, dict) or not blocked.get("reason") or not blocked.get("affectedRequirements") or not blocked.get("affectedAdrs"):
+            errors.append("ERROR SPK009: blocked spike retains reason, affected requirements, and affected ADRs")
+        result = metadata.get("replayResult")
+        if isinstance(result, dict) and result.get("status") != "blocked":
+            errors.append("ERROR SPK010: blocked spike requires a blocked local replay result")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     command = parser.add_subparsers(dest="command", required=True)
     validate = command.add_parser("validate")
     validate.add_argument("--root", type=Path, required=True)
     validate.add_argument("--report", type=Path, required=True)
+    spike = command.add_parser("validate-spike")
+    spike.add_argument("directory", type=Path)
+    spike_mode = spike.add_mutually_exclusive_group(required=True)
+    spike_mode.add_argument("--contract", action="store_true")
+    spike_mode.add_argument("--complete", action="store_true")
     args = parser.parse_args()
+
+    if args.command == "validate-spike":
+        errors = validate_spike(args.directory.resolve(), "contract" if args.contract else "complete")[:100]
+        for error in errors:
+            print(error)
+        return 1 if errors else 0
+
     root = args.root
     errors: list[str] = []
     sources: list[dict[str, Any]] = []
