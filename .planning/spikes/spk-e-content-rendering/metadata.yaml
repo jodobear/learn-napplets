@@ -66,7 +66,7 @@ recommendation: >-
 disposition: retain-as-fixture
 environmentFacts:
   environmentManifest: environment.json
-  capturedAt: '2026-07-24T02:25:00Z'
+  capturedAt: '2026-07-24T02:08:16Z'
   runner: tools/phase1-python Python 3.14.3
   renderer: local deterministic Python renderer; PyYAML 6.0.3 only
   browserExecution: not-used; direct-installed browser inventory retained without browser execution
@@ -100,7 +100,7 @@ rawOutputDigests:
   - path: environment.json
     sha256: 06183ff7c618d6b58a89c16b30f023dd0b442be98a543ec2f3feabecec00f17d
   - path: measurements.yaml
-    sha256: 2654b8dd0c6b83d70cc00383cad626c324f032380d88c559048a3c1d75fd5a74
+    sha256: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8
   - path: /tmp/spk-e-content-rendering/manifest.json
     sha256: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
 replayResult:
@@ -112,4 +112,4 @@ evidenceLinks:
     sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
   - kind: measurement
     path: measurements.yaml
-    sha256: 2654b8dd0c6b83d70cc00383cad626c324f032380d88c559048a3c1d75fd5a74
+    sha256: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8

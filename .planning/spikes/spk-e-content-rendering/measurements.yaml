@@ -1,7 +1,7 @@
 schemaVersion: 1
 spikeId: SPK-E-CONTENT-RENDERING
 classification: local shared-source representation-parity observation
-measuredAt: '2026-07-24T02:25:00Z'
+measuredAt: '2026-07-24T02:08:16Z'
 nonProduction: true
 fixture:
   path: fixture.yaml
