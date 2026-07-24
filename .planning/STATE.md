@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-27-PLAN.md
-last_updated: "2026-07-24T11:58:21.691Z"
+stopped_at: Completed 01-23-PLAN.md
+last_updated: "2026-07-24T12:09:48.436Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 25
+  completed_plans: 26
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 25 of 28
+Plan: 26 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█████████░] 89%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -82,6 +82,7 @@ Progress: [█████████░] 89%
 | Phase 01 P21 | 256s | 2 tasks | 4 files |
 | Phase 01 P22 | 145s | 2 tasks | 4 files |
 | Phase 01 P27 | 386s | 2 tasks | 7 files |
+| Phase 01 P23 | 347s | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -152,6 +153,10 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: LES-005 through LES-009 remain deterministic conceptual simulations because no first real-lab operation or teaching-host profile is selected.
 - [Phase ?]: Manifest and dTag identity terms remain linked to provisional policy claims and blocked canonical questions, not teaching rules.
 - [Phase ?]: Host-mediated sibling composition has no observed canonical result and remains a conceptual comparison topic.
+- [Phase ?]: ADR-0009 retains fixed variants and bounded native text editing as a proposed least-authority direction; CodeMirror is unselected and CodeJar remains blocked.
+- [Phase ?]: ADR-0010 keeps public-package admission and updates blocked until release, root-export, provenance, integrity, implementation, compatibility, and review evidence are complete.
+- [Phase ?]: ADR-0011 proposes targeted D-20/D-36 source-refresh review work that retains old identity and never auto-changes claims, ADRs, or approvals.
+- [Phase ?]: The static public-site path remains a proposed post-Phase-2 direction; host, package, portable, external-delivery, and complex interactive capabilities remain deferred.
 
 ### Pending Todos
 
@@ -175,6 +180,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T11:58:21.683Z
-Stopped at: Completed 01-27-PLAN.md
+Last session: 2026-07-24T12:09:48.427Z
+Stopped at: Completed 01-23-PLAN.md
 Resume file: None
