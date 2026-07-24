@@ -1,0 +1,91 @@
+schemaVersion: 1
+id: SPK-IMPACT-H-BROWSER-EGRESS
+kind: spike-impact-fragment
+fragmentId: SPK-H-IMPACT-001
+spikeId: SPK-H-BROWSER-EGRESS
+metadataPath: spikes/spk-h-browser-egress/metadata.yaml
+metadataSha256: 1f6e42f81ce9f1ae765d9166eb9b09676f67c366e410feb744626127ba84fbfb
+reportPath: spikes/spk-h-browser-egress/report.md
+reportSha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
+measurementPath: spikes/spk-h-browser-egress/measurements.yaml
+measurementSha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
+sourceIds: [SRC-POLICY-001, SRC-POLICY-002]
+sourceLinks:
+  - sourceId: SRC-POLICY-001
+    relation: affects
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+measurementLinks:
+  - path: spikes/spk-h-browser-egress/measurements.yaml
+    sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
+evidenceLinks:
+  - kind: source
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: metadata
+    path: spikes/spk-h-browser-egress/metadata.yaml
+    sha256: 1f6e42f81ce9f1ae765d9166eb9b09676f67c366e410feb744626127ba84fbfb
+  - kind: measurement
+    path: spikes/spk-h-browser-egress/measurements.yaml
+    sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
+  - kind: report
+    path: spikes/spk-h-browser-egress/report.md
+    sha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
+proposedOpenQuestions:
+  - id: OQ-EGRESS-NIP-001
+    rationale: No current immutable upstream NIP statement resolves whether or how the measured channels are constrained or mediated; collect a complete reviewed source/claim pair before teaching a protocol rule.
+  - id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    rationale: Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser fixture or CSP result exists for any declared channel group.
+proposedDriftRecords:
+  - id: DRF-EGRESS-001
+    rationale: The local Chrome fixture outcome and Firefox execution block preserve the browser-egress versus mediated-access question without deciding upstream behavior.
+  - id: DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    rationale: The approved direct-installed Firefox surface did not produce a clean Playwright context; retain this tooling mismatch without inferring channel support or rejection.
+compatibilityObservations:
+  - browser: Chromium / Google Chrome 150.0.7871.124
+    status: passed
+    classification: observed-browser-behavior
+    rationale: Five fresh contexts completed all eight bounded local channel groups, source-window mapping, and semantic-negative CSP checks with no external target or secret.
+  - browser: Firefox 152.0.4
+    status: blocked
+    classification: observed-browser-behavior
+    rationale: All five required samples were blocked at BrowserType.launch before fixture attachment; no channel, referrer/origin, sandbox, or CSP behavior was observed.
+affectedRequirements: [EVID-04]
+affectedPhases: ['01', '02', '05']
+uncertainty:
+  state: material
+  reason: The only source bindings are project policy/archive inputs; Chrome measures one disposable local fixture, Firefox has no attached-context result, and neither result establishes upstream protocol behavior or a production CSP.
+proposedImpacts:
+  - type: requirement
+    id: EVID-04
+    rationale: The mandatory browser egress package has reproducible Chrome observation but remains cross-browser blocked until Firefox can be observed or a reviewed deferral maps its impact.
+  - type: adr
+    id: ADR-0005
+    rationale: Teaching-host evidence remains proposed and blocked for a cross-browser recommendation; this fixture cannot select a production host profile.
+  - type: adr
+    id: ADR-0014
+    rationale: Security and egress findings remain proposed project-policy input; no CSP or browser-channel conclusion is accepted by this fragment.
+  - type: phase
+    id: '01'
+    rationale: Plan 01-28 may consolidate the immutable local evidence but must preserve source, observation, policy, and question boundaries.
+  - type: phase
+    id: '02'
+    rationale: Product and content contracts must retain a static/deferred fallback rather than represent this fixture as an accepted host or protocol conclusion.
+  - type: phase
+    id: '05'
+    rationale: Any future first vertical slice must preserve the cross-browser and upstream-source blockers before introducing a real host path.
+securityEgress:
+  sandboxMode: sandbox=allow-scripts; opaque-origin srcdoc guest; top-level observer only
+  networkTargets: [127.0.0.1 ephemeral loopback only]
+  usedSecrets: false
+securityEgressFindingProposal:
+  id: SEF-BROWSER-EGRESS-001
+  classification: proposed-project-policy
+  finding: Use a restrictive, reviewable public-site CSP as proposed project policy; do not represent it as an upstream NIP requirement or a cross-browser conclusion from this local fixture.
+  owner: research-owner
+  requiredApproval: Dated security and protocol-technical review before ADR-0014 or any production CSP decision.
+  revisitTrigger: Collect a current immutable upstream egress statement and obtain Firefox attached-context measurements under the approved toolchain.

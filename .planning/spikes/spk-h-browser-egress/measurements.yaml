@@ -1,0 +1,94 @@
+schemaVersion: 1
+spikeId: SPK-H-BROWSER-EGRESS
+classification: observed browser behavior from an exact synthetic local fixture
+measuredAt: '2026-07-24T15:56:08Z'
+nonProduction: true
+fixture:
+  path: fixture.html
+  sha256: 51bd5b65fb89ede010391b64e6db8222b4d91ec9e8ed499835375b3cb0f6811e
+  bytes: 13118
+  selectedSpkCLoadingModel: top-level observer; opaque-origin srcdoc guest; sandbox=allow-scripts only
+  dataAuthority: Local synthetic endpoints and project-policy status labels only; no upstream protocol statement is encoded.
+runner:
+  path: runner.py
+  sha256: 4da4d9a494d6605609f8b18d44a4e6781cb44012adaa60f0394426dc114afaa3
+  toolchain: tools/phase1-python with playwright==1.61.0
+  browserDownloads: not-requested
+  browserArguments: none
+  loopbackOnly: true
+replay:
+  command: tools/phase1-python .planning/spikes/spk-h-browser-egress/runner.py --fixture .planning/spikes/spk-h-browser-egress/fixture.html --out /tmp/spk-h-browser-egress
+  deterministicInput: true
+  repetitionsRequired: 5
+  contextsPerBrowser: 5
+  networkDuringMeasurement: deterministic-loopback-only
+  packageInstallation: false
+  outputDirectory: /tmp/spk-h-browser-egress
+  browserResults:
+    path: /tmp/spk-h-browser-egress/browser-results.json
+    sha256: b5a25132b43de628d1c20c28eb09cfd8e47ecb497b51ffbbdc23e5baf18d827c
+  manifest:
+    path: /tmp/spk-h-browser-egress/manifest.json
+    sha256: bda16c727b9239313b05811d5e80845a9b53d5e878f127bf3d2937e79de64a53
+    result: blocked
+measurements:
+  - name: chromium-egress-fixture-elapsed-milliseconds
+    nondeterministic: true
+    rawValues: [405.229, 328.769, 327.803, 333.707, 333.753]
+    range: {min: 327.803, max: 405.229}
+    median: 333.707
+  - name: chromium-required-check-count
+    nondeterministic: false
+    rawValues: [19, 19, 19, 19, 19]
+    range: {min: 19, max: 19}
+    median: 19
+  - name: chromium-loopback-network-endpoint-count
+    nondeterministic: false
+    rawValues: [8, 8, 8, 8, 8]
+    range: {min: 8, max: 8}
+    median: 8
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+    note: Zero is an explicit unavailable sentinel, not a Firefox timing observation; Firefox exited before a clean Playwright context or fixture result existed.
+browserRuns:
+  - browser: Chromium / Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    outcome: passed
+    samples: [1, 2, 3, 4, 5]
+    sandbox: sandbox=allow-scripts only; opaque-origin srcdoc guest; top-level source mapping passed
+    measurementCsp: default-src 'none'; script-src 'unsafe-inline' LOOPBACK; connect-src LOOPBACK WS_LOOPBACK; img-src LOOPBACK; media-src LOOPBACK; worker-src blob: LOOPBACK; form-action LOOPBACK; base-uri 'none'; frame-src 'none'
+    channelGroups:
+      fetch: {status: fulfilled, endpoint: /fetch, result: '200 local-fetch'}
+      imagesMedia: {status: fulfilled, endpoints: [/pixel.png, /tone.wav], result: 'loaded and loadedmetadata'}
+      classicModuleScripts: {status: fulfilled, endpoints: [/classic.js, /module.js], result: 'both fixed markers observed'}
+      webSocket: {status: fulfilled, endpoint: /socket, result: local-websocket-ok}
+      eventSource: {status: fulfilled, endpoint: /events, result: local-event-source-ok}
+      worker: {status: fulfilled, endpoint: 'none; fixed blob: worker', result: local-worker-ok}
+      formNavigation: {status: observed, formReceipt: absent, navigationReceipt: absent, result: 'form blocked without allow-forms; top navigation rejected with SecurityError'}
+      referrerOrigin: {status: fulfilled, endpoints: [/headers default, /headers no-referrer], origin: 'null', referer: null, result: 'both receipts retained without normalization'}
+    semanticNegativeCsp:
+      status: passed
+      csp: default-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'
+      fetch: rejected-before-endpoint-receipt
+      image: rejected-before-endpoint-receipt
+  - browser: Firefox
+    executable: /usr/bin/firefox
+    expectedVersion: 152.0.4
+    outcome: blocked
+    attemptedSamples: [1, 2, 3, 4, 5]
+    affectedChannelGroups: [fetch, imagesMedia, classicModuleScripts, webSocket, eventSource, worker, formNavigation, referrerOrigin]
+    errorClass: BrowserType.launch
+    observedBehavior: Direct-installed Firefox exited with code 0 before Playwright 1.61.0 attached to a clean context; no fixture channel or CSP behavior was observed.
+    workaroundApplied: none
+    proposedFollowUp: Preserve the direct-installed Firefox/Playwright mismatch for review; do not download a browser or add launcher flags, profiles, preferences, or any configuration workaround.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  networkTargets: [127.0.0.1 ephemeral loopback only]
+  externalTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: Raw browser JSON and manifest remain under /tmp/spk-h-browser-egress only.
+result: blocked

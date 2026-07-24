@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' http://127.0.0.1:*; style-src 'unsafe-inline'; connect-src http://127.0.0.1:* ws://127.0.0.1:*; img-src http://127.0.0.1:*; media-src http://127.0.0.1:*; worker-src blob: http://127.0.0.1:*; form-action http://127.0.0.1:*; base-uri 'none'; frame-src 'none'">
     <title>SPK-H local browser egress fixture</title>
     <style>
       body { font: 16px system-ui, sans-serif; margin: 1rem; }
@@ -54,7 +54,7 @@
             `connect-src ${origin} ${websocketOrigin}`,
             `img-src ${origin}`,
             `media-src ${origin}`,
-            `worker-src ${origin}`,
+            `worker-src blob: ${origin}`,
             `form-action ${origin}`,
             "base-uri 'none'",
             "frame-src 'none'"
@@ -114,11 +114,12 @@
                   source.onerror = () => { clearTimeout(timeout); source.close(); reject(new Error('eventsource-error')); };
                   source.onmessage = (event) => { clearTimeout(timeout); source.close(); resolve(String(event.data)); };
                 });
-                const workerRoundTrip = (url) => new Promise((resolve, reject) => {
-                  const worker = new Worker(url);
-                  const timeout = setTimeout(() => { worker.terminate(); reject(new Error('worker-timeout')); }, 2500);
-                  worker.onerror = () => { clearTimeout(timeout); worker.terminate(); reject(new Error('worker-error')); };
-                  worker.onmessage = (event) => { clearTimeout(timeout); worker.terminate(); resolve(String(event.data)); };
+                const workerRoundTrip = () => new Promise((resolve, reject) => {
+                  const blobUrl = URL.createObjectURL(new Blob(["self.postMessage('local-worker-ok');"], { type: 'text/javascript' }));
+                  const worker = new Worker(blobUrl);
+                  const timeout = setTimeout(() => { worker.terminate(); URL.revokeObjectURL(blobUrl); reject(new Error('worker-timeout')); }, 2500);
+                  worker.onerror = () => { clearTimeout(timeout); worker.terminate(); URL.revokeObjectURL(blobUrl); reject(new Error('worker-error')); };
+                  worker.onmessage = (event) => { clearTimeout(timeout); worker.terminate(); URL.revokeObjectURL(blobUrl); resolve(String(event.data)); };
                 });
                 const settled = async (name, operation) => {
                   try { return { name, status: 'fulfilled', value: await operation() }; }
@@ -139,7 +140,7 @@
                   })));
                   channels.push(await settled('websocket', () => websocketRoundTrip(localWsOrigin + '/socket?case=' + encodeURIComponent(sampleId))));
                   channels.push(await settled('eventsource', () => eventSourceRoundTrip(localOrigin + '/events?case=' + encodeURIComponent(sampleId))));
-                  channels.push(await settled('worker', () => workerRoundTrip(localOrigin + '/worker.js?case=' + encodeURIComponent(sampleId))));
+                  channels.push(await settled('worker', () => workerRoundTrip()));
                   channels.push(await settled('referrer-origin', async () => {
                     const defaultHeaders = await (await fetch(localOrigin + '/headers?case=' + encodeURIComponent(sampleId) + '-default', { mode: 'cors' })).json();
                     const noReferrerHeaders = await (await fetch(localOrigin + '/headers?case=' + encodeURIComponent(sampleId) + '-no-referrer', { mode: 'cors', referrerPolicy: 'no-referrer' })).json();

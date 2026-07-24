@@ -209,7 +209,11 @@ def run_sample(browser: Browser, server: LocalEgressServer, family: str, sample:
         negative = result["negativeCsp"]
         channels = channel_map(measurement["channels"])
         negative_channels = channel_map(negative["channels"])
-        receipts = server.matching_receipts(case)
+        receipts = [
+            *server.matching_receipts(case),
+            *server.matching_receipts(f"{case}-default"),
+            *server.matching_receipts(f"{case}-no-referrer"),
+        ]
         negative_receipts = server.matching_receipts(f"{case}-negative")
         receipt_paths = {receipt["path"] for receipt in receipts}
 
@@ -227,7 +231,7 @@ def run_sample(browser: Browser, server: LocalEgressServer, family: str, sample:
         expect(set((channels["referrer-origin"]["value"] or {}).keys()) == {"defaultHeaders", "noReferrerHeaders"}, "both-referrer-modes-recorded", checks)
         expect(channels.get("form-navigation", {}).get("status") == "observed", "form-navigation-attempt-recorded", checks)
         expect("/form" not in receipt_paths and "/navigation" not in receipt_paths, "sandbox-without-form-or-top-navigation-token-prevented-receipt", checks)
-        expect({"/fetch", "/pixel.png", "/tone.wav", "/classic.js", "/module.js", "/socket", "/events", "/worker.js", "/headers"}.issubset(receipt_paths), "all-loopback-channel-endpoints-received", checks)
+        expect({"/fetch", "/pixel.png", "/tone.wav", "/classic.js", "/module.js", "/socket", "/events", "/headers"}.issubset(receipt_paths), "all-network-channel-endpoints-received", checks)
         expect(negative_channels.get("negative-fetch", {}).get("status") == "rejected", "semantic-negative-csp-rejects-fetch", checks)
         expect(negative_channels.get("negative-image", {}).get("status") == "rejected", "semantic-negative-csp-rejects-image", checks)
         expect(not negative_receipts, "semantic-negative-csp-prevents-local-endpoint-receipts", checks)

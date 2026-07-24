@@ -28,10 +28,11 @@
     "affectedRequirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}},
     "affectedPhases": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^\\d{2}$"}},
     "evidenceLinks": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"], "properties": {"kind": {"enum": ["source", "metadata", "measurement", "report"]}, "path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
-    "securityEgress": {"type": "object", "additionalProperties": false, "required": ["sandboxMode", "networkTargets", "usedSecrets"], "properties": {"sandboxMode": {"type": "string", "minLength": 1}, "networkTargets": {"type": "array", "items": {"type": "string"}}, "usedSecrets": {"const": false}}}
+    "securityEgress": {"type": "object", "additionalProperties": false, "required": ["sandboxMode", "networkTargets", "usedSecrets"], "properties": {"sandboxMode": {"type": "string", "minLength": 1}, "networkTargets": {"type": "array", "items": {"type": "string"}}, "usedSecrets": {"const": false}}},
+    "securityEgressFindingProposal": {"type": "object", "additionalProperties": false, "required": ["id", "classification", "finding", "owner", "requiredApproval"], "properties": {"id": {"type": "string", "pattern": "^SEF-[A-Z0-9][A-Z0-9-]*$"}, "classification": {"const": "proposed-project-policy"}, "finding": {"type": "string", "minLength": 1}, "owner": {"type": "string", "minLength": 1}, "requiredApproval": {"type": "string", "minLength": 1}, "revisitTrigger": {"type": "string", "minLength": 1}}}
   },
   "allOf": [
-    {"if": {"properties": {"spikeId": {"pattern": "^SPK-H-"}}}, "then": {"required": ["securityEgress"]}},
+    {"if": {"properties": {"spikeId": {"pattern": "^SPK-H-"}}}, "then": {"required": ["securityEgress", "fragmentId", "measurementPath", "measurementSha256", "sourceIds", "proposedOpenQuestions", "proposedDriftRecords", "compatibilityObservations", "affectedRequirements", "affectedPhases", "evidenceLinks", "securityEgressFindingProposal"]}},
     {"if": {"properties": {"spikeId": {"const": "SPK-C-BOUNDARY-HARNESS"}}}, "then": {"required": ["fragmentId", "measurementPath", "measurementSha256", "sourceIds", "proposedOpenQuestions", "proposedDriftRecords", "compatibilityObservations", "affectedRequirements", "affectedPhases", "evidenceLinks", "securityEgress"]}}
   ]
 }

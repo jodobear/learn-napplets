@@ -37,12 +37,16 @@ is assigned to `srcdoc`**. The template itself is committed and digest-pinned.
 
 | Mode | Exact guest CSP | Purpose | Classification |
 | --- | --- | --- | --- |
-| `local-channel-measurement` | `default-src 'none'; script-src 'unsafe-inline' LOOPBACK; connect-src LOOPBACK WS_LOOPBACK; img-src LOOPBACK; media-src LOOPBACK; worker-src LOOPBACK; form-action LOOPBACK; base-uri 'none'; frame-src 'none'` | Permit only the deterministic local endpoints required to observe the declared channels. | observed-browser-behavior input, not a public policy recommendation |
+| `local-channel-measurement` | `default-src 'none'; script-src 'unsafe-inline' LOOPBACK; connect-src LOOPBACK WS_LOOPBACK; img-src LOOPBACK; media-src LOOPBACK; worker-src blob: LOOPBACK; form-action LOOPBACK; base-uri 'none'; frame-src 'none'` | Permit only the deterministic local endpoints required to observe the declared channels. | observed-browser-behavior input, not a public policy recommendation |
 | `semantic-negative-csp` | `default-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'` | Require the bounded local fetch and image attempts to reject before external endpoint contact. | observed-browser-behavior input, not an upstream requirement |
 
-The top-level document has its own inert CSP: `default-src 'none'; script-src
-'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'`.
-It creates no network channel itself.
+The top-level document has its own constrained CSP: `default-src 'none'; script-src
+'unsafe-inline' http://127.0.0.1:*; style-src 'unsafe-inline'; connect-src
+http://127.0.0.1:* ws://127.0.0.1:*; img-src http://127.0.0.1:*; media-src
+http://127.0.0.1:*; worker-src blob: http://127.0.0.1:*; form-action
+http://127.0.0.1:*; base-uri 'none'; frame-src 'none'`. It creates no network
+channel itself; the inherited source list permits the opaque-origin guest's exact
+local measurement CSP to be tested instead of silently blocking it at the parent.
 
 ## Predeclared clean-context matrix
 
@@ -56,7 +60,7 @@ without explicit browser CLI flags, profile, preference, or browser download.
 | Classic/module scripts | `GET /classic.js` and `GET /module.js` | Both fixed markers become visible before channel run | Script outcome is not a browser security generalization. |
 | WebSocket | Local HTTP upgrade at `/socket` | Fixed `local-websocket-ok` response after one fixed message | No public WebSocket target exists. |
 | EventSource | `GET /events` | Fixed `local-event-source-ok` message, then client close | No public stream exists. |
-| Workers | `GET /worker.js` | Dedicated worker returns `local-worker-ok` | Worker runs only fixed fixture code. |
+| Workers | Fixed `blob:` worker created in the opaque-origin guest | Dedicated worker returns `local-worker-ok` without a network request | Worker runs only fixed fixture code; this records worker execution, not a same-origin worker-loader claim. |
 | Form/navigation | `POST /form` attempt and `top.location` assignment to `/navigation` | Without sandbox tokens, no endpoint receipt; bounded sandbox failure is recorded | It does not prove a protocol or future host policy. |
 | Referrer/origin | `GET /headers` with default and `referrerPolicy: 'no-referrer'` | Endpoint preserves received `Origin` and `Referer` values without interpretation | Values are recorded, not normalized into a claim. |
 
