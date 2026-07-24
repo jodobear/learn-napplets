@@ -1,0 +1,84 @@
+schemaVersion: 1
+spikeId: SPK-B-STATIC-FRAMEWORK
+classification: observed implementation behavior
+measuredAt: 2026-07-24T00:58:33Z
+nonProduction: true
+fixture:
+  path: fixture.md
+  sha256: 24ee064159a14de4f0c9e6c8d3f9684fad1ace76920cb899d8fc614a5a24e503
+replay:
+  command: node .planning/spikes/spk-b-static-framework/.experiment/run-comparison.mjs
+  repetitionsRequired: 5
+  repetitionsCompleted: 5
+  deterministicInput: true
+  networkDuringMeasurement: false
+  browserDownload: false
+candidates:
+  - name: astro
+    version: 7.1.3
+    approval: approved
+    sourceDigest: 62fd73f32b0cd09e225ebfeba14e185452626d4494e0e547641af7dacec3a351
+    outcome: pass
+    successfulReplays: 5
+    outputDigest: ec7e951d45a25fdcf0648263164a81e6709ade51ae8d9e3723bf3130b69eec94
+    outputFiles:
+      - dist/index.html
+      - dist/lab/index.html
+    elapsedMilliseconds: [574.272, 619.803, 584.662, 650.223, 575.047]
+    elapsedMillisecondsMean: 600.801
+    elapsedMillisecondsMin: 574.272
+    elapsedMillisecondsMax: 650.223
+    commandOutputDigests:
+      - 1eb07ee22247adc6aded78501ffef0e970c3f745192596b6af509c56f39ca3a5
+      - 2f2fe298b902f34f4f653fb2c5593858b0f548fa11116702521f7582643af77f
+      - 0724f85c691f91a6ca9ec6c3cf6f706271faba579eea215f077b8e5935df54b8
+      - 22eac159039cda4e019c926b4263a0247e3f5d4ed7a5117b8b2b489e92706d0f
+      - b43079ed07c52d8444fa9ddeadb7d19c3e4aacb08b024b196d9cef1571b7bd3e
+    criteria:
+      prerendering: pass; five static HTML builds emitted the same output digest
+      markdownStructuredContent: pass; public entry contained fixture Markdown-equivalent and structured-record text
+      interactiveLabs: pass; lab entry emitted a bounded local button/toggle/reset script and transcript
+      multipleEntries: pass; distinct public and lab entry files were emitted
+      testSupport: pass; deterministic output assertions passed on each replay
+      bundleAuthorityIsolation: pass; public and local-lab entries remained separately inspectable static outputs with no host authority fixture
+      accessibility: pass; emitted entries included keyboard buttons, reduced-motion media rule, transcript/state inspection, and reset/replay path
+      staticDeployment: pass; output was static HTML with no required live service
+    failures: []
+    blockers: []
+  - name: vitepress
+    version: 1.6.4
+    approval: approved
+    sourceDigest: 6190431f603b28d960a62fe77f300985271bccf199f44bc42aa50652782ded58
+    outcome: failed-fixture-accessibility-assertion
+    successfulReplays: 0
+    outputDigest: 2948ebf6c8c59be0f82b95e945d7110c492d375d646cddb1cbde9cea49a69c26
+    outputFiles:
+      - dist/index.html
+      - dist/lab/index.html
+    elapsedMilliseconds: [1408.259, 1504.092, 1515.608, 1461.244, 1471.271]
+    elapsedMillisecondsMean: 1472.095
+    elapsedMillisecondsMin: 1408.259
+    elapsedMillisecondsMax: 1515.608
+    commandOutputDigests:
+      - c5009c2097e9caf8239c9f5db9dc1f69ee662424f9051a2a8fe04b17231b4af2
+      - be49728265467273e61ed049bc6a1a9b440b899d0c09ccbb3d5274a951974f0d
+      - a6d08b17b8ff06c298c2e62b9124cfc18b2e7729941dfa2b8ec0e8bf4fc90b6c
+      - 6cae739f2c047ffb0dbbcbbc11a3607617bae7d79d2952ff46819cd2dcb9eaca
+      - 6cae739f2c047ffb0dbbcbbc11a3607617bae7d79d2952ff46819cd2dcb9eaca
+    criteria:
+      prerendering: pass; five static HTML builds emitted the same output digest
+      markdownStructuredContent: pass; public entry contained fixture Markdown and structured-record text
+      interactiveLabs: pass; lab entry emitted the bounded local toggle/reset script and transcript
+      multipleEntries: pass; distinct public and lab entry files were emitted
+      testSupport: fail; deterministic assertion could not find the reduced-motion marker in emitted HTML
+      bundleAuthorityIsolation: pass; public and local-lab entries remained separately inspectable static outputs with no host authority fixture
+      accessibility: fail; fixture assertion did not find the reduced-motion marker in emitted HTML
+      staticDeployment: pass; output was static HTML with no required live service
+    failures:
+      - accessibility assertion missing prefers-reduced-motion
+    blockers:
+      - Do not use this result to recommend VitePress for ADR-0002 until a separately reviewed fixture can prove the required reduced-motion/static-equivalent path without changing the approved package set.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  retainedExperimentArtifacts: false
+  result: pass
