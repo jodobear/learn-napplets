@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-14-PLAN.md (SPK-F blocked portable feasibility evidence recorded)
-last_updated: "2026-07-24T08:34:55.558Z"
+stopped_at: Completed 01-15-PLAN.md (SPK-G blocked public package evidence recorded)
+last_updated: "2026-07-24T08:51:13.425Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 17 of 28
+Plan: 18 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [██████░░░░] 57%
+Progress: [██████░░░░] 61%
 
 ## Performance Metrics
 
@@ -73,6 +73,7 @@ Progress: [██████░░░░] 57%
 | Phase 01 P12 | 880s | 2 tasks | 7 files |
 | Phase 01 P13 | 634s | 2 tasks | 7 files |
 | Phase 01 P14 | 6h 18m 46s | 3 tasks | 7 files |
+| Phase 01-research-and-truth-baseline P15 | 710s | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Astro 7.1.3 and VitePress 1.6.4 were installed only after dated SPK-F-specific human approval.
 - [Phase ?]: SPK-F is a blocked ADR-0007 evidence result because Firefox exited before Playwright attachment; no portable outcome is selected.
 - [Phase ?]: SPK-B VitePress reduced-motion/static-equivalent evidence remains independently unresolved.
+- [Phase ?]: SPK-G blocks CAND-NAPPLET-WEB-PACKAGE until an exact public release, root export, provenance, integrity, and immutable release/implementation baseline are collected and approved.
+- [Phase ?]: SPK-G zero-operation replays are supply-chain blocker evidence only, never package conformance or protocol authority.
 
 ### Pending Todos
 
@@ -142,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T08:34:55.547Z
-Stopped at: Completed 01-14-PLAN.md (SPK-F blocked portable feasibility evidence recorded)
+Last session: 2026-07-24T08:51:13.417Z
+Stopped at: Completed 01-15-PLAN.md (SPK-G blocked public package evidence recorded)
 Resume file: None
