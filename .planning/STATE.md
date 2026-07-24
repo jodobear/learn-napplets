@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-17-PLAN.md (SPK-I accessible diagram/motion evidence recorded; Firefox browser block preserved)
-last_updated: "2026-07-24T09:16:43.873Z"
+stopped_at: Completed 01-18-PLAN.md (SPK-J least-authority editing evidence recorded; Firefox block preserved)
+last_updated: "2026-07-24T09:49:41.100Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 19 of 28
+Plan: 20 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [██████░░░░] 64%
+Progress: [███████░░░] 68%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Progress: [██████░░░░] 64%
 | Phase 01 P14 | 6h 18m 46s | 3 tasks | 7 files |
 | Phase 01-research-and-truth-baseline P15 | 710s | 3 tasks | 7 files |
 | Phase 01 P17 | 1201s | 2 tasks | 7 files |
+| Phase 01-research-and-truth-baseline P18 | 1224s | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -126,6 +127,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-G zero-operation replays are supply-chain blocker evidence only, never package conformance or protocol authority.
 - [Phase ?]: SPK-I retains data-driven semantic SVG as a proposed static-first ADR-0006 baseline; no visual dependency or dynamic state controller was added.
 - [Phase ?]: SPK-I remains blocked for cross-browser recommendation because direct-installed Firefox exited before Playwright attached; no launcher or configuration workaround was used.
+- [Phase ?]: SPK-J proposes fixed tested variants as the default and controlled native textarea only for the declared bounded edit; no arbitrary learner code executes in trusted context.
+- [Phase ?]: SPK-J does not select CodeMirror despite bounded Chromium success; CodeJar and cross-browser ADR-0009 evidence remain blocked.
 
 ### Pending Todos
 
@@ -149,6 +152,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T09:16:43.863Z
-Stopped at: Completed 01-17-PLAN.md (SPK-I accessible diagram/motion evidence recorded; Firefox browser block preserved)
+Last session: 2026-07-24T09:49:41.093Z
+Stopped at: Completed 01-18-PLAN.md (SPK-J least-authority editing evidence recorded; Firefox block preserved)
 Resume file: None
