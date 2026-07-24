@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-13-PLAN.md (SPK-E shared-content parity evidence passed)
-last_updated: "2026-07-24T02:11:47.892Z"
+stopped_at: Completed 01-14-PLAN.md (SPK-F blocked portable feasibility evidence recorded)
+last_updated: "2026-07-24T08:34:55.558Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 16 of 28
+Plan: 17 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█████░░░░░] 54%
+Progress: [██████░░░░] 57%
 
 ## Performance Metrics
 
@@ -72,6 +72,7 @@ Progress: [█████░░░░░] 54%
 | Phase 01 P11 | 888s | 2 tasks | 11 files |
 | Phase 01 P12 | 880s | 2 tasks | 7 files |
 | Phase 01 P13 | 634s | 2 tasks | 7 files |
+| Phase 01 P14 | 6h 18m 46s | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-E keeps one bounded fixture as the content-fact source and validates six representation outputs for exact provenance/status parity.
 - [Phase ?]: SPK-E preserves exact canonical vocabulary values where canonical records provide no separate terminology, maturity, uncertainty, or status IDs.
 - [Phase ?]: SPK-E retains generated outputs only in /tmp and commits digest-based replay evidence as proposed ADR-0004 input.
+- [Phase ?]: Astro 7.1.3 and VitePress 1.6.4 were installed only after dated SPK-F-specific human approval.
+- [Phase ?]: SPK-F is a blocked ADR-0007 evidence result because Firefox exited before Playwright attachment; no portable outcome is selected.
+- [Phase ?]: SPK-B VitePress reduced-motion/static-equivalent evidence remains independently unresolved.
 
 ### Pending Todos
 
@@ -128,6 +132,7 @@ None yet.
 - Do not create a production scaffold before Phase 1 and Phase 2 gates pass.
 - SPK-C Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; no cross-browser fixture evidence exists for ADR-0005.
 - SPK-D verified-loader feasibility is blocked: immutable current manifest/identity source records and reviewed signature/blob/aggregate/loader verifier provenance are unavailable; ADR-0005 and ADR-0008 receive proposed blocked evidence only.
+- SPK-F cross-browser feasibility is blocked: direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; preserve SPK-B VitePress accessibility evidence.
 
 ## Deferred Items
 
@@ -137,6 +142,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T02:11:47.885Z
-Stopped at: Completed 01-13-PLAN.md (SPK-E shared-content parity evidence passed)
+Last session: 2026-07-24T08:34:55.547Z
+Stopped at: Completed 01-14-PLAN.md (SPK-F blocked portable feasibility evidence recorded)
 Resume file: None

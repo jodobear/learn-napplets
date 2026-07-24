@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 15/28 plans executed
+**Plans**: 16/28 plans executed
 
 Plans:
 **Wave 1**
@@ -100,7 +100,7 @@ Plans:
 - [x] 01-11-PLAN.md — Run SPK-C browser evidence and preserve its immutable local impact fragment.
 - [x] 01-12-PLAN.md — Run SPK-D verified-loader evidence and preserve its immutable local impact fragment.
 - [x] 01-13-PLAN.md — Run SPK-E shared-content rendering evidence.
-- [ ] 01-14-PLAN.md — Run SPK-F portable Workbench/course feasibility evidence.
+- [x] 01-14-PLAN.md — Run SPK-F portable Workbench/course feasibility evidence.
 - [ ] 01-15-PLAN.md — Run SPK-G package/conformance evidence and preserve its immutable local impact fragment.
 - [ ] 01-17-PLAN.md — Run SPK-I diagram/motion accessibility evidence.
 - [ ] 01-18-PLAN.md — Run SPK-J least-authority code-editing evidence.
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 15/28 | In Progress|  |
+| 1. Research and Truth Baseline | 16/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
