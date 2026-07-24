@@ -64,16 +64,19 @@ safety:
   noDestructiveState: true
   liveProbe: not-used
 externalProbeAuthorization:
-  status: not-authorized
+  status: local-only
+  decisionDate: '2026-07-24'
+  approverRole: project operator
   authorizationRule: >-
-    An external write is ineligible until the project operator selects
-    sandbox-probe in Task 2, explicitly names one target, and supplies all
-    required sandbox, cleanup, retention, owner, security, and release fields.
+    Task 2 selected local-only. No external write is authorized; no target is
+    named; no sandbox exception is active; and a later sandbox-probe decision
+    would require a new explicit human authorization with every named-target,
+    cleanup, retention, owner, security, and release field before any command
+    could become eligible.
   credentialHandling: >-
-    No account or credential is inspected, requested, or accessed for SPK-K
-    while status is not-authorized. If later authorized, credentials remain
-    outside version control and command output; the record may state only the
-    credential source class and redaction result.
+    Local-only explicitly prohibits account or credential inspection, request,
+    or access. Credentials remain outside version control and command output;
+    no credential source class, value, or redacted provider result is recorded.
 uncertainty:
   state: material
   reason: >-
