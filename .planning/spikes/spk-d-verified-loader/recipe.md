@@ -67,7 +67,7 @@ Then run:
 ```bash
 tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-d-verified-loader --complete
 tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-d-verified-loader/report.md
-tools/phase1-python tools/validate-research.py validate-impact-fragment .planning/spikes/spk-d-verified-loader/impact-fragment.yaml
+tools/phase1-python tools/validate-research.py validate-impact-fragment --root .planning .planning/spikes/spk-d-verified-loader/impact-fragment.yaml
 ```
 
 ## Outcome thresholds

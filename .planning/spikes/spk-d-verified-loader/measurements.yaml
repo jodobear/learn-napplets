@@ -1,0 +1,84 @@
+schemaVersion: 1
+spikeId: SPK-D-VERIFIED-LOADER
+classification: local fixture-integrity observation
+measuredAt: '2026-07-24T01:49:36Z'
+nonProduction: true
+fixture:
+  path: fixture.json
+  sha256: 7d5a04eb9b5684c147053ee913aae375fdd8a994ba7e15c9da309a3d1e944cc6
+  artifact:
+    byteLength: 29
+    sha256: b83079843b0410559ad4e275557c4103d3a3b86026fc0bc9eccf62fe42e9607c
+    outcome: unchanged local bytes decode and match the pinned digest
+  mutation:
+    caseId: one-byte-xor-offset-0
+    changedByteOffsets: [0]
+    byteLength: 29
+    sha256: 34e7f0624caefa1b9e3257946df0eed0d37c0b6253c41d0a7d3975a622e39d9d
+    outcome: exactly one local byte changes and the pinned mutated digest matches
+replay:
+  command: tools/phase1-python -c fixture-integrity-only
+  toolchain: CPython 3.14.3 via tools/phase1-python
+  deterministicInput: true
+  repetitionsRequired: 5
+  completedSamples: [1, 2, 3, 4, 5]
+  networkDuringMeasurement: false
+  packageInstallation: false
+  browserExecution: not-used
+  exitCodes: [0, 0, 0, 0, 0]
+  changedByteOffsetsPerSample: [[0], [0], [0], [0], [0]]
+  verificationStatePerSample: [blocked, blocked, blocked, blocked, blocked]
+measurements:
+  - name: fixture-integrity-command-exit-code
+    nondeterministic: false
+    rawValues: [0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: changed-byte-count
+    nondeterministic: false
+    rawValues: [1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: reviewed-verification-surfaces-available
+    nondeterministic: false
+    rawValues: [0]
+    range: {min: 0, max: 0}
+    median: 0
+verificationSurfaces:
+  manifest-resolution:
+    status: blocked
+    reason: No immutable current manifest source or reviewed resolver implementation is registered.
+  identity-mapping:
+    status: blocked
+    reason: No immutable current identity source or reviewed mapping implementation is registered.
+  signature-verification:
+    status: blocked
+    reason: No reviewed public verifier provenance is registered; no signature value or verifier was fabricated.
+  blob-verification:
+    status: blocked
+    reason: No reviewed public verifier provenance is registered; no blob contract or verifier was fabricated.
+  aggregate-verification:
+    status: blocked
+    reason: No reviewed public verifier provenance is registered; no aggregate value, algorithm, or verifier was fabricated.
+  exact-byte-loading:
+    status: blocked
+    reason: Byte decoding and pinned digest comparison replayed, but no reviewed loader implementation is available to establish loading behavior.
+relevantErrors:
+  - primitive: manifest-resolution
+    error: not-run because the immutable current source and reviewed resolver surface are absent
+  - primitive: identity-mapping
+    error: not-run because the immutable current source and reviewed mapping surface are absent
+  - primitive: signature-verification
+    error: not-run because reviewed verifier provenance is absent
+  - primitive: blob-verification
+    error: not-run because reviewed verifier provenance is absent
+  - primitive: aggregate-verification
+    error: not-run because reviewed verifier provenance is absent
+  - primitive: exact-byte-loading
+    error: not-run as loader behavior because a reviewed loader implementation is absent
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  networkTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: false
+result: blocked

@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-D-VERIFIED-LOADER
 kind: spike
 nonProduction: true
-status: planned
+status: blocked
 hypothesis: >-
   A current, immutable, publicly reviewed verification implementation and source
   baseline would be necessary to measure manifest resolution, identity mapping,
@@ -18,7 +18,7 @@ commands:
   - tools/phase1-python -c "import hashlib,json; f=json.load(open('.planning/spikes/spk-d-verified-loader/fixture.json')); b=bytes.fromhex(f['artifact']['exactBytesHex']); m=bytes([b[0]^1])+b[1:]; assert len(b)==f['artifact']['byteLength']==len(m); assert hashlib.sha256(b).hexdigest()==f['artifact']['sha256']; assert sum(x!=y for x,y in zip(b,m))==1; assert hashlib.sha256(m).hexdigest()==f['mutationCase']['sha256']; assert all(s['status']=='blocked' for s in f['verificationSurfaces'])"
   - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-d-verified-loader --complete
   - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-d-verified-loader/report.md
-  - tools/phase1-python tools/validate-research.py validate-impact-fragment .planning/spikes/spk-d-verified-loader/impact-fragment.yaml
+  - tools/phase1-python tools/validate-research.py validate-impact-fragment --root .planning .planning/spikes/spk-d-verified-loader/impact-fragment.yaml
 environmentManifest: environment.json
 sourceBindings:
   - sourceId: SRC-POLICY-001
@@ -162,3 +162,51 @@ recommendation: >-
   Profile 2 or teach manifest/identity/verification behavior until immutable
   source and reviewed verifier evidence are collected and approved.
 disposition: blocked
+environmentFacts:
+  environmentManifest: environment.json
+  capturedAt: '2026-07-24T01:49:36Z'
+  runner: tools/phase1-python Python 3.14.3
+  fixtureIntegrity: standard-library digest comparison only
+  browserExecution: not-used; installed browser inventory retained without browser execution
+  verificationSurface: unavailable; no reviewed verifier was added or substituted
+measurements:
+  - name: fixture-integrity-command-exit-code
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: changed-byte-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: reviewed-verification-surfaces-available
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+rawOutputDigests:
+  - path: fixture.json
+    sha256: 7d5a04eb9b5684c147053ee913aae375fdd8a994ba7e15c9da309a3d1e944cc6
+  - path: environment.json
+    sha256: 603fdef9b0d7948f52bfdb1c640b3f61c97debc549d2e7d9c054f188871bb6c1
+  - path: measurements.yaml
+    sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
+replayResult:
+  status: blocked
+  outputDigest: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
+evidenceLinks:
+  - kind: source
+    path: ../../research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: measurement
+    path: measurements.yaml
+    sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
+blocked:
+  reason: >-
+    The replay proved only the supplied local byte-digest and one-byte mutation
+    assertions. Current immutable manifest and identity sources plus reviewed
+    signature/blob/aggregate/loader verifier provenance are absent, so no
+    protocol-sensitive verification surface was executed or inferred.
+  affectedRequirements: [EVID-04]
+  affectedAdrs: [ADR-0005, ADR-0008]
