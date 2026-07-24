@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-28-PLAN.md
-last_updated: "2026-07-24T11:28:04.842Z"
+stopped_at: Completed 01-21-PLAN.md
+last_updated: "2026-07-24T11:40:26.068Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 22 of 28
+Plan: 23 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [████████░░] 79%
+Progress: [████████░░] 82%
 
 ## Performance Metrics
 
@@ -79,6 +79,7 @@ Progress: [████████░░] 79%
 | Phase 01 P19 | 13m | 3 tasks | 8 files |
 | Phase 01 P16 | 18m 30s | 2 tasks | 10 files |
 | Phase 01 P28 | 37m | 2 tasks | 8 files |
+| Phase 01 P21 | 256s | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -139,6 +140,10 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: A restrictive public-site CSP is proposed project policy only; OQ-EGRESS-NIP-001 and DRF-EGRESS-001 remain open pending immutable upstream evidence and review.
 - [Phase ?]: All SPK-A through SPK-L reports are explicit no-impact or consolidated canonical evidence; raw report prose is not canonical authority.
 - [Phase ?]: SPK-C/D/G/H outcomes remain blocked or materially uncertain; incompatible fragment stable IDs publish deterministic OQ-CONSOLIDATION review work instead of overwriting evidence.
+- [Phase ?]: ADR 0001 carries the narrow public-site-first workspace boundary as a proposed review direction while retaining the broader alternative.
+- [Phase ?]: ADR 0002 carries Astro 7.1.3 only as a proposed fixture-supported candidate and retains the VitePress reduced-motion/static-equivalent blocker.
+- [Phase ?]: ADR 0003 treats local artifact assembly as non-production evidence and keeps any external deployment or publication behind new authorization.
+- [Phase ?]: ADR 0004 proposes common structured-source parity as a Phase 2 contract constraint without authorizing a production renderer.
 
 ### Pending Todos
 
@@ -162,6 +167,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T11:28:04.832Z
-Stopped at: Completed 01-28-PLAN.md
+Last session: 2026-07-24T11:40:26.059Z
+Stopped at: Completed 01-21-PLAN.md
 Resume file: None
