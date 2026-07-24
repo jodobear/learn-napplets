@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-E-CONTENT-RENDERING
 kind: spike
 nonProduction: true
-status: planned
+status: passed
 hypothesis: >-
   One bounded, local structured content record can deterministically render static
   HTML, guest content, Markdown, a glossary entry, a transcript, and knowledge
@@ -64,3 +64,52 @@ recommendation: >-
   Retain this non-production fixture as proposed ADR-0004 schema/render/LLM parity
   evidence; any production content pipeline remains deferred pending human review.
 disposition: retain-as-fixture
+environmentFacts:
+  environmentManifest: environment.json
+  capturedAt: '2026-07-24T02:25:00Z'
+  runner: tools/phase1-python Python 3.14.3
+  renderer: local deterministic Python renderer; PyYAML 6.0.3 only
+  browserExecution: not-used; direct-installed browser inventory retained without browser execution
+  network: not-used
+measurements:
+  - name: renderer-command-exit-code
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: generated-representation-count
+    nondeterministic: false
+    rawValues: [6, 6, 6, 6, 6]
+    range: {min: 6, max: 6}
+    median: 6
+  - name: canonical-field-parity-pass-count
+    nondeterministic: false
+    rawValues: [6, 6, 6, 6, 6]
+    range: {min: 6, max: 6}
+    median: 6
+  - name: replay-manifest-byte-match
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+rawOutputDigests:
+  - path: fixture.yaml
+    sha256: 191cfe305f1be02f0c8ae7cf6548bd118ab6b97d0bcdaf63a8ebd8b3f7986f71
+  - path: render.py
+    sha256: 9a78ae19b9bd79158fccc47921fb76f78a59361c94ada4131fc97f08c1508fb8
+  - path: environment.json
+    sha256: 06183ff7c618d6b58a89c16b30f023dd0b442be98a543ec2f3feabecec00f17d
+  - path: measurements.yaml
+    sha256: 2654b8dd0c6b83d70cc00383cad626c324f032380d88c559048a3c1d75fd5a74
+  - path: /tmp/spk-e-content-rendering/manifest.json
+    sha256: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
+replayResult:
+  status: passed
+  outputDigest: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
+evidenceLinks:
+  - kind: source
+    path: ../../research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: measurement
+    path: measurements.yaml
+    sha256: 2654b8dd0c6b83d70cc00383cad626c324f032380d88c559048a3c1d75fd5a74

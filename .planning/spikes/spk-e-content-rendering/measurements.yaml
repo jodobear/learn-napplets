@@ -1,0 +1,93 @@
+schemaVersion: 1
+spikeId: SPK-E-CONTENT-RENDERING
+classification: local shared-source representation-parity observation
+measuredAt: '2026-07-24T02:25:00Z'
+nonProduction: true
+fixture:
+  path: fixture.yaml
+  sha256: 191cfe305f1be02f0c8ae7cf6548bd118ab6b97d0bcdaf63a8ebd8b3f7986f71
+renderer:
+  path: render.py
+  sha256: 9a78ae19b9bd79158fccc47921fb76f78a59361c94ada4131fc97f08c1508fb8
+  inputAuthority: fixture.yaml is the only content-fact input; templates do not define evidence/status values.
+replay:
+  command: tools/phase1-python render.py --fixture fixture.yaml --out /tmp/spk-e-content-rendering
+  toolchain: CPython 3.14.3 via tools/phase1-python
+  deterministicInput: true
+  repetitionsRequired: 5
+  completedSamples: [1, 2, 3, 4, 5]
+  networkDuringMeasurement: false
+  packageInstallation: false
+  browserExecution: not-used
+  exitCodes: [0, 0, 0, 0, 0]
+  manifestByteMatchAcrossSamples: [true, true, true, true, true]
+  outputDirectory: /tmp/spk-e-content-rendering
+  manifest:
+    path: /tmp/spk-e-content-rendering/manifest.json
+    sha256: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
+    result: passed
+canonicalFieldParity:
+  requiredFields: [sourceId, claimId, terminology, maturity, uncertaintyState, status]
+  expected:
+    sourceId: SRC-POLICY-002
+    claimId: CLM-POLICY-001
+    terminology: immutable source record
+    maturity: accepted
+    uncertaintyState: limited
+    status: provisional
+  outcomes:
+    - target: static-html
+      output: static.html
+      sha256: b2686612c91bafb13a00a4040efdfd652c2d41ae8965ac4571b8a796cb5e58a1
+      parity: passed
+    - target: guest-content
+      output: guest-content.json
+      sha256: 0530273fe307a845c228d59bc69940a37a52f0ca1e3cbeb43b9a540fd666742c
+      parity: passed
+    - target: markdown
+      output: content.md
+      sha256: fe1102b2fa0fc5d8ca78a35bfc783e9176c661ac14e290d7a49ba888ec85c921
+      parity: passed
+    - target: glossary
+      output: glossary.md
+      sha256: c3239ca1984b7dd75ec8a00bdd9491e0212768b7f5466091b8f313310411422c
+      parity: passed
+    - target: transcript
+      output: transcript.txt
+      sha256: ae6874a4f66663fd072f9ef652edbeb950e7a35fbe0080e9724a22d2ba826514
+      parity: passed
+    - target: knowledge-json
+      output: knowledge.json
+      sha256: 9a69344e7d2a372e03f0ac65bac73cdc336f7a653c33fa96d84648011d75d6cf
+      parity: passed
+measurements:
+  - name: renderer-command-exit-code
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: generated-representation-count
+    nondeterministic: false
+    rawValues: [6, 6, 6, 6, 6]
+    range: {min: 6, max: 6}
+    median: 6
+  - name: canonical-field-parity-pass-count
+    nondeterministic: false
+    rawValues: [6, 6, 6, 6, 6]
+    range: {min: 6, max: 6}
+    median: 6
+  - name: replay-manifest-byte-match
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+renderingMismatch: none
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  applicationRoutesCreated: []
+  frameworkScaffoldCreated: []
+  secondAuthoringSourcesCreated: []
+  networkTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: /tmp outputs only; no generated representation committed
+result: passed
