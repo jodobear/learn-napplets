@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-15-PLAN.md (SPK-G blocked public package evidence recorded)
-last_updated: "2026-07-24T08:51:13.425Z"
+stopped_at: Completed 01-17-PLAN.md (SPK-I accessible diagram/motion evidence recorded; Firefox browser block preserved)
+last_updated: "2026-07-24T09:16:43.873Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 18 of 28
+Plan: 19 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [██████░░░░] 61%
+Progress: [██████░░░░] 64%
 
 ## Performance Metrics
 
@@ -74,6 +74,7 @@ Progress: [██████░░░░] 61%
 | Phase 01 P13 | 634s | 2 tasks | 7 files |
 | Phase 01 P14 | 6h 18m 46s | 3 tasks | 7 files |
 | Phase 01-research-and-truth-baseline P15 | 710s | 3 tasks | 7 files |
+| Phase 01 P17 | 1201s | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-B VitePress reduced-motion/static-equivalent evidence remains independently unresolved.
 - [Phase ?]: SPK-G blocks CAND-NAPPLET-WEB-PACKAGE until an exact public release, root export, provenance, integrity, and immutable release/implementation baseline are collected and approved.
 - [Phase ?]: SPK-G zero-operation replays are supply-chain blocker evidence only, never package conformance or protocol authority.
+- [Phase ?]: SPK-I retains data-driven semantic SVG as a proposed static-first ADR-0006 baseline; no visual dependency or dynamic state controller was added.
+- [Phase ?]: SPK-I remains blocked for cross-browser recommendation because direct-installed Firefox exited before Playwright attached; no launcher or configuration workaround was used.
 
 ### Pending Todos
 
@@ -136,6 +139,7 @@ None yet.
 - SPK-C Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; no cross-browser fixture evidence exists for ADR-0005.
 - SPK-D verified-loader feasibility is blocked: immutable current manifest/identity source records and reviewed signature/blob/aggregate/loader verifier provenance are unavailable; ADR-0005 and ADR-0008 receive proposed blocked evidence only.
 - SPK-F cross-browser feasibility is blocked: direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; preserve SPK-B VitePress accessibility evidence.
+- SPK-I: Direct-installed Firefox 152.0.4 exits before approved Playwright 1.61.0 attaches; Chrome passed five static SVG samples, but ADR-0006 cannot receive a positive cross-browser recommendation.
 
 ## Deferred Items
 
@@ -145,6 +149,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T08:51:13.417Z
-Stopped at: Completed 01-15-PLAN.md (SPK-G blocked public package evidence recorded)
+Last session: 2026-07-24T09:16:43.863Z
+Stopped at: Completed 01-17-PLAN.md (SPK-I accessible diagram/motion evidence recorded; Firefox browser block preserved)
 Resume file: None
