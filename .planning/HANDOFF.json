@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-24T10:06:51Z",
+  "phase": "01",
+  "phase_name": "research-and-truth-baseline",
+  "phase_dir": ".planning/phases/01-research-and-truth-baseline",
+  "plan": 16,
+  "task": 0,
+  "total_tasks": 2,
+  "status": "paused",
+  "completed_tasks": [
+    {"id":"phase-01/plans-01-15","name":"Plans 01-01 through 01-15","status":"done","commit":"d65a9d2"},
+    {"id":"01-17","name":"Accessible diagram and motion evidence","status":"done","commit":"bfaaed2"},
+    {"id":"01-18","name":"Least-authority code-editing evidence","status":"done","commit":"7b2f213"},
+    {"id":"01-19","name":"Local-only deployment evidence","status":"done","commit":"a9d82a1"},
+    {"id":"01-20","name":"Source freshness evidence","status":"done","commit":"29843ae"},
+    {"id":"01-26","name":"Audience and teaching-scope synthesis","status":"done","commit":"bd83d4d"}
+  ],
+  "remaining_tasks": [
+    {"id":"01-16","name":"Browser network and egress harness","status":"not_started"},
+    {"id":"01-28","name":"Serialized spike-impact consolidation","status":"not_started"},
+    {"id":"01-21","name":"Remaining Wave 11 work","status":"not_started"},
+    {"id":"01-22","name":"Remaining Wave 11 work","status":"not_started"},
+    {"id":"01-27","name":"Remaining Wave 11 work","status":"not_started"},
+    {"id":"01-23","name":"Remaining Wave 12 work","status":"not_started"},
+    {"id":"01-25","name":"Remaining Wave 12 work","status":"not_started"},
+    {"id":"01-24","name":"Final human closeout","status":"not_started"}
+  ],
+  "blockers": [
+    {"id":"firefox-playwright","scope":"SPK-C/SPK-F/SPK-I/SPK-J and later browser-sensitive conclusions","detail":"Installed Firefox 152.0.4 exits before approved Playwright 1.61.0 attaches. Preserve as blocked evidence; do not download managed browsers or change launch configuration without a new reviewed decision."},
+    {"id":"public-package-baseline","scope":"SPK-D/SPK-G and related ADRs","detail":"No complete immutable public manifest/identity/verifier or released public-package/export baseline exists; blocked evidence is intentional."}
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision":"Use installed Chrome and Firefox only","rationale":"Managed Playwright browser downloads were not requested.","phase":"01"},
+    {"decision":"SPK-F Astro 7.1.3 and VitePress 1.6.4 installs approved only for isolated disposable evidence","rationale":"Exact registry integrity and MIT licenses reviewed; no production dependency or ADR acceptance.","phase":"01"},
+    {"decision":"SPK-G public package candidate blocked","rationale":"No qualifying exact release, root export, provenance, integrity, or immutable release/implementation baseline exists.","phase":"01"},
+    {"decision":"SPK-J CodeJar blocked; exact four-package CodeMirror set approved only for isolated experiment with explicit incomplete transitive-lock-review exception","rationale":"Measure package editor without selecting it or executing learner code; recommendation remains fixed variants/controlled textarea.","phase":"01"},
+    {"decision":"SPK-K local-only","rationale":"No external write, deployment, publication, account, credential, or remote target was authorized.","phase":"01"}
+  ],
+  "uncommitted_files": [".planning/research/reports/validation.md", ".claude/", ".planning/PROJECT.md", ".planning/config.json", ".planning/governance/", ".planning/graphs/", ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md", ".planning/phases/01-research-and-truth-baseline/01-DISCUSSION-LOG.md", ".planning/research/.cache/", ".planning/traceability/", ".planning/validation/", "CLAUDE.md", "graphify-out/"],
+  "next_action": "Run /gsd-resume-work, then continue /gsd-execute-phase 1. Resume at Wave 9 Plan 01-16; do not rerun completed Wave 8 plans.",
+  "context_notes": "20 of 28 plans complete. Wave 8 is complete. Post-wave gate passed: 34 Phase 1 unit tests, research validation, planning validation (expected PENDING001 only), schema drift gate, codebase drift advisory, and UI safety gate. Worktree isolation remains auto-degraded; execute sequentially on master. Task #14 remains in progress; Tasks #15 and #16 remain blocked behind execution."
+}
