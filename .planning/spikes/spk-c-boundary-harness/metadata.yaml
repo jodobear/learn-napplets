@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-C-BOUNDARY-HARNESS
 kind: spike
 nonProduction: true
-status: planned
+status: blocked
 hypothesis: >-
   A local sandboxed iframe can receive a declared domain value before its guest
   script runs, exchange a bounded postMessage request and deterministic response,
@@ -16,6 +16,8 @@ variables:
   controlled: [local fixture, sandbox allow-scripts only, clean browser context, fixed nonce, no network targets, five samples per browser]
 commands:
   - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-c-boundary-harness --contract
+  - tools/phase1-python .planning/spikes/spk-c-boundary-harness/runner.py
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-c-boundary-harness --complete
   - Use only Playwright 1.61.0 with the installed /usr/bin/google-chrome and /usr/bin/firefox executables; do not run playwright install or download a managed browser.
 environmentManifest: environment.json
 browserExecutionSurfaces:
@@ -144,3 +146,44 @@ recommendation: >-
   preserve the upstream-source blocker and require human review before selecting a
   teaching-host profile.
 disposition: retain-as-fixture
+environmentFacts:
+  manifest: environment.json
+  capturedAt: '2026-07-24T01:32:14Z'
+  browserRunner: direct installed Google Chrome and Firefox via Playwright 1.61.0
+  browserFlags: headless=true; no explicit browser CLI flags
+measurements:
+  - name: chromium-boundary-harness-elapsed-milliseconds
+    nondeterministic: true
+    rawValues: [39.305, 30.764, 33.352, 34.44, 29.556]
+    range: {min: 29.556, max: 39.305}
+    median: 33.352
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+rawOutputDigests:
+  - path: fixture.html
+    sha256: acc7a1655bac027301185de1fd16c8dc8b6056443ff77e2c0f92b0970d9211df
+  - path: runner.py
+    sha256: a50cf27b80770d27a96168fa5ea1fe7daf3ef49b4455d7da3ab326def0059125
+  - path: measurements.yaml
+    sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+replayResult:
+  status: blocked
+  outputDigest: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+evidenceLinks:
+  - kind: source
+    path: environment.json
+    sha256: c21cb7cf5ed85c496b1e97facb0d69389d772f23c142e8112b57cb31f9f3e695
+  - kind: measurement
+    path: measurements.yaml
+    sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+blocked:
+  reason: >-
+    Chromium completed all five clean-context fixture samples, but the separately
+    pinned installed Firefox 152.0.4 process exited before Playwright 1.61.0 could
+    attach to any clean context. No Firefox fixture behavior was observed, so the
+    cross-browser success threshold is not met.
+  affectedRequirements: [EVID-04]
+  affectedAdrs: [ADR-0005]

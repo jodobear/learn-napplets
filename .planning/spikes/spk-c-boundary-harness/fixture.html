@@ -35,7 +35,7 @@
           '<script>',
           domainAssignment,
           "window.__spkCInjectionPhase='pre-guest-script';",
-          '<\\/script>',
+          '<\/script>',
           '<script>',
           "(() => { const nonce='spk-c-local-nonce-v1';",
           "window.addEventListener('message', (event) => {",
@@ -45,7 +45,7 @@
           "});",
           "window.addEventListener('message', (event) => { const data=event.data || {}; if (data.kind !== 'boundary-response' || data.nonce !== nonce) return; parent.postMessage({kind:'boundary-result', nonce, scenario:data.scenario, response:data}, '*'); });",
           '})();',
-          '<\\/script>'
+          '<\/script>'
         ].join('');
       }
 

@@ -1,0 +1,88 @@
+schemaVersion: 1
+spikeId: SPK-C-BOUNDARY-HARNESS
+classification: observed browser behavior
+measuredAt: '2026-07-24T01:32:14Z'
+nonProduction: true
+fixture:
+  path: fixture.html
+  sha256: acc7a1655bac027301185de1fd16c8dc8b6056443ff77e2c0f92b0970d9211df
+runner:
+  path: runner.py
+  sha256: a50cf27b80770d27a96168fa5ea1fe7daf3ef49b4455d7da3ab326def0059125
+  toolchain: tools/phase1-python with playwright==1.61.0
+replay:
+  command: tools/phase1-python .planning/spikes/spk-c-boundary-harness/runner.py
+  repetitionsRequired: 5
+  contextsPerBrowser: 5
+  deterministicInput: true
+  networkDuringMeasurement: false
+  browserDownload: false
+  installedBrowsersOnly: true
+measurements:
+  - name: chromium-boundary-harness-elapsed-milliseconds
+    nondeterministic: true
+    rawValues: [39.305, 30.764, 33.352, 34.44, 29.556]
+    range: {min: 29.556, max: 39.305}
+    median: 33.352
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+    note: Zero is an explicit unavailable sentinel, not a Firefox timing observation; Firefox exited during Playwright launch before a clean context or fixture result existed.
+browserRuns:
+  - browser: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    outcome: passed
+    samples:
+      - sample: 1
+        elapsedMilliseconds: 39.305
+        preScriptInjection: pre-guest-script
+        MessageEventSourceMappedToIframe: true
+        declaredDomainPresentResponse: {ok: true, result: local-service-ok}
+        declaredDomainRemovedResponse: {ok: false, error: declared-domain-missing}
+      - sample: 2
+        elapsedMilliseconds: 30.764
+        preScriptInjection: pre-guest-script
+        MessageEventSourceMappedToIframe: true
+        declaredDomainPresentResponse: {ok: true, result: local-service-ok}
+        declaredDomainRemovedResponse: {ok: false, error: declared-domain-missing}
+      - sample: 3
+        elapsedMilliseconds: 33.352
+        preScriptInjection: pre-guest-script
+        MessageEventSourceMappedToIframe: true
+        declaredDomainPresentResponse: {ok: true, result: local-service-ok}
+        declaredDomainRemovedResponse: {ok: false, error: declared-domain-missing}
+      - sample: 4
+        elapsedMilliseconds: 34.44
+        preScriptInjection: pre-guest-script
+        MessageEventSourceMappedToIframe: true
+        declaredDomainPresentResponse: {ok: true, result: local-service-ok}
+        declaredDomainRemovedResponse: {ok: false, error: declared-domain-missing}
+      - sample: 5
+        elapsedMilliseconds: 29.556
+        preScriptInjection: pre-guest-script
+        MessageEventSourceMappedToIframe: true
+        declaredDomainPresentResponse: {ok: true, result: local-service-ok}
+        declaredDomainRemovedResponse: {ok: false, error: declared-domain-missing}
+  - browser: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    expectedVersion: 152.0.4
+    outcome: blocked
+    attemptedSamples: [1, 2, 3, 4, 5]
+    observedBehavior: No fixture behavior was observed because Playwright 1.61.0 could not retain a launched clean Firefox context; the installed process exited with code 0 before automation connected.
+    errorClass: BrowserType.launch
+    timingSentinel: 0.0
+    sourceMapping: not-observed
+    injection: not-observed
+    envelopes: not-observed
+    proposedFollowUp: Record the direct-installed Firefox/Playwright launch mismatch for later review; do not substitute a browser or make a positive cross-browser conclusion.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  networkTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: false
+  result: pass

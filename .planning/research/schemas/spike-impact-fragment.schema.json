@@ -18,7 +18,20 @@
     "measurementLinks": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
     "uncertainty": {"type": "object", "additionalProperties": false, "required": ["state", "reason"], "properties": {"state": {"enum": ["none", "limited", "material"]}, "reason": {"type": "string", "minLength": 1}}},
     "proposedImpacts": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["type", "id", "rationale"], "properties": {"type": {"enum": ["requirement", "adr", "phase", "lesson"]}, "id": {"type": "string", "minLength": 1}, "rationale": {"type": "string", "minLength": 1}}}},
+    "fragmentId": {"type": "string", "pattern": "^SPK-[A-Z0-9][A-Z0-9-]*-IMPACT-\\d{3}$"},
+    "measurementPath": {"type": "string", "pattern": "^spikes/spk-[a-z0-9-]+/measurements\\.yaml$"},
+    "measurementSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sourceIds": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"}},
+    "proposedOpenQuestions": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "rationale"], "properties": {"id": {"type": "string", "pattern": "^OQ-[A-Z0-9][A-Z0-9-]*$"}, "rationale": {"type": "string", "minLength": 1}}}},
+    "proposedDriftRecords": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "rationale"], "properties": {"id": {"type": "string", "pattern": "^DRF-[A-Z0-9][A-Z0-9-]*$"}, "rationale": {"type": "string", "minLength": 1}}}},
+    "compatibilityObservations": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["browser", "status", "classification", "rationale"], "properties": {"browser": {"type": "string", "minLength": 1}, "status": {"enum": ["passed", "failed", "blocked"]}, "classification": {"const": "observed-browser-behavior"}, "rationale": {"type": "string", "minLength": 1}}}},
+    "affectedRequirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}},
+    "affectedPhases": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^\\d{2}$"}},
+    "evidenceLinks": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"], "properties": {"kind": {"enum": ["source", "metadata", "measurement", "report"]}, "path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
     "securityEgress": {"type": "object", "additionalProperties": false, "required": ["sandboxMode", "networkTargets", "usedSecrets"], "properties": {"sandboxMode": {"type": "string", "minLength": 1}, "networkTargets": {"type": "array", "items": {"type": "string"}}, "usedSecrets": {"const": false}}}
   },
-  "allOf": [{"if": {"properties": {"spikeId": {"pattern": "^SPK-H-"}}}, "then": {"required": ["securityEgress"]}}]
+  "allOf": [
+    {"if": {"properties": {"spikeId": {"pattern": "^SPK-H-"}}}, "then": {"required": ["securityEgress"]}},
+    {"if": {"properties": {"spikeId": {"const": "SPK-C-BOUNDARY-HARNESS"}}}, "then": {"required": ["fragmentId", "measurementPath", "measurementSha256", "sourceIds", "proposedOpenQuestions", "proposedDriftRecords", "compatibilityObservations", "affectedRequirements", "affectedPhases", "evidenceLinks", "securityEgress"]}}
+  ]
 }

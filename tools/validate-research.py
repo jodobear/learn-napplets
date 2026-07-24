@@ -223,6 +223,34 @@ def validate_spike(directory: Path, mode: str) -> list[str]:
     expected_directory = str(metadata.get("id", "")).lower()
     if directory.name != expected_directory or directory.parent.name != "spikes" or directory.parent.parent.name != ".planning":
         errors.append("ERROR SPK002: spike directory must be .planning/spikes/spk-*/ and match its SPK ID")
+
+    bindings = metadata.get("sourceBindings", [])
+    enriched_bindings = [binding for binding in bindings if isinstance(binding, dict) and any(key in binding for key in ("claimId", "primitive", "expectedClassification", "immutable"))]
+    if enriched_bindings:
+        try:
+            source_document = load_yaml(ROOT / ".planning/research/source-registry.yaml")
+            claim_document = load_yaml(ROOT / ".planning/research/claims.yaml")
+            sources = {record.get("id"): record for record in source_document.get("sources", []) if isinstance(record, dict)}
+            claims = {record.get("id"): record for record in claim_document.get("claims", []) if isinstance(record, dict)}
+        except ValueError as exc:
+            errors.append(f"ERROR SPK011: cannot resolve enriched source bindings: {exc}")
+            sources, claims = {}, {}
+        immutable_fields = ("commitSha", "path", "locator", "contentSha256", "retrievedAt", "authorityTier", "evidenceClass", "maturity")
+        for binding in enriched_bindings:
+            primitive = binding.get("primitive", "<unknown>")
+            source_id = binding.get("sourceId")
+            claim_id = binding.get("claimId")
+            source = sources.get(source_id)
+            if source is None:
+                errors.append(f"ERROR SPK012: {primitive} references unknown source {source_id}")
+                continue
+            if claim_id not in claims:
+                errors.append(f"ERROR SPK013: {primitive} references unknown claim {claim_id}")
+            immutable = binding.get("immutable")
+            if not isinstance(immutable, dict) or any(immutable.get(field) != source.get(field) for field in immutable_fields):
+                errors.append(f"ERROR SPK014: {primitive} immutable binding does not match source {source_id}")
+            if binding.get("expectedClassification") == "blocked" and claims.get(claim_id, {}).get("state") != "blocked":
+                errors.append(f"ERROR SPK015: {primitive} marked blocked must resolve to a blocked claim")
     if mode == "contract":
         return errors
 
