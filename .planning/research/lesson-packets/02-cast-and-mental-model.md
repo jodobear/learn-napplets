@@ -79,8 +79,22 @@ No current package/global API can be shown. Present a non-executable vocabulary 
 - `DRF-HANDSHAKE-001`, `DRF-METADATA-001`, and `DRF-INTENT-001` are **blocked**; bootstrap, metadata, and handler meanings are unresolved.
 - `CLM-DRF-METADATA-NORMATIVE` is **provisional** project policy, not evidence of an upstream registry rule.
 
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-METADATA-001` — **state: blocked**. **Reason:** No immutable registry or projection baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-INTENT-001` — **state: blocked**. **Reason:** Handler and catalog sources lack immutable released and current-work baselines. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - Use `OQ-UPSTREAM-BASELINE-001` to acquire and review official NIP-5D/NIP-5A, registry, projection, runtime, and current-work records.
 - Compare normative sources and observed implementations as parallel records under D-12 and D-16; do not collapse them into an atlas fact.
 - Replace only the affected conceptual cards once the relevant claim has immutable evidence and required human review.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-METADATA-001` — **state: blocked**. **Reason:** No immutable registry or projection baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-INTENT-001` — **state: blocked**. **Reason:** Handler and catalog sources lack immutable released and current-work baselines. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.

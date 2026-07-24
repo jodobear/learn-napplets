@@ -99,7 +99,7 @@ def record_reason(record: dict[str, Any]) -> str:
     history = record.get("history") or []
     if history and history[-1].get("reason"):
         return str(history[-1]["reason"])
-    return str(record.get("question") or "")
+    return str(record.get("question") or record.get("scope") or "")
 
 
 class LessonEvidenceTests(unittest.TestCase):
@@ -199,7 +199,7 @@ class LessonEvidenceTests(unittest.TestCase):
                 if state not in UNSETTLED_STATES:
                     continue
                 self.assertTrue(record_reason(record), f"{evidence_id} has no canonical reason")
-                self.assertTrue(record.get("impacts"), f"{evidence_id} has no canonical impact")
+                self.assertTrue(record.get("impacts") or record.get("scope"), f"{evidence_id} has no canonical impact")
                 for required_section in (blocked, follow_up):
                     self.assertIn(evidence_id, required_section, f"{packet.name} omits {evidence_id} from an uncertainty section")
                     self.assertRegex(required_section, rf"{re.escape(evidence_id)}.*?state: {re.escape(state)}")

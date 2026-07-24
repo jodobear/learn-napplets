@@ -85,9 +85,17 @@ No verifier, resolver, manifest parser, package install, or runtime import is ap
 - `OQ-VERIFIED-LOADER-IDENTITY-001`, `OQ-VERIFIED-LOADER-MANIFEST-001`, and `OQ-VERIFIED-LOADER-VERIFIER-001` — **state: blocked**. **Reason:** identity mapping, manifest source/resolver, and verifier provenance lack required immutable evidence. **Impact:** do not present or implement those behaviors.
 - `OQ-PUBLIC-PACKAGE-BASELINE-001` and `OQ-PUBLIC-CONFORMANCE-001` — **state: blocked**. **Reason:** public release/export/integrity and conformance targets are uncollected. **Impact:** do not claim an artifact is distributable, compatible, or conformant.
 
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-MANIFEST-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
 ## Follow-up research
 
 - `CMP-BASELINE-001` — **state: blocked**. **Reason:** qualified public compatibility inputs are missing. **Impact:** collect independently pinned package, runtime, example, fixture, release, and current-work evidence before selecting an identity/distribution teaching path.
 - `DRF-IDENTITY-001`, `DRF-MANIFEST-001`, `DRF-ARTIFACT-001`, and `DRF-CONFORMANCE-001` — **state: blocked**. **Reason:** their normative and observed evidence remains distinct and incomplete. **Impact:** retain parallel authority/maturity records under D-12 and D-16 rather than inventing a rule.
 - `OQ-VERIFIED-LOADER-IDENTITY-001`, `OQ-VERIFIED-LOADER-MANIFEST-001`, and `OQ-VERIFIED-LOADER-VERIFIER-001` — **state: blocked**. **Reason:** each has a separately scoped official-source/provenance search and review criterion. **Impact:** resolve all three before promoting a loader-related identity or manifest conclusion.
 - `OQ-PUBLIC-PACKAGE-BASELINE-001` and `OQ-PUBLIC-CONFORMANCE-001` — **state: blocked**. **Reason:** public release, integrity, export, and target evidence is absent. **Impact:** revisit distribution teaching only after the dated questions resolve and required technical/security review occurs.
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-MANIFEST-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.

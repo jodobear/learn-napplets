@@ -78,8 +78,20 @@ No current tested package or global example is available. A static pseudo-owners
 - `CLM-CMP-RUNTIME-001` is **blocked**: no runtime compatibility baseline exists, so no concrete host behavior may be claimed.
 - `DRF-DISCOVERY-001` and `DRF-HANDSHAKE-001` are **blocked**: discovery and bootstrap behavior require official immutable evidence and human review.
 
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-DISCOVERY-001` — **state: blocked**. **Reason:** No immutable official discovery or registry baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - Resolve `OQ-UPSTREAM-BASELINE-001` by recording official identity, revision, locator, digest, authority, evidence class, maturity, and review state for relevant sources.
 - Revisit `DRF-DISCOVERY-001` and `DRF-HANDSHAKE-001` after the required immutable sources and independent implementation or measurement evidence are collected.
 - Promote no candidate instrument beyond a conceptual simulation unless its claimed behavior is linked to reviewed canonical evidence.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-DISCOVERY-001` — **state: blocked**. **Reason:** No immutable official discovery or registry baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.

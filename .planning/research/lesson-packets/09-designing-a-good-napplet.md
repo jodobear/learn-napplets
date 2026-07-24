@@ -86,8 +86,18 @@ No scaffold, package, runtime API, manifest, or real napplet code belongs in thi
 - `DRF-INTENT-001` — **state: blocked**. **Reason:** handler/catalog assumptions are unpinned. **Impact:** integration, routing, and delegation seams remain unresolved.
 - `OQ-UPSTREAM-BASELINE-001`, `OQ-VERIFIED-LOADER-IDENTITY-001`, and `OQ-VERIFIED-LOADER-MANIFEST-001` — **state: blocked**. **Reason:** official-source, identity, and manifest/resolver review work is incomplete. **Impact:** evidence gaps stay visible in the design brief rather than becoming requirements.
 
+- `CLM-DRF-MANIFEST-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - `CMP-BASELINE-001` — **state: blocked**. **Reason:** no independently pinned public compatibility inputs exist. **Impact:** use the static first-site design brief only until a reviewed baseline supports a selected host/runtime/package path.
 - `DRF-METADATA-001`, `DRF-IDENTITY-001`, `DRF-MANIFEST-001`, and `DRF-INTENT-001` — **state: blocked**. **Reason:** immutable sources and observed behavior remain distinct or absent. **Impact:** retain D-12/D-16 parallel records and D-18 states rather than converting a heuristic into an upstream fact.
 - `OQ-UPSTREAM-BASELINE-001`, `OQ-VERIFIED-LOADER-IDENTITY-001`, and `OQ-VERIFIED-LOADER-MANIFEST-001` — **state: blocked**. **Reason:** each records a dated official-source search, unresolved reason, scope, and review criterion. **Impact:** resolve those questions before a manifest, `dTag`, identity, or integration rule is promoted beyond a clearly labelled proposal.
+- `CLM-DRF-MANIFEST-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.

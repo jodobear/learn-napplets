@@ -79,8 +79,22 @@ No current tested code example is available. A data-only, non-executable fixture
 - `DRF-EGRESS-001` is **blocked**: browser-versus-mediated external access is unmeasured and unresolved.
 - `CLM-DRF-IDENTITY-NORMATIVE` is **provisional** project policy, not a protocol identity definition.
 
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-IDENTITY-001` — **state: blocked**. **Reason:** No immutable manifest or aggregate-identity source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-MANIFEST-001` — **state: blocked**. **Reason:** Current manifest-kind sources are absent from the immutable registry. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-EGRESS-001` — **state: blocked**. **Reason:** No named browser measurement or immutable mediated-access source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - Fulfil `OQ-UPSTREAM-BASELINE-001` with official immutable Nostr and napplet-related sources before promoting any event, relay, identity, or publication statement.
 - Acquire separate source and measurement evidence for `DRF-IDENTITY-001`, `DRF-MANIFEST-001`, and `DRF-EGRESS-001`; retain normative and observed sides separately.
 - Replace the conceptual wire/code markers only with validated source-linked fixtures and the required human review.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-IDENTITY-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-IDENTITY-001` — **state: blocked**. **Reason:** No immutable manifest or aggregate-identity source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-MANIFEST-001` — **state: blocked**. **Reason:** Current manifest-kind sources are absent from the immutable registry. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-EGRESS-001` — **state: blocked**. **Reason:** No named browser measurement or immutable mediated-access source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.

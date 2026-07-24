@@ -78,8 +78,22 @@ No executable host/guest code is safe to present as current behavior. Use a non-
 - `DRF-HANDSHAKE-001`, `DRF-EGRESS-001`, and `DRF-UNKNOWN-MESSAGES-001` are **blocked**: bootstrap, egress, and unknown-message behavior require current source/measurement evidence.
 - `HOST-PROFILE-001` is **not selected** in `TSCOPE-001`; the safe fallback is a labeled static conceptual simulation.
 
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-EGRESS-001` — **state: blocked**. **Reason:** No named browser measurement or immutable mediated-access source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-UNKNOWN-MESSAGES-001` — **state: blocked**. **Reason:** No immutable protocol or runtime record defines the current behavior. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - Resolve `OQ-UPSTREAM-BASELINE-001` with official immutable protocol, package, runtime, and browser-boundary records before claiming a mechanism.
 - Run the planned browser and boundary spikes with a deterministic local fixture; record browser observation, upstream statement, and project policy separately.
 - Revisit `DRF-HANDSHAKE-001`, `DRF-EGRESS-001`, and `DRF-UNKNOWN-MESSAGES-001` only after their source, measurement, impact, and review requirements are met.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-HANDSHAKE-001` — **state: blocked**. **Reason:** No immutable NIP-5D bootstrap baseline or observed runtime baseline has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-EGRESS-001` — **state: blocked**. **Reason:** No named browser measurement or immutable mediated-access source has been collected. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `DRF-UNKNOWN-MESSAGES-001` — **state: blocked**. **Reason:** No immutable protocol or runtime record defines the current behavior. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** All relevant candidates remain discovery pointers without immutable current evidence. **Impact:** requirements EVID-02, EVID-03, OPER-01; phases 01.

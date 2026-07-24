@@ -82,8 +82,16 @@ No runtime composition API, handler registry, or implementation adapter can be s
 - `DRF-INTENT-001` — **state: blocked**. **Reason:** handler/catalog sources lack released and current-work baselines. **Impact:** routing, replacement, and delegation semantics cannot be taught.
 - `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** the relevant official source records and review are not collected. **Impact:** composition-dependent content remains a clearly labelled comparison exercise.
 
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-INTENT-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - `CMP-BASELINE-001` — **state: blocked**. **Reason:** public package/runtime/example/fixture evidence has not been compared. **Impact:** retain the deterministic static comparison instead of selecting a composition host or real interoperability lab.
 - `DRF-DISCOVERY-001`, `DRF-METADATA-001`, and `DRF-INTENT-001` — **state: blocked**. **Reason:** their distinct source and observed-behavior questions are unresolved. **Impact:** preserve the parallel evidence under D-12, D-16, D-18, and D-19 rather than forcing a common behavior.
 - `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** its dated official-source search remains incomplete. **Impact:** acquire and review separate registry, projection, convention, runtime, and implementation records before any host-mediated sibling-composition conclusion.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-DRF-METADATA-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.
+- `CLM-DRF-INTENT-NORMATIVE` — **state: provisional**. **Reason:** This is a governing evidence rule, not an upstream protocol conclusion. **Impact:** requirements EVID-02, EVID-03; phases 01.

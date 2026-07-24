@@ -1,5 +1,5 @@
 schemaVersion: 1
-inventoryStatus: staged
+inventoryStatus: complete
 lessons:
   - id: LES-001
     filename: 01-nostr-client-taken-apart.md
@@ -30,13 +30,13 @@ lessons:
     status: present
   - id: LES-010
     filename: 10-anatomy-of-a-napplet.md
-    status: planned
+    status: present
   - id: LES-011
     filename: 11-build-test-and-publish.md
-    status: planned
+    status: present
   - id: LES-012
     filename: 12-inside-a-runtime.md
-    status: planned
+    status: present
   - id: LES-013
     filename: 13-evolving-the-protocol.md
-    status: planned
+    status: present

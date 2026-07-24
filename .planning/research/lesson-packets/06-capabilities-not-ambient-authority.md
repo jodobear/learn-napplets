@@ -81,9 +81,15 @@ No current API should be taught. A non-executable policy matrix can distinguish 
 - `DRF-UNKNOWN-MESSAGES-001` — **state: blocked**. **Reason:** no current source defines unknown request/source handling. **Impact:** errors, rejection, and fallback mechanics remain unspecified.
 - `OQ-UPSTREAM-BASELINE-001` and `OQ-EGRESS-NIP-001` — **state: blocked**. **Reason:** official source collection and measured-browser work are incomplete. **Impact:** mechanism-dependent teaching stays bounded to a conceptual simulation.
 
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
 ## Follow-up research
 
 - `CMP-BASELINE-001` — **state: blocked**. **Reason:** no public package/runtime/example/fixture comparison exists. **Impact:** retain the static conceptual fallback until a reviewed compatibility baseline can support a selected host profile.
 - `DRF-HANDSHAKE-001`, `DRF-EGRESS-001`, and `DRF-UNKNOWN-MESSAGES-001` — **state: blocked**. **Reason:** no immutable definition or adequate measurement resolves the separate questions. **Impact:** preserve distinct normative, observed, policy, and inference records under D-12, D-16, and D-18.
 - `OQ-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** official immutable source records and review are absent. **Impact:** use it to collect the source/claim path for any later capability claim.
 - `OQ-EGRESS-NIP-001` — **state: blocked**. **Reason:** its official-source scope and attached-context measurement have not been completed. **Impact:** revisit browser/mediation statements only after the dated question and required review resolve.
+- `CLM-POLICY-001` — **state: provisional**. **Reason:** Policy is structurally validated; it does not itself approve a protocol-sensitive claim. **Impact:** requirements EVID-01, OPER-03; phases 01.
+- `CLM-UPSTREAM-BASELINE-001` — **state: blocked**. **Reason:** Candidate discovery pointers lack a complete official identity, resolved revision:path blob, digest, and human technical review. **Impact:** requirements EVID-01, EVID-02; phases 01.
+- `CLM-CMP-RUNTIME-001` — **state: blocked**. **Reason:** Runtime candidates remain unpinned discovery pointers. **Impact:** requirements EVID-02, EVID-03; phases 01.
