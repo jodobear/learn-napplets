@@ -43,11 +43,17 @@ tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/s
 
 After Task 2, whether its selection is `local-only` or `sandbox-probe`, Task 3
 may perform the local-only assembly described in `fixture.md`, calculate SHA-256
-artifact identities, inspect a loopback-only preview of `public-site-static`,
-and remove those local artifacts as the declared rollback check. Every local
-command must use `tools/phase1-python`; all generated files must remain below
-`.planning/spikes/spk-k-deployment/.experiment/`. The Task 3 implementation
-must record the exact local commands before it executes them.
+artifact identities, inspect static content without a listener, and remove those
+local artifacts as the declared rollback check. The exact local commands are:
+
+```text
+tools/phase1-python .planning/spikes/spk-k-deployment/runner.py --fixture .planning/spikes/spk-k-deployment/fixture.md --out .planning/spikes/spk-k-deployment/.experiment/local-artifacts
+tools/phase1-python .planning/spikes/spk-k-deployment/runner.py --fixture .planning/spikes/spk-k-deployment/fixture.md --out .planning/spikes/spk-k-deployment/.experiment/local-artifacts --rollback
+```
+
+Every local command must use `tools/phase1-python`; all generated files must
+remain below `.planning/spikes/spk-k-deployment/.experiment/`. The runner does
+not open a listener or make a network request.
 
 No package installation, remote configuration, account lookup, credential
 access, provider CLI command, external probe, publication, or deployment command

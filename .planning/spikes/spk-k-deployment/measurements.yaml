@@ -1,0 +1,74 @@
+schemaVersion: 1
+spikeId: SPK-K-DEPLOYMENT
+replayDate: '2026-07-24'
+mode: local-only
+externalProbe:
+  status: blocked
+  outcome: SPK-K-BLOCKED-EXTERNAL-AUTHORIZATION-MISSING
+  operationsExecuted: 0
+  reason: >-
+    Task 2 selected local-only. No account, credential, target lookup, remote
+    configuration, deployment, publication, external write, or external command
+    was authorized or performed.
+fixture:
+  path: fixture.md
+  sha256: 1f30bb1a2c4c63715b94ce85d1f95a68f5eefc8eaf749e86e4008b0ecddebfe0
+runner:
+  path: runner.py
+  sha256: 17b661472935df263603ec6efde06973c4c5a0e765adf170432b7e4c84aef793
+artifacts:
+  - id: public-site-static
+    payload: index.html
+    payloadBytes: 247
+    payloadSha256: b6d5dc6beb9d4762e2b2e45773f8718425ba8d659d4af72942965bc81722f32d
+    manifestSha256: b7c3b8652e1934e9b83ec8b6bf9282c8de567fe5e394de96eb0aadfaf7305e6a
+    localPreview: not-hosted; static inspection only; no listener started
+    staticInspection: passed
+    isolation: passed
+  - id: lab-artifact-placeholder
+    payload: README.md
+    payloadBytes: 101
+    payloadSha256: b42d642ad81c214ade3881fe71e5d59a01e30aa94bb8459ee6ba71cc67281496
+    manifestSha256: b8a58cc4c057e9c6bbfc1f979a876182146387f35349a17736109e8b88276dd0
+    localPreview: not-hosted; static inspection only; no listener started
+    staticInspection: passed
+    isolation: passed
+  - id: portable-output-placeholder
+    payload: README.md
+    payloadBytes: 104
+    payloadSha256: 3dfd73d47effeb24116a664b9109ba5d207d4d43d4283609ace6933d59c72844
+    manifestSha256: 6d9a9025040183aec0c7688052484bc8b24177995384afd3acb26f4e23564938
+    localPreview: not-hosted; static inspection only; no listener started
+    staticInspection: passed
+    isolation: passed
+checks:
+  - name: local-artifact-byte-count
+    nondeterministic: false
+    rawValues: [452]
+    range: {min: 452, max: 452}
+    median: 452
+  - name: static-inspection-pass-count
+    nondeterministic: false
+    rawValues: [3]
+    range: {min: 3, max: 3}
+    median: 3
+  - name: isolation-pass-count
+    nondeterministic: false
+    rawValues: [3]
+    range: {min: 3, max: 3}
+    median: 3
+  - name: rollback-pass-count
+    nondeterministic: false
+    rawValues: [1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: external-operation-count
+    nondeterministic: false
+    rawValues: [0]
+    range: {min: 0, max: 0}
+    median: 0
+replay:
+  status: passed-local-only
+  outputDigest: f9d777acf32478dfe5e4ca69b96280e89b0cc045d6c97b9db603f42635033aaa
+  rollbackPassed: true
+  retainedLocalArtifacts: false

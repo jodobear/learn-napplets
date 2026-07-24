@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "ENV-SPK-K-DEPLOYMENT",
+  "kind": "environment",
+  "os": "Fedora Linux 43 (Server Edition); Linux 7.1.3-101.fc43.x86_64",
+  "container": "local disposable Phase 1 replay; no container image",
+  "browsers": [
+    {
+      "family": "not-used-local-static-inspection",
+      "version": "not-applicable",
+      "executableSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "runtimes": {
+    "python": "CPython 3.14.3 via tools/phase1-python"
+  },
+  "packageManager": {
+    "name": "pip",
+    "version": "26.0; isolated Phase 1 tool environment"
+  },
+  "dependencies": [
+    {
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "sha256": "c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce"
+    }
+  ],
+  "environmentFlags": [
+    "local-fixture-only",
+    "no-network",
+    "no-browser-listener",
+    "no-external-command",
+    "external-probe-authorization-local-only",
+    "outputs-below-spk-k-experiment"
+  ],
+  "commandHashes": [
+    {
+      "command": "tools/phase1-python",
+      "sha256": "644981c1104123d43a8e2b4a9b5b0738ad790e6f80c2f712f185bfc76a5507e5"
+    },
+    {
+      "command": "tools/validate-research.py",
+      "sha256": "443345a145c2b8f27a6d34fe71e10fc7d645c7bac54a8f7257211a03b9c14d1e"
+    },
+    {
+      "command": ".planning/spikes/spk-k-deployment/runner.py",
+      "sha256": "17b661472935df263603ec6efde06973c4c5a0e765adf170432b7e4c84aef793"
+    }
+  ]
+}
