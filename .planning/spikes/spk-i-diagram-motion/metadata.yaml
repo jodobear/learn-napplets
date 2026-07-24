@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-I-DIAGRAM-MOTION
 kind: spike
 nonProduction: true
-status: planned
+status: blocked
 hypothesis: >-
   A bounded, data-driven semantic SVG with visible focus, native keyboard-reachable
   step links, and co-located transcript/table representations can carry all essential
@@ -94,12 +94,78 @@ safety:
 uncertainty:
   state: material
   reason: >-
-    This isolated synthetic fixture can measure a local representation contract only.
-    It cannot establish upstream protocol behavior, select a production visual system,
-    prove screen-reader speech output, or accept ADR-0006.
+    Chromium proves only the bounded local semantic-DOM and screenshot contract.
+    Firefox could not attach under the approved direct-installed browser route, and no
+    result proves upstream behavior, production accessibility, screen-reader speech,
+    runtime isolation, or ADR acceptance.
 recommendation: >-
-  Pending measurement, retain only a data-driven semantic SVG plus static transcript
-  and table as the proposed ADR-0006 baseline; treat state/motion controllers and all
-  visual dependencies as unselected until an approved need passes the same essential
-  equivalence and boundary checks.
+  Retain Candidate A as a proposed non-production static-first SVG baseline with
+  transcript/table parity; ADR-0006 remains blocked for a cross-browser positive
+  recommendation until the direct-installed Firefox/Playwright mismatch is separately
+  reviewed. State/motion controllers and visual dependencies remain unselected.
 disposition: retain-as-fixture
+environmentFacts:
+  capturedAt: '2026-07-24T09:08:47Z'
+  environmentManifest: environment.json
+  runner: tools/phase1-python with CPython 3.14.3 and Playwright 1.61.0
+  browserExecution: Chromium passed five clean contexts; Firefox launch blocked before context attachment
+  browserDownloads: not-requested
+  network: not-used
+  visualDependencies: not-installed
+measurements:
+  - name: chromium-fixture-load-milliseconds
+    nondeterministic: true
+    rawValues: [9.108, 16.832, 8.382, 11.235, 12.139]
+    range: {min: 8.382, max: 16.832}
+    median: 11.235
+  - name: fixture-byte-cost
+    nondeterministic: false
+    rawValues: [8625, 8625, 8625, 8625, 8625]
+    range: {min: 8625, max: 8625}
+    median: 8625
+  - name: chromium-essential-check-count
+    nondeterministic: false
+    rawValues: [27, 27, 27, 27, 27]
+    range: {min: 27, max: 27}
+    median: 27
+  - name: chromium-initial-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+rawOutputDigests:
+  - path: fixture.svg
+    sha256: abe83d1fc388235625862f0281ea838665b7be747052a15a2029047e3159e8f3
+  - path: runner.py
+    sha256: be8b88ad99054ae84039aea8457ee92052d33473bfaaa80322dcc0bce2fb27f2
+  - path: environment.json
+    sha256: fdbb3e8d986dbc35b83093f7d31524388c9f5ddd8a8f3a70411eddec664898b3
+  - path: measurements.yaml
+    sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
+  - path: /tmp/spk-i-diagram-motion/browser-results.json
+    sha256: 8c01d8f814d2a8f2e6ad77292b7dd43dd54fced02818cea716bb608325ed7db5
+  - path: /tmp/spk-i-diagram-motion/manifest.json
+    sha256: cfa271c9b61c304160d0ee7afcb0658e7864b127dac4c54640d044be30b0e1b7
+replayResult:
+  status: blocked
+  outputDigest: cfa271c9b61c304160d0ee7afcb0658e7864b127dac4c54640d044be30b0e1b7
+evidenceLinks:
+  - kind: source
+    path: ../../research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: measurement
+    path: measurements.yaml
+    sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
+blocked:
+  reason: >-
+    Direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0 attached
+    to a clean context, leaving all Firefox fixture checks unobserved. Chromium passed
+    the five declared local samples, but a positive cross-browser recommendation would
+    overstate the available evidence.
+  affectedRequirements: [EVID-04]
+  affectedAdrs: [ADR-0006]

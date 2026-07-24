@@ -1,0 +1,131 @@
+schemaVersion: 1
+spikeId: SPK-I-DIAGRAM-MOTION
+classification: observed browser behavior from a synthetic local fixture
+measuredAt: '2026-07-24T09:08:47Z'
+nonProduction: true
+fixture:
+  path: fixture.svg
+  sha256: abe83d1fc388235625862f0281ea838665b7be747052a15a2029047e3159e8f3
+  bytes: 8625
+  dataAuthority: Synthetic labels plus SRC-POLICY-002/CLM-POLICY-001 status labels only; no protocol claim or production content is encoded.
+runner:
+  path: runner.py
+  sha256: be8b88ad99054ae84039aea8457ee92052d33473bfaaa80322dcc0bce2fb27f2
+  toolchain: tools/phase1-python with playwright==1.61.0
+  learnerCodeExecution: not-used
+  scriptInjection: not-used
+  browserDownloads: not-requested
+replay:
+  command: tools/phase1-python .planning/spikes/spk-i-diagram-motion/runner.py --fixture .planning/spikes/spk-i-diagram-motion/fixture.svg --out /tmp/spk-i-diagram-motion
+  deterministicInput: true
+  repetitionsRequired: 5
+  completedSamples:
+    Chromium: [1, 2, 3, 4, 5]
+    Firefox: []
+  contextsPerBrowser: 5
+  networkDuringMeasurement: false
+  packageInstallation: false
+  outputDirectory: /tmp/spk-i-diagram-motion
+  browserResults:
+    path: /tmp/spk-i-diagram-motion/browser-results.json
+    sha256: 8c01d8f814d2a8f2e6ad77292b7dd43dd54fced02818cea716bb608325ed7db5
+  manifest:
+    path: /tmp/spk-i-diagram-motion/manifest.json
+    sha256: cfa271c9b61c304160d0ee7afcb0658e7864b127dac4c54640d044be30b0e1b7
+    result: blocked
+candidateComparison:
+  - id: candidate-a-data-driven-semantic-svg
+    representation: fixture.svg
+    stateMotion: Native SVG anchors select named static steps; no auto-looping motion or script.
+    status: partial-pass
+    scope: Chromium passed every declared local essential-equivalence check in five clean contexts; overall comparison remains blocked by Firefox launch failure.
+    cost:
+      javascriptBytes: 0
+      fixtureBytes: 8625
+      chromiumLoadMilliseconds: {rawValues: [9.108, 16.832, 8.382, 11.235, 12.139], range: {min: 8.382, max: 16.832}, median: 11.235}
+  - id: candidate-b-minimal-state-motion-controller
+    representation: not-created
+    stateMotion: Would require executable state code.
+    status: unselected
+    scope: Not measured because SPK-I must not add a dynamic learner-code or script-injection surface merely to create a comparison candidate.
+    cost: not-claimed
+  - id: candidate-c-visual-library
+    representation: not-created
+    stateMotion: Dependency-owned rendering or motion.
+    status: blocked
+    scope: No approved measured need exists; no visual dependency was installed, substituted, or downloaded.
+    cost: not-claimed
+measurements:
+  - name: chromium-fixture-load-milliseconds
+    nondeterministic: true
+    rawValues: [9.108, 16.832, 8.382, 11.235, 12.139]
+    range: {min: 8.382, max: 16.832}
+    median: 11.235
+  - name: fixture-byte-cost
+    nondeterministic: false
+    rawValues: [8625, 8625, 8625, 8625, 8625]
+    range: {min: 8625, max: 8625}
+    median: 8625
+  - name: chromium-essential-check-count
+    nondeterministic: false
+    rawValues: [27, 27, 27, 27, 27]
+    range: {min: 27, max: 27}
+    median: 27
+  - name: chromium-initial-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+    note: Zero is an explicit unavailable sentinel, not a Firefox timing observation; Firefox exited before a clean Playwright context or fixture result existed.
+browserRuns:
+  - browser: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    outcome: passed
+    samples: [1, 2, 3, 4, 5]
+    semanticSvg: {title: passed, description: passed, transcriptRegion: passed, tableRole: passed}
+    keyboard: {tabReachableLinks: 3, enterSelectsNamedSteps: 3, visibleFocusScreenshots: passed}
+    stateParity: {visual: passed, transcript: passed, table: passed, labels: [Compose, Host sentinel, Static result]}
+    reducedMotion: {mode: reduce, staticEquivalentToNoPreference: passed}
+    resetReplay: {immutableTarget: step-compose, screenshotDigestMatch: passed}
+    screenshotDeterminism:
+      initialDigest: a5e00e4e82453a94263c8f1be4a68771fd4d3fa0d23bd01562badab25f87b0cb
+      allFiveSamplesByteIdentical: true
+      focusDigests:
+        step-compose: b043e7bd9d4a9e415878dac38cef6a6d9804d6cb3a3ede3d127984bef348b4da
+        step-host: c61ee5504a5bfd49ed1850627df02804531e6d49e84825e1fc3023ff9324bcd2
+        step-result: 966f5975648a65686ad277aae2d4c4d619f3cd93910e841687955ae749cc0677
+    hostileInputAndSentinel:
+      hostileInput: escaped literal text; passed
+      scriptElements: 0
+      inlineEventAttributes: []
+      unsafeHrefs: []
+      trustedHostSentinel: trusted-host-only-static; unchanged
+      dynamicExecution: no executable surface present; passed by static and browser-DOM inspection
+      scriptInjection: no executable surface present; passed by static and browser-DOM inspection
+    screenReaderExposure: Semantic DOM contract passed; actual assistive-technology speech was not observed.
+  - browser: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    expectedVersion: 152.0.4
+    outcome: blocked
+    attemptedSamples: [1, 2, 3, 4, 5]
+    errorClass: BrowserType.launch
+    observedBehavior: Direct-installed Firefox exited with code 0 before Playwright 1.61.0 attached to a clean context; no fixture, screenshot, keyboard, reduced-motion, transcript, table, or sentinel result was observed.
+    workaroundApplied: none
+    proposedFollowUp: Preserve the direct-installed Firefox/Playwright launch mismatch for review; do not download a browser or add launcher flags, profiles, preferences, or other configuration workarounds.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  applicationRoutesCreated: []
+  frameworkScaffoldCreated: []
+  visualDependenciesInstalled: []
+  networkTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: Generated screenshots and raw browser result JSON remain under /tmp/spk-i-diagram-motion only.
+result: blocked
