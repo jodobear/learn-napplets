@@ -15,13 +15,13 @@ lessons:
     status: present
   - id: LES-005
     filename: 05-one-request-across-boundary.md
-    status: planned
+    status: present
   - id: LES-006
     filename: 06-capabilities-not-ambient-authority.md
-    status: planned
+    status: present
   - id: LES-007
     filename: 07-identity-and-distribution.md
-    status: planned
+    status: present
   - id: LES-008
     filename: 08-apps-that-cooperate.md
     status: planned
