@@ -768,6 +768,87 @@ def merge_fragments(research: Path, fragments: list[tuple[Path, dict[str, Any]]]
     return documents, outcomes, []
 
 
+def record_conflict_questions(
+    documents: dict[str, dict[str, Any]],
+    fragments: list[tuple[Path, dict[str, Any]]],
+    conflicts: list[str],
+) -> None:
+    """Publish deterministic review work while leaving incompatible targets untouched."""
+    questions = documents["open-questions.yaml"].setdefault("questions", [])
+    question_index = {record.get("id"): record for record in questions if isinstance(record, dict)}
+    for conflict_id in conflicts:
+        fragment_id = conflict_id.removeprefix("OQ-CONSOLIDATION-")
+        candidates = sorted(
+            ((path, fragment) for path, fragment in fragments if fragment.get("fragmentId", fragment.get("id")) == fragment_id),
+            key=lambda item: (sha256(item[0]), str(item[0])),
+        )
+        digests = [sha256(path) for path, _ in candidates]
+        source_refs = sorted(
+            {
+                reference
+                for _, fragment in candidates
+                for reference in [*fragment.get("sourceIds", []), *(item.get("id") for item in fragment.get("proposedDriftRecords", []) if isinstance(item, dict))]
+            }
+        )
+        requirements = sorted({item for _, fragment in candidates for item in fragment.get("affectedRequirements", [])})
+        phases = sorted({item for _, fragment in candidates for item in fragment.get("affectedPhases", [])})
+        decisions = sorted(
+            {
+                item.get("id")
+                for _, fragment in candidates
+                for item in fragment.get("proposedImpacts", [])
+                if isinstance(item, dict) and item.get("type") == "adr"
+            }
+        )
+        history = [
+            {
+                "at": CONSOLIDATION_AT,
+                "status": "blocked",
+                "reason": f"Incompatible {fragment_id} immutable proposal SHA-256 {digest}; retain both payloads for human review.",
+            }
+            for digest in digests
+        ]
+        existing = question_index.get(conflict_id)
+        if isinstance(existing, dict):
+            existing_history = existing.setdefault("history", [])
+            for entry in history:
+                if not any(isinstance(item, dict) and entry["reason"] == item.get("reason") for item in existing_history):
+                    existing_history.append(entry)
+            continue
+        record = {
+            "id": conflict_id,
+            "kind": "open-question",
+            "question": f"Which immutable {fragment_id} payload, if any, may be consolidated after review of the incompatible evidence?",
+            "status": "blocked",
+            "sourceRefs": source_refs,
+            "impacts": {"requirements": requirements, "phases": phases},
+            "blockedDecisions": decisions or ["ADR-0005"],
+            "resolutionCriteria": ["Compare both retained immutable fragment SHA-256 values with their report, metadata, measurement, source, and claim provenance; then obtain the required review."],
+            "owner": "research-owner",
+            "review": {"status": "pending", "requiredRoles": ["protocol-technical", "security"]},
+            "history": history,
+        }
+        questions.append(record)
+        question_index[conflict_id] = record
+    questions.sort(key=lambda item: item.get("id", ""))
+
+
+def input_snapshot_digest(reports: list[tuple[str, Path, str]], fragments: list[tuple[Path, dict[str, Any]]]) -> str:
+    """Return the deterministic rerun key for every immutable consolidation input."""
+    inputs: list[tuple[str, str]] = []
+    for _, report, digest in reports:
+        directory = report.parent
+        inputs.extend(
+            (
+                (str(report), digest),
+                (str(directory / "metadata.yaml"), sha256(directory / "metadata.yaml")),
+                (str(directory / "measurements.yaml"), sha256(directory / "measurements.yaml")),
+            )
+        )
+    inputs.extend((str(path), sha256(path)) for path, _ in fragments)
+    return hashlib.sha256(json.dumps(sorted(inputs), separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
 def security_egress_synthesis(fragment: dict[str, Any]) -> str:
     digest = fragment["_digest"]
     source_ids = ", ".join(fragment["sourceIds"])
@@ -788,20 +869,32 @@ def replay_manifest(spikes: Path, reports: list[tuple[str, Path, str]]) -> dict[
 
 
 def consolidation_audit(reports: list[tuple[str, Path, str]], fragments: list[tuple[Path, dict[str, Any]]], outcomes: list[tuple[str, str]], conflicts: list[str], manifest_digest: str) -> str:
-    fragment_by_spike = {item[1].get("spikeId"): (item[0], item[1]) for item in fragments}
-    lines = ["# Spike Consolidation Audit", "", "This deterministic audit records immutable inputs and serialized outcomes; it does not accept an ADR or promote a local observation into an upstream fact.", "", "## Immutable input snapshot", "", "| Spike | Report | SHA-256 | Fragment |", "| --- | --- | --- | --- |"]
+    rerun_digest = input_snapshot_digest(reports, fragments)
+    lines = ["# Spike Consolidation Audit", "", "This deterministic audit records immutable inputs and serialized outcomes; it does not accept an ADR or promote a local observation into an upstream fact.", "", "## Immutable input snapshot", "", "| Spike | Report | Metadata | Measurement | Fragment |", "| --- | --- | --- | --- | --- |"]
     for short_id, report, digest in reports:
-        directory = SPIKE_REPORTS[short_id]
-        fragment = fragment_by_spike.get(short_id + "-" + directory.removeprefix("spk-").upper().replace("-", "-"))
-        local_fragments = [(path, value) for path, value in fragments if value.get("spikeId", "").startswith(short_id + "-")]
-        fragment_text = ", ".join(f"{value.get('fragmentId', value.get('id'))} {sha256(path)}" for path, value in local_fragments) or "no-impact-fragment"
-        lines.append(f"| {short_id} | `{report.relative_to(report.parents[2])}` | `{digest}` | {fragment_text} |")
+        directory = report.parent
+        metadata = directory / "metadata.yaml"
+        measurement = directory / "measurements.yaml"
+        local_fragments = sorted(
+            ((path, value) for path, value in fragments if value.get("spikeId", "").startswith(short_id + "-")),
+            key=lambda item: (item[1].get("fragmentId", item[1].get("id", "")), str(item[0])),
+        )
+        fragment_text = ", ".join(f"`{path.relative_to(report.parents[2])}` SHA-256 `{sha256(path)}`" for path, _ in local_fragments) or "no-impact-fragment"
+        lines.append(
+            f"| {short_id} | `{report.relative_to(report.parents[2])}` SHA-256 `{digest}` | "
+            f"`{metadata.relative_to(report.parents[2])}` SHA-256 `{sha256(metadata)}` | "
+            f"`{measurement.relative_to(report.parents[2])}` SHA-256 `{sha256(measurement)}` | {fragment_text} |"
+        )
     lines.extend(["", "## Serialized outcomes", "", "| Stable ID | Disposition |", "| --- | --- |"])
     for stable_id, outcome in sorted(outcomes):
         lines.append(f"| {stable_id} | {outcome} |")
     for conflict in conflicts:
-        lines.append(f"| {conflict} | blocked-conflict; retain both immutable fragment payloads for human review |")
-    lines.extend(["", "## Transaction", "", "- Exclusive `fcntl.flock` lock acquired before immutable snapshot and staging.", "- Canonical targets: compatibility-matrix.yaml, drift-register.yaml, open-questions.yaml, security-egress-findings.md, replay-manifest.yaml.", "- Blocked and uncertain dispositions remain blocked; no report prose becomes an asserted upstream fact.", f"- Replay manifest SHA-256: `{manifest_digest}`.", "- Rerun digest is this audit SHA-256 after publication; identical validated inputs produce byte-identical staged outputs.", ""])
+        lines.append(f"| {conflict} | blocked-conflict; deterministic review work retains both immutable fragment payloads |")
+    lines.extend(["", "## Blocked and uncertain outcomes", ""])
+    for _, fragment in sorted(fragments, key=lambda item: item[1].get("fragmentId", item[1].get("id", ""))):
+        proposed_questions = ", ".join(item["id"] for item in fragment.get("proposedOpenQuestions", []) if isinstance(item, dict)) or "none"
+        lines.append(f"- `{fragment.get('fragmentId', fragment.get('id'))}`: uncertainty `{fragment['uncertainty']['state']}` — {fragment['uncertainty']['reason']} Open questions: {proposed_questions}.")
+    lines.extend(["", "## Transaction", "", "- Exclusive `fcntl.flock` lock acquired before immutable snapshot and staging.", "- Canonical targets: compatibility-matrix.yaml, drift-register.yaml, open-questions.yaml, security-egress-findings.md, replay-manifest.yaml.", "- Blocked and uncertain dispositions remain blocked; no report prose becomes an asserted upstream fact.", f"- Replay manifest SHA-256: `{manifest_digest}`.", f"- Rerun input digest: `{rerun_digest}`; identical validated inputs produce byte-identical staged outputs.", ""])
     return "\n".join(lines)
 
 
@@ -846,7 +939,7 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
             return errors
         documents, outcomes, conflicts = merge_fragments(research, fragments)
         if conflicts:
-            return [f"ERROR CONS003: incompatible stable fragment proposal requires {item}" for item in conflicts]
+            record_conflict_questions(documents, fragments, conflicts)
         h_fragment = next((fragment for _, fragment in fragments if fragment.get("spikeId") == "SPK-H-BROWSER-EGRESS"), None)
         if h_fragment is None:
             return ["ERROR CONS004: SPK-H fragment is required before security/egress synthesis"]
@@ -855,11 +948,12 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         security = security_egress_synthesis(h_fragment)
         manifest = replay_manifest(spikes, reports)
         manifest_bytes = yaml_bytes(manifest)
-        audit_text = consolidation_audit(reports, fragments, outcomes, [], hashlib.sha256(manifest_bytes).hexdigest())
+        audit_text = consolidation_audit(reports, fragments, outcomes, conflicts, hashlib.sha256(manifest_bytes).hexdigest())
+        conflict_errors = [f"ERROR CONS003: incompatible stable fragment proposal requires {item}" for item in conflicts]
         if dry_run:
             audit.parent.mkdir(parents=True, exist_ok=True)
             audit.write_text(audit_text, encoding="utf-8")
-            return []
+            return conflict_errors
         stage = Path(tempfile.mkdtemp(prefix=".spike-consolidation-", dir=research))
         targets = {
             research / "compatibility-matrix.yaml": yaml_bytes(documents["compatibility-matrix.yaml"]),
@@ -880,8 +974,10 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         validation_errors += schema_errors(research / "schemas/open-question.schema.json", staged_documents["open-questions.yaml"].get("questions", []))
         validation_errors += validate_replay_manifest(staged[spikes / "replay-manifest.yaml"], planning_root)
         if validation_errors:
+            shutil.rmtree(stage, ignore_errors=True)
             return validation_errors
         if os.environ.get("CONSOLIDATION_INJECT_PRECOMMIT_FAILURE") == "1":
+            shutil.rmtree(stage, ignore_errors=True)
             return ["CONSOLIDATION_INJECTED_FAILURE: staged transaction rolled back before publication"]
         originals = {target: target.read_bytes() if target.exists() else None for target in targets}
         try:
@@ -897,7 +993,7 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
             return [f"ERROR CONS005: publication failed and prior canonical state was restored: {exc}"]
         finally:
             shutil.rmtree(stage, ignore_errors=True)
-        return []
+        return conflict_errors
     finally:
         release_consolidation_lock(lock)
 
