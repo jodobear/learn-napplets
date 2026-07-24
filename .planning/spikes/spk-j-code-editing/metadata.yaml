@@ -1,0 +1,219 @@
+schemaVersion: 1
+id: SPK-J-CODE-EDITING
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A fixed tested variant or a controlled native textarea can meet the declared
+  synthetic learning task with less authority, lower startup cost, deterministic
+  replay, and clearer accessibility than a package editor; a lightweight editor
+  or CodeMirror may be measured only after its exact dependency record receives
+  a dated human supply-chain decision.
+variables:
+  independent:
+    - fixed tested synthetic variants
+    - controlled native textarea edits limited to declared safe variants
+    - lightweight editor candidate with no arbitrary code execution
+    - CodeMirror package candidate set with pinned direct package records
+  dependent:
+    - learner task completion and accepted-edit classification
+    - keyboard and screen-reader interaction evidence
+    - static fallback and deterministic reset/replay result
+    - fixture and candidate package byte/startup cost
+    - trusted-context sentinel and arbitrary-input containment result
+  controlled:
+    - synthetic local JavaScript-like text only; no credentials, uploads, telemetry, or network target
+    - fixture inspects text with exact matching and never evaluates learner input
+    - direct-installed Chromium and Firefox through approved Playwright 1.61.0 when Task 3 runs
+    - five clean local samples per available browser; generated output remains under /tmp/spk-j-code-editing
+    - no package-manager call, editor import, or production scaffold before Task 2 records per-package human status
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-j-code-editing --contract
+  - >-
+    Deferred until Task 2 human review: run only an approved exact candidate's
+    recorded isolated command. No package-manager command is authorized by this
+    planned contract.
+  - >-
+    Deferred until Task 3: run the local fixture measurement in five clean
+    browser samples and preserve the actual accessibility, reset/replay,
+    bundle/startup, and trusted-context observations.
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-002
+    claimId: CLM-POLICY-001
+    primitive: immutable evidence and human review gate for editing candidates
+    relation: supports
+    plan: 01-18
+    expectedClassification: project-policy
+    immutable:
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Required fields and verification rule
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: project-policy
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  In each available browser, five local replays show that fixed variants and the
+  controlled textarea complete the synthetic task with keyboard-reachable
+  labels, visible focus, announced accepted/rejected edit state, a static
+  no-JavaScript-readable fallback, deterministic reset/replay, no network or
+  persistence, and an unchanged trusted-context sentinel. A package editor can
+  be measured only if every exact package version, registry/repository source,
+  public export locator, license, integrity, immutable source revision,
+  maintenance/bundle evidence, dependency closure, and dated human decision is
+  recorded before installation.
+failureOutcome: >-
+  If a local fixed or controlled candidate loses keyboard, visible-focus,
+  status-announcement, static-equivalence, reset/replay, containment, or
+  sentinel checks in an available browser, retain the observed failure and make
+  no positive editing recommendation. Do not compensate by evaluating learner
+  input, adding a production component, or substituting an unreviewed editor.
+blockedOutcome: >-
+  If a candidate lacks a complete exact package record, immutable source/API
+  evidence, dependency closure, or Task 2 dated human approval, it remains
+  blocked and no install/import/measurement occurs. If an approved browser
+  cannot launch through the approved direct-installed route, record that exact
+  browser scope as blocked without downloading a browser or changing flags,
+  profiles, or preferences.
+replay:
+  input: fixture.html
+  command: >-
+    Before approval, validate the contract and inspect fixture.html for its
+    exact-match-only edit classification and absence of dynamic code execution.
+    After approval, run only the approved isolated candidate command and the
+    declared five-sample browser replay.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+  essential: true
+uncertainty:
+  state: material
+  reason: >-
+    This planned fixture can establish only local browser behavior for synthetic
+    text. It cannot establish learner comprehension, screen-reader speech,
+    production bundle behavior, upstream protocol behavior, or a selected
+    editor. The CodeMirror direct records are source-complete but have no human
+    approval or complete resolved dependency lock; CodeJar has a source-version
+    mismatch and is not eligible.
+recommendation: >-
+  Start comparison with fixed tested variants and a controlled textarea. Retain
+  the native lightweight shell as an inspection-only candidate. Keep CodeJar
+  blocked for its source-version mismatch and keep the CodeMirror direct package
+  set blocked pending dependency-closure evidence and a dated Task 2 human
+  supply-chain decision. ADR-0009 receives proposed evidence only; no editor is
+  selected or installed by Task 1.
+disposition: retain-as-fixture
+packageApproval:
+  reviewedAt: null
+  reviewer: null
+  status: pending-human-review
+  candidates:
+    - name: codejar
+      version: 4.3.0
+      registryUrl: https://registry.npmjs.org/codejar/4.3.0
+      projectUrl: https://github.com/antonmedv/codejar
+      repositoryUrl: https://github.com/antonmedv/codejar.git
+      license: MIT; source package.json at gitHead 4d19174c5a2759a5bf90be26353f7c85715392fa reports version 4.2.0, not the 4.3.0 registry release
+      releaseTarball: https://registry.npmjs.org/codejar/-/codejar-4.3.0.tgz
+      integrity: sha512-A7BlrtD2oHR4xsABs/lLvDNxiPxkx71SuyHhcilBHbPMASpQs4d1AG2XjDSAm7y40RmfXbSGbMBhllGy//CDOA==
+      shasum: 16901574fa2114def629ff20bd0408acb1891a12
+      provenanceRetrievedAt: '2026-07-24T09:23:23Z'
+      provenanceSource: npm version metadata; registry root release time 2025-10-14T09:05:30.639Z; repository gitHead 4d19174c5a2759a5bf90be26353f7c85715392fa
+      hashSourceDecision: >-
+        Incomplete and operationally blocked: npm's root export is . ->
+        dist/codejar.js (with ./cursor -> dist/cursor.js), 26,112 unpacked
+        bytes and no declared dependencies, but the registry 4.3.0 gitHead's
+        immutable package.json says 4.2.0. Do not install, import, or treat the
+        gitHead as 4.3.0 API/license proof. Task 2 must retain or explicitly
+        record this block; Task 1 makes no approval mutation.
+      approval: pending
+      isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codejar-4.3.0
+      installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codejar-4.3.0 install --ignore-scripts --package-lock=false codejar@4.3.0
+    - name: '@codemirror/state'
+      version: 6.5.2
+      registryUrl: https://registry.npmjs.org/@codemirror%2Fstate/6.5.2
+      projectUrl: https://github.com/codemirror/state
+      repositoryUrl: https://github.com/codemirror/state.git
+      license: MIT; immutable package.json at 64cba4b48555891636bc9afba74952c4224f53b1
+      releaseTarball: https://registry.npmjs.org/@codemirror/state/-/state-6.5.2.tgz
+      integrity: sha512-FVqsPqtPWKVVL3dPSxy8wEF/ymIEuVzF1PK3VbUgrxXpJUSHQWWZz4JMToquRxnkw+36LTamCZG2iua2Ptq0fA==
+      shasum: 8eca3a64212a83367dc85475b7d78d5c9b7076c6
+      provenanceRetrievedAt: '2026-07-24T09:23:23Z'
+      provenanceSource: npm version metadata published 2025-02-03T12:12:54.353Z; gitHead 64cba4b48555891636bc9afba74952c4224f53b1 marked version 6.5.2
+      hashSourceDecision: >-
+        Source-complete direct package: root export import/require points to
+        dist/index.js or dist/index.cjs; public API is exported from
+        src/index.ts at the recorded gitHead, including EditorState, StateField,
+        Compartment, Transaction, and StateEffect. Registry reports 431,834
+        unpacked bytes/9 files. It remains operationally blocked until Task 2
+        approves it and the full resolved dependency lock is recorded.
+      approval: pending
+      isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
+      installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+    - name: '@codemirror/view'
+      version: 6.38.6
+      registryUrl: https://registry.npmjs.org/@codemirror%2Fview/6.38.6
+      projectUrl: https://github.com/codemirror/view
+      repositoryUrl: https://github.com/codemirror/view.git
+      license: MIT; immutable package.json at 05e9b6633b03f857178b1dd7f97739cea7cffd2e
+      releaseTarball: https://registry.npmjs.org/@codemirror/view/-/view-6.38.6.tgz
+      integrity: sha512-qiS0z1bKs5WOvHIAC0Cybmv4AJSkAXgX5aD6Mqd2epSLlVJsQl8NG23jCVouIgkh4All/mrbdsf2UOLFnJw0tw==
+      shasum: 25d9df071393801196c311025d2caa7a5523c26c
+      provenanceRetrievedAt: '2026-07-24T09:23:23Z'
+      provenanceSource: npm version metadata published 2025-10-13T07:32:25.479Z; gitHead 05e9b6633b03f857178b1dd7f97739cea7cffd2e marked version 6.38.6
+      hashSourceDecision: >-
+        Source-complete direct package: root export import/require points to
+        dist/index.js or dist/index.cjs; public API is exported from
+        src/index.ts at the recorded gitHead, including EditorView, keymap,
+        KeyBinding, lineNumbers, and placeholder. Registry reports 1,195,929
+        unpacked bytes/9 files. It remains operationally blocked until Task 2
+        approves it and the full resolved dependency lock is recorded.
+      approval: pending
+      isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
+      installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+    - name: '@codemirror/commands'
+      version: 6.8.1
+      registryUrl: https://registry.npmjs.org/@codemirror%2Fcommands/6.8.1
+      projectUrl: https://github.com/codemirror/commands
+      repositoryUrl: https://github.com/codemirror/commands.git
+      license: MIT; immutable package.json at 1fe425f7424887b96feadf8d9b0dc7f3afb80b44
+      releaseTarball: https://registry.npmjs.org/@codemirror/commands/-/commands-6.8.1.tgz
+      integrity: sha512-KlGVYufHMQzxbdQONiLyGQDUW0itrLZwq3CcY7xpv9ZLRHqzkBSoteocBHtMCoY7/Ci4xhzSrToIeLg7FxHuaw==
+      shasum: 639f5559d2f33f2582a2429c58cb0c1b925c7a30
+      provenanceRetrievedAt: '2026-07-24T09:23:23Z'
+      provenanceSource: npm version metadata published 2025-03-31T06:09:04.731Z; gitHead 1fe425f7424887b96feadf8d9b0dc7f3afb80b44 marked version 6.8.1
+      hashSourceDecision: >-
+        Source-complete direct package: root export import/require points to
+        dist/index.js or dist/index.cjs; public API includes history,
+        historyKeymap, undo, redo, and defaultKeymap in src/commands.ts at the
+        recorded gitHead. Registry reports 235,720 unpacked bytes/9 files. It
+        remains operationally blocked until Task 2 approves it and the full
+        resolved dependency lock is recorded.
+      approval: pending
+      isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
+      installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+    - name: '@codemirror/lang-javascript'
+      version: 6.2.3
+      registryUrl: https://registry.npmjs.org/@codemirror%2Flang-javascript/6.2.3
+      projectUrl: https://github.com/codemirror/lang-javascript
+      repositoryUrl: https://github.com/codemirror/lang-javascript.git
+      license: MIT; immutable package.json at 9f86da0fcf08360c449a327b131866d9b4ca8d95
+      releaseTarball: https://registry.npmjs.org/@codemirror/lang-javascript/-/lang-javascript-6.2.3.tgz
+      integrity: sha512-8PR3vIWg7pSu7ur8A07pGiYHgy3hHj+mRYRCSG8q+mPIrl0F02rgpGv+DsQTHRTc30rydOsf5PZ7yjKFg2Ackw==
+      shasum: d705c359dc816afcd3bcdf120a559f83d31d4cda
+      provenanceRetrievedAt: '2026-07-24T09:23:23Z'
+      provenanceSource: npm version metadata published 2025-02-12T10:12:43.061Z; gitHead 9f86da0fcf08360c449a327b131866d9b4ca8d95 marked version 6.2.3
+      hashSourceDecision: >-
+        Source-complete direct package: root export import/require points to
+        dist/index.js or dist/index.cjs; public API is exported from
+        src/index.ts at the recorded gitHead, including javascript,
+        javascriptLanguage, typescriptLanguage, and jsxLanguage. Registry
+        reports 61,953 unpacked bytes/9 files. It remains operationally blocked
+        until Task 2 approves it and the full resolved dependency lock is
+        recorded.
+      approval: pending
+      isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
+      installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3

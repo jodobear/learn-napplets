@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'none'; img-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'">
+    <title>SPK-J least-authority editing fixture</title>
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { line-height: 1.5; margin: 1rem auto; max-width: 72rem; padding: 0 1rem; }
+      fieldset { margin: 1rem 0; padding: 1rem; }
+      textarea, pre, output { box-sizing: border-box; display: block; font: 1rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; max-width: 100%; width: 100%; }
+      textarea { min-height: 5rem; }
+      pre, output { border: 1px solid currentColor; padding: .75rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+      button, textarea { border: 2px solid currentColor; border-radius: .25rem; padding: .5rem; }
+      button:focus-visible, textarea:focus-visible { outline: 3px solid Highlight; outline-offset: 3px; }
+      .controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+      .hint { font-size: .95rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SPK-J local-only least-authority editing fixture</h1>
+      <p>
+        This disposable non-production fixture recognizes only two synthetic text
+        variants. It does not evaluate, parse, compile, lint, send, save, or execute
+        learner text. The no-JavaScript content below is the static equivalent.
+      </p>
+
+      <section aria-labelledby="task-heading">
+        <h2 id="task-heading">Declared learning task</h2>
+        <p>Change the synthetic greeting from <code>Hello</code> to <code>Hi</code>.</p>
+        <pre aria-label="Declared safe variants">const greeting = "Hello";
+const greeting = "Hi";</pre>
+      </section>
+
+      <fieldset>
+        <legend>Candidate A: fixed tested variants</legend>
+        <p class="hint">Choose a fixed fixture constant; no learner text is executed.</p>
+        <div class="controls">
+          <button type="button" data-fixed="const greeting = &quot;Hello&quot;;">Use starter variant</button>
+          <button type="button" data-fixed="const greeting = &quot;Hi&quot;;">Use alternate variant</button>
+        </div>
+        <output id="fixed-output" aria-live="polite">Static fallback: choose a fixed variant after JavaScript loads.</output>
+      </fieldset>
+
+      <fieldset>
+        <legend>Candidate B: controlled small textarea edit</legend>
+        <label for="controlled-edit">Synthetic text; only the two declared exact variants are recognized</label>
+        <textarea id="controlled-edit" aria-describedby="controlled-help" spellcheck="false">const greeting = "Hello";</textarea>
+        <p id="controlled-help" class="hint">Other text remains literal and is reported as unrecognized. It is never executed.</p>
+        <output id="controlled-status" aria-live="polite">Static fallback: starter variant is recognized.</output>
+        <div class="controls"><button type="button" id="controlled-reset">Reset controlled edit</button></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Candidate C: lightweight native inspection shell</legend>
+        <label for="lightweight-edit">Synthetic text with line and character inspection</label>
+        <textarea id="lightweight-edit" aria-describedby="lightweight-help" spellcheck="false">const greeting = "Hello";</textarea>
+        <p id="lightweight-help" class="hint">This uses a native textarea only. It is not a package editor and provides no code execution.</p>
+        <output id="lightweight-status" aria-live="polite">Static fallback: one line, 25 characters, starter variant recognized.</output>
+        <div class="controls"><button type="button" id="lightweight-reset">Reset lightweight shell</button></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Candidate D/E: package editors</legend>
+        <p>
+          CodeJar and CodeMirror are not loaded, imported, or simulated here. Their
+          exact package records and blockers are in <code>metadata.yaml</code> and
+          <code>recipe.md</code>; Task 2 must record a dated decision before any
+          isolated package operation.
+        </p>
+      </fieldset>
+
+      <section aria-labelledby="boundary-heading">
+        <h2 id="boundary-heading">Trusted-context boundary</h2>
+        <p>
+          A test-only sentinel is checked after every edit. Hostile input is displayed
+          with <code>textContent</code>; it cannot become markup, a script, or a
+          top-level operation.
+        </p>
+        <output id="sentinel-status" aria-live="polite">Static fallback: no learner code is executed.</output>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        'use strict';
+        const starter = 'const greeting = "Hello";';
+        const alternate = 'const greeting = "Hi";';
+        const sentinelValue = 'spk-j-trusted-context-sentinel-v1';
+        window.__spkJTrustedHostSentinel = sentinelValue;
+
+        const exactVariant = (value) => {
+          if (value === starter) return 'starter variant recognized';
+          if (value === alternate) return 'alternate variant recognized';
+          return 'unrecognized literal text; nothing was executed';
+        };
+
+        const sentinelStatus = document.getElementById('sentinel-status');
+        const checkSentinel = () => {
+          const intact = window.__spkJTrustedHostSentinel === sentinelValue;
+          sentinelStatus.textContent = intact
+            ? 'Trusted-context sentinel unchanged; learner text was not executed.'
+            : 'Trusted-context sentinel changed: fixture boundary failure.';
+          return intact;
+        };
+
+        const fixedOutput = document.getElementById('fixed-output');
+        document.querySelectorAll('[data-fixed]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const value = button.dataset.fixed;
+            fixedOutput.textContent = `${exactVariant(value)}: ${value}`;
+            checkSentinel();
+          });
+        });
+
+        const connectControlled = (textareaId, statusId, resetId, includeLength) => {
+          const textarea = document.getElementById(textareaId);
+          const status = document.getElementById(statusId);
+          const update = () => {
+            const lines = textarea.value === '' ? 0 : textarea.value.split('\n').length;
+            const lengthText = includeLength ? `; ${lines} line(s), ${textarea.value.length} character(s)` : '';
+            status.textContent = `${exactVariant(textarea.value)}${lengthText}`;
+            checkSentinel();
+          };
+          textarea.addEventListener('input', update);
+          document.getElementById(resetId).addEventListener('click', () => {
+            textarea.value = starter;
+            update();
+            textarea.focus();
+          });
+          update();
+          return update;
+        };
+
+        connectControlled('controlled-edit', 'controlled-status', 'controlled-reset', false);
+        connectControlled('lightweight-edit', 'lightweight-status', 'lightweight-reset', true);
+
+        // Test-only inspection. It returns labels and text; it never evaluates learner input.
+        window.runSpkJFixture = () => ({
+          fixedText: fixedOutput.textContent,
+          controlledText: document.getElementById('controlled-edit').value,
+          controlledStatus: document.getElementById('controlled-status').textContent,
+          lightweightText: document.getElementById('lightweight-edit').value,
+          lightweightStatus: document.getElementById('lightweight-status').textContent,
+          sentinelIntact: checkSentinel()
+        });
+      })();
+    </script>
+  </body>
+</html>
