@@ -1,0 +1,95 @@
+{
+  "fixtureVersion": 1,
+  "spikeId": "SPK-D-VERIFIED-LOADER",
+  "nonProduction": true,
+  "purpose": "Local exact-byte integrity fixture only; it does not encode a protocol manifest, signature, blob, aggregate, or identity value.",
+  "sourceBaseline": [
+    {
+      "sourceId": "SRC-POLICY-001",
+      "claimId": "CLM-UPSTREAM-BASELINE-001",
+      "commitSha": "c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0",
+      "path": "docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md",
+      "locator": "Known high-risk drift to re-verify",
+      "contentSha256": "df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb",
+      "classification": "blocked"
+    },
+    {
+      "sourceId": "SRC-POLICY-002",
+      "claimId": "CLM-DRF-MANIFEST-NORMATIVE",
+      "commitSha": "b534103068be8c07e6869bfb7290fb60fdd87c8c",
+      "path": ".planning/governance/evidence-policy.md",
+      "locator": "Freshness",
+      "contentSha256": "9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2",
+      "classification": "project-policy"
+    }
+  ],
+  "artifact": {
+    "encoding": "hex",
+    "exactBytesHex": "53504b2d44206c6f63616c20666978747572652062797465732076310a",
+    "byteLength": 29,
+    "sha256": "b83079843b0410559ad4e275557c4103d3a3b86026fc0bc9eccf62fe42e9607c",
+    "expectedVerificationState": "blocked",
+    "interpretationLimit": "The digest pins this local input for replay. It is not signature, blob, aggregate, manifest, or identity verification."
+  },
+  "mutationCase": {
+    "id": "one-byte-xor-offset-0",
+    "description": "XOR the first byte with 0x01; only byte offset 0 changes from 0x53 to 0x52.",
+    "byteOffset": 0,
+    "originalByteHex": "53",
+    "mutatedByteHex": "52",
+    "mutatedBytesHex": "52504b2d44206c6f63616c20666978747572652062797465732076310a",
+    "byteLength": 29,
+    "sha256": "34e7f0624caefa1b9e3257946df0eed0d37c0b6253c41d0a7d3975a622e39d9d",
+    "expectedFixtureIntegrity": "changed",
+    "expectedVerificationState": "blocked",
+    "interpretationLimit": "A changed local digest is an integrity observation only; no unavailable verification surface is simulated or treated as successful."
+  },
+  "verificationSurfaces": [
+    {
+      "field": "manifest-resolution",
+      "status": "blocked",
+      "reason": "No immutable current manifest source or reviewed resolver implementation is present in the source registry."
+    },
+    {
+      "field": "identity-mapping",
+      "status": "blocked",
+      "reason": "No immutable current identity source or reviewed mapping implementation is present in the source registry."
+    },
+    {
+      "field": "signature-verification",
+      "status": "blocked",
+      "reason": "No reviewed public verification surface is pinned; no signature value or verifier is fabricated."
+    },
+    {
+      "field": "blob-verification",
+      "status": "blocked",
+      "reason": "No reviewed public verification surface is pinned; no blob contract or result is fabricated."
+    },
+    {
+      "field": "aggregate-verification",
+      "status": "blocked",
+      "reason": "No reviewed public aggregate-verification surface is pinned; no aggregate value or algorithm is fabricated."
+    },
+    {
+      "field": "exact-byte-loading",
+      "status": "blocked",
+      "reason": "The fixture bytes and their digests are replayable, but no reviewed loader implementation is available to establish loader behavior."
+    }
+  ],
+  "replayContract": {
+    "command": "tools/phase1-python -c '<stdlib digest and one-byte mutation assertions>'",
+    "requiredAssertions": [
+      "artifact bytes decode from exactBytesHex",
+      "artifact byte length and SHA-256 equal the pinned values",
+      "mutation changes exactly one byte at offset 0",
+      "mutation byte length and SHA-256 equal the pinned values",
+      "all unavailable verification surfaces remain blocked"
+    ],
+    "prohibitedAssertions": [
+      "signature verification success",
+      "blob verification success",
+      "aggregate verification success",
+      "manifest or identity protocol behavior"
+    ]
+  }
+}

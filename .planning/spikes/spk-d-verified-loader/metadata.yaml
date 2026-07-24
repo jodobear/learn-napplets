@@ -1,0 +1,164 @@
+schemaVersion: 1
+id: SPK-D-VERIFIED-LOADER
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A current, immutable, publicly reviewed verification implementation and source
+  baseline would be necessary to measure manifest resolution, identity mapping,
+  signature/blob/aggregate verification, and exact-byte loading. With only the
+  current blocked policy baseline, SPK-D can pin a local byte fixture and record
+  an impact-scoped blocked result without manufacturing a verified-loader claim.
+variables:
+  independent: [fixture case, verification-surface availability]
+  dependent: [pinned-byte integrity observation, mutation observation, feasibility disposition]
+  controlled: [local fixture bytes, approved Phase 1 Python wrapper, no package installation, no network access, immutable policy bindings]
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-d-verified-loader --contract
+  - tools/phase1-python -c "import hashlib,json; f=json.load(open('.planning/spikes/spk-d-verified-loader/fixture.json')); b=bytes.fromhex(f['artifact']['exactBytesHex']); m=bytes([b[0]^1])+b[1:]; assert len(b)==f['artifact']['byteLength']==len(m); assert hashlib.sha256(b).hexdigest()==f['artifact']['sha256']; assert sum(x!=y for x,y in zip(b,m))==1; assert hashlib.sha256(m).hexdigest()==f['mutationCase']['sha256']; assert all(s['status']=='blocked' for s in f['verificationSurfaces'])"
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-d-verified-loader --complete
+  - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-d-verified-loader/report.md
+  - tools/phase1-python tools/validate-research.py validate-impact-fragment .planning/spikes/spk-d-verified-loader/impact-fragment.yaml
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: manifest resolution
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: identity mapping
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: exact artifact-byte loading
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: signature verification
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: blob verification
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: aggregate verification
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: reused verifier provenance
+    relation: affects
+    plan: 01-12
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  A current immutable manifest and identity source plus a publicly reviewed
+  implementation surface resolve every declared verification primitive for the
+  unchanged fixture and reject the one-byte mutation with replayable evidence.
+failureOutcome: >-
+  If a reviewed verification surface is available but the unchanged fixture or
+  one-byte mutation produces a result inconsistent with its pinned contract,
+  record the actual error and make no positive verified-loader recommendation.
+blockedOutcome: >-
+  If an immutable current manifest/identity baseline, reviewed verifier
+  provenance, or approved execution surface is unavailable, record the byte
+  fixture observation and an impact-scoped blocked result without adding a
+  package, implementing cryptography, or claiming verification success.
+replay:
+  input: fixture.json
+  command: >-
+    Run the declared standard-library fixture-integrity assertion through
+    tools/phase1-python, then validate the completed spike, report, and impact
+    fragment. The assertion checks only supplied byte digests and the one-byte
+    mutation; it does not implement or simulate protocol verification.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: >-
+    The registry contains only project-policy/archive records and no immutable
+    current manifest, identity, signature, blob, aggregate, or reviewed loader
+    implementation evidence. Local digest observations cannot establish protocol
+    behavior or a verified-loader profile.
+recommendation: >-
+  Keep SPK-D as a non-production blocked feasibility fixture. Do not select
+  Profile 2 or teach manifest/identity/verification behavior until immutable
+  source and reviewed verifier evidence are collected and approved.
+disposition: blocked
