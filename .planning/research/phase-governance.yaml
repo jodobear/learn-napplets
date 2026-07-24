@@ -47,24 +47,54 @@ verification:
   validatedAt: '2026-07-24T12:25:40Z'
   validator: tools/validate-planning.py --phase-1-complete
 approval:
-  status: pending
+  status: approved
+  approvedBy: project-owner (scoped Phase 2 product/content-contract readiness)
+  approvedAt: '2026-07-24T00:00:00Z'
 signoffs:
   product:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — Phase 1 evidence is sufficient to define the minimum Phase 2 product/content contract; no product implementation authorized.
   protocolTechnical:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — canonical evidence is sufficient for Phase 2 contracting while upstream, package, manifest, identity, verifier, and browser blockers remain explicit.
   security:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — evidence is sufficient for contract planning only; no teaching-host architecture, CSP behavior, residual risk, or production security posture accepted.
   accessibility:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — evidence is sufficient to specify the Phase 2 accessibility contract; Firefox and VitePress accessibility evidence remains unresolved.
   contentLearning:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — thirteen research packets and canonical citation/uncertainty checks are sufficient to define the minimum learning contract.
   release:
-    status: pending
+    status: approved
+    signedBy: project-owner
+    signedAt: '2026-07-24T00:00:00Z'
+    evidence:
+      - Approved 2026-07-24 — Phase 1 evidence package and local replay/no-scaffold gates are complete; no deployment, publication, production release, or external action approved.
 blockers:
   - id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
     state: blocked
     impact: No cross-browser browser-boundary, CSP, portable-target, or diagram recommendation; no browser workaround is authorized.
+    owner: research-owner
+  - id: DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    state: blocked
+    impact: The direct-installed Firefox observation remains a preserved conflict record because Firefox exited before Playwright attached.
     owner: research-owner
   - id: OQ-PUBLIC-PACKAGE-BASELINE-001
     state: blocked
@@ -98,8 +128,24 @@ blockers:
     state: unresolved
     impact: Portable target is optional and deferred; it cannot block the static public learning path.
     owner: product-owner
+  - id: ADR-0006
+    state: unresolved
+    impact: Dynamic-diagram capability remains deferred; the static diagram, transcript, and table path is the only proposed safe minimum.
+    owner: accessibility-owner
   - id: ADR-0009
     state: blocked
     impact: Editor choices remain bounded to the proposed fixed-variant/native-textarea direction; Firefox and CodeJar evidence is unavailable.
     owner: research-owner
-phaseResult: blocked
+  - id: ADR-0010
+    state: blocked
+    impact: Public-package admission and updates remain blocked until release, root-export, provenance, integrity, implementation, compatibility, and review evidence are complete.
+    owner: research-owner
+  - id: ADR-0011
+    state: unresolved
+    impact: Freshness automation remains deferred; only targeted, human-reviewed source-refresh work is proposed.
+    owner: research-owner
+  - id: VITEPRESS-ACCESSIBILITY-EVIDENCE
+    state: unresolved
+    impact: VitePress reduced-motion and static-equivalent accessibility evidence remains unresolved and cannot support a positive framework accessibility recommendation.
+    owner: accessibility-owner
+phaseResult: passed

@@ -41,7 +41,7 @@ The required artifact inventory is present: executive/decision/risk/security syn
 | SPK-K | blocked / blocked | 452, 3, 3, 1, 0 | `spk-k-deployment/metadata.yaml` |
 | SPK-L | planned / passed local replay | 0 | `spk-l-source-freshness/metadata.yaml` |
 
-The Phase 1 governance record has distinct pending slots for product, protocol/technical, security, accessibility, content/learning, and release; it intentionally records `phaseResult: blocked` pending human closeout.
+The Phase 1 governance record now contains distinct approved, dated scoped entries for product, protocol/technical, security, accessibility, content/learning, and release. The project owner recorded `phaseResult: passed` on 2026-07-24 only for Phase 2 product/content-contract readiness; that result does not accept ADRs, residual risk, production work, deployment, release, external action, or Phase 2 transition.
 
 ## Conflicts
 
@@ -67,22 +67,23 @@ The closeout validator also checked deterministic typed-ID ordering, complete so
 
 ## Recommendation
 
-**Candidate closeout recommendation: blocked pending human review.** The automation gate is green, but `PGV-PHASE-001` remains `blocked` until the project owner supplies itemized, dated role outcomes and one explicit result.
+**Human closeout result: passed, scoped to Phase 2 product/content-contract readiness only.** On 2026-07-24, the project owner supplied the required dated role-specific approvals and `PGV-PHASE-001` was updated to `phaseResult: passed`. This result affirms that the evidence baseline is sufficient to define the minimum Phase 2 product/content contract; it is not an ADR acceptance, residual-risk acceptance, production-scaffold authorization, deployment/release approval, external-action approval, or Phase 2 transition approval.
 
-**Minimum website-unlocking decisions for Phase 2 / later static site:**
+**Permitted Phase 2 use of this closeout:**
 
-1. Record the Phase 1 human closeout result and per-role review status.
-2. Keep ADR-0001 (public-site-first boundary), ADR-0002 (static-site candidate), and ADR-0004 (common structured source) as evidence-backed proposals for the Phase 2 product/content contract; do not convert them to accepted automatically.
+1. Define the minimum product/content contract from the evidence-backed, still-proposed ADR handoff.
+2. Keep ADR-0001 (public-site-first boundary), ADR-0002 (static-site candidate), and ADR-0004 (common structured source) as evidence-backed proposals; do not convert any ADR to accepted automatically.
 3. Preserve static lessons, transcript/table/static equivalents, deterministic conceptual simulations, and source/status/uncertainty visibility as the safe scope boundary.
-4. Keep production framework/application scaffolding prohibited until the required owner ADR decision and Phase 2 contract approval are recorded.
+4. Keep production framework/application scaffolding prohibited until the required ADR disposition and Phase 2 contract approval are recorded.
 
-**Complexity safe to defer:** teaching host and real lab operation (ADR-0005/0008); portable target (ADR-0007); package admission/versioning (ADR-0010); editor and dynamic diagram capability (ADR-0006/0009); external deployment/publication (ADR-0003); and freshness cadence automation (ADR-0011). Deferral does not erase their blockers or required reviews.
+**Complexity retained as blocked or deferred:** teaching host and real lab operation (ADR-0005/0008); portable target (ADR-0007); package admission/versioning (ADR-0010); editor and dynamic diagram capability (ADR-0006/0009); external deployment/publication (ADR-0003); and freshness cadence automation (ADR-0011). Firefox and VitePress accessibility evidence, package, manifest/identity/verifier, browser, and upstream-baseline blockers remain explicit. Deferral does not erase any blocker or required review.
 
 ## Uncertainty
 
 - **EVID-03:** equality semantics for future compatibility dimensions remains an explicit versioned-schema-extension question; current known IDs and baselines validate, but a new dimension requires migration review.
 - **EVID-04:** unlike spike measurement units remain unaggregated; raw values and their evidence remain linked without a fabricated universal score.
-- **Residual blocker set:** `OQ-UPSTREAM-BASELINE-001`, `OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001`, `OQ-EGRESS-NIP-001`, `OQ-PUBLIC-PACKAGE-BASELINE-001`, `OQ-PUBLIC-CONFORMANCE-001`, `OQ-VERIFIED-LOADER-MANIFEST-001`, `OQ-VERIFIED-LOADER-IDENTITY-001`, and `OQ-VERIFIED-LOADER-VERIFIER-001` remain blocked with mapped impacts.
+- **Residual blocker set:** `OQ-UPSTREAM-BASELINE-001`, `OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001`, `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`, `OQ-EGRESS-NIP-001`, `OQ-PUBLIC-PACKAGE-BASELINE-001`, `OQ-PUBLIC-CONFORMANCE-001`, `OQ-VERIFIED-LOADER-MANIFEST-001`, `OQ-VERIFIED-LOADER-IDENTITY-001`, and `OQ-VERIFIED-LOADER-VERIFIER-001` remain blocked with mapped impacts. VitePress reduced-motion/static-equivalent evidence remains unresolved; no stable VitePress blocker ID is asserted where the canonical records do not provide one.
+- **Retained deferrals:** ADR-0003 external deployment/publication, ADR-0006 dynamic diagrams, ADR-0007 portable target, ADR-0009 editor capability, ADR-0010 package admission/update, and ADR-0011 freshness automation remain blocked or deferred in `PGV-PHASE-001`.
 - **Security exceptions:** none accepted. Public CSP, host/guest boundary, package, verifier, real external service, credentials, deployment, and browser workaround actions remain prohibited pending their named reviews.
 
 ## Affected phases and requirements
@@ -96,10 +97,19 @@ The closeout validator also checked deterministic typed-ID ordering, complete so
 | OPER-01 | Targeted refresh/review-work and replay determinism validated; no automatic claim rewrite | 01, 02, 11 |
 | OPER-03 | Governance role, exit-evidence, verification, requirement, and human-closeout fields validated | 01, 02–11 |
 
-The Phase 2 entry gate requires a human-recorded passed Phase 1 baseline plus the evidence-backed proposed ADR 0001–0011 handoff. It permits product/content-contract definition only; human ADR disposition and Phase 2 contract approval remain separate production-scaffold gates.
+The Phase 2 entry gate has the human-recorded passed Phase 1 baseline plus the evidence-backed, still-proposed ADR 0001–0011 handoff. It permits product/content-contract definition only; human ADR disposition, Phase 2 contract approval, phase-transition approval, and every production-scaffold gate remain separate.
 
 ## Owner and required approval
 
-Research owner prepared the validated evidence package. Required human closeout entries are separate dated statuses for product, protocol/technical, security, accessibility, content/learning, and release roles, plus the project owner’s exact `passed` or `blocked` result. Protocol/technical review is required for upstream-sensitive evidence; security review for egress/authority/exceptions; accessibility review for learner-facing equivalents; content/learning review for teaching scope; release review for package and external delivery; product review for scope and portability.
+Research owner prepared the validated evidence package. On 2026-07-24 the project owner recorded these separate scoped role outcomes:
 
-All ADR 0001–0011 remain `proposed`. The evidence handoff at `.planning/research/adr-handoff.yaml` identifies each owner, approver, evidence IDs, deadline, impacts, and interim no-scaffold restriction. No approval is implied by this report or any automated command.
+- **Product:** Approved — Phase 1 evidence is sufficient to define the minimum Phase 2 product/content contract; no product implementation authorized.
+- **Protocol/technical:** Approved — canonical evidence is sufficient for Phase 2 contracting while upstream, package, manifest, identity, verifier, and browser blockers remain explicit.
+- **Security:** Approved — evidence is sufficient for contract planning only; no teaching-host architecture, CSP behavior, residual risk, or production security posture accepted.
+- **Accessibility:** Approved — evidence is sufficient to specify the Phase 2 accessibility contract; Firefox and VitePress accessibility evidence remains unresolved.
+- **Content/learning:** Approved — thirteen research packets and canonical citation/uncertainty checks are sufficient to define the minimum learning contract.
+- **Release:** Approved — Phase 1 evidence package and local replay/no-scaffold gates are complete; no deployment, publication, production release, or external action approved.
+
+Protocol/technical review remains required for upstream-sensitive evidence; security review remains required for egress/authority/exceptions; accessibility review remains required for learner-facing equivalents; content/learning review remains required for teaching scope; release review remains required for package and external delivery; product review remains required for scope and portability.
+
+All ADR 0001–0011 remain `proposed`. The evidence handoff at `.planning/research/adr-handoff.yaml` identifies each owner, approver, evidence IDs, deadline, impacts, and interim no-scaffold restriction. The scoped human closeout does not accept an ADR, waive a blocker, accept residual risk, authorize a production scaffold, or approve phase transition, deployment, release, publication, or external action.
