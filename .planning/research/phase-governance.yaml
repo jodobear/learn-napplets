@@ -1,0 +1,105 @@
+schemaVersion: 1
+id: PGV-PHASE-001
+kind: phase-governance
+phase: '01'
+owner: research-owner
+requiredApprover: protocol-technical-owner
+requirements:
+  - EVID-01
+  - EVID-02
+  - EVID-03
+  - EVID-04
+  - OPER-01
+  - OPER-03
+exitEvidence:
+  - id: SRC-POLICY-001
+    measure: immutable source and claim provenance records validate
+    expected: complete canonical source-to-claim links
+    actual: structurally valid; upstream-sensitive claims remain explicitly blocked
+    path: .planning/research/source-registry.yaml
+  - id: CLM-UPSTREAM-BASELINE-001
+    measure: blocked baseline is impact-scoped rather than inferred as an upstream fact
+    expected: blocked claim with uncertainty, impact, and refresh route
+    actual: blocked with canonical drift and open-question links
+    path: .planning/research/claims.yaml
+  - id: SPK-C-BOUNDARY-HARNESS
+    measure: browser-boundary replay evidence
+    expected: validated report and replay result preserving unavailable-browser evidence
+    actual: Chromium fixture evidence recorded; Firefox attachment remains blocked
+    path: .planning/spikes/spk-c-boundary-harness/report.md
+  - id: SPK-H-BROWSER-EGRESS
+    measure: security and egress evidence synthesis
+    expected: pinned-source, observation, policy, question, impact, uncertainty, owner, and approval fields
+    actual: complete synthesis with unresolved Firefox and upstream-evidence blockers
+    path: .planning/research/security-egress-findings.md
+  - id: LES-001
+    measure: fixed thirteen-packet lesson index and canonical evidence validation
+    expected: thirteen present packets with resolved or impact-scoped citations
+    actual: all thirteen packets indexed and validated
+    path: .planning/research/lesson-packets/index.yaml
+  - id: ADR-0001
+    measure: proposed ADR set has evidence, uncertainty, impact, approver, and revisit trigger
+    expected: ADR 0001 through ADR 0011 remain proposed
+    actual: proposed-only series is present for human review
+    path: .planning/adr
+verification:
+  gsdState: passed
+  validatedAt: '2026-07-24T12:25:40Z'
+  validator: tools/validate-planning.py --phase-1-complete
+approval:
+  status: pending
+signoffs:
+  product:
+    status: pending
+  protocolTechnical:
+    status: pending
+  security:
+    status: pending
+  accessibility:
+    status: pending
+  contentLearning:
+    status: pending
+  release:
+    status: pending
+blockers:
+  - id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    state: blocked
+    impact: No cross-browser browser-boundary, CSP, portable-target, or diagram recommendation; no browser workaround is authorized.
+    owner: research-owner
+  - id: OQ-PUBLIC-PACKAGE-BASELINE-001
+    state: blocked
+    impact: No public package admission, consumption, update, or package-conformance claim without release, provenance, integrity, root-export, and immutable implementation evidence.
+    owner: research-owner
+  - id: OQ-VERIFIED-LOADER-MANIFEST-001
+    state: blocked
+    impact: Manifest, dTag identity, signature/blob/aggregate verification, and loader recommendations remain unavailable for Phase 2 and later teaching-host work.
+    owner: research-owner
+  - id: OQ-VERIFIED-LOADER-IDENTITY-001
+    state: blocked
+    impact: Manifest and identity teaching remains conceptual; no immutable identity mapping is accepted.
+    owner: research-owner
+  - id: OQ-VERIFIED-LOADER-VERIFIER-001
+    state: blocked
+    impact: Verifier provenance is unknown; no cryptography or production loader may be implemented from the fixture.
+    owner: research-owner
+  - id: OQ-EGRESS-NIP-001
+    state: blocked
+    impact: Egress and CSP observations remain fixture-specific; restrictive CSP is proposed project policy, not upstream protocol fact.
+    owner: research-owner
+  - id: OQ-UPSTREAM-BASELINE-001
+    state: blocked
+    impact: Protocol, runtime, compatibility, and current-work claims remain blocked until official immutable baselines are acquired and reviewed.
+    owner: research-owner
+  - id: ADR-0003
+    state: blocked
+    impact: External deployment and publication are not authorized; only local static inspection and rollback evidence exists.
+    owner: research-owner
+  - id: ADR-0007
+    state: unresolved
+    impact: Portable target is optional and deferred; it cannot block the static public learning path.
+    owner: product-owner
+  - id: ADR-0009
+    state: blocked
+    impact: Editor choices remain bounded to the proposed fixed-variant/native-textarea direction; Firefox and CodeJar evidence is unavailable.
+    owner: research-owner
+phaseResult: blocked

@@ -31,6 +31,15 @@ GOVERNANCE = {
     "exitEvidence": [{"id": "SPK-TEST-001", "measure": "replay result", "expected": "blocked", "actual": "blocked", "path": "spikes/spk-test-001/report.md"}],
     "verification": {"gsdState": "passed", "validatedAt": "2026-07-24T00:00:00Z", "validator": "validate-research"},
     "approval": {"status": "pending"},
+    "signoffs": {
+        "product": {"status": "pending"},
+        "protocolTechnical": {"status": "pending"},
+        "security": {"status": "pending"},
+        "accessibility": {"status": "pending"},
+        "contentLearning": {"status": "pending"},
+        "release": {"status": "pending"},
+    },
+    "blockers": [],
     "phaseResult": "blocked",
 }
 

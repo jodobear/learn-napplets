@@ -4,7 +4,7 @@
   "title": "Reusable phase ownership and exit-evidence record",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "id", "kind", "phase", "owner", "requiredApprover", "requirements", "exitEvidence", "verification", "approval", "phaseResult"],
+  "required": ["schemaVersion", "id", "kind", "phase", "owner", "requiredApprover", "requirements", "exitEvidence", "verification", "approval", "signoffs", "blockers", "phaseResult"],
   "properties": {
     "schemaVersion": {"const": 1},
     "id": {"type": "string", "pattern": "^PGV-[A-Z0-9][A-Z0-9-]*$"},
@@ -12,11 +12,82 @@
     "phase": {"type": "string", "pattern": "^\\d{2}$"},
     "owner": {"type": "string", "minLength": 1},
     "requiredApprover": {"type": "string", "minLength": 1},
-    "requirements": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}},
-    "exitEvidence": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["id", "measure", "expected", "actual", "path"], "properties": {"id": {"type": "string", "pattern": "^(SRC|CLM|SPK|ADR|LES)-[A-Z0-9][A-Z0-9-]*$"}, "measure": {"type": "string", "minLength": 1}, "expected": {"type": "string", "minLength": 1}, "actual": {"type": "string", "minLength": 1}, "path": {"type": "string", "minLength": 1}}}},
-    "verification": {"type": "object", "additionalProperties": false, "required": ["gsdState", "validatedAt", "validator"], "properties": {"gsdState": {"enum": ["pending", "passed", "blocked"]}, "validatedAt": {"type": "string", "format": "date-time"}, "validator": {"type": "string", "minLength": 1}}},
-    "approval": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {"status": {"enum": ["pending", "approved", "rejected"]}, "approvedBy": {"type": "string", "minLength": 1}, "approvedAt": {"type": "string", "format": "date-time"}}},
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]{3,4}-\\d{2}$"}
+    },
+    "exitEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "measure", "expected", "actual", "path"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^(SRC|CLM|SPK|ADR|LES)-[A-Z0-9][A-Z0-9-]*$"},
+          "measure": {"type": "string", "minLength": 1},
+          "expected": {"type": "string", "minLength": 1},
+          "actual": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gsdState", "validatedAt", "validator"],
+      "properties": {
+        "gsdState": {"enum": ["pending", "passed", "blocked"]},
+        "validatedAt": {"type": "string", "format": "date-time"},
+        "validator": {"type": "string", "minLength": 1}
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["pending", "approved", "rejected"]},
+        "approvedBy": {"type": "string", "minLength": 1},
+        "approvedAt": {"type": "string", "format": "date-time"}
+      }
+    },
+    "signoffs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product", "protocolTechnical", "security", "accessibility", "contentLearning", "release"],
+      "properties": {
+        "product": {"$ref": "#/$defs/signoff"},
+        "protocolTechnical": {"$ref": "#/$defs/signoff"},
+        "security": {"$ref": "#/$defs/signoff"},
+        "accessibility": {"$ref": "#/$defs/signoff"},
+        "contentLearning": {"$ref": "#/$defs/signoff"},
+        "release": {"$ref": "#/$defs/signoff"}
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "state", "impact", "owner"], "properties": {"id": {"type": "string", "minLength": 1}, "state": {"enum": ["blocked", "unknown", "unresolved"]}, "impact": {"type": "string", "minLength": 1}, "owner": {"type": "string", "minLength": 1}}}
+    },
     "phaseResult": {"enum": ["passed", "blocked"]}
   },
-  "allOf": [{"if": {"properties": {"approval": {"properties": {"status": {"const": "approved"}}}}}, "then": {"properties": {"approval": {"required": ["approvedBy", "approvedAt"]}}}}]
+  "$defs": {
+    "signoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["pending", "approved", "blocked", "rejected"]},
+        "signedBy": {"type": "string", "minLength": 1},
+        "signedAt": {"type": "string", "format": "date-time"},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [{"if": {"properties": {"status": {"const": "approved"}}}, "then": {"required": ["signedBy", "signedAt", "evidence"]}}]
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"approval": {"properties": {"status": {"const": "approved"}}}}}, "then": {"properties": {"approval": {"required": ["approvedBy", "approvedAt"]}}}},
+    {"if": {"properties": {"phaseResult": {"const": "passed"}}}, "then": {"properties": {"approval": {"properties": {"status": {"const": "approved"}}}, "signoffs": {"properties": {"product": {"properties": {"status": {"const": "approved"}}}, "protocolTechnical": {"properties": {"status": {"const": "approved"}}}, "security": {"properties": {"status": {"const": "approved"}}}, "accessibility": {"properties": {"status": {"const": "approved"}}}, "contentLearning": {"properties": {"status": {"const": "approved"}}}, "release": {"properties": {"status": {"const": "approved"}}}}}}}}
+  ]
 }

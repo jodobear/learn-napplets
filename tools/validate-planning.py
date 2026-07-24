@@ -7,8 +7,11 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 PLANNING = ROOT / ".planning"
@@ -77,6 +80,167 @@ def phase1_execution_preflight_errors(review_text: str) -> list[str]:
     if not authorized or not dated:
         errors.append("PRE003: missing authorized dated convergence decision")
 
+    return errors
+
+
+def load_yaml(path: Path) -> dict:
+    try:
+        document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise ValueError(f"cannot read valid YAML {path}: {exc}") from exc
+    if not isinstance(document, dict):
+        raise ValueError(f"YAML root must be an object: {path}")
+    return document
+
+
+def phase1_command_errors(*args: str) -> list[str]:
+    command = [sys.executable, str(ROOT / "tools/validate-research.py"), *args]
+    result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    if result.returncode == 0:
+        return []
+    detail = (result.stdout or result.stderr).strip().replace("\n", " | ")
+    return [f"GATE{args[0].upper()}: {detail or 'validator failed'}"]
+
+
+def phase1_citation_and_inventory_errors() -> list[str]:
+    """Validate Phase 1 citation provenance and candidate disposition coverage."""
+    errors: list[str] = []
+    research = PLANNING / "research"
+    try:
+        sources = {
+            record.get("id"): record
+            for record in load_yaml(research / "source-registry.yaml").get("sources", [])
+            if isinstance(record, dict)
+        }
+        claims = {
+            record.get("id"): record
+            for record in load_yaml(research / "claims.yaml").get("claims", [])
+            if isinstance(record, dict)
+        }
+        candidates = {
+            record.get("id")
+            for record in load_yaml(research / "candidate-source-manifest.yaml").get("candidates", [])
+            if isinstance(record, dict)
+        }
+        inventory = load_yaml(research / "ecosystem-inventory.yaml").get("items", [])
+    except ValueError as exc:
+        return [f"GATE014: {exc}"]
+
+    required_source_fields = {
+        "officialUrl", "repository", "commitSha", "path", "locator", "contentSha256",
+        "retrievedAt", "authorityTier", "evidenceClass", "maturity", "immutableUrl",
+    }
+    citation_paths = [
+        *sorted(research.glob("*catalog*.yaml")),
+        *sorted((research / "lesson-packets").glob("*.md")),
+        *sorted((PLANNING / "adr").glob("*.md")),
+    ]
+    for path in citation_paths:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(f"GATE015: cannot read citation-bearing artifact {path.relative_to(ROOT)}: {exc}")
+            continue
+        for claim_id in sorted(set(re.findall(r"(?<![A-Z0-9-])(CLM-[A-Z0-9][A-Z0-9-]*)\\b", text))):
+            claim = claims.get(claim_id)
+            if not isinstance(claim, dict):
+                errors.append(f"GATE016: {path.relative_to(ROOT)} cites unknown claim {claim_id}")
+                continue
+            relations = claim.get("sourceRelations")
+            if not isinstance(relations, list) or not relations:
+                errors.append(f"GATE017: {claim_id} lacks canonical source relations")
+                continue
+            for relation in relations:
+                source = sources.get(relation.get("sourceId")) if isinstance(relation, dict) else None
+                if not isinstance(source, dict) or any(not source.get(field) for field in required_source_fields):
+                    errors.append(f"GATE018: {claim_id} does not traverse to complete immutable SRC provenance")
+                    break
+
+    dispositions = {
+        item.get("candidateId"): item
+        for item in inventory
+        if isinstance(item, dict) and isinstance(item.get("candidateId"), str)
+    }
+    for candidate_id in sorted(candidates):
+        item = dispositions.get(candidate_id)
+        if not isinstance(item, dict) or not item.get("disposition") or not item.get("reason"):
+            errors.append(f"GATE019: candidate source {candidate_id} lacks an ecosystem-inventory disposition")
+    return errors
+
+
+def phase1_completion_errors() -> list[str]:
+    """Fail closed for the complete Phase 1 research evidence baseline."""
+    errors: list[str] = []
+    gates_path = PLANNING / "validation/phase-gates.yaml"
+    try:
+        gates = load_yaml(gates_path)
+        phase = gates.get("phases", {}).get(1) or gates.get("phases", {}).get("1")
+        required_artifacts = phase.get("requiredArtifacts", []) if isinstance(phase, dict) else []
+    except ValueError as exc:
+        return [f"GATE002: {exc}"]
+    if not required_artifacts:
+        errors.append("GATE003: Phase 1 required-artifact inventory is empty")
+    for relative_path in required_artifacts:
+        path = PLANNING / str(relative_path)
+        if not path.is_file():
+            errors.append(f"GATE004: missing Phase 1 required artifact {path.relative_to(ROOT)}")
+
+    required_paths = (
+        "research/phase-governance.yaml",
+        "research/lesson-packets/index.yaml",
+        "research/reports/spike-consolidation.md",
+        "spikes/replay-manifest.yaml",
+        "research/candidate-source-manifest.yaml",
+        "research/ecosystem-inventory.yaml",
+    )
+    for relative_path in required_paths:
+        if not (PLANNING / relative_path).is_file():
+            errors.append(f"GATE005: missing closeout artifact .planning/{relative_path}")
+
+    expected_spikes = tuple(f"SPK-{letter}" for letter in "ABCDEFGHIJKL")
+    for spike_id in expected_spikes:
+        matches = list((PLANNING / "spikes").glob(f"{spike_id.lower()}-*/report.md"))
+        if len(matches) != 1:
+            errors.append(f"GATE006: expected one report for {spike_id}, found {len(matches)}")
+        else:
+            errors.extend(phase1_command_errors("validate-report", str(matches[0])))
+
+    index = PLANNING / "research/lesson-packets/index.yaml"
+    errors.extend(phase1_command_errors("validate-lessons", "--index", str(index), "--required-present", "13"))
+    lesson_result = subprocess.run(
+        [sys.executable, "-m", "unittest", "discover", "-s", "tests/phase1", "-p", "test_lesson_evidence.py"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if lesson_result.returncode:
+        detail = (lesson_result.stdout or lesson_result.stderr).strip().replace("\n", " | ")
+        errors.append(f"GATE007: full thirteen-packet canonical-evidence suite failed: {detail}")
+
+    for number in range(1, 12):
+        matches = list((PLANNING / "adr").glob(f"{number:04d}-*.md"))
+        if len(matches) != 1:
+            errors.append(f"GATE008: expected one proposed ADR {number:04d}, found {len(matches)}")
+        else:
+            errors.extend(phase1_command_errors("validate-adr", str(matches[0])))
+
+    security = PLANNING / "research/security-egress-findings.md"
+    errors.extend(phase1_command_errors("validate-report", str(security)))
+    security_text = security.read_text(encoding="utf-8") if security.is_file() else ""
+    required_security_content = (
+        "SPK-H-IMPACT-001", "Sources and immutable revisions", "Browser observations",
+        "Proposed project policy", "Unresolved questions", "Uncertainty",
+        "Affected phases and requirements", "Owner and required approval",
+    )
+    for marker in required_security_content:
+        if marker not in security_text:
+            errors.append(f"GATE009: security/egress synthesis lacks required field {marker!r}")
+
+    governance = PLANNING / "research/phase-governance.yaml"
+    errors.extend(phase1_command_errors("validate-governance", str(governance)))
+    errors.extend(phase1_command_errors("replay-spikes", "--manifest", str(PLANNING / "spikes/replay-manifest.yaml"), "--check"))
+    errors.extend(phase1_citation_and_inventory_errors())
     return errors
 
 
@@ -214,6 +378,7 @@ def main() -> int:
             error("GATE002", f"Phase 1 artifacts missing: {', '.join(missing_phase1)}")
         if lesson_count != 13:
             error("GATE003", f"expected 13 lesson packets, found {lesson_count}")
+        errors.extend(phase1_completion_errors())
     elif missing_phase1 or lesson_count != 13:
         warn("PENDING001", "Phase 1/source Phase 0 deliverables are pending as expected")
 
