@@ -1,0 +1,146 @@
+schemaVersion: 1
+id: SPK-C-BOUNDARY-HARNESS
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A local sandboxed iframe can receive a declared domain value before its guest
+  script runs, exchange a bounded postMessage request and deterministic response,
+  map MessageEvent.source to its iframe window, and explicitly report the
+  declared-domain-removed path in installed Chromium and Firefox without exposing
+  secrets, executing guest code in a trusted top-level context, or inferring an
+  upstream napplet protocol.
+variables:
+  independent: [browser family, declared-domain presence]
+  dependent: [pre-script injection acknowledgement, request/response envelope, MessageEvent.source mapping, declared-domain removal result]
+  controlled: [local fixture, sandbox allow-scripts only, clean browser context, fixed nonce, no network targets, five samples per browser]
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-c-boundary-harness --contract
+  - Use only Playwright 1.61.0 with the installed /usr/bin/google-chrome and /usr/bin/firefox executables; do not run playwright install or download a managed browser.
+environmentManifest: environment.json
+browserExecutionSurfaces:
+  - family: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    executableSha256: aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec
+    launchMode: direct-installed-playwright-1.61.0
+  - family: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    version: 152.0.4
+    executableSha256: 12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e
+    launchMode: direct-installed-playwright-1.61.0
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: sandboxed iframe
+    relation: affects
+    plan: 01-11
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: pre-script declared-domain injection
+    relation: affects
+    plan: 01-11
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: postMessage message carrier
+    relation: affects
+    plan: 01-11
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: MessageEvent.source mapping
+    relation: affects
+    plan: 01-11
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: declared-domain removal
+    relation: affects
+    plan: 01-11
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  Five clean-context samples in each declared installed browser complete both the
+  declared-domain and declared-domain-removed scenarios: the first acknowledges
+  pre-script injection, maps MessageEvent.source to the iframe, and receives the
+  fixed successful response; the second returns the fixed domain-capability-missing
+  error. Results are recorded only as browser observations.
+failureOutcome: >-
+  If either browser cannot complete every required primitive or returns a source
+  mapping, envelope, or deterministic-response mismatch, retain the raw local
+  observation as failed evidence and make no positive boundary recommendation.
+blockedOutcome: >-
+  If a required installed browser, approved Playwright 1.61.0 runner, immutable
+  source binding, or replayable local fixture is unavailable, record an
+  impact-scoped blocker for EVID-04 and ADR-0005 without substituting a browser,
+  adding a package, or claiming upstream behavior.
+replay:
+  input: fixture.html
+  command: >-
+    Launch a fresh Playwright 1.61.0 context against local fixture.html for each
+    declared browser and each of five samples. Invoke runBoundaryHarness(), retain
+    both scenario envelopes and source mapping observations, then validate the
+    completed spike, report, fragment, and planning boundary.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: >-
+    The only available source bindings are project-policy records that explicitly
+    block current upstream protocol conclusions. Browser measurements can describe
+    this isolated fixture but cannot establish a shipped napplet or host protocol.
+recommendation: >-
+  Retain this disposable fixture only as proposed ADR-0005 browser evidence;
+  preserve the upstream-source blocker and require human review before selecting a
+  teaching-host profile.
+disposition: retain-as-fixture

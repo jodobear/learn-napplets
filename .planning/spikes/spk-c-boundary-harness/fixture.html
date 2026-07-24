@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8">
+  <title>SPK-C sandboxed boundary fixture</title>
+  <meta name="robots" content="noindex">
+  <style>
+    body { font: 16px system-ui, sans-serif; margin: 1rem; }
+    iframe { border: 1px solid #555; height: 8rem; width: 100%; }
+    pre { overflow-wrap: anywhere; white-space: pre-wrap; }
+  </style>
+  <h1>SPK-C local-only sandbox fixture</h1>
+  <p>This disposable fixture has no network targets, credentials, relays, wallets, uploads, or persistent state.</p>
+  <iframe id="guest" sandbox="allow-scripts" title="SPK-C untrusted local guest"></iframe>
+  <pre id="transcript" aria-live="polite">Awaiting local browser replay.</pre>
+  <script>
+    (() => {
+      'use strict';
+      const nonce = 'spk-c-local-nonce-v1';
+      const fixture = document.getElementById('guest');
+      const transcriptElement = document.getElementById('transcript');
+      const transcript = [];
+      let active = null;
+
+      function record(entry) {
+        transcript.push(entry);
+        transcriptElement.textContent = JSON.stringify(transcript, null, 2);
+      }
+
+      function guestMarkup(declaredDomain) {
+        const domainAssignment = declaredDomain
+          ? `window.__spkCDeclaredDomain=${JSON.stringify(declaredDomain)};`
+          : '';
+        return [
+          '<!doctype html><meta charset="utf-8">',
+          '<script>',
+          domainAssignment,
+          "window.__spkCInjectionPhase='pre-guest-script';",
+          '<\\/script>',
+          '<script>',
+          "(() => { const nonce='spk-c-local-nonce-v1';",
+          "window.addEventListener('message', (event) => {",
+          "const data=event.data || {}; if (data.kind !== 'boundary-start' || data.nonce !== nonce) return;",
+          "parent.postMessage({kind:'boundary-ready', nonce, scenario:data.scenario, injectionPhase:window.__spkCInjectionPhase, declaredDomainPresent:Boolean(window.__spkCDeclaredDomain)}, '*');",
+          "parent.postMessage({kind:'boundary-request', nonce, scenario:data.scenario, operation:'deterministic-local-service'}, '*');",
+          "});",
+          "window.addEventListener('message', (event) => { const data=event.data || {}; if (data.kind !== 'boundary-response' || data.nonce !== nonce) return; parent.postMessage({kind:'boundary-result', nonce, scenario:data.scenario, response:data}, '*'); });",
+          '})();',
+          '<\\/script>'
+        ].join('');
+      }
+
+      function runScenario(scenario, declaredDomain) {
+        return new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error(`timeout:${scenario}`)), 3000);
+          active = { scenario, resolve, reject, timeout, ready: null, sourceMapped: false };
+          fixture.srcdoc = guestMarkup(declaredDomain);
+          fixture.onload = () => fixture.contentWindow.postMessage({ kind: 'boundary-start', nonce, scenario }, '*');
+        });
+      }
+
+      window.addEventListener('message', (event) => {
+        const data = event.data || {};
+        if (!active || data.nonce !== nonce || data.scenario !== active.scenario) return;
+        if (data.kind === 'boundary-ready') {
+          active.ready = data;
+          record({ observer: 'top-level-only', kind: data.kind, scenario: data.scenario, injectionPhase: data.injectionPhase, declaredDomainPresent: data.declaredDomainPresent });
+          return;
+        }
+        if (data.kind === 'boundary-request') {
+          active.sourceMapped = event.source === fixture.contentWindow;
+          const response = data.scenario === 'declared-domain-present'
+            ? { kind: 'boundary-response', nonce, scenario: data.scenario, ok: true, result: 'local-service-ok' }
+            : { kind: 'boundary-response', nonce, scenario: data.scenario, ok: false, error: 'declared-domain-missing' };
+          record({ observer: 'top-level-only', kind: data.kind, scenario: data.scenario, sourceMapped: active.sourceMapped, operation: data.operation });
+          event.source.postMessage(response, '*');
+          return;
+        }
+        if (data.kind === 'boundary-result') {
+          const result = { scenario: data.scenario, ready: active.ready, sourceMapped: active.sourceMapped, response: data.response };
+          record({ observer: 'top-level-only', kind: data.kind, ...result });
+          clearTimeout(active.timeout);
+          active.resolve(result);
+          active = null;
+        }
+      });
+
+      window.runBoundaryHarness = async () => {
+        transcript.length = 0;
+        const withDeclaredDomain = await runScenario('declared-domain-present', 'lesson.example.invalid');
+        const withoutDeclaredDomain = await runScenario('declared-domain-removed', null);
+        return { nonce, scenarios: [withDeclaredDomain, withoutDeclaredDomain], transcript };
+      };
+    })();
+  </script>
+</html>
