@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-22-PLAN.md
-last_updated: "2026-07-24T11:49:06.296Z"
+stopped_at: Completed 01-27-PLAN.md
+last_updated: "2026-07-24T11:58:21.691Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 24
+  completed_plans: 25
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 24 of 28
+Plan: 25 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -81,6 +81,7 @@ Progress: [█████████░] 86%
 | Phase 01 P28 | 37m | 2 tasks | 8 files |
 | Phase 01 P21 | 256s | 2 tasks | 4 files |
 | Phase 01 P22 | 145s | 2 tasks | 4 files |
+| Phase 01 P27 | 386s | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: ADR 0005–0008 remain proposed-only; the public static learning path is independent of optional portable and advanced capabilities.
 - [Phase ?]: Semantic SVG is only a proposed later baseline; static diagram, transcript, and table remain the minimum safe path.
 - [Phase ?]: Future protocol fixtures must traverse CLM-* to complete immutable SRC-* records and use explicit deterministic fakes.
+- [Phase ?]: LES-005 through LES-009 remain deterministic conceptual simulations because no first real-lab operation or teaching-host profile is selected.
+- [Phase ?]: Manifest and dTag identity terms remain linked to provisional policy claims and blocked canonical questions, not teaching rules.
+- [Phase ?]: Host-mediated sibling composition has no observed canonical result and remains a conceptual comparison topic.
 
 ### Pending Todos
 
@@ -171,6 +175,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T11:49:06.287Z
-Stopped at: Completed 01-22-PLAN.md
+Last session: 2026-07-24T11:58:21.683Z
+Stopped at: Completed 01-27-PLAN.md
 Resume file: None

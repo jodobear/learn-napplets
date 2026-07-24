@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 24/28 plans executed
+**Plans**: 25/28 plans executed
 
 Plans:
 **Wave 1**
@@ -118,7 +118,7 @@ Plans:
 
 - [x] 01-21-PLAN.md — Draft proposed ADR 0001–0004 from consolidated evidence.
 - [x] 01-22-PLAN.md — Draft proposed ADR 0005–0008 from consolidated evidence.
-- [ ] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
+- [x] 01-27-PLAN.md — Create LES-05 through LES-09 packets.
 
 **Wave 12** *(blocked on the Wave 11 proposal and lesson inputs)*
 
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 24/28 | In Progress|  |
+| 1. Research and Truth Baseline | 25/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
