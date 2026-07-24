@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "ENV-SPK-J-CODE-EDITING-001",
+  "kind": "environment",
+  "os": "Fedora Linux 43 (Server Edition); Linux 7.1.3-101.fc43.x86_64 x86_64",
+  "container": "not detected",
+  "browsers": [
+    {
+      "family": "Chromium / Google Chrome",
+      "version": "150.0.7871.124",
+      "executableSha256": "aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec"
+    },
+    {
+      "family": "Firefox",
+      "version": "152.0.4",
+      "executableSha256": "12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e"
+    }
+  ],
+  "runtimes": {
+    "python": "CPython 3.14.3 via tools/phase1-python",
+    "playwright": "1.61.0",
+    "node": "v22.22.0"
+  },
+  "packageManager": {
+    "name": "npm",
+    "version": "10.9.4"
+  },
+  "dependencies": [
+    {
+      "name": "@codemirror/state",
+      "version": "6.5.2",
+      "sha256": "b0d54b24ac1c9e16e82332700f365cb1b57abbd80abed4d85d401382011f4cc0"
+    },
+    {
+      "name": "@codemirror/view",
+      "version": "6.38.6",
+      "sha256": "2b23ddb8b5eb20e612b5e362a067f7b3499843a84f48ea603de36e436ef84b50"
+    },
+    {
+      "name": "@codemirror/commands",
+      "version": "6.8.1",
+      "sha256": "62d623c51d51aa975a38b04e6e08294916de68d2aa8ee63bf85332924c7f4036"
+    },
+    {
+      "name": "@codemirror/lang-javascript",
+      "version": "6.2.3",
+      "sha256": "255b3b46514fee837761b4cbe666a8d0edd5f5b2099889b27c783d672d54d8dd"
+    },
+    {
+      "name": "playwright",
+      "version": "1.61.0",
+      "sha256": "54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e"
+    }
+  ],
+  "environmentFlags": [
+    "headless=true",
+    "direct-installed-browsers-only",
+    "runner-added-browser-arguments=none",
+    "playwright-managed-browser-downloads=not-requested",
+    "npm=--ignore-scripts --package-lock=false",
+    "package-experiment=.planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core",
+    "browser-harness=127.0.0.1-loopback-only",
+    "external-network-during-browser-measurement=not-used",
+    "output=/tmp/spk-j-code-editing"
+  ],
+  "commandHashes": [
+    {
+      "command": "npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3",
+      "sha256": "082b1bb072c4397a9b2b73a3ddca1a96f1537bf1c6c6d0c57c39f33e44c18d33"
+    },
+    {
+      "command": "tools/phase1-python .planning/spikes/spk-j-code-editing/runner.py --fixture .planning/spikes/spk-j-code-editing/fixture.html --experiment .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core --out /tmp/spk-j-code-editing",
+      "sha256": "5c7f66e13f8e9945314310ad24509dfb9d666b340c8f8633e9ad3bf1c16d1c59"
+    },
+    {
+      "command": "tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-j-code-editing --complete",
+      "sha256": "afe7116bfe08f2e3743874a384a6fcfe3b4999e2a259817ee843b949b964e8a9"
+    },
+    {
+      "command": "tools/phase1-python tools/validate-research.py validate --root .planning/research --report /tmp/spk-j-research-validation.md",
+      "sha256": "ae8025587c640558c21e27a6ad48617277fe76ba9c257bfca60547f8047639ab"
+    }
+  ]
+}

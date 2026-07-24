@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-J-CODE-EDITING
 kind: spike
 nonProduction: true
-status: planned
+status: blocked
 hypothesis: >-
   A fixed tested variant or a controlled native textarea can meet the declared
   synthetic learning task with less authority, lower startup cost, deterministic
@@ -29,14 +29,11 @@ variables:
     - no package-manager call, editor import, or production scaffold before Task 2 records per-package human status
 commands:
   - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-j-code-editing --contract
-  - >-
-    Deferred until Task 2 human review: run only an approved exact candidate's
-    recorded isolated command. No package-manager command is authorized by this
-    planned contract.
-  - >-
-    Deferred until Task 3: run the local fixture measurement in five clean
-    browser samples and preserve the actual accessibility, reset/replay,
-    bundle/startup, and trusted-context observations.
+  - npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+  - tools/phase1-python .planning/spikes/spk-j-code-editing/runner.py --fixture .planning/spikes/spk-j-code-editing/fixture.html --experiment .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core --out /tmp/spk-j-code-editing
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-j-code-editing --complete
+  - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-j-code-editing/report.md
+  - tools/phase1-python tools/validate-research.py validate --root .planning/research --report /tmp/spk-j-research-validation.md
 environmentManifest: environment.json
 sourceBindings:
   - sourceId: SRC-POLICY-002
@@ -197,10 +194,12 @@ packageApproval:
         Source-complete direct package: root export import/require points to
         dist/index.js or dist/index.cjs; public API includes history,
         historyKeymap, undo, redo, and defaultKeymap in src/commands.ts at the
-        recorded gitHead. Registry reports 235,720 unpacked bytes/9 files. It
-        remains operationally blocked until Task 2 approves it and the full
-        resolved dependency lock is recorded.
-      approval: pending
+        recorded gitHead. Registry reports 235,720 unpacked bytes/9 files.
+        Approved by the project operator on 2026-07-24 via the 01-18
+        blocking-human checkpoint for this SPK-J-local, non-production
+        experiment only. The reviewer explicitly accepts the incomplete
+        resolved dependency-lock review; this is not production or ADR approval.
+      approval: approved
       isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
       installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
     - name: '@codemirror/lang-javascript'
@@ -219,9 +218,106 @@ packageApproval:
         dist/index.js or dist/index.cjs; public API is exported from
         src/index.ts at the recorded gitHead, including javascript,
         javascriptLanguage, typescriptLanguage, and jsxLanguage. Registry
-        reports 61,953 unpacked bytes/9 files. It remains operationally blocked
-        until Task 2 approves it and the full resolved dependency lock is
-        recorded.
-      approval: pending
+        reports 61,953 unpacked bytes/9 files. Approved by the project operator
+        on 2026-07-24 via the 01-18 blocking-human checkpoint for this
+        SPK-J-local, non-production experiment only. The reviewer explicitly
+        accepts the incomplete resolved dependency-lock review; this is not
+        production or ADR approval.
+      approval: approved
       isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
       installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+browserExecutionSurfaces:
+  - family: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    executableSha256: aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec
+    launchMode: direct-installed-playwright-1.61.0
+  - family: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    version: 152.0.4
+    executableSha256: 12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e
+    launchMode: direct-installed-playwright-1.61.0
+environmentFacts:
+  capturedAt: '2026-07-24T15:10:27Z'
+  environmentManifest: environment.json
+  runner: tools/phase1-python with CPython 3.14.3 and Playwright 1.61.0
+  browserExecution: Chromium passed five clean contexts; Firefox launch blocked before context attachment
+  browserDownloads: not-requested
+  network: 127.0.0.1 loopback only during measurement
+  arbitraryLearnerCodeExecution: not-used and prohibited
+  packageExperiment: exact approved CodeMirror direct set installed only under ignored SPK-J .experiment storage
+measurements:
+  - name: chromium-native-fixture-load-milliseconds
+    nondeterministic: true
+    rawValues: [30.92, 22.921, 22.29, 37.275, 26.53]
+    range: {min: 22.29, max: 37.275}
+    median: 26.53
+  - name: chromium-codemirror-harness-load-milliseconds
+    nondeterministic: true
+    rawValues: [74.381, 79.477, 78.325, 56.455, 56.311]
+    range: {min: 56.311, max: 79.477}
+    median: 74.381
+  - name: fixture-byte-cost
+    nondeterministic: false
+    rawValues: [7955, 7955, 7955, 7955, 7955]
+    range: {min: 7955, max: 7955}
+    median: 7955
+  - name: approved-codemirror-resolved-package-tree-byte-cost
+    nondeterministic: false
+    rawValues: [5174566, 5174566, 5174566, 5174566, 5174566]
+    range: {min: 5174566, max: 5174566}
+    median: 5174566
+  - name: chromium-essential-check-count
+    nondeterministic: false
+    rawValues: [24, 24, 24, 24, 24]
+    range: {min: 24, max: 24}
+    median: 24
+  - name: chromium-fixture-reset-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: chromium-codemirror-initial-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+rawOutputDigests:
+  - path: fixture.html
+    sha256: f0a2e97578be8abc9c685ee753c20ab4155e8b7f08aa18b52b38687d45d0a3dd
+  - path: runner.py
+    sha256: 30e5c053a96d7527962c4a69f7af7a6c73ad3d09c32157f04278d568b992c83e
+  - path: environment.json
+    sha256: b1f5908976032e02398e90f524e4f80f3c21f22138d564aa952ff1c0f78d7d00
+  - path: measurements.yaml
+    sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
+  - path: /tmp/spk-j-code-editing/browser-results.json
+    sha256: e15afaed4626cb924fc44a558eafbba7de4583ea413ab0ee41ee97e45e0ce87e
+  - path: /tmp/spk-j-code-editing/manifest.json
+    sha256: beed1b3e7fb26c7f91f15f6ad3254ec2d94e9a02a611fa9dd9e83443368c3189
+replayResult:
+  status: blocked
+  outputDigest: beed1b3e7fb26c7f91f15f6ad3254ec2d94e9a02a611fa9dd9e83443368c3189
+evidenceLinks:
+  - kind: source
+    path: ../../research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: measurement
+    path: measurements.yaml
+    sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
+blocked:
+  reason: >-
+    Direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0
+    attached, leaving all Firefox fixture and editor checks unobserved. Chromium
+    passed five bounded samples, but a positive cross-browser recommendation
+    would overstate evidence. CodeJar 4.3.0 also remains blocked by its registry
+    release/source-version mismatch.
+  affectedRequirements: [EVID-04]
+  affectedAdrs: [ADR-0009]

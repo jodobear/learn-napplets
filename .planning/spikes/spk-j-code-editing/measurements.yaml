@@ -1,0 +1,172 @@
+schemaVersion: 1
+spikeId: SPK-J-CODE-EDITING
+classification: observed browser behavior from a synthetic local fixture and approved local package candidate
+measuredAt: '2026-07-24T15:10:27Z'
+nonProduction: true
+fixture:
+  path: fixture.html
+  sha256: f0a2e97578be8abc9c685ee753c20ab4155e8b7f08aa18b52b38687d45d0a3dd
+  bytes: 7955
+  dataAuthority: Synthetic exact text variants and fixed hostile input only; no protocol, runtime, or production-content claim.
+runner:
+  path: runner.py
+  sha256: 30e5c053a96d7527962c4a69f7af7a6c73ad3d09c32157f04278d568b992c83e
+  toolchain: tools/phase1-python with playwright==1.61.0
+  learnerCodeExecution: not-used
+  arbitraryLearnerInputExecution: prohibited
+  packageHarnessInput: fixed synthetic starter text only
+  browserDownloads: not-requested
+replay:
+  command: tools/phase1-python .planning/spikes/spk-j-code-editing/runner.py --fixture .planning/spikes/spk-j-code-editing/fixture.html --experiment .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core --out /tmp/spk-j-code-editing
+  deterministicInput: true
+  repetitionsRequired: 5
+  completedSamples:
+    Chromium: [1, 2, 3, 4, 5]
+    Firefox: []
+  contextsPerBrowser: 5
+  localLoopbackHarness: true
+  externalNetworkDuringMeasurement: false
+  packageInstallation:
+    status: approved-and-run-once
+    command: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
+    directPackages: ['@codemirror/state@6.5.2', '@codemirror/view@6.38.6', '@codemirror/commands@6.8.1', '@codemirror/lang-javascript@6.2.3']
+    ignoredPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
+    resolvedPackageTreeBytes: 5174566
+    resolvedPackageCount: 15
+    dependencyLockReview: explicitly accepted by the dated 2026-07-24 human decision for this isolated non-production experiment only
+  browserResults:
+    path: /tmp/spk-j-code-editing/browser-results.json
+    sha256: e15afaed4626cb924fc44a558eafbba7de4583ea413ab0ee41ee97e45e0ce87e
+  manifest:
+    path: /tmp/spk-j-code-editing/manifest.json
+    sha256: beed1b3e7fb26c7f91f15f6ad3254ec2d94e9a02a611fa9dd9e83443368c3189
+    result: blocked
+candidateComparison:
+  - id: candidate-a-fixed-tested-variants
+    representation: native buttons plus immutable synthetic text constants
+    status: partial-pass
+    scope: Chromium completed all five local keyboard, focus, announcement, reset, static-equivalence, hostile-input, and sentinel checks. Overall recommendation remains blocked by Firefox launch.
+    cost:
+      javascriptPackageBytes: 0
+      fixtureBytes: 7955
+      chromiumLoadMilliseconds: {rawValues: [30.92, 22.921, 22.29, 37.275, 26.53], range: {min: 22.29, max: 37.275}, median: 26.53}
+  - id: candidate-b-controlled-native-textarea
+    representation: labelled native textarea with exact safe-variant comparison
+    status: partial-pass
+    scope: Chromium accepted only the alternate exact text, classified a fixed hostile literal as unrecognized text, created no extra script element, preserved the trusted-context sentinel, and restored the starter text in all five samples. Overall recommendation remains blocked by Firefox launch.
+    cost:
+      javascriptPackageBytes: 0
+      fixtureBytes: 7955
+      chromiumLoadMilliseconds: {rawValues: [30.92, 22.921, 22.29, 37.275, 26.53], range: {min: 22.29, max: 37.275}, median: 26.53}
+  - id: candidate-c-lightweight-native-shell
+    representation: second labelled native textarea with line/character inspection
+    status: partial-pass
+    scope: Chromium exposed the native label and live status, reported the fixed one-line edit, and restored the starter text in all five samples. It adds no dependency or evaluator. Overall recommendation remains blocked by Firefox launch.
+    cost:
+      javascriptPackageBytes: 0
+      fixtureBytes: 7955
+      chromiumLoadMilliseconds: {rawValues: [30.92, 22.921, 22.29, 37.275, 26.53], range: {min: 22.29, max: 37.275}, median: 26.53}
+  - id: candidate-d-codejar-4.3.0
+    representation: not-created
+    status: blocked
+    scope: The registry 4.3.0 gitHead resolves to a repository package.json stating version 4.2.0. The dated human decision blocks it; no package command ran.
+    cost: not-measured
+  - id: candidate-e-codemirror-6-direct-set
+    representation: local loopback harness using approved exact direct package versions and a fixed synthetic document
+    status: partial-pass
+    scope: Chromium loaded the 15-package resolved local tree, created a CodeMirror contenteditable surface, accepted keyboard focus with harness-visible focus, exposed an announced status, retained a static no-JavaScript fallback, preserved the sentinel, and received only the fixed starter document. Overall recommendation remains blocked by Firefox launch and the package is not selected as the least-authority default.
+    cost:
+      directPublishedUnpackedBytes: 1925436
+      resolvedPackageTreeBytes: 5174566
+      chromiumLoadMilliseconds: {rawValues: [74.381, 79.477, 78.325, 56.455, 56.311], range: {min: 56.311, max: 79.477}, median: 74.381}
+measurements:
+  - name: chromium-native-fixture-load-milliseconds
+    nondeterministic: true
+    rawValues: [30.92, 22.921, 22.29, 37.275, 26.53]
+    range: {min: 22.29, max: 37.275}
+    median: 26.53
+  - name: chromium-codemirror-harness-load-milliseconds
+    nondeterministic: true
+    rawValues: [74.381, 79.477, 78.325, 56.455, 56.311]
+    range: {min: 56.311, max: 79.477}
+    median: 74.381
+  - name: fixture-byte-cost
+    nondeterministic: false
+    rawValues: [7955, 7955, 7955, 7955, 7955]
+    range: {min: 7955, max: 7955}
+    median: 7955
+  - name: approved-codemirror-resolved-package-tree-byte-cost
+    nondeterministic: false
+    rawValues: [5174566, 5174566, 5174566, 5174566, 5174566]
+    range: {min: 5174566, max: 5174566}
+    median: 5174566
+  - name: chromium-essential-check-count
+    nondeterministic: false
+    rawValues: [24, 24, 24, 24, 24]
+    range: {min: 24, max: 24}
+    median: 24
+  - name: chromium-fixture-reset-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: chromium-codemirror-initial-screenshot-distinct-digest-count
+    nondeterministic: false
+    rawValues: [1, 1, 1, 1, 1]
+    range: {min: 1, max: 1}
+    median: 1
+  - name: firefox-launch-elapsed-milliseconds-unavailable-sentinel
+    nondeterministic: true
+    rawValues: [0.0, 0.0, 0.0, 0.0, 0.0]
+    range: {min: 0.0, max: 0.0}
+    median: 0.0
+    note: Zero is an unavailable sentinel, not a Firefox timing observation; Firefox exited before Playwright 1.61.0 attached to a clean context.
+browserRuns:
+  - browser: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    outcome: passed
+    samples: [1, 2, 3, 4, 5]
+    fixtureAccessibility:
+      keyboardFixedVariant: passed
+      visibleFocus: passed
+      textareaLabelAndLiveStatus: passed
+      staticEquivalent: passed
+      reducedMotion: no animation is present
+      resetReplayScreenshotDigest: 861f71cf19c5428b0edd1c7a387bac37a38c92c3a6a2a7ab553110d4f6482439
+    codeMirrorAccessibility:
+      contenteditableExposed: passed
+      keyboardFocusable: passed
+      harnessVisibleFocus: passed
+      announcedStatus: passed
+      staticFallback: passed
+      initialScreenshotDigest: c1a88a72a8141d88048c535ee3bb95e71b06417caaaf145eb999451e6c127445
+    isolation:
+      hostileInput: fixed runner-provided literal entered only into native controlled textarea; classified as unrecognized text
+      scriptElementsAfterHostileInput: 1
+      dynamicScriptInjection: none observed
+      trustedHostSentinel: unchanged
+      arbitraryLearnerCodeExecution: not-used and prohibited
+      codeMirrorDocument: fixed starter text only; no learner input was passed to the package editor
+      browserRequests: 16 local loopback module/fixture requests; no external origin
+    screenReaderExposure: Semantic DOM contract passed; actual assistive-technology speech was not observed.
+  - browser: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    expectedVersion: 152.0.4
+    outcome: blocked
+    attemptedSamples: [1, 2, 3, 4, 5]
+    errorClass: BrowserType.launch
+    observedBehavior: Direct-installed Firefox exited with code 0 before Playwright 1.61.0 attached to a clean context; no fixture, package-harness, screenshot, keyboard, static-fallback, or sentinel result was observed.
+    workaroundApplied: none
+    proposedFollowUp: Preserve the direct-installed Firefox/Playwright launch mismatch for review; do not download a browser or add launcher flags, profiles, preferences, or another configuration workaround.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  applicationRoutesCreated: []
+  frameworkScaffoldCreated: []
+  editorDependenciesInstalledOutsideIgnoredExperiment: []
+  networkTargets: [127.0.0.1 local-only measurement server]
+  usedSecrets: false
+  retainedExperimentArtifacts: node_modules is ignored under SPK-J .experiment; generated screenshots, temporary harness, and raw browser results remain under /tmp/spk-j-code-editing only.
+result: blocked
