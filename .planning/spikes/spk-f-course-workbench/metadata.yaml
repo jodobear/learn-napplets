@@ -74,9 +74,9 @@ recommendation: >-
   remains GO-LATER; Task 1 does not select an outcome.
 disposition: retain-as-fixture
 packageApproval:
-  reviewedAt: null
-  reviewer: null
-  status: pending-human-review
+  reviewedAt: '2026-07-24'
+  reviewer: project operator via 01-14 blocking-human checkpoint
+  status: approved
   candidates:
     - name: astro
       version: 7.1.3
@@ -90,10 +90,10 @@ packageApproval:
       provenanceRetrievedAt: '2026-07-24'
       provenanceSource: https://registry.npmjs.org/astro/7.1.3
       hashSourceDecision: >-
-        Pending human review: the official npm registry release integrity and
-        shasum are recorded for the exact tarball; do not download, trust, or
-        install this candidate unless Task 2 records a dated approval.
-      approval: pending
+        Approved 2026-07-24 by the project operator via the 01-14
+        blocking-human checkpoint after review of official registry/project
+        provenance, MIT license, exact registry integrity, and isolated command.
+      approval: approved
       isolationPath: .planning/spikes/spk-f-course-workbench/.experiment/astro-7.1.3
       installCommand: npm --prefix .planning/spikes/spk-f-course-workbench/.experiment/astro-7.1.3 install --ignore-scripts --package-lock=false astro@7.1.3
     - name: vitepress
@@ -108,9 +108,9 @@ packageApproval:
       provenanceRetrievedAt: '2026-07-24'
       provenanceSource: https://registry.npmjs.org/vitepress/1.6.4
       hashSourceDecision: >-
-        Pending human review: the official npm registry release integrity and
-        shasum are recorded for the exact tarball; do not download, trust, or
-        install this candidate unless Task 2 records a dated approval.
-      approval: pending
+        Approved 2026-07-24 by the project operator via the 01-14
+        blocking-human checkpoint after review of official registry/project
+        provenance, MIT license, exact registry integrity, and isolated command.
+      approval: approved
       isolationPath: .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4
       installCommand: npm --prefix .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4 install --ignore-scripts --package-lock=false vitepress@1.6.4
