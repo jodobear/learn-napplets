@@ -46,6 +46,44 @@ class GovernanceValidationTests(unittest.TestCase):
     def run_cli(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run([sys.executable, str(VALIDATOR), *args], cwd=ROOT, text=True, capture_output=True, check=False)
 
+    def run_planning_gate(self) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "validate-planning.py"), "--phase-1-complete"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    def test_phase_one_closeout_requires_governance_and_complete_evidence_contract(self) -> None:
+        governance = ROOT / ".planning/research/phase-governance.yaml"
+        self.assertTrue(governance.is_file(), "Phase closeout needs a governance record")
+        result = self.run_planning_gate()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_phase_one_governance_requires_all_distinct_role_signoff_slots(self) -> None:
+        record = copy.deepcopy(GOVERNANCE)
+        record["signoffs"] = {
+            "product": {"status": "pending"},
+            "protocolTechnical": {"status": "pending"},
+            "security": {"status": "pending"},
+            "accessibility": {"status": "pending"},
+            "contentLearning": {"status": "pending"},
+            "release": {"status": "pending"},
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "governance.yaml"
+            path.write_text(yaml.safe_dump(record), encoding="utf-8")
+            self.assertEqual(self.run_cli("validate-governance", str(path)).returncode, 0)
+            for role in tuple(record["signoffs"]):
+                with self.subTest(role=role):
+                    incomplete = copy.deepcopy(record)
+                    del incomplete["signoffs"][role]
+                    path.write_text(yaml.safe_dump(incomplete), encoding="utf-8")
+                    result = self.run_cli("validate-governance", str(path))
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("signoffs", result.stdout)
+
     def test_governance_requires_roles_requirements_exit_evidence_and_validation_state(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "governance.yaml"
