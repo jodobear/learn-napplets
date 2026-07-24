@@ -31,6 +31,18 @@ MANDATORY_TOPICS = {
     'browser egress versus mediated access',
     'conformance/private-or-retired behavior',
 }
+MANDATORY_DRIFT_IDS = {
+    'DRF-ARTIFACT-001',
+    'DRF-CONFORMANCE-001',
+    'DRF-DISCOVERY-001',
+    'DRF-EGRESS-001',
+    'DRF-HANDSHAKE-001',
+    'DRF-IDENTITY-001',
+    'DRF-INTENT-001',
+    'DRF-MANIFEST-001',
+    'DRF-METADATA-001',
+    'DRF-UNKNOWN-MESSAGES-001',
+}
 
 
 class DriftSchemas(unittest.TestCase):
@@ -52,12 +64,18 @@ class DriftSchemas(unittest.TestCase):
         sources = {record['id']: record for record in yaml.safe_load(SOURCES.read_text())['sources']}
         claims = {record['id']: record for record in yaml.safe_load(CLAIMS.read_text())['claims']}
         records = register['drift']
-        self.assertEqual(len(records), 10)
-        self.assertEqual({record['topic'] for record in records}, MANDATORY_TOPICS)
+        records_by_id = {record['id']: record for record in records}
+        self.assertEqual(len(records_by_id), len(records))
+        self.assertTrue(MANDATORY_DRIFT_IDS <= records_by_id.keys())
+        self.assertEqual(
+            {records_by_id[record_id]['topic'] for record_id in MANDATORY_DRIFT_IDS},
+            MANDATORY_TOPICS,
+        )
         for record in records:
             self.assertTrue(record['id'].startswith('DRF-'))
             self.assertFalse(self.validate(DRIFT, record))
-            self.assertNotEqual(record['normative']['claimId'], record['observed']['claimId'])
+            if record['id'] in MANDATORY_DRIFT_IDS:
+                self.assertNotEqual(record['normative']['claimId'], record['observed']['claimId'])
             for side_name in ('normative', 'observed'):
                 side = record[side_name]
                 self.assertIn(side['claimId'], claims)
@@ -68,6 +86,12 @@ class DriftSchemas(unittest.TestCase):
                     {key: source[key] for key in ('commitSha', 'path', 'contentSha256')},
                 )
             self.assertIn('dependentDecisionDisposition', record)
+        for record_id, record in records_by_id.items():
+            if record_id not in MANDATORY_DRIFT_IDS:
+                self.assertTrue(any(
+                    isinstance(item, dict) and 'Consolidated SPK-' in item.get('reason', '')
+                    for item in record.get('history', [])
+                ))
 
     def test_open_questions_route_unresolved_dependent_decisions(self):
         questions = yaml.safe_load(QUESTIONS.read_text())['questions']
