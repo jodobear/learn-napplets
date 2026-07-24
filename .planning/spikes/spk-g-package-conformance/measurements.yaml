@@ -1,0 +1,79 @@
+schemaVersion: 1
+spikeId: SPK-G-PACKAGE-CONFORMANCE
+classification: dependency-free blocked supply-chain and source-baseline observation
+measuredAt: '2026-07-24T08:42:56Z'
+nonProduction: true
+fixture:
+  path: fixture.md
+  sha256: 2481ad99caed14b4e72af36ec87cf19f0ca62aa7e2e7498016582917d192172b
+  outcome: >-
+    The fixture declares no package import because no exact released public
+    package/version/export is cataloged and approved.
+replay:
+  command: tools/phase1-python -c spk-g-blocked-package-gate
+  toolchain: CPython 3.14.3 via tools/phase1-python
+  deterministicInput: true
+  repetitionsRequired: 5
+  completedSamples: [1, 2, 3, 4, 5]
+  networkDuringMeasurement: false
+  packageInstallation: false
+  packageImport: false
+  browserExecution: not-used
+  exitCodes: [0, 0, 0, 0, 0]
+  expectedBlockedCode: SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+  observedBlockedCodePerSample:
+    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+measurements:
+  - name: eligible-public-package-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: package-install-attempt-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: public-export-import-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: public-conformance-target-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+  - name: forbidden-private-or-deep-import-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+candidateDisposition:
+  catalogEntry: CAND-NAPPLET-WEB-PACKAGE
+  approval: blocked
+  disposition: blocked
+  reason: >-
+    No exact released public package version, documented public export locator,
+    official registry/project provenance, license, release integrity, distinct
+    immutable release/implementation source baselines, or public conformance
+    target is cataloged through CLM-CMP-PACKAGE-001.
+relevantErrors:
+  - primitive: package-installation
+    error: not-run because the human decision blocked CAND-NAPPLET-WEB-PACKAGE and no exact package/version exists
+  - primitive: public-export-import
+    error: not-run because no documented package-root public export locator exists
+  - primitive: compile-check
+    error: not-run because no exact package/version or reviewed public export is eligible
+  - primitive: conformance-check
+    error: not-run because no public conformance target or immutable source baseline exists
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  networkTargets: []
+  usedSecrets: false
+  retainedExperimentArtifacts: false
+result: blocked

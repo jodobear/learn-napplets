@@ -1,0 +1,115 @@
+schemaVersion: 1
+id: SPK-IMPACT-G-PACKAGE-CONFORMANCE
+kind: spike-impact-fragment
+fragmentId: SPK-G-IMPACT-001
+spikeId: SPK-G-PACKAGE-CONFORMANCE
+metadataPath: spikes/spk-g-package-conformance/metadata.yaml
+metadataSha256: 8a0a91e7a70a77466aa3942cdc2e6c59a5350df98a59606ecd68a3d315f8195c
+reportPath: spikes/spk-g-package-conformance/report.md
+reportSha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+measurementPath: spikes/spk-g-package-conformance/measurements.yaml
+measurementSha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+sourceIds: [SRC-POLICY-001, SRC-POLICY-002]
+sourceLinks:
+  - sourceId: SRC-POLICY-001
+    relation: affects
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+measurementLinks:
+  - path: spikes/spk-g-package-conformance/measurements.yaml
+    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+evidenceLinks:
+  - kind: source
+    path: research/source-registry.yaml
+    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+  - kind: metadata
+    path: spikes/spk-g-package-conformance/metadata.yaml
+    sha256: 8a0a91e7a70a77466aa3942cdc2e6c59a5350df98a59606ecd68a3d315f8195c
+  - kind: measurement
+    path: spikes/spk-g-package-conformance/measurements.yaml
+    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+  - kind: report
+    path: spikes/spk-g-package-conformance/report.md
+    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+proposedOpenQuestions:
+  - id: OQ-PUBLIC-PACKAGE-BASELINE-001
+    rationale: >-
+      Collect and review an exact official public release/version, registry and
+      project provenance, license, integrity, documented root export, and
+      distinct immutable released-package and implementation source records
+      before any SPK-G install is reconsidered.
+  - id: OQ-PUBLIC-CONFORMANCE-001
+    rationale: >-
+      Identify a public conformance target and its immutable source baseline;
+      do not infer conformance from private paths, a compile result, or an
+      unpublished build.
+proposedDriftRecords:
+  - id: DRF-ARTIFACT-001
+    rationale: >-
+      Retain the blocked artifact drift record because no public release
+      artifact, integrity value, or implementation baseline was available.
+  - id: DRF-CONFORMANCE-001
+    rationale: >-
+      Retain the blocked conformance drift record because no public fixture or
+      conformance target was available to execute.
+compatibilityObservations:
+  - browser: not-applicable — SPK-G did not execute a browser or package
+    status: blocked
+    classification: observed-browser-behavior
+    rationale: >-
+      Schema-required classification label only. No browser behavior was
+      observed; compatibility remains blocked before package execution because
+      the public release/export/source-baseline gate failed.
+affectedRequirements: [EVID-03, EVID-04]
+affectedPhases: ['01', '02']
+uncertainty:
+  state: material
+  reason: >-
+    The human block and local replay establish only that no qualified candidate
+    was available or executed. Package identity, public exports, license,
+    integrity, browser support, source revision, drift, and conformance remain
+    unresolved.
+proposedImpacts:
+  - type: requirement
+    id: EVID-03
+    rationale: >-
+      Public package identity and source-baseline evidence remain blocked until
+      an exact released public export is cataloged and reviewed.
+  - type: requirement
+    id: EVID-04
+    rationale: >-
+      No implementation or conformance behavior was executed; preserve the
+      bounded dependency-free blocker rather than substitute a package.
+  - type: adr
+    id: ADR-0005
+    rationale: >-
+      Proposed blocked input only; this result cannot select a host or runtime
+      integration profile.
+  - type: adr
+    id: ADR-0008
+    rationale: >-
+      Proposed blocked input only; no package behavior supports an authority or
+      mediated-access conclusion.
+  - type: adr
+    id: ADR-0010
+    rationale: >-
+      Proposed blocked input only; package-consumption guidance must remain
+      deferred until public baseline evidence is reviewed.
+  - type: phase
+    id: '01'
+    rationale: >-
+      Plan 01-28 must validate this immutable SPK-G hand-off and retain the
+      blocker if the proposed IDs cannot be consolidated.
+  - type: phase
+    id: '02'
+    rationale: >-
+      Retain a static/deferred fallback and do not add a napplet package
+      dependency from this blocked research record.
+securityEgress:
+  sandboxMode: dependency-free local metadata gate; no package or browser execution
+  networkTargets: []
+  usedSecrets: false
