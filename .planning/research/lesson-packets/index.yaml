@@ -24,10 +24,10 @@ lessons:
     status: present
   - id: LES-008
     filename: 08-apps-that-cooperate.md
-    status: planned
+    status: present
   - id: LES-009
     filename: 09-designing-a-good-napplet.md
-    status: planned
+    status: present
   - id: LES-010
     filename: 10-anatomy-of-a-napplet.md
     status: planned
