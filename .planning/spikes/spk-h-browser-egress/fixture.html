@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+    <title>SPK-H local browser egress fixture</title>
+    <style>
+      body { font: 16px system-ui, sans-serif; margin: 1rem; }
+      iframe { border: 1px solid currentColor; height: 10rem; width: 100%; }
+      pre { overflow-wrap: anywhere; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SPK-H local-only browser egress fixture</h1>
+      <p>
+        Disposable non-production browser fixture. The runner supplies only deterministic
+        loopback endpoints. This page contains no secret, account, public target, upload,
+        persistence, or production host behavior.
+      </p>
+      <iframe id="guest" sandbox="allow-scripts" title="SPK-H opaque-origin guest"></iframe>
+      <pre id="transcript" aria-live="polite">Awaiting local browser replay.</pre>
+    </main>
+    <script>
+      (() => {
+        'use strict';
+        const fixture = document.getElementById('guest');
+        const transcriptElement = document.getElementById('transcript');
+        const nonce = 'spk-h-local-nonce-v1';
+        const transcript = [];
+        let active = null;
+
+        const query = new URLSearchParams(window.location.search);
+        const origin = query.get('origin');
+        const sample = query.get('sample');
+        if (!origin || !/^http:\/\/127\.0\.0\.1:\d+$/.test(origin) || !sample) {
+          throw new Error('SPK-H requires an explicit loopback origin and sample identifier');
+        }
+        const websocketOrigin = origin.replace(/^http:/, 'ws:');
+
+        function record(entry) {
+          transcript.push(entry);
+          transcriptElement.textContent = JSON.stringify(transcript, null, 2);
+        }
+
+        function csp(mode) {
+          if (mode === 'semantic-negative-csp') {
+            return "default-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'";
+          }
+          return [
+            "default-src 'none'",
+            `script-src 'unsafe-inline' ${origin}`,
+            `connect-src ${origin} ${websocketOrigin}`,
+            `img-src ${origin}`,
+            `media-src ${origin}`,
+            `worker-src ${origin}`,
+            `form-action ${origin}`,
+            "base-uri 'none'",
+            "frame-src 'none'"
+          ].join('; ');
+        }
+
+        function guestMarkup(mode) {
+          const measurementMode = mode === 'local-channel-measurement';
+          const scriptTags = measurementMode
+            ? `<script src="${origin}/classic.js?case=${encodeURIComponent(sample)}"><\/script><script type="module" src="${origin}/module.js?case=${encodeURIComponent(sample)}"><\/script>`
+            : '';
+          return `<!doctype html><html lang="en"><meta charset="utf-8">
+            <meta http-equiv="Content-Security-Policy" content="${csp(mode)}">
+            <title>SPK-H opaque-origin guest</title>
+            ${scriptTags}
+            <form id="egress-form" action="${origin}/form?case=${encodeURIComponent(sample)}" method="post"><input name="fixed" value="spk-h-fixed"></form>
+            <script>
+              (() => {
+                'use strict';
+                const parentNonce = ${JSON.stringify(nonce)};
+                const localOrigin = ${JSON.stringify(origin)};
+                const localWsOrigin = ${JSON.stringify(websocketOrigin)};
+                const sampleId = ${JSON.stringify(sample)};
+                const modeName = ${JSON.stringify(mode)};
+                const boundedError = (error) => ({ name: error && error.name ? error.name : 'Error', message: String(error && error.message ? error.message : error).slice(0, 180) });
+                const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+                const waitFor = async (predicate, label) => {
+                  for (let attempt = 0; attempt < 30; attempt += 1) {
+                    if (predicate()) return true;
+                    await delay(100);
+                  }
+                  throw new Error('timeout:' + label);
+                };
+                const imageLoad = (url) => new Promise((resolve, reject) => {
+                  const image = new Image();
+                  image.onload = () => resolve('loaded');
+                  image.onerror = () => reject(new Error('image-error'));
+                  image.src = url;
+                });
+                const mediaLoad = (url) => new Promise((resolve, reject) => {
+                  const audio = document.createElement('audio');
+                  audio.preload = 'metadata';
+                  audio.onloadedmetadata = () => resolve('loadedmetadata');
+                  audio.onerror = () => reject(new Error('media-error'));
+                  audio.src = url;
+                });
+                const websocketRoundTrip = (url) => new Promise((resolve, reject) => {
+                  const socket = new WebSocket(url);
+                  const timeout = setTimeout(() => { socket.close(); reject(new Error('websocket-timeout')); }, 2500);
+                  socket.onerror = () => { clearTimeout(timeout); reject(new Error('websocket-error')); };
+                  socket.onopen = () => socket.send('spk-h-fixed-ping');
+                  socket.onmessage = (event) => { clearTimeout(timeout); socket.close(); resolve(String(event.data)); };
+                });
+                const eventSourceRoundTrip = (url) => new Promise((resolve, reject) => {
+                  const source = new EventSource(url);
+                  const timeout = setTimeout(() => { source.close(); reject(new Error('eventsource-timeout')); }, 2500);
+                  source.onerror = () => { clearTimeout(timeout); source.close(); reject(new Error('eventsource-error')); };
+                  source.onmessage = (event) => { clearTimeout(timeout); source.close(); resolve(String(event.data)); };
+                });
+                const workerRoundTrip = (url) => new Promise((resolve, reject) => {
+                  const worker = new Worker(url);
+                  const timeout = setTimeout(() => { worker.terminate(); reject(new Error('worker-timeout')); }, 2500);
+                  worker.onerror = () => { clearTimeout(timeout); worker.terminate(); reject(new Error('worker-error')); };
+                  worker.onmessage = (event) => { clearTimeout(timeout); worker.terminate(); resolve(String(event.data)); };
+                });
+                const settled = async (name, operation) => {
+                  try { return { name, status: 'fulfilled', value: await operation() }; }
+                  catch (error) { return { name, status: 'rejected', error: boundedError(error) }; }
+                };
+                async function runMeasurement() {
+                  const channels = [];
+                  await waitFor(() => window.__spkHClassicLoaded === 'local-classic-script', 'classic-script');
+                  await waitFor(() => window.__spkHModuleLoaded === 'local-module-script', 'module-script');
+                  channels.push({ name: 'classic-module-scripts', status: 'fulfilled', value: { classic: window.__spkHClassicLoaded, module: window.__spkHModuleLoaded } });
+                  channels.push(await settled('fetch', async () => {
+                    const response = await fetch(localOrigin + '/fetch?case=' + encodeURIComponent(sampleId), { mode: 'cors' });
+                    return { status: response.status, body: await response.json() };
+                  }));
+                  channels.push(await settled('images-media', async () => ({
+                    image: await imageLoad(localOrigin + '/pixel.png?case=' + encodeURIComponent(sampleId)),
+                    media: await mediaLoad(localOrigin + '/tone.wav?case=' + encodeURIComponent(sampleId))
+                  })));
+                  channels.push(await settled('websocket', () => websocketRoundTrip(localWsOrigin + '/socket?case=' + encodeURIComponent(sampleId))));
+                  channels.push(await settled('eventsource', () => eventSourceRoundTrip(localOrigin + '/events?case=' + encodeURIComponent(sampleId))));
+                  channels.push(await settled('worker', () => workerRoundTrip(localOrigin + '/worker.js?case=' + encodeURIComponent(sampleId))));
+                  channels.push(await settled('referrer-origin', async () => {
+                    const defaultHeaders = await (await fetch(localOrigin + '/headers?case=' + encodeURIComponent(sampleId) + '-default', { mode: 'cors' })).json();
+                    const noReferrerHeaders = await (await fetch(localOrigin + '/headers?case=' + encodeURIComponent(sampleId) + '-no-referrer', { mode: 'cors', referrerPolicy: 'no-referrer' })).json();
+                    return { defaultHeaders, noReferrerHeaders };
+                  }));
+                  const form = document.getElementById('egress-form');
+                  let formInvocation = 'requested';
+                  try { form.requestSubmit(); } catch (error) { formInvocation = 'threw:' + boundedError(error).name; }
+                  let navigation;
+                  try {
+                    window.top.location.href = localOrigin + '/navigation?case=' + encodeURIComponent(sampleId);
+                    navigation = { status: 'assignment-returned' };
+                  } catch (error) {
+                    navigation = { status: 'rejected', error: boundedError(error) };
+                  }
+                  await delay(250);
+                  channels.push({ name: 'form-navigation', status: 'observed', value: { formInvocation, navigation, sandbox: 'allow-scripts only; no allow-forms or top-navigation token' } });
+                  return channels;
+                }
+                async function runNegativeCsp() {
+                  const fetchResult = await settled('negative-fetch', async () => {
+                    await fetch(localOrigin + '/fetch?case=' + encodeURIComponent(sampleId) + '-negative', { mode: 'cors' });
+                    return 'unexpected-fetch-success';
+                  });
+                  const imageResult = await settled('negative-image', () => imageLoad(localOrigin + '/pixel.png?case=' + encodeURIComponent(sampleId) + '-negative'));
+                  return [fetchResult, imageResult];
+                }
+                window.addEventListener('message', async (event) => {
+                  const data = event.data || {};
+                  if (data.kind !== 'spk-h-start' || data.nonce !== parentNonce) return;
+                  const result = modeName === 'local-channel-measurement' ? await runMeasurement() : await runNegativeCsp();
+                  parent.postMessage({ kind: 'spk-h-result', nonce: parentNonce, mode: modeName, channels: result }, '*');
+                });
+              })();
+            <\/script>`;
+        }
+
+        function runGuest(mode) {
+          return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('timeout:' + mode)), 8000);
+            active = { mode, resolve, reject, timeout, sourceMapped: false };
+            fixture.srcdoc = guestMarkup(mode);
+            fixture.onload = () => fixture.contentWindow.postMessage({ kind: 'spk-h-start', nonce }, '*');
+          });
+        }
+
+        window.addEventListener('message', (event) => {
+          const data = event.data || {};
+          if (!active || data.kind !== 'spk-h-result' || data.nonce !== nonce || data.mode !== active.mode) return;
+          active.sourceMapped = event.source === fixture.contentWindow;
+          const result = { mode: active.mode, sourceMapped: active.sourceMapped, channels: data.channels };
+          record(result);
+          clearTimeout(active.timeout);
+          active.resolve(result);
+          active = null;
+        });
+
+        window.runSpkHEgress = async () => {
+          transcript.length = 0;
+          const measurement = await runGuest('local-channel-measurement');
+          const negativeCsp = await runGuest('semantic-negative-csp');
+          return {
+            fixtureInput: {
+              sample,
+              origin,
+              sandbox: 'allow-scripts',
+              loadingModel: 'top-level observer + opaque-origin srcdoc guest',
+              measurementCsp: csp('local-channel-measurement'),
+              negativeCsp: csp('semantic-negative-csp')
+            },
+            measurement,
+            negativeCsp,
+            transcript
+          };
+        };
+      })();
+    </script>
+  </body>
+</html>

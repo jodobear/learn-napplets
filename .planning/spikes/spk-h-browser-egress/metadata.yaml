@@ -1,0 +1,135 @@
+schemaVersion: 1
+id: SPK-H-BROWSER-EGRESS
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  The exact SPK-C top-level observer plus opaque-origin srcdoc guest loaded in an
+  iframe with sandbox="allow-scripts" can yield bounded, reproducible local-loopback
+  observations for fetch, media, scripts, WebSocket, EventSource, workers,
+  form/navigation, and referrer/origin behavior without credentials, public probes,
+  or an assertion about an upstream napplet requirement.
+variables:
+  independent:
+    - 'browser family: Chromium / Google Chrome and Firefox'
+    - 'CSP mode: bounded local-channel measurement or restrictive semantic-negative CSP'
+    - 'channel group: fetch; images/media; classic/module scripts; WebSocket; EventSource; workers; form/navigation; referrer/origin'
+  dependent:
+    - local channel result and endpoint receipt
+    - sandbox-prohibited form and top-navigation result
+    - request Origin and Referer headers as received by the local endpoint
+    - exact browser launch/attachment result
+  controlled:
+    - 'SPK-C selected model: top-level observer, opaque-origin srcdoc guest, sandbox=allow-scripts only'
+    - deterministic local loopback endpoints with no credential, external target, upload, persistent state, or public probe
+    - approved Playwright 1.61.0 with direct-installed Google Chrome 150.0.7871.124 and Firefox 152.0.4
+    - five fresh browser contexts per declared browser and no explicit browser CLI flags
+    - fixed fixture template and recorded CSP inputs
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-h-browser-egress --contract
+  - tools/phase1-python .planning/spikes/spk-h-browser-egress/runner.py --fixture .planning/spikes/spk-h-browser-egress/fixture.html --out /tmp/spk-h-browser-egress
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-h-browser-egress --complete
+  - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-h-browser-egress/report.md
+  - tools/phase1-python tools/validate-research.py validate-impact-fragment .planning/spikes/spk-h-browser-egress/impact-fragment.yaml --root .planning
+environmentManifest: environment.json
+browserExecutionSurfaces:
+  - family: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    executableSha256: aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec
+    launchMode: direct-installed-playwright-1.61.0
+  - family: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    version: 152.0.4
+    executableSha256: 12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e
+    launchMode: direct-installed-playwright-1.61.0
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-UPSTREAM-BASELINE-001
+    primitive: current upstream NIP browser-egress statement
+    relation: affects
+    plan: 01-16
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-002
+    claimId: CLM-POLICY-001
+    primitive: separation of local browser observation from project CSP policy and upstream fact
+    relation: supports
+    plan: 01-16
+    expectedClassification: project-policy
+    immutable:
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Required fields and verification rule
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: project-policy
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  Each browser that launches and attaches completes five fresh-context samples with
+  all eight declared channel groups recorded. Chromium must retain every allowed
+  local-loopback endpoint result, exact CSP mode, sandbox-prohibited form/top
+  navigation outcome, and received Origin/Referer values. Firefox either completes
+  the same matrix or records five explicit BrowserType.launch blocks before any
+  fixture claim. The restrictive CSP semantic-negative guest must reject its bounded
+  fetch/image attempts in every browser that reaches fixture execution.
+failureOutcome: >-
+  If an available browser reaches fixture execution but any declared channel result,
+  endpoint receipt, source-window mapping, CSP-negative result, or no-secret/
+  loopback-only guard fails, retain the raw local observation as failed evidence and
+  make no browser-policy or host recommendation. Do not add an external endpoint,
+  privileged sandbox token, browser configuration, or package as compensation.
+blockedOutcome: >-
+  If a named direct-installed browser or approved Playwright 1.61.0 cannot launch
+  or attach, record the exact execution blocker for every affected channel group.
+  Preserve the known Firefox behavior when it exits before attachment; do not use a
+  managed browser, launcher flags, profile, preference, or workaround.
+replay:
+  input: fixture.html
+  command: >-
+    Start only deterministic loopback endpoints, launch a fresh Playwright 1.61.0
+    context for each of five samples per named browser, invoke runSpkHEgress(),
+    retain bounded endpoint receipts and browser results under /tmp, then validate
+    the completed spike, report, and impact fragment.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+externalProbeAuthorization:
+  status: local-only
+  decisionDate: '2026-07-24'
+  approverRole: project-owner
+  authorizationRule: No public probe is essential; every channel uses a deterministic local loopback endpoint.
+  credentialHandling: No credentials, account access, or secret material are read, sent, or retained.
+uncertainty:
+  state: material
+  reason: >-
+    No current immutable upstream NIP browser-egress statement is available. This
+    spike measures only one disposable local fixture and named browser/tooling
+    surfaces; it cannot establish upstream protocol behavior, broad browser support,
+    a production CSP, or ADR acceptance.
+recommendation: >-
+  Retain the exact SPK-C selected iframe/loading model as a disposable local
+  measurement only. Treat any CSP direction as proposed public-site policy after
+  security review; retain OQ-EGRESS-NIP-001 and DRF-EGRESS-001 until current
+  immutable upstream evidence is collected and reviewed.
+disposition: retain-as-fixture
+environmentFacts:
+  selectedSpkCMetadataPath: ../spk-c-boundary-harness/metadata.yaml
+  selectedSpkCMetadataSha256: 39c876306da5d086ffdaa28114e648b092b5e242f858a02ceb8d7c9e2ed09c11
+  selectedSpkCReportPath: ../spk-c-boundary-harness/report.md
+  selectedSpkCReportSha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
+  selectedLoadingModel: top-level observer; iframe srcdoc opaque-origin guest; sandbox=allow-scripts only
+  measurementCspTemplate: default-src 'none'; script-src 'unsafe-inline' LOOPBACK; connect-src LOOPBACK WS_LOOPBACK; img-src LOOPBACK; media-src LOOPBACK; worker-src LOOPBACK; form-action LOOPBACK; base-uri 'none'; frame-src 'none'
+  semanticNegativeCsp: default-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'
