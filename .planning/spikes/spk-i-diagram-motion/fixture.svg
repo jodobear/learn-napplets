@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 760" width="1040" height="760" role="img" aria-labelledby="fixture-title fixture-description" data-spike-id="SPK-I-DIAGRAM-MOTION" data-classification="synthetic-local-observation" data-status="planned" data-source-id="SRC-POLICY-002" data-claim-id="CLM-POLICY-001" data-motion-policy="no-auto-loop; named-static-steps-only" data-reset-state="step-compose">
+  <title id="fixture-title">Synthetic trusted-host boundary diagram with static accessible representations</title>
+  <desc id="fixture-description">A deterministic three-step synthetic flow. Keyboard-reachable links select Compose, Host sentinel, and Static result. The same labels appear in a transcript and an accessible table. Motion is not required to understand the flow.</desc>
+  <metadata>{"spikeId":"SPK-I-DIAGRAM-MOTION","classification":"synthetic-local-observation","status":"planned","sourceId":"SRC-POLICY-002","claimId":"CLM-POLICY-001","motionPolicy":"no-auto-loop; named-static-steps-only"}</metadata>
+  <style>
+    :root { color-scheme: light; }
+    .surface { fill: #ffffff; stroke: #1e293b; stroke-width: 2; }
+    .step { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 3; }
+    .host { fill: #ecfdf5; stroke: #047857; stroke-width: 3; }
+    .result { fill: #fefce8; stroke: #a16207; stroke-width: 3; }
+    .control { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+    .control-label, .label, .table-text, .transcript-text { fill: #0f172a; font-family: sans-serif; }
+    .control-label { font-size: 18px; font-weight: 700; }
+    .label { font-size: 18px; }
+    .small { font-size: 15px; }
+    .status { font-size: 14px; font-weight: 700; }
+    .edge { fill: none; stroke: #475569; stroke-width: 3; marker-end: url(#arrowhead); }
+    a:focus .control, a:focus .step, a:focus .host, a:focus .result { stroke: #c2410c; stroke-width: 6; }
+    a:hover .control { fill: #f8fafc; }
+    @media (prefers-reduced-motion: reduce) { .motion-cue { opacity: 1; } }
+    @media (prefers-reduced-motion: no-preference) { .motion-cue { opacity: 1; } }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect class="surface" x="12" y="12" width="1016" height="736" rx="12"/>
+  <g aria-label="Fixture status" role="group">
+    <text class="status" x="42" y="50">SPK-I synthetic local observation — planned; project-policy source/status label only</text>
+    <text class="small" x="42" y="74">Essential meaning is static. No auto-looping motion, script, external input, or production component is present.</text>
+  </g>
+
+  <g role="navigation" aria-label="Keyboard-reachable diagram steps">
+    <a href="#step-compose" tabindex="0" aria-label="Focus synthetic step 1: Compose">
+      <rect class="control" x="42" y="100" width="285" height="52" rx="8"/>
+      <text class="control-label" x="62" y="133">1. Compose synthetic input</text>
+    </a>
+    <a href="#step-host" tabindex="0" aria-label="Focus synthetic step 2: Host sentinel">
+      <rect class="control" x="375" y="100" width="285" height="52" rx="8"/>
+      <text class="control-label" x="395" y="133">2. Inspect host sentinel</text>
+    </a>
+    <a href="#step-result" tabindex="0" aria-label="Focus synthetic step 3: Static result">
+      <rect class="control" x="708" y="100" width="285" height="52" rx="8"/>
+      <text class="control-label" x="728" y="133">3. Read static result</text>
+    </a>
+  </g>
+
+  <g id="visual-flow" role="group" aria-label="Visible static diagram flow">
+    <path class="edge motion-cue" d="M 315 276 L 385 276"/>
+    <path class="edge motion-cue" d="M 645 276 L 715 276"/>
+
+    <a href="#step-compose" tabindex="0" aria-label="Synthetic step 1: Compose">
+      <g id="step-compose" role="group" aria-labelledby="compose-label">
+        <rect class="step" x="62" y="194" width="253" height="164" rx="12"/>
+        <text id="compose-label" class="label" x="84" y="230">Step 1 — Compose</text>
+        <text class="small" x="84" y="260">Owner: synthetic learner</text>
+        <text class="small" x="84" y="286">Input: named static state</text>
+        <text class="small" x="84" y="312">Hostile text remains text:</text>
+        <text class="small" x="84" y="336">&lt;script&gt;window.__learnerInjection = true&lt;/script&gt;</text>
+      </g>
+    </a>
+
+    <a href="#step-host" tabindex="0" aria-label="Synthetic step 2: Trusted host sentinel">
+      <g id="step-host" role="group" aria-labelledby="host-label">
+        <rect class="host" x="385" y="194" width="260" height="164" rx="12"/>
+        <text id="host-label" class="label" x="407" y="230">Step 2 — Host sentinel</text>
+        <text class="small" x="407" y="260">Owner: trusted test host</text>
+        <text class="small" x="407" y="286">Sentinel: present, unmodified</text>
+        <text class="small" x="407" y="312">Dynamic execution: denied</text>
+        <text class="small" x="407" y="336">Script injection: denied</text>
+      </g>
+    </a>
+
+    <a href="#step-result" tabindex="0" aria-label="Synthetic step 3: Static result">
+      <g id="step-result" role="group" aria-labelledby="result-label">
+        <rect class="result" x="715" y="194" width="260" height="164" rx="12"/>
+        <text id="result-label" class="label" x="737" y="230">Step 3 — Static result</text>
+        <text class="small" x="737" y="260">Outcome: shown without motion</text>
+        <text class="small" x="737" y="286">Reset/replay: immutable step 1</text>
+        <text class="small" x="737" y="312">Transcript/table: identical labels</text>
+        <text class="small" x="737" y="336">Status: synthetic local observation</text>
+      </g>
+    </a>
+  </g>
+
+  <g id="transcript" role="region" aria-label="Static transcript">
+    <text class="label" x="42" y="420">Static transcript</text>
+    <text class="transcript-text small" x="42" y="450">1. Compose — synthetic learner supplies a named static state; hostile script-looking input remains literal text.</text>
+    <text class="transcript-text small" x="42" y="476">2. Host sentinel — trusted test host sentinel remains present and unmodified; dynamic execution and script injection are denied.</text>
+    <text class="transcript-text small" x="42" y="502">3. Static result — result is visible without motion; reset/replay returns to immutable step 1 and uses identical labels.</text>
+  </g>
+
+  <g id="state-table" role="table" aria-label="Accessible state parity table" aria-rowcount="4" aria-colcount="3">
+    <text class="label" x="42" y="548">Accessible state parity table</text>
+    <rect class="control" x="42" y="566" width="940" height="136" rx="4"/>
+    <path d="M 250 566 V 702 M 590 566 V 702 M 42 600 H 982 M 42 634 H 982 M 42 668 H 982" stroke="#334155" stroke-width="1"/>
+    <g role="row" aria-rowindex="1">
+      <text class="table-text small" role="columnheader" aria-colindex="1" x="58" y="589">State</text>
+      <text class="table-text small" role="columnheader" aria-colindex="2" x="266" y="589">Owner / boundary</text>
+      <text class="table-text small" role="columnheader" aria-colindex="3" x="606" y="589">Visible static outcome</text>
+    </g>
+    <g role="row" aria-rowindex="2">
+      <text class="table-text small" role="cell" aria-colindex="1" x="58" y="623">1. Compose</text>
+      <text class="table-text small" role="cell" aria-colindex="2" x="266" y="623">synthetic learner</text>
+      <text class="table-text small" role="cell" aria-colindex="3" x="606" y="623">hostile text is literal</text>
+    </g>
+    <g role="row" aria-rowindex="3">
+      <text class="table-text small" role="cell" aria-colindex="1" x="58" y="657">2. Host sentinel</text>
+      <text class="table-text small" role="cell" aria-colindex="2" x="266" y="657">trusted test host</text>
+      <text class="table-text small" role="cell" aria-colindex="3" x="606" y="657">execution and injection denied</text>
+    </g>
+    <g role="row" aria-rowindex="4">
+      <text class="table-text small" role="cell" aria-colindex="1" x="58" y="691">3. Static result</text>
+      <text class="table-text small" role="cell" aria-colindex="2" x="266" y="691">deterministic fixture</text>
+      <text class="table-text small" role="cell" aria-colindex="3" x="606" y="691">reset/replay returns to step 1</text>
+    </g>
+  </g>
+
+  <text class="small" x="42" y="730">Reduced-motion equivalent: this same static named-step view. Reset/replay target: step-compose.</text>
+</svg>

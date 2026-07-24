@@ -1,0 +1,105 @@
+schemaVersion: 1
+id: SPK-I-DIAGRAM-MOTION
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A bounded, data-driven semantic SVG with visible focus, native keyboard-reachable
+  step links, and co-located transcript/table representations can carry all essential
+  synthetic teaching meaning deterministically without a visual dependency or dynamic
+  learner-code execution.
+variables:
+  independent:
+    - static data-driven semantic SVG representation
+    - minimal local state/motion controller (comparison only; not introduced into the fixture)
+    - visual-library dependency candidate (comparison only; no package is installed)
+  dependent:
+    - keyboard-reachable control count
+    - SVG/transcript/table state-label parity
+    - reduced-motion and reset/replay determinism
+    - hostile-input containment and trusted-host sentinel integrity
+    - screenshot digest stability
+    - fixture byte cost and browser load timing
+  controlled:
+    - synthetic labels and project-policy source/status identifiers only
+    - direct-installed Google Chrome and Firefox via approved Playwright 1.61.0
+    - five headless local samples per available browser with no browser download, network, or dependency installation
+    - isolated /tmp/spk-i-diagram-motion output only; no production route, framework, or app component
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-i-diagram-motion --contract
+  - tools/phase1-python .planning/spikes/spk-i-diagram-motion/runner.py --fixture .planning/spikes/spk-i-diagram-motion/fixture.svg --out /tmp/spk-i-diagram-motion
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-i-diagram-motion --complete
+  - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-i-diagram-motion/report.md
+  - tools/phase1-python tools/validate-research.py validate --root .planning/research --report /tmp/spk-i-research-validation.md
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-002
+    claimId: CLM-POLICY-001
+    primitive: accessible static-first representation and evidence/status handling
+    relation: measures
+    plan: 01-17
+    expectedClassification: project-policy
+    immutable:
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Required fields and verification rule
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: project-policy
+      evidenceClass: project-policy
+      maturity: accepted
+browserExecutionSurfaces:
+  - family: Chromium
+    vendor: Google Chrome
+    executable: /opt/google/chrome/google-chrome
+    version: 150.0.7871.124
+    executableSha256: aea09d69ce7f24d5901f6bfb15dd44d0c856e793e0a498f8d8393ec7d2c308ec
+    launchMode: direct-installed-playwright-1.61.0
+  - family: Firefox
+    vendor: Mozilla Firefox
+    executable: /usr/bin/firefox
+    version: 152.0.4
+    executableSha256: 12e361bb42c030a9ffa940c641ff3ddf53ea097d40a7b2ea4903cd2c954dcc2e
+    launchMode: direct-installed-playwright-1.61.0
+successThreshold: >-
+  For each available browser, five local samples expose a title and description,
+  three keyboard-reachable native SVG links with visible focus, exact synthetic state
+  labels in the visual flow, transcript, and accessible table, a no-motion static
+  reduced-motion equivalent, deterministic reset/replay and screenshot digest, no
+  script or event-attribute injection from the hostile label, and an unchanged
+  trusted-host sentinel. The static SVG must remain the only passing candidate with
+  measured byte/load values; any unmeasured dependency candidate remains blocked.
+failureOutcome: >-
+  If the fixture loses semantic, keyboard, focus, representation-parity, reset/replay,
+  screenshot, or hostile-input/sentinel checks in an available browser, retain the
+  failed local evidence and make no positive ADR-0006 recommendation. Do not add
+  undocumented interaction logic, a visual library, an application component, or a
+  dynamic learner-code surface as compensation.
+blockedOutcome: >-
+  If an approved direct-installed browser cannot launch or attach under Playwright
+  1.61.0, record the exact block and affected checks for ADR-0006 and Phase 04 while
+  preserving the known Firefox launch blocker. Do not download a browser or add
+  launcher flags, profiles, preferences, or an unapproved workaround.
+replay:
+  input: fixture.svg
+  command: >-
+    Run runner.py through tools/phase1-python into /tmp/spk-i-diagram-motion, compare
+    five per-browser output records and screenshot digests, then validate the completed
+    spike and common research root with --report.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+  essential: true
+uncertainty:
+  state: material
+  reason: >-
+    This isolated synthetic fixture can measure a local representation contract only.
+    It cannot establish upstream protocol behavior, select a production visual system,
+    prove screen-reader speech output, or accept ADR-0006.
+recommendation: >-
+  Pending measurement, retain only a data-driven semantic SVG plus static transcript
+  and table as the proposed ADR-0006 baseline; treat state/motion controllers and all
+  visual dependencies as unselected until an approved need passes the same essential
+  equivalence and boundary checks.
+disposition: retain-as-fixture
