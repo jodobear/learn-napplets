@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 0
+open_count: 1
 waived_count: 0
 fixed_count: 1
-total_count: 1
-last_updated: 2026-07-23T21:36:41.912Z
+total_count: 2
+last_updated: 2026-07-24T01:07:30.289Z
 ---
 
 # Broken Windows Ledger
@@ -16,6 +16,7 @@ last_updated: 2026-07-23T21:36:41.912Z
 | id | phase | kind | file | line | description | status | reason | recorded_at | resolved_at |
 |----|-------|------|------|------|-------------|--------|--------|-------------|-------------|
 | 1 | 01 | deviation | requirements-phase1-tools.txt |  | Removed inline pip hashes because they forced unapproved resolver pins; artifact hashes remain in approval and environment records. | fixed |  | 2026-07-23T21:36:10.803Z | 2026-07-23T21:36:41.912Z |
+| 2 | 01 | unrun-verify | tools/phase1-python |  | Python unittest discovery found no test modules and exited 5 after SPK-B validation. | open |  | 2026-07-24T01:07:30.289Z |  |
 
 ````json
 [
@@ -30,6 +31,18 @@ last_updated: 2026-07-23T21:36:41.912Z
     "reason": "",
     "recorded_at": "2026-07-23T21:36:10.803Z",
     "resolved_at": "2026-07-23T21:36:41.912Z"
+  },
+  {
+    "id": 2,
+    "kind": "unrun-verify",
+    "phase": "01",
+    "file": "tools/phase1-python",
+    "line": null,
+    "description": "Python unittest discovery found no test modules and exited 5 after SPK-B validation.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T01:07:30.289Z",
+    "resolved_at": null
   }
 ]
 ````
