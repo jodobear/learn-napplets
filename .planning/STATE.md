@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-10-PLAN.md
-last_updated: "2026-07-24T01:07:43.289Z"
+stopped_at: Completed 01-11-PLAN.md (SPK-C blocked Firefox evidence)
+last_updated: "2026-07-24T01:38:14.323Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 13 of 28
+Plan: 14 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [████░░░░░░] 43%
+Progress: [█████░░░░░] 46%
 
 ## Performance Metrics
 
@@ -69,6 +69,7 @@ Progress: [████░░░░░░] 43%
 | Phase 01 P08 | 309s | 1 tasks | 7 files |
 | Phase 01 P09 | 20m | 2 tasks | 6 files |
 | Phase 01 P10 | 748s | 3 tasks | 4 files |
+| Phase 01 P11 | 888s | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-A retains Candidate A as a proposed public-site-first workspace boundary model; ADR-0001 remains pending human review.
 - [Phase ?]: Astro 7.1.3 is proposed ADR-0002 evidence only after five passing isolated fixture replays.
 - [Phase ?]: VitePress 1.6.4 is blocked from a positive ADR-0002 recommendation until a reviewed accessibility/static-equivalent fixture resolves its repeated assertion failure.
+- [Phase ?]: SPK-C remains blocked overall: Chromium passed five isolated samples, but direct-installed Firefox 152.0.4 could not launch under approved Playwright 1.61.0.
+- [Phase ?]: SPK-C source bindings remain blocked policy inputs; browser fixture observations do not establish upstream protocol behavior.
 
 ### Pending Todos
 
@@ -116,6 +119,7 @@ None yet.
 - Phase 1 source registry, compatibility matrix, mandatory spike evidence, and lesson research packets do not yet exist.
 - Upstream-sensitive terms and protocol behavior must remain labeled as uncertain until immutable-source evidence is reviewed.
 - Do not create a production scaffold before Phase 1 and Phase 2 gates pass.
+- SPK-C Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; no cross-browser fixture evidence exists for ADR-0005.
 
 ## Deferred Items
 
@@ -125,6 +129,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T01:07:43.281Z
-Stopped at: Completed 01-10-PLAN.md
+Last session: 2026-07-24T01:38:14.315Z
+Stopped at: Completed 01-11-PLAN.md (SPK-C blocked Firefox evidence)
 Resume file: None
