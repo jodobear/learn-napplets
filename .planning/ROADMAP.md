@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Phase 1 evidence closeout is pending required human review. Its ADR 0001–0011 records remain proposed, no human closeout or residual-risk acceptance has occurred, and no production application scaffold is authorized.
+**Current gate:** Phase 1 has a human-recorded `passed` evidence baseline only for Phase 2 product/content-contract readiness and awaits orchestrator verification. ADR 0001–0011 remain proposed; no residual-risk acceptance, production application scaffold, deployment/release, external action, or Phase 2 transition is authorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 27/28 plans executed
+**Plans**: 28/28 plans executed
 
 Plans:
 **Wave 1**
@@ -127,7 +127,7 @@ Plans:
 
 **Wave 13** *(blocked on the completed evidence baseline)*
 
-- [ ] 01-24-PLAN.md — Enforce the Phase 1 gate after consolidation and stop for human closeout.
+- [x] 01-24-PLAN.md — Enforce the Phase 1 gate after consolidation and stop for human closeout.
 
 ### Phase 2: Product and Content Contract
 
@@ -412,7 +412,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 27/28 | In Progress|  |
+| 1. Research and Truth Baseline | 28/28 | Awaiting orchestrator verification |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

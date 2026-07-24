@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-25-PLAN.md
-last_updated: "2026-07-24T12:20:33.113Z"
+stopped_at: Completed 01-24-PLAN.md; awaiting orchestrator verification
+last_updated: "2026-07-24T12:46:57.319Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 28
-  completed_plans: 27
+  completed_plans: 28
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 27 of 28
-Status: Ready to execute
+Plan: 28 of 28
+Status: Awaiting orchestrator verification
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [██████████] 96%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -84,6 +84,7 @@ Progress: [██████████] 96%
 | Phase 01 P27 | 386s | 2 tasks | 7 files |
 | Phase 01 P23 | 347s | 2 tasks | 6 files |
 | Phase 01 P25 | 434s | 2 tasks | 15 files |
+| Phase 01 P24 | 15m | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -160,6 +161,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: The static public-site path remains a proposed post-Phase-2 direction; host, package, portable, external-delivery, and complex interactive capabilities remain deferred.
 - [Phase ?]: The lesson index is a complete, ordered thirteen-entry contract rather than a directory convention.
 - [Phase ?]: Build, runtime, package, deployment, and contribution content remains deterministic conceptual research until canonical evidence and human review resolve its blockers.
+- [Phase ?]: Phase 1 passed only for Phase 2 product/content-contract readiness; it neither approves a transition nor authorizes production work.
+- [Phase ?]: All six dated scoped role approvals retain Firefox, VitePress, package, manifest/identity/verifier, delivery, portable, editor, dynamic-diagram, and freshness blockers or deferrals.
+- [Phase ?]: ADR 0001–0011 remain proposed; no residual risk, CSP behavior, teaching-host architecture, deployment, release, publication, or external action is accepted.
 
 ### Pending Todos
 
@@ -183,6 +187,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T12:20:33.104Z
-Stopped at: Completed 01-25-PLAN.md
+Last session: 2026-07-24T12:46:57.308Z
+Stopped at: Completed 01-24-PLAN.md; awaiting orchestrator verification
 Resume file: None
