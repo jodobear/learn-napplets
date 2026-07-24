@@ -1,0 +1,116 @@
+schemaVersion: 1
+id: SPK-F-COURSE-WORKBENCH
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A guest-only, disposable two-lesson Workbench/course simulation can be built
+  with an approved static-content candidate while preserving a visible
+  distinction between simulated UI and real host-mediated runtime behavior.
+variables:
+  independent:
+    - approved static-content package candidate
+    - capability-present versus capability-absent simulation state
+  dependent:
+    - artifact shape and byte size
+    - startup elapsed milliseconds
+    - memory high-water mark
+    - keyboard and reduced-motion accessibility checks
+    - internal lesson navigation checks
+    - Chromium and Firefox local runtime compatibility
+    - optional progress and external-opening degradation behavior
+    - update and identity implications
+    - build-complexity command and configuration count
+  controlled:
+    - guest-only SPK-F-local ignored experiment path
+    - two representative local lessons in fixture.md
+    - no host imports, secrets, private frames, or external state writes
+    - tools/phase1-python validation and five-sample measurement policy
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-f-course-workbench --contract
+  - Do not run a package install command until every exact candidate has a dated human approval in packageApproval.
+  - After approval only, run the exact candidate install command from packageApproval and retain all generated output below .planning/spikes/spk-f-course-workbench/.experiment/.
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    relation: affects
+    plan: 01-14
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    plan: 01-14
+successThreshold: >-
+  After a per-candidate dated human approval, five reproducible isolated runs
+  produce the declared guest-only fixture measurements for both capability
+  states, preserve no production marker outside SPK-F, and state one proposed
+  ADR-0007 outcome without claiming a real runtime composition.
+failureOutcome: >-
+  If an approved candidate cannot build or execute the declared guest-only
+  fixture, retain the measured failure and recommend no portable-target
+  outcome; do not substitute an unreviewed package or create a host scaffold.
+blockedOutcome: >-
+  If any exact candidate is blocked, remains unapproved, or cannot produce
+  reproducible local evidence, run only dependency-free contract evidence and
+  report SPK-F as blocked for EVID-04 and ADR-0007. Do not choose a substitute.
+replay:
+  input: fixture.md
+  command: >-
+    After approval only, run the approved exact isolated command, execute the
+    two-lesson fixture in capability-present and capability-absent states five
+    times through tools/phase1-python, capture digests and environment facts,
+    then validate the completed spike and planning boundary.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: >-
+    This contract can measure only a local guest-only simulation. It cannot
+    establish a current upstream artifact contract, real host authority,
+    sibling-napplet composition, package conformance, or acceptance of ADR-0007.
+recommendation: >-
+  Preserve only proposed ADR-0007 outcome vocabulary: GO-V1, GO-LATER,
+  WORKBENCH-ONLY, NO-GO, or a blocked-evidence result. The default hypothesis
+  remains GO-LATER; Task 1 does not select an outcome.
+disposition: retain-as-fixture
+packageApproval:
+  reviewedAt: null
+  reviewer: null
+  status: pending-human-review
+  candidates:
+    - name: astro
+      version: 7.1.3
+      registryUrl: https://registry.npmjs.org/astro/7.1.3
+      projectUrl: https://astro.build
+      repositoryUrl: https://github.com/withastro/astro
+      license: MIT
+      releaseTarball: https://registry.npmjs.org/astro/-/astro-7.1.3.tgz
+      integrity: sha512-4dhPyAAXthf3xLEYnG8SeL7yr/nTPPABfY7e9YF0yuO+vK9Xp+8Q5j4xzsmL3GueukQv4oNwGNTBepLOiDGeJA==
+      shasum: f80d8459c10fff08b2c457e9171547f32761582c
+      provenanceRetrievedAt: '2026-07-24'
+      provenanceSource: https://registry.npmjs.org/astro/7.1.3
+      hashSourceDecision: >-
+        Pending human review: the official npm registry release integrity and
+        shasum are recorded for the exact tarball; do not download, trust, or
+        install this candidate unless Task 2 records a dated approval.
+      approval: pending
+      isolationPath: .planning/spikes/spk-f-course-workbench/.experiment/astro-7.1.3
+      installCommand: npm --prefix .planning/spikes/spk-f-course-workbench/.experiment/astro-7.1.3 install --ignore-scripts --package-lock=false astro@7.1.3
+    - name: vitepress
+      version: 1.6.4
+      registryUrl: https://registry.npmjs.org/vitepress/1.6.4
+      projectUrl: https://vitepress.dev/
+      repositoryUrl: https://github.com/vuejs/vitepress
+      license: MIT
+      releaseTarball: https://registry.npmjs.org/vitepress/-/vitepress-1.6.4.tgz
+      integrity: sha512-+2ym1/+0VVrbhNyRoFFesVvBvHAVMZMK0rw60E3X/5349M1GuVdKeazuksqopEdvkKwKGs21Q729jX81/bkBJg==
+      shasum: 1b6c68fede541a3f401a66263dce0c985e2d8d92
+      provenanceRetrievedAt: '2026-07-24'
+      provenanceSource: https://registry.npmjs.org/vitepress/1.6.4
+      hashSourceDecision: >-
+        Pending human review: the official npm registry release integrity and
+        shasum are recorded for the exact tarball; do not download, trust, or
+        install this candidate unless Task 2 records a dated approval.
+      approval: pending
+      isolationPath: .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4
+      installCommand: npm --prefix .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4 install --ignore-scripts --package-lock=false vitepress@1.6.4
