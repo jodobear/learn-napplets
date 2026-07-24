@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 20/28 plans executed
+**Plans**: 21/28 plans executed
 
 Plans:
 **Wave 1**
@@ -108,7 +108,7 @@ Plans:
 
 **Wave 9** *(blocked on SPK-C's selected boundary model)*
 
-- [ ] 01-16-PLAN.md — Run SPK-H browser egress/CSP evidence using the selected SPK-C model.
+- [x] 01-16-PLAN.md — Run SPK-H browser egress/CSP evidence using the selected SPK-C model.
 
 **Wave 10** *(blocked on all spike evidence, including SPK-H)*
 
@@ -410,7 +410,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 20/28 | In Progress|  |
+| 1. Research and Truth Baseline | 21/28 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 6
+open_count: 10
 waived_count: 0
 fixed_count: 1
-total_count: 7
-last_updated: 2026-07-24T10:04:33.290Z
+total_count: 11
+last_updated: 2026-07-24T10:36:13.437Z
 ---
 
 # Broken Windows Ledger
@@ -22,6 +22,10 @@ last_updated: 2026-07-24T10:04:33.290Z
 | 5 | 01 | deviation | .planning/spikes/spk-d-verified-loader/metadata.yaml |  | Added the validator-required --root .planning argument to the SPK-D impact-fragment command. | open |  | 2026-07-24T01:58:26.678Z |  |
 | 6 | 01 | stub | .planning/spikes/spk-k-deployment/fixture.md | 33 | Intentional lab-artifact placeholder prevents a teaching-host deployment claim pending evidence and ADR approval. | open |  | 2026-07-24T10:04:33.212Z |  |
 | 7 | 01 | stub | .planning/spikes/spk-k-deployment/fixture.md | 36 | Intentional portable-output placeholder prevents a portability claim while ADR-0007 remains unresolved. | open |  | 2026-07-24T10:04:33.290Z |  |
+| 8 | 01 | deviation | .planning/spikes/spk-h-browser-egress/fixture.html |  | Parent CSP inheritance initially blocked the declared local script measurement. | open |  | 2026-07-24T10:36:13.234Z |  |
+| 9 | 01 | deviation | .planning/spikes/spk-h-browser-egress/fixture.html |  | Opaque-origin worker probe was bounded to a blob worker and documented as non-loader evidence. | open |  | 2026-07-24T10:36:13.304Z |  |
+| 10 | 01 | deviation | .planning/spikes/spk-h-browser-egress/runner.py |  | Referrer-mode receipt grouping initially produced a false failed matrix result. | open |  | 2026-07-24T10:36:13.369Z |  |
+| 11 | 01 | deviation | .planning/research/schemas/spike-impact-fragment.schema.json |  | SPK-H needed a typed security-egress finding proposal schema field for required approval metadata. | open |  | 2026-07-24T10:36:13.437Z |  |
 
 ````json
 [
@@ -107,6 +111,54 @@ last_updated: 2026-07-24T10:04:33.290Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-07-24T10:04:33.290Z",
+    "resolved_at": null
+  },
+  {
+    "id": 8,
+    "kind": "deviation",
+    "phase": "01",
+    "file": ".planning/spikes/spk-h-browser-egress/fixture.html",
+    "line": null,
+    "description": "Parent CSP inheritance initially blocked the declared local script measurement.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:36:13.234Z",
+    "resolved_at": null
+  },
+  {
+    "id": 9,
+    "kind": "deviation",
+    "phase": "01",
+    "file": ".planning/spikes/spk-h-browser-egress/fixture.html",
+    "line": null,
+    "description": "Opaque-origin worker probe was bounded to a blob worker and documented as non-loader evidence.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:36:13.304Z",
+    "resolved_at": null
+  },
+  {
+    "id": 10,
+    "kind": "deviation",
+    "phase": "01",
+    "file": ".planning/spikes/spk-h-browser-egress/runner.py",
+    "line": null,
+    "description": "Referrer-mode receipt grouping initially produced a false failed matrix result.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:36:13.369Z",
+    "resolved_at": null
+  },
+  {
+    "id": 11,
+    "kind": "deviation",
+    "phase": "01",
+    "file": ".planning/research/schemas/spike-impact-fragment.schema.json",
+    "line": null,
+    "description": "SPK-H needed a typed security-egress finding proposal schema field for required approval metadata.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:36:13.437Z",
     "resolved_at": null
   }
 ]

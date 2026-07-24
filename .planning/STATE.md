@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Session resumed; next action is Wave 9 Plan 01-16
-last_updated: "2026-07-24T10:09:32.286Z"
+stopped_at: Completed 01-16-PLAN.md
+last_updated: "2026-07-24T10:35:24.660Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -32,7 +32,7 @@ Plan: 21 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [███████░░░] 71%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [███████░░░] 71%
 | Phase 01 P17 | 1201s | 2 tasks | 7 files |
 | Phase 01-research-and-truth-baseline P18 | 1224s | 3 tasks | 8 files |
 | Phase 01 P19 | 13m | 3 tasks | 8 files |
+| Phase 01 P16 | 18m 30s | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -132,6 +133,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-J does not select CodeMirror despite bounded Chromium success; CodeJar and cross-browser ADR-0009 evidence remain blocked.
 - [Phase ?]: SPK-K Task 2 selected local-only on 2026-07-24; external deployment/publication remains scoped blocked evidence.
 - [Phase ?]: SPK-K local replay uses digest-pinned static inspection and rollback with no listener, external command, target, account, or credential access.
+- [Phase ?]: SPK-H retains SPK-C's opaque-origin srcdoc guest and sandbox=allow-scripts-only loading model.
+- [Phase ?]: Chrome egress outcomes are fixture-specific observations; Firefox exits before Playwright attachment and blocks cross-browser recommendation without a workaround.
+- [Phase ?]: A restrictive public-site CSP is proposed project policy only; OQ-EGRESS-NIP-001 and DRF-EGRESS-001 remain open pending immutable upstream evidence and review.
 
 ### Pending Todos
 
@@ -155,6 +159,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T10:09:32.277Z
-Stopped at: Session resumed; next action is Wave 9 Plan 01-16
+Last session: 2026-07-24T10:35:24.651Z
+Stopped at: Completed 01-16-PLAN.md
 Resume file: None
