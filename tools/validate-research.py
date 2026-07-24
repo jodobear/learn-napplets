@@ -4,10 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
+import os
 import re
+import shutil
 import sys
+import tempfile
+import time
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
@@ -510,7 +515,391 @@ def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
     for impact in fragment.get("proposedImpacts", []):
         if isinstance(impact, dict) and not re.fullmatch(expected_patterns.get(impact.get("type"), r"$^"), str(impact.get("id", ""))):
             errors.append("ERROR IMP013: proposed impact type and canonical ID do not match")
+
+    declared_source_ids = set(fragment.get("sourceIds", []))
+    linked_source_ids = {link.get("sourceId") for link in fragment.get("sourceLinks", []) if isinstance(link, dict)}
+    if fragment.get("fragmentId"):
+        if declared_source_ids != linked_source_ids:
+            errors.append("ERROR IMP014: sourceIds must exactly match typed sourceLinks")
+        evidence_kinds = {link.get("kind") for link in fragment.get("evidenceLinks", []) if isinstance(link, dict)}
+        if any(kind not in evidence_kinds for kind in ("source", "metadata", "measurement", "report")):
+            errors.append("ERROR IMP015: evidenceLinks must include source, metadata, measurement, and report provenance")
+        for link in fragment.get("evidenceLinks", []):
+            if not isinstance(link, dict):
+                continue
+            evidence_file = planning_root / str(link.get("path", ""))
+            if not evidence_file.is_file() or link.get("sha256") != hashlib.sha256(evidence_file.read_bytes()).hexdigest():
+                errors.append("ERROR IMP016: evidence link path is missing or has an altered SHA-256")
+
+        try:
+            claims_document = load_yaml(planning_root / "research/claims.yaml")
+            claims = {item.get("id"): item for item in claims_document.get("claims", []) if isinstance(item, dict)}
+        except ValueError as exc:
+            claims = {}
+            errors.append(f"ERROR IMP017: claims registry does not resolve: {exc}")
+        for source_id in declared_source_ids:
+            if not any(isinstance(claim, dict) and any(isinstance(relation, dict) and relation.get("sourceId") == source_id for relation in claim.get("sourceRelations", [])) for claim in claims.values()):
+                errors.append(f"ERROR IMP018: source {source_id} has no canonical claim provenance")
+    if str(spike_id).startswith("SPK-H-"):
+        proposal = fragment.get("securityEgressFindingProposal")
+        if not isinstance(proposal, dict) or not proposal.get("id") or not proposal.get("owner") or not proposal.get("requiredApproval"):
+            errors.append("ERROR IMP020: SPK-H requires securityEgress and complete output provenance")
     return errors
+
+
+SPIKE_REPORTS = {
+    "SPK-A": "spk-a-workspace",
+    "SPK-B": "spk-b-static-framework",
+    "SPK-C": "spk-c-boundary-harness",
+    "SPK-D": "spk-d-verified-loader",
+    "SPK-E": "spk-e-content-rendering",
+    "SPK-F": "spk-f-course-workbench",
+    "SPK-G": "spk-g-package-conformance",
+    "SPK-H": "spk-h-browser-egress",
+    "SPK-I": "spk-i-diagram-motion",
+    "SPK-J": "spk-j-code-editing",
+    "SPK-K": "spk-k-deployment",
+    "SPK-L": "spk-l-source-freshness",
+}
+CONSOLIDATION_AT = "2026-07-24T00:00:00Z"
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def normalized_fragment(fragment: dict[str, Any]) -> str:
+    return json.dumps(normalize_yaml(fragment), sort_keys=True, separators=(",", ":"))
+
+
+def yaml_bytes(document: dict[str, Any]) -> bytes:
+    return yaml.safe_dump(document, sort_keys=False, allow_unicode=True).encode("utf-8")
+
+
+def acquire_consolidation_lock(research: Path, timeout: float) -> tuple[Any | None, str | None]:
+    lock_name = hashlib.sha256(str(research.resolve()).encode("utf-8")).hexdigest()[:20]
+    handle = open(Path(tempfile.gettempdir()) / f"learn-napplets-consolidation-{lock_name}.lock", "a+", encoding="utf-8")
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return handle, None
+        except BlockingIOError:
+            if time.monotonic() >= deadline:
+                handle.close()
+                return None, "CONSOLIDATION_LOCK_CONFLICT: timed out waiting for the exclusive consolidation lock"
+            time.sleep(0.01)
+
+
+def release_consolidation_lock(handle: Any) -> None:
+    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    handle.close()
+
+
+def fragment_source_claim_errors(fragment: dict[str, Any], planning_root: Path) -> list[str]:
+    """Validate that every fragment source has a metadata claim-to-source path."""
+    errors: list[str] = []
+    metadata_path = planning_root / str(fragment["metadataPath"])
+    metadata = load_yaml(metadata_path)
+    claims = load_yaml(planning_root / "research/claims.yaml").get("claims", [])
+    claim_index = {item.get("id"): item for item in claims if isinstance(item, dict)}
+    for source_id in fragment.get("sourceIds", []):
+        bindings = [item for item in metadata.get("sourceBindings", []) if isinstance(item, dict) and item.get("sourceId") == source_id]
+        bound_claims = [claim_index.get(binding.get("claimId")) for binding in bindings]
+        canonical_claims = [claim for claim in claim_index.values() if isinstance(claim, dict) and any(isinstance(link, dict) and link.get("sourceId") == source_id for link in claim.get("sourceRelations", []))]
+        if not canonical_claims:
+            errors.append(f"ERROR IMP018: source {source_id} has no canonical claim provenance")
+        if bound_claims and not any(isinstance(claim, dict) and any(isinstance(link, dict) and link.get("sourceId") == source_id for link in claim.get("sourceRelations", [])) for claim in bound_claims):
+            errors.append(f"ERROR IMP019: metadata claim provenance does not transitively resolve {source_id}")
+    return errors
+
+
+def discover_consolidation_inputs(spikes: Path, planning_root: Path, input_order: str) -> tuple[list[tuple[Path, dict[str, Any]]], list[str], list[tuple[str, Path, str]]]:
+    errors: list[str] = []
+    reports: list[tuple[str, Path, str]] = []
+    for short_id, directory in SPIKE_REPORTS.items():
+        report = spikes / directory / "report.md"
+        if not report.is_file():
+            errors.append(f"ERROR CONS001: missing required {short_id} report at {report}")
+        else:
+            reports.append((short_id, report, sha256(report)))
+    paths = sorted(spikes.glob("spk-*/impact-fragment*.yaml"))
+    if input_order == "reverse":
+        paths.reverse()
+    fragments: list[tuple[Path, dict[str, Any]]] = []
+    for path in paths:
+        fragment_errors = validate_impact_fragment(path, planning_root)
+        try:
+            fragment = load_yaml(path)
+        except ValueError as exc:
+            errors.append(f"ERROR CONS002: {exc}")
+            continue
+        errors.extend(fragment_errors)
+        errors.extend(fragment_source_claim_errors(fragment, planning_root))
+        fragments.append((path, fragment))
+    return fragments, sorted(set(errors)), reports
+
+
+def merge_fragment_history(document: dict[str, Any], key: str, fragment: dict[str, Any], prefix: str) -> None:
+    marker = f"{fragment['fragmentId']} fragment SHA-256 {fragment['_digest']}"
+    proposals = [item for item in fragment.get(prefix, []) if isinstance(item, dict)]
+    proposal_ids = {item.get("id") for item in proposals}
+    for record in document.get(key, []):
+        if not isinstance(record, dict) or record.get("id") not in proposal_ids:
+            continue
+        history = record.get("history", [])
+        if any(isinstance(item, dict) and marker in str(item.get("reason", "")) for item in history):
+            continue
+        rationale = next((item.get("rationale", "") for item in proposals if item.get("id") == record.get("id")), "")
+        history.append({"at": CONSOLIDATION_AT, "state": record.get("status", "blocked"), "reason": f"Consolidated {marker}; {rationale}"})
+        record["history"] = history
+
+
+def new_drift_record(fragment: dict[str, Any], drift_id: str, claims: dict[str, dict[str, Any]], sources: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    source_id = fragment["sourceIds"][0]
+    source = sources[source_id]
+    claim_id = next((item.get("id") for item in claims.values() if isinstance(item, dict) and any(isinstance(link, dict) and link.get("sourceId") == source_id for link in item.get("sourceRelations", []))), "CLM-UPSTREAM-BASELINE-001")
+    side = {
+        "claimId": claim_id,
+        "sourceId": source_id,
+        "commitSha": source["commitSha"],
+        "path": source["path"],
+        "locator": source["locator"],
+        "contentSha256": source["contentSha256"],
+        "statement": "Consolidated local spike observation is retained as a blocked project-evidence hand-off, not an upstream fact.",
+        "authorityTier": source["authorityTier"],
+        "maturity": source["maturity"],
+        "evidenceClass": source["evidenceClass"],
+    }
+    return {
+        "id": drift_id,
+        "kind": "drift",
+        "topic": drift_id.removeprefix("DRF-").lower().replace("-", " "),
+        "status": "blocked",
+        "statusReason": f"Consolidated {fragment['fragmentId']} retains a local blocked or uncertain observation without asserting upstream behavior.",
+        "normative": side,
+        "observed": side.copy(),
+        "impacts": {"content": ["LES-001"], "code": [fragment["spikeId"]], "knowledge": ["spike-consolidation"], "requirements": sorted(fragment["affectedRequirements"]), "phases": sorted(fragment["affectedPhases"])},
+        "uncertainty": fragment["uncertainty"],
+        "history": [{"at": CONSOLIDATION_AT, "state": "blocked", "reason": f"Consolidated {fragment['fragmentId']} fragment SHA-256 {fragment['_digest']}."}],
+        "review": {"owner": "research-owner", "status": "pending", "requiredRoles": ["protocol-technical", "security"]},
+        "dependentDecisionDisposition": {"decisionIds": sorted(item["id"] for item in fragment["proposedImpacts"] if item.get("type") == "adr") or ["ADR-0005"], "disposition": "blocked", "safeFallback": "Keep the deterministic static fallback.", "revisitTrigger": "Collect immutable source evidence and obtain required review."},
+    }
+
+
+def merge_fragments(research: Path, fragments: list[tuple[Path, dict[str, Any]]]) -> tuple[dict[str, dict[str, Any]], list[tuple[str, str]], list[str]]:
+    documents = {name: load_yaml(research / name) for name in ("compatibility-matrix.yaml", "drift-register.yaml", "open-questions.yaml")}
+    sources = {item.get("id"): item for item in load_yaml(research / "source-registry.yaml").get("sources", []) if isinstance(item, dict)}
+    claims = {item.get("id"): item for item in load_yaml(research / "claims.yaml").get("claims", []) if isinstance(item, dict)}
+    outcomes: list[tuple[str, str]] = []
+    conflicts: list[str] = []
+    seen: dict[str, str] = {}
+    accepted: list[dict[str, Any]] = []
+    for path, fragment in sorted(fragments, key=lambda item: (item[1].get("fragmentId", ""), str(item[0]))):
+        digest = sha256(path)
+        fragment = copy_fragment = dict(fragment)
+        copy_fragment["_digest"] = digest
+        stable_id = str(fragment.get("fragmentId", fragment.get("id")))
+        payload = normalized_fragment(fragment)
+        previous = seen.get(stable_id)
+        if previous is not None:
+            if previous != payload:
+                conflicts.append(f"OQ-CONSOLIDATION-{stable_id}")
+                outcomes.append((stable_id, "blocked-conflict"))
+            else:
+                outcomes.append((stable_id, "no-op-duplicate"))
+            continue
+        seen[stable_id] = payload
+        accepted.append(copy_fragment)
+        outcomes.append((stable_id, "merged"))
+    if conflicts:
+        return documents, outcomes, sorted(set(conflicts))
+    drift_records = documents["drift-register.yaml"].setdefault("drift", [])
+    drift_index = {record.get("id"): record for record in drift_records if isinstance(record, dict)}
+    questions = documents["open-questions.yaml"].setdefault("questions", [])
+    question_index = {record.get("id"): record for record in questions if isinstance(record, dict)}
+    compatibility = documents["compatibility-matrix.yaml"].get("compatibility", [])
+    for fragment in accepted:
+        for drift_proposal in fragment.get("proposedDriftRecords", []):
+            if not isinstance(drift_proposal, dict):
+                continue
+            drift_id = drift_proposal["id"]
+            if drift_id not in drift_index:
+                record = new_drift_record(fragment, drift_id, claims, sources)
+                drift_records.append(record)
+                drift_index[drift_id] = record
+        merge_fragment_history(documents["drift-register.yaml"], "drift", fragment, "proposedDriftRecords")
+        for question in fragment.get("proposedOpenQuestions", []):
+            question_id = question["id"]
+            marker = f"{fragment['fragmentId']} fragment SHA-256 {fragment['_digest']}"
+            if question_id in question_index:
+                history = question_index[question_id].setdefault("history", [])
+                if not any(marker in str(item.get("reason", "")) for item in history if isinstance(item, dict)):
+                    history.append({"at": CONSOLIDATION_AT, "status": "blocked", "reason": f"Consolidated {marker}; {question['rationale']}"})
+                continue
+            linked_drift = sorted(item["id"] for item in fragment.get("proposedDriftRecords", []) if isinstance(item, dict))
+            question_index[question_id] = {
+                "id": question_id,
+                "kind": "open-question",
+                "question": question["rationale"],
+                "status": "blocked",
+                "sourceRefs": sorted(set(fragment["sourceIds"] + linked_drift)),
+                "impacts": {"requirements": sorted(fragment["affectedRequirements"]), "phases": sorted(fragment["affectedPhases"])},
+                "blockedDecisions": sorted(item["id"] for item in fragment["proposedImpacts"] if item.get("type") == "adr") or ["ADR-0005"],
+                "resolutionCriteria": ["Collect complete immutable source and claim provenance, then obtain the required review."],
+                "owner": "research-owner",
+                "review": {"status": "pending", "requiredRoles": ["protocol-technical", "security"]},
+                "history": [{"at": CONSOLIDATION_AT, "status": "blocked", "reason": f"Consolidated {marker}; {question['rationale']}"}],
+            }
+            questions.append(question_index[question_id])
+        for record in compatibility:
+            if not isinstance(record, dict):
+                continue
+            known_drift = record.setdefault("knownDrift", [])
+            for drift_proposal in fragment.get("proposedDriftRecords", []):
+                if not isinstance(drift_proposal, dict):
+                    continue
+                drift_id = drift_proposal["id"]
+                if drift_id not in known_drift:
+                    known_drift.append(drift_id)
+            record["knownDrift"] = sorted(known_drift)
+    drift_records.sort(key=lambda item: item.get("id", ""))
+    questions.sort(key=lambda item: item.get("id", ""))
+    return documents, outcomes, []
+
+
+def security_egress_synthesis(fragment: dict[str, Any]) -> str:
+    digest = fragment["_digest"]
+    source_ids = ", ".join(fragment["sourceIds"])
+    return f"""# Security and egress synthesis\n\n## Research question\n\nWhat does the validated SPK-H local fixture support without converting local browser behavior or project policy into an upstream protocol conclusion?\n\n## Sources and immutable revisions\n\n- Fragment: `{fragment['fragmentId']}` SHA-256 `{digest}`.\n- Report: `{fragment['reportPath']}` SHA-256 `{fragment['reportSha256']}`.\n- Metadata: `{fragment['metadataPath']}` SHA-256 `{fragment['metadataSha256']}`.\n- Measurement: `{fragment['measurementPath']}` SHA-256 `{fragment['measurementSha256']}`.\n- Canonical source and claim provenance: {source_ids}; `CLM-UPSTREAM-BASELINE-001` and `CLM-POLICY-001`.\n\n## Upstream-fact status\n\nNo current immutable upstream egress statement was collected. `SRC-POLICY-001` and `CLM-UPSTREAM-BASELINE-001` record that absence as blocked project evidence; they are not upstream browser or protocol proof.\n\n## Browser observations\n\nThe exact opaque-origin `srcdoc` guest with `sandbox=allow-scripts` only produced five bounded Chromium local-loopback observations. Firefox exited before Playwright attached, so no Firefox channel or CSP behavior was observed. These are fixture observations only.\n\n## Proposed project policy\n\n`{fragment['securityEgressFindingProposal']['id']}` is a proposed project policy: use a restrictive, reviewable public-site CSP only after the named security and protocol review. It is not an upstream NIP requirement or cross-browser conclusion.\n\n## Unresolved questions\n\n{'; '.join(item['id'] for item in fragment['proposedOpenQuestions'])} remain blocked pending immutable upstream evidence and, for Firefox, attached-context measurements under the approved toolchain.\n\n## Conflicts\n\n`DRF-EGRESS-001` and the Firefox launcher blocker retain the distinct local observation and unresolved upstream question. No conflict is silently resolved by this synthesis.\n\n## Inference\n\nThe supported inference is limited to the named local fixture, browser version, sandbox tokens, CSP inputs, and loopback endpoints. It does not select a production host profile.\n\n## Uncertainty\n\n{fragment['uncertainty']['reason']}\n\n## Owner and required approval\n\nOwner: `{fragment['securityEgressFindingProposal']['owner']}`. Required approval: {fragment['securityEgressFindingProposal']['requiredApproval']} Revisit trigger: {fragment['securityEgressFindingProposal'].get('revisitTrigger', 'Collect immutable evidence and review it.')}\n"""
+
+
+def replay_manifest(spikes: Path, reports: list[tuple[str, Path, str]]) -> dict[str, Any]:
+    entries: list[dict[str, Any]] = []
+    for short_id, report, report_digest in reports:
+        directory = report.parent
+        metadata = directory / "metadata.yaml"
+        measurement = directory / "measurements.yaml"
+        evidence = [{"path": str(report.relative_to(spikes.parent)), "sha256": report_digest}, {"path": str(metadata.relative_to(spikes.parent)), "sha256": sha256(metadata)}]
+        if measurement.is_file():
+            evidence.append({"path": str(measurement.relative_to(spikes.parent)), "sha256": sha256(measurement)})
+        entries.append({"spikeId": short_id, "report": evidence[0], "metadata": evidence[1], "measurement": evidence[2] if len(evidence) == 3 else None, "fixtureEvidence": evidence, "replayCommand": f"tools/phase1-python tools/validate-research.py validate-spike .planning/{str(directory.relative_to(spikes.parent))} --complete", "applicability": "local-only; retain blocked result when declared browser or upstream baseline is unavailable", "freshnessThreshold": "recheck when any pinned input digest changes", "requiredOutcome": "validated complete spike or explicit blocked disposition"})
+    return {"schemaVersion": 1, "kind": "spike-replay-manifest", "entries": entries}
+
+
+def consolidation_audit(reports: list[tuple[str, Path, str]], fragments: list[tuple[Path, dict[str, Any]]], outcomes: list[tuple[str, str]], conflicts: list[str], manifest_digest: str) -> str:
+    fragment_by_spike = {item[1].get("spikeId"): (item[0], item[1]) for item in fragments}
+    lines = ["# Spike Consolidation Audit", "", "This deterministic audit records immutable inputs and serialized outcomes; it does not accept an ADR or promote a local observation into an upstream fact.", "", "## Immutable input snapshot", "", "| Spike | Report | SHA-256 | Fragment |", "| --- | --- | --- | --- |"]
+    for short_id, report, digest in reports:
+        directory = SPIKE_REPORTS[short_id]
+        fragment = fragment_by_spike.get(short_id + "-" + directory.removeprefix("spk-").upper().replace("-", "-"))
+        local_fragments = [(path, value) for path, value in fragments if value.get("spikeId", "").startswith(short_id + "-")]
+        fragment_text = ", ".join(f"{value.get('fragmentId', value.get('id'))} {sha256(path)}" for path, value in local_fragments) or "no-impact-fragment"
+        lines.append(f"| {short_id} | `{report.relative_to(report.parents[2])}` | `{digest}` | {fragment_text} |")
+    lines.extend(["", "## Serialized outcomes", "", "| Stable ID | Disposition |", "| --- | --- |"])
+    for stable_id, outcome in sorted(outcomes):
+        lines.append(f"| {stable_id} | {outcome} |")
+    for conflict in conflicts:
+        lines.append(f"| {conflict} | blocked-conflict; retain both immutable fragment payloads for human review |")
+    lines.extend(["", "## Transaction", "", "- Exclusive `fcntl.flock` lock acquired before immutable snapshot and staging.", "- Canonical targets: compatibility-matrix.yaml, drift-register.yaml, open-questions.yaml, security-egress-findings.md, replay-manifest.yaml.", "- Blocked and uncertain dispositions remain blocked; no report prose becomes an asserted upstream fact.", f"- Replay manifest SHA-256: `{manifest_digest}`.", "- Rerun digest is this audit SHA-256 after publication; identical validated inputs produce byte-identical staged outputs.", ""])
+    return "\n".join(lines)
+
+
+def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
+    try:
+        manifest = load_yaml(path)
+    except ValueError as exc:
+        return [f"ERROR RPL001: {exc}"]
+    entries = manifest.get("entries", [])
+    if not isinstance(entries, list) or len(entries) != len(SPIKE_REPORTS):
+        return ["ERROR RPL002: manifest must account for SPK-A through SPK-L"]
+    errors: list[str] = []
+    seen: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, dict) or entry.get("spikeId") in seen:
+            errors.append("ERROR RPL003: entries require unique stable spike IDs")
+            continue
+        seen.add(entry["spikeId"])
+        for evidence in entry.get("fixtureEvidence", []):
+            if not isinstance(evidence, dict):
+                errors.append("ERROR RPL004: invalid fixture evidence")
+                continue
+            target = planning_root / str(evidence.get("path", ""))
+            if not target.is_file() or evidence.get("sha256") != sha256(target):
+                errors.append("ERROR RPL005: replay manifest digest does not match local input")
+    if seen != set(SPIKE_REPORTS):
+        errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
+    return errors
+
+
+def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run: bool, timeout: float, input_order: str) -> list[str]:
+    planning_root = spikes.parent
+    lock, lock_error = acquire_consolidation_lock(research, timeout)
+    if lock_error:
+        return [lock_error]
+    try:
+        hold_seconds = float(os.environ.get("CONSOLIDATION_TEST_HOLD_LOCK_SECONDS", "0"))
+        if hold_seconds > 0:
+            time.sleep(hold_seconds)
+        fragments, errors, reports = discover_consolidation_inputs(spikes, planning_root, input_order)
+        if errors:
+            return errors
+        documents, outcomes, conflicts = merge_fragments(research, fragments)
+        if conflicts:
+            return [f"ERROR CONS003: incompatible stable fragment proposal requires {item}" for item in conflicts]
+        h_fragment = next((fragment for _, fragment in fragments if fragment.get("spikeId") == "SPK-H-BROWSER-EGRESS"), None)
+        if h_fragment is None:
+            return ["ERROR CONS004: SPK-H fragment is required before security/egress synthesis"]
+        h_fragment = dict(h_fragment)
+        h_fragment["_digest"] = sha256(next(path for path, fragment in fragments if fragment.get("spikeId") == "SPK-H-BROWSER-EGRESS"))
+        security = security_egress_synthesis(h_fragment)
+        manifest = replay_manifest(spikes, reports)
+        manifest_bytes = yaml_bytes(manifest)
+        audit_text = consolidation_audit(reports, fragments, outcomes, [], hashlib.sha256(manifest_bytes).hexdigest())
+        if dry_run:
+            audit.parent.mkdir(parents=True, exist_ok=True)
+            audit.write_text(audit_text, encoding="utf-8")
+            return []
+        stage = Path(tempfile.mkdtemp(prefix=".spike-consolidation-", dir=research))
+        targets = {
+            research / "compatibility-matrix.yaml": yaml_bytes(documents["compatibility-matrix.yaml"]),
+            research / "drift-register.yaml": yaml_bytes(documents["drift-register.yaml"]),
+            research / "open-questions.yaml": yaml_bytes(documents["open-questions.yaml"]),
+            research / "security-egress-findings.md": security.encode("utf-8"),
+            audit: audit_text.encode("utf-8"),
+            spikes / "replay-manifest.yaml": manifest_bytes,
+        }
+        staged: dict[Path, Path] = {}
+        for index, (target, content) in enumerate(targets.items()):
+            staged_path = stage / f"{index:02d}-{target.name}"
+            staged_path.write_bytes(content)
+            staged[target] = staged_path
+        staged_documents = {name: load_yaml(staged[research / name]) for name in ("compatibility-matrix.yaml", "drift-register.yaml", "open-questions.yaml")}
+        validation_errors = schema_errors(research / "schemas/compatibility.schema.json", staged_documents["compatibility-matrix.yaml"].get("compatibility", []))
+        validation_errors += schema_errors(research / "schemas/drift.schema.json", staged_documents["drift-register.yaml"].get("drift", []))
+        validation_errors += schema_errors(research / "schemas/open-question.schema.json", staged_documents["open-questions.yaml"].get("questions", []))
+        validation_errors += validate_replay_manifest(staged[spikes / "replay-manifest.yaml"], planning_root)
+        if validation_errors:
+            return validation_errors
+        if os.environ.get("CONSOLIDATION_INJECT_PRECOMMIT_FAILURE") == "1":
+            return ["CONSOLIDATION_INJECTED_FAILURE: staged transaction rolled back before publication"]
+        originals = {target: target.read_bytes() if target.exists() else None for target in targets}
+        try:
+            for target, staged_path in staged.items():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(staged_path, target)
+        except OSError as exc:
+            for target, original in originals.items():
+                if original is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    target.write_bytes(original)
+            return [f"ERROR CONS005: publication failed and prior canonical state was restored: {exc}"]
+        finally:
+            shutil.rmtree(stage, ignore_errors=True)
+        return []
+    finally:
+        release_consolidation_lock(lock)
 
 
 def main() -> int:
@@ -540,6 +929,16 @@ def main() -> int:
     fragment = command.add_parser("validate-impact-fragment")
     fragment.add_argument("path", type=Path)
     fragment.add_argument("--root", type=Path, required=True)
+    consolidate = command.add_parser("consolidate-spike-impacts")
+    consolidate.add_argument("--spikes", type=Path, required=True)
+    consolidate.add_argument("--research", type=Path, required=True)
+    consolidate.add_argument("--audit", type=Path, required=True)
+    consolidate.add_argument("--dry-run", action="store_true")
+    consolidate.add_argument("--lock-timeout", type=float, default=2.0)
+    consolidate.add_argument("--input-order", choices=("normal", "reverse"), default="normal")
+    replay = command.add_parser("replay-spikes")
+    replay.add_argument("--manifest", type=Path, required=True)
+    replay.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
     if args.command == "validate-spike":
@@ -558,6 +957,10 @@ def main() -> int:
         errors = validate_migration(args.path)[:100]
     elif args.command == "validate-impact-fragment":
         errors = validate_impact_fragment(args.path, args.root)[:100]
+    elif args.command == "consolidate-spike-impacts":
+        errors = consolidate_spike_impacts(args.spikes, args.research, args.audit, args.dry_run, args.lock_timeout, args.input_order)[:100]
+    elif args.command == "replay-spikes":
+        errors = validate_replay_manifest(args.manifest, args.manifest.parents[1])[:100] if args.check else []
     else:
         errors = []
     if args.command != "validate":
