@@ -2,5 +2,6 @@
 
 # Isolated Phase 1 research environments, package caches, and Python bytecode.
 .research/
+.planning/spikes/*/.experiment/
 __pycache__/
 

@@ -1,0 +1,100 @@
+schemaVersion: 1
+spikeId: SPK-F-COURSE-WORKBENCH
+classification: observed implementation behavior
+measuredAt: '2026-07-24T13:57:03Z'
+nonProduction: true
+fixture:
+  path: fixture.md
+  sha256: f7f490d6dcc198b2358682e906979b9c366eed24174e846eb42531c750fcb690
+replay:
+  command: CI=1 NO_COLOR=1 node .planning/spikes/spk-f-course-workbench/.experiment/run-spk-f.mjs
+  repetitionsRequired: 5
+  repetitionsCompleted: 5
+  deterministicInput: true
+  networkDuringMeasurement: false
+  browserDownload: false
+candidates:
+  - name: astro
+    version: 7.1.3
+    approval: approved
+    sourceDigest: 3a3392ee06a0857dca921ccd2abd89026947f988d473ddc36c0b9566ecf771c8
+    installedManifestSha256: bf3ff78baf8ec066d56d5ca414fa38ff2fecefa21c2aa69b5891bc03740aa41a
+    outcome: blocked-cross-browser-runtime
+    successfulReplays: 5
+    outputDigest: 6b09b1f03f901de0e32a6ab36fe2fbf8b92e760489c2298afc248ed8bd0da86b
+    outputFiles: [dist/index.html]
+    artifactBytes: [3710, 3710, 3710, 3710, 3710]
+    buildElapsedMilliseconds: [586.506, 595.418, 593.762, 618.394, 567.076]
+    buildElapsedRange: {min: 567.076, max: 618.394}
+    buildElapsedMedian: 593.762
+    buildMaxResidentSetKiB: [244092, 238564, 247724, 236904, 240084]
+    buildMemoryRange: {min: 236904, max: 247724}
+    buildMemoryMedian: 240084
+    commandOutputDigests:
+      - a7190b215c14fd9000c8a6f2d74a3a5c69f36640809323d6ae0c2a876c159f14
+      - 409afe11323cd967c6a00079834dc3ec4fca8a1719d7e0320a36fcc597e63837
+      - 2489256b43f32acc7df58b8326548e9e489e26dd8774f20207931692306fb4eb
+      - 3aef255960696cfeaf65b7acd5a5238df9bd2adbbf2fd573614d42bd892aa731
+      - 1571e241ba0d42155b89e5e0b88333d049319c6bc018854c60a69d33369502f5
+    criteria:
+      artifactShape: pass; one static HTML file and no host artifact
+      startupAndMemory: pass; five local static builds measured; browser startup remains blocked for Firefox
+      accessibility: pass-in-Chromium; keyboard controls, reduced-motion media query, transcript/state inspection, and reset were exercised
+      navigation: pass-in-Chromium; lesson controls and reset were exercised
+      runtimeCompatibility: blocked; Chromium passed and Firefox failed before attachment
+      capabilityDegradation: pass-in-Chromium; toggle entered present state and reset restored absent state
+      updateIdentity: pass; stable SPK-F identity marker is in output
+      buildComplexity: pass; one config, one page, and one command in an ignored guest-only tree
+      bundleAuthorityIsolation: pass; no iframe, host import, private composition claim, secret, or external write
+    blockers:
+      - Firefox 152.0.4 exited before approved Playwright 1.61.0 attached, matching the pre-existing SPK-C browser blocker.
+  - name: vitepress
+    version: 1.6.4
+    approval: approved
+    sourceDigest: 6f36953e01902c1eb6b85c5a9e8397e3b896870a5b3078b8a746432bee7490cd
+    installedManifestSha256: da038b347065c4543eb794a52f552140451974804800d99e20f6d6e624200ac4
+    outcome: blocked-cross-browser-runtime
+    successfulReplays: 5
+    outputDigest: ba7313c36bb704e99b349691bc72f9cad48c637cbc49877a315a97bc0eb2b42c
+    outputFiles:
+      - docs/.vitepress/dist/index.html
+      - docs/.vitepress/dist/assets/style.DrQ0iiwb.css
+      - docs/.vitepress/dist/assets/app.CGUfk4Mr.js
+    artifactBytes: [924910, 924910, 924910, 924910, 924910]
+    buildElapsedMilliseconds: [1519.536, 1508.372, 1484.563, 1492.743, 1511.64]
+    buildElapsedRange: {min: 1484.563, max: 1519.536}
+    buildElapsedMedian: 1508.372
+    buildMaxResidentSetKiB: [304388, 317944, 308288, 299528, 301592]
+    buildMemoryRange: {min: 299528, max: 317944}
+    buildMemoryMedian: 304388
+    commandOutputDigests:
+      - b96fca20e1d03da9d124a4a43a431c588dfbeff642a3d47e8ffc4a6ab7df4fa8
+      - 1054d78d58b1214b8f3ccaf763648f47816d380c46e7aaedf555bf3e8cec6e53
+      - deaff7a69964def47f7946ad2b12a994259febc4fe79e407a7178c8d251d4d74
+      - bc08b5f2aaf680f2b65a6c6512eceb5986778d02177fb113d238a7b11ab530b0
+      - 1054d78d58b1214b8f3ccaf763648f47816d380c46e7aaedf555bf3e8cec6e53
+    criteria:
+      artifactShape: pass; static HTML, assets, and fonts remain in the ignored disposable tree
+      startupAndMemory: pass; five local static builds measured; browser startup remains blocked for Firefox
+      accessibility: limited-pass-in-Chromium; keyboard controls and reduced-motion rendering were present, but this does not replace SPK-B's unresolved VitePress assertion failure
+      navigation: pass-in-Chromium; lesson navigation controls rendered
+      runtimeCompatibility: blocked; Chromium passed and Firefox failed before attachment
+      capabilityDegradation: static-equivalent-only; both present/absent transcript states rendered without claiming mediated authority
+      updateIdentity: pass; stable SPK-F identity marker is in output
+      buildComplexity: pass; one config, one page, and one command in an ignored guest-only tree
+      bundleAuthorityIsolation: pass; no iframe, host import, private composition claim, secret, or external write
+    blockers:
+      - Firefox 152.0.4 exited before approved Playwright 1.61.0 attached, matching the pre-existing SPK-C browser blocker.
+      - SPK-B's independent VitePress reduced-motion/static-equivalent assertion failure remains unresolved and is not superseded by this distinct fixture.
+browserObservation:
+  chromium:
+    status: passed
+    astro: identity, keyboard navigation, no private frame, reduced-motion setting, capability-present toggle, and reset-to-absent all passed
+    vitepress: identity, keyboard navigation controls, no private frame, reduced-motion setting, and static capability transcript all passed
+  firefox:
+    status: blocked
+    detail: Firefox 152.0.4 exited before Playwright attached; no retry or configuration change was attempted.
+repositoryBoundary:
+  productionMarkersCreatedOutsideSpike: []
+  retainedExperimentArtifacts: false
+  result: pass

@@ -2,7 +2,7 @@ schemaVersion: 1
 id: SPK-F-COURSE-WORKBENCH
 kind: spike
 nonProduction: true
-status: planned
+status: blocked
 hypothesis: >-
   A guest-only, disposable two-lesson Workbench/course simulation can be built
   with an approved static-content candidate while preserving a visible
@@ -31,6 +31,12 @@ commands:
   - Do not run a package install command until every exact candidate has a dated human approval in packageApproval.
   - After approval only, run the exact candidate install command from packageApproval and retain all generated output below .planning/spikes/spk-f-course-workbench/.experiment/.
 environmentManifest: environment.json
+environmentFacts:
+  manifest: environment.json
+  capturedAt: '2026-07-24T13:57:03Z'
+  runner: tools/phase1-python Python 3.14.3; Node v22.22.0; npm 10.9.4
+  browserExecution: Chromium passed bounded checks; Firefox 152.0.4 exited before Playwright attachment
+  network: package retrieval completed only through exact approved installs; no network during five-run measurement
 sourceBindings:
   - sourceId: SRC-POLICY-001
     relation: affects
@@ -69,10 +75,11 @@ uncertainty:
     establish a current upstream artifact contract, real host authority,
     sibling-napplet composition, package conformance, or acceptance of ADR-0007.
 recommendation: >-
-  Preserve only proposed ADR-0007 outcome vocabulary: GO-V1, GO-LATER,
-  WORKBENCH-ONLY, NO-GO, or a blocked-evidence result. The default hypothesis
-  remains GO-LATER; Task 1 does not select an outcome.
-disposition: retain-as-fixture
+  Blocked evidence result for ADR-0007: both exact packages produced the local
+  guest-only fixture under Chromium, but Firefox exited before attachment.
+  Select none of GO-V1, GO-LATER, WORKBENCH-ONLY, or NO-GO; public-site work
+  remains independent and the pre-existing VitePress accessibility evidence remains unresolved.
+disposition: blocked
 packageApproval:
   reviewedAt: '2026-07-24'
   reviewer: project operator via 01-14 blocking-human checkpoint
@@ -114,3 +121,61 @@ packageApproval:
       approval: approved
       isolationPath: .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4
       installCommand: npm --prefix .planning/spikes/spk-f-course-workbench/.experiment/vitepress-1.6.4 install --ignore-scripts --package-lock=false vitepress@1.6.4
+measurements:
+  - name: astro-build-elapsed-milliseconds
+    nondeterministic: true
+    rawValues: [586.506, 595.418, 593.762, 618.394, 567.076]
+    range: {min: 567.076, max: 618.394}
+    median: 593.762
+  - name: astro-build-max-resident-set-kib
+    nondeterministic: true
+    rawValues: [244092, 238564, 247724, 236904, 240084]
+    range: {min: 236904, max: 247724}
+    median: 240084
+  - name: vitepress-build-elapsed-milliseconds
+    nondeterministic: true
+    rawValues: [1519.536, 1508.372, 1484.563, 1492.743, 1511.64]
+    range: {min: 1484.563, max: 1519.536}
+    median: 1508.372
+  - name: vitepress-build-max-resident-set-kib
+    nondeterministic: true
+    rawValues: [304388, 317944, 308288, 299528, 301592]
+    range: {min: 299528, max: 317944}
+    median: 304388
+  - name: chromium-bounded-runtime-check-pass-count
+    nondeterministic: false
+    rawValues: [2, 2, 2, 2, 2]
+    range: {min: 2, max: 2}
+    median: 2
+  - name: firefox-runtime-attachment-pass-count
+    nondeterministic: false
+    rawValues: [0, 0, 0, 0, 0]
+    range: {min: 0, max: 0}
+    median: 0
+rawOutputDigests:
+  - path: fixture.md
+    sha256: f7f490d6dcc198b2358682e906979b9c366eed24174e846eb42531c750fcb690
+  - path: .experiment/evidence/measurements.json
+    sha256: 52fb05708d01d9464f3aa8c7d0a067b8c128e743dce5fd77c0634128bb72aa19
+  - path: .experiment/evidence/browser-observations.json
+    sha256: e3ec32253036c320679421f040cd47ec7198a6eb6b592c16f355194efcb3e7cd
+replayResult:
+  status: blocked
+  outputDigest: 52fb05708d01d9464f3aa8c7d0a067b8c128e743dce5fd77c0634128bb72aa19
+evidenceLinks:
+  - kind: source
+    path: environment.json
+    sha256: 88158eb8fa500670360c8b927adc796f76f6911bdc99a598dfb79f39ab99fa46
+  - kind: measurement
+    path: measurements.yaml
+    sha256: d235ca07db2a8cde1444277c5e1689e63086421d1cbc95e6a9cd15e2435f1ce6
+  - kind: report
+    path: report.md
+    sha256: 06db24dc5fdb3ab863a80f85c4c85648181c4589a923c99ee1ae3a15a8fd96ef
+blocked:
+  reason: >-
+    Direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0
+    attached, so the required two-browser runtime compatibility evidence is not
+    available; SPK-B's distinct VitePress accessibility assertion blocker also remains unresolved.
+  affectedRequirements: [EVID-04]
+  affectedAdrs: [ADR-0007]
