@@ -1,0 +1,114 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-24T14:15:54.205Z",
+  "phase": "01",
+  "phase_name": "research-and-truth-baseline",
+  "phase_dir": ".planning/phases/01-research-and-truth-baseline",
+  "plan": 24,
+  "task": 3,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": 1,
+      "name": "Execute all Phase 1 plans",
+      "status": "done",
+      "commit": "09ea7f2"
+    },
+    {
+      "id": 2,
+      "name": "Run code review and phase verification",
+      "status": "done",
+      "commit": "7fdfa5e",
+      "result": "gaps_found; 1/5 must-haves verified"
+    },
+    {
+      "id": 3,
+      "name": "Prepare urgent disposable static demo",
+      "status": "done",
+      "progress": "demo-out/site built; 7 tests, structural checks, manifest checks, and approved Chrome verification passed; server-agent handoff prepared"
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": 4,
+      "name": "Plan focused Phase 1 verification gap closure",
+      "status": "not_started",
+      "command": "/gsd-plan-phase 1 --gaps"
+    },
+    {
+      "id": 5,
+      "name": "Complete Nyquist validation and security review after fixes",
+      "status": "not_started"
+    },
+    {
+      "id": 6,
+      "name": "Re-run Phase 1 verification before any Phase 2 transition",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [
+    {
+      "description": "Phase verifier confirmed trust-critical evidence-tooling gaps; status is gaps_found with score 1/5.",
+      "type": "technical",
+      "workaround": "None. Create focused gap plans from 01-VERIFICATION.md and 01-REVIEW.md, execute them, then re-verify."
+    },
+    {
+      "description": "01-VALIDATION.md remains draft and nyquist_compliant=false.",
+      "type": "technical",
+      "workaround": "Complete integrity fixes first, then run /gsd-validate-phase 1 and update coverage truthfully."
+    },
+    {
+      "description": "Security enforcement is active but no 01-SECURITY.md exists; confirmed findings include arbitrary replay command execution, path escape, non-atomic publication, and dependency-integrity gaps.",
+      "type": "technical",
+      "workaround": "Run the security review after targeted fixes and before transition."
+    },
+    {
+      "description": "Firefox 152.0.4 still exits before approved Playwright 1.61.0 attaches.",
+      "type": "technical",
+      "workaround": "Keep Firefox/cross-browser claims blocked; do not install browsers or add launcher/profile workarounds."
+    }
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [
+    {
+      "action": "Separate server agent may deploy only /workspace/projects/learn-napplets/demo-out/site/ to learn-napplets.zignosis.org after reading demo-out/DEPLOYMENT-HANDOFF.md.",
+      "context": "This session prepared and verified the static bundle but performed no VPS, DNS, credential, or deployment action.",
+      "blocking": false
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Prioritize an isolated non-production static demo while preserving Phase 1 verification gaps.",
+      "rationale": "A demo was urgently needed, but canonical production scaffolding and Phase 2 transition remain unauthorized.",
+      "phase": "01"
+    },
+    {
+      "decision": "Use demo-out/site as the only deployable document root for learn-napplets.zignosis.org.",
+      "rationale": "Keeps the demo self-contained and prevents repository planning, tools, tests, reports, and source files from being published.",
+      "phase": "01"
+    },
+    {
+      "decision": "Keep all ADRs proposed and all protocol/runtime/package/browser/deployment claims explicitly bounded.",
+      "rationale": "Code review and verifier confirmed evidence-integrity gaps; publication cannot imply acceptance or production readiness.",
+      "phase": "01"
+    }
+  ],
+  "uncommitted_files": [
+    "demo-out/ (new disposable static demo bundle, intentionally untracked)",
+    ".claude/ (pre-existing untracked)",
+    ".planning/PROJECT.md (pre-existing untracked)",
+    ".planning/config.json (pre-existing untracked)",
+    ".planning/governance/ (pre-existing untracked)",
+    ".planning/graphs/ (pre-existing untracked)",
+    ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md (pre-existing untracked)",
+    ".planning/phases/01-research-and-truth-baseline/01-DISCUSSION-LOG.md (pre-existing untracked)",
+    ".planning/research/.cache/ (pre-existing untracked)",
+    ".planning/traceability/ bootstrap files (pre-existing untracked)",
+    ".planning/validation/required-artifacts.json (pre-existing untracked)",
+    "CLAUDE.md (pre-existing untracked)",
+    "graphify-out/ (pre-existing untracked)"
+  ],
+  "next_action": "First check whether the server agent deployed the demo and preserve any operational result outside canonical Phase 1 evidence. Then run /gsd-plan-phase 1 --gaps; do not transition to Phase 2 or authorize production work.",
+  "context_notes": "All 28 plans executed and human closeout was scoped to Phase 2 contract readiness only, but adversarial code review found 9 critical and 3 warning findings; verifier confirmed all 12 and recorded gaps_found. Requirements were reverted to pending. Disposable demo is complete at demo-out/site with manifest SHA-256 9ee30a62f6e7d61f5fdf13a81f9617dcc82ddcb46063a5a14520dfbc3627df77. Chrome 150.0.7871.124 passed local synthetic checks; Firefox not run due existing blocker. No server or external action occurred."
+}
