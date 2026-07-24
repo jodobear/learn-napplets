@@ -1,0 +1,89 @@
+schemaVersion: 1
+id: SPK-K-DEPLOYMENT
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  Deterministic local assembly can separately demonstrate a static public-site
+  artifact, a bounded lab-artifact placeholder, and an optional portable-output
+  placeholder without proving hosting, publication, a live teaching host, or a
+  production release. A deployment/publication claim remains blocked unless a
+  later human decision explicitly authorizes one named disposable sandbox write.
+variables:
+  independent:
+    - local static public-site artifact assembly
+    - local lab-artifact output assessment
+    - local optional portable-output assessment
+    - external-probe authorization state
+  dependent:
+    - artifact identity, file listing, byte count, and SHA-256 digest
+    - local preview, isolation, and rollback evidence
+    - eligible or blocked deployment/publication evidence state
+  controlled:
+    - disposable non-production outputs beneath .planning/spikes/spk-k-deployment/.experiment/
+    - no network target, account, credential, remote configuration, publication, or deployment command before explicit named-target authorization
+    - tools/phase1-python for every declared local validation or replay command
+    - static public-content fallback; no host, guest, package, or runtime claim
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-k-deployment --contract
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    relation: affects
+    plan: 01-19
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    plan: 01-19
+successThreshold: >-
+  Local assembly produces the three declared fixture artifacts only beneath the
+  SPK-K spike directory; records each artifact SHA-256, file list, byte count,
+  local preview result, isolation result, and local rollback result; and leaves
+  external deployment/publication explicitly not-authorized or locally scoped
+  blocked unless Task 2 records a named disposable-sandbox authorization.
+failureOutcome: >-
+  If a declared local artifact cannot be assembled, previewed locally, isolated,
+  rolled back, or digest-pinned, retain the failure and make no positive
+  deployment, publication, portability, hosting, or production-release claim.
+  Do not substitute a framework, deployment provider, package, account, or
+  remote target.
+blockedOutcome: >-
+  Without an explicit Task 2 authorization for a named disposable sandbox,
+  external deployment and publication are blocked. Record local artifact evidence
+  only, map the blocker to EVID-04, ADR-0003, and Phase 01/affected later delivery
+  work, and do not inspect credentials or execute a remote command.
+replay:
+  input: fixture.md
+  command: >-
+    Run only the declared local assembly, digest, local-preview, isolation, and
+    rollback commands through tools/phase1-python after Task 2. Replay uses the
+    fixture and writes all generated outputs beneath the SPK-K .experiment/
+    directory; no external command is eligible while authorization is not-authorized
+    or local-only.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+externalProbeAuthorization:
+  status: not-authorized
+  authorizationRule: >-
+    An external write is ineligible until the project operator selects
+    sandbox-probe in Task 2, explicitly names one target, and supplies all
+    required sandbox, cleanup, retention, owner, security, and release fields.
+  credentialHandling: >-
+    No account or credential is inspected, requested, or accessed for SPK-K
+    while status is not-authorized. If later authorized, credentials remain
+    outside version control and command output; the record may state only the
+    credential source class and redaction result.
+uncertainty:
+  state: material
+  reason: >-
+    Local artifact assembly can demonstrate only bounded local output behavior.
+    It cannot establish external hosting behavior, public reachability, provider
+    configuration, a real lab runtime, portable compatibility, publication, or
+    acceptance of ADR-0003.
+recommendation: >-
+  Use local artifact evidence as the safe default and preserve deployment/
+  publication as scoped blocked evidence until a separate named disposable-
+  sandbox authorization is recorded. ADR-0003 receives proposed evidence only;
+  neither a public site nor a production release is selected.
+disposition: retain-as-fixture
