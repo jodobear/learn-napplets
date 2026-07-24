@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-12-PLAN.md (SPK-D blocked verified-loader evidence)
-last_updated: "2026-07-24T01:57:42.086Z"
+stopped_at: Completed 01-13-PLAN.md (SPK-E shared-content parity evidence passed)
+last_updated: "2026-07-24T02:11:47.892Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 15 of 28
+Plan: 16 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [█████░░░░░] 50%
+Progress: [█████░░░░░] 54%
 
 ## Performance Metrics
 
@@ -71,6 +71,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01 P10 | 748s | 3 tasks | 4 files |
 | Phase 01 P11 | 888s | 2 tasks | 11 files |
 | Phase 01 P12 | 880s | 2 tasks | 7 files |
+| Phase 01 P13 | 634s | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-C source bindings remain blocked policy inputs; browser fixture observations do not establish upstream protocol behavior.
 - [Phase ?]: SPK-D records verified-loader feasibility as blocked until current immutable manifest/identity sources and reviewed verifier provenance exist; no cryptography is hand-rolled.
 - [Phase ?]: Exact-byte and one-byte mutation replay is local fixture-integrity evidence only; it does not resolve protocol behavior or the Plan 01-11 Firefox blocker.
+- [Phase ?]: SPK-E keeps one bounded fixture as the content-fact source and validates six representation outputs for exact provenance/status parity.
+- [Phase ?]: SPK-E preserves exact canonical vocabulary values where canonical records provide no separate terminology, maturity, uncertainty, or status IDs.
+- [Phase ?]: SPK-E retains generated outputs only in /tmp and commits digest-based replay evidence as proposed ADR-0004 input.
 
 ### Pending Todos
 
@@ -133,6 +137,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T01:57:42.078Z
-Stopped at: Completed 01-12-PLAN.md (SPK-D blocked verified-loader evidence)
+Last session: 2026-07-24T02:11:47.885Z
+Stopped at: Completed 01-13-PLAN.md (SPK-E shared-content parity evidence passed)
 Resume file: None
