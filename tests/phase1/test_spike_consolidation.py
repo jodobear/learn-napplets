@@ -98,6 +98,20 @@ class SpikeConsolidationTests(unittest.TestCase):
     def canonical_bytes(self, planning: Path) -> dict[str, bytes]:
         return {name: (planning / "research" / name).read_bytes() for name in CANONICAL_TARGETS}
 
+    def remove_consolidation_history(self, planning: Path) -> None:
+        """Make a pre-publication fixture without discarding unrelated history."""
+        for filename, key in (("drift-register.yaml", "drift"), ("open-questions.yaml", "questions")):
+            path = planning / "research" / filename
+            document = yaml.safe_load(path.read_text(encoding="utf-8"))
+            for record in document.get(key, []):
+                if isinstance(record, dict) and isinstance(record.get("history"), list):
+                    record["history"] = [
+                        item
+                        for item in record["history"]
+                        if not (isinstance(item, dict) and "Consolidated SPK-" in str(item.get("reason", "")))
+                    ]
+            path.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
+
     def test_fragment_resolves_source_and_measurement_digests(self) -> None:
         fragment_path, planning, temp = self.write_fixture_root(copy.deepcopy(FRAGMENT))
         with temp:
@@ -176,20 +190,31 @@ class SpikeConsolidationTests(unittest.TestCase):
     def test_conflicting_stable_id_is_blocked_without_replacing_canonical_state(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             planning = self.copy_planning(Path(temp))
-            before = self.canonical_bytes(planning)
             source = planning / "spikes" / "spk-c-boundary-harness" / "impact-fragment.yaml"
+            before = {name: (planning / "research" / name).read_bytes() for name in ("compatibility-matrix.yaml", "drift-register.yaml")}
+            source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
             conflict = yaml.safe_load(source.read_text(encoding="utf-8"))
             conflict["uncertainty"]["reason"] = "Incompatible immutable evidence proposal."
-            source.with_name("impact-fragment-conflict.yaml").write_text(yaml.safe_dump(conflict, sort_keys=False), encoding="utf-8")
+            conflict_path = source.with_name("impact-fragment-conflict.yaml")
+            conflict_path.write_text(yaml.safe_dump(conflict, sort_keys=False), encoding="utf-8")
+            conflict_digest = hashlib.sha256(conflict_path.read_bytes()).hexdigest()
             audit = planning / "research" / "reports" / "audit.md"
             result = self.run_consolidation(planning, audit)
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("OQ-CONSOLIDATION-SPK-C-IMPACT-001", result.stdout)
-            self.assertEqual(before, self.canonical_bytes(planning))
+            conflict_id = "OQ-CONSOLIDATION-SPK-C-IMPACT-001"
+            self.assertIn(conflict_id, result.stdout)
+            self.assertEqual(before, {name: (planning / "research" / name).read_bytes() for name in before})
+            questions = yaml.safe_load((planning / "research" / "open-questions.yaml").read_text(encoding="utf-8"))["questions"]
+            conflict_question = next((item for item in questions if item["id"] == conflict_id), None)
+            self.assertIsNotNone(conflict_question)
+            self.assertIn(source_digest, str(conflict_question["history"]))
+            self.assertIn(conflict_digest, str(conflict_question["history"]))
+            self.assertIn(conflict_id, audit.read_text(encoding="utf-8"))
 
     def test_contention_and_injected_precommit_failure_preserve_byte_identical_state(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             planning = self.copy_planning(Path(temp))
+            self.remove_consolidation_history(planning)
             audit = planning / "research" / "reports" / "audit.md"
             before = self.canonical_bytes(planning)
             env = os.environ | {"CONSOLIDATION_TEST_HOLD_LOCK_SECONDS": "0.4"}
