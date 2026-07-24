@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 10
+open_count: 12
 waived_count: 0
 fixed_count: 1
-total_count: 11
-last_updated: 2026-07-24T10:36:13.437Z
+total_count: 13
+last_updated: 2026-07-24T12:20:20.176Z
 ---
 
 # Broken Windows Ledger
@@ -26,6 +26,8 @@ last_updated: 2026-07-24T10:36:13.437Z
 | 9 | 01 | deviation | .planning/spikes/spk-h-browser-egress/fixture.html |  | Opaque-origin worker probe was bounded to a blob worker and documented as non-loader evidence. | open |  | 2026-07-24T10:36:13.304Z |  |
 | 10 | 01 | deviation | .planning/spikes/spk-h-browser-egress/runner.py |  | Referrer-mode receipt grouping initially produced a false failed matrix result. | open |  | 2026-07-24T10:36:13.369Z |  |
 | 11 | 01 | deviation | .planning/research/schemas/spike-impact-fragment.schema.json |  | SPK-H needed a typed security-egress finding proposal schema field for required approval metadata. | open |  | 2026-07-24T10:36:13.437Z |  |
+| 12 | 01 | deviation | tests/phase1/test_lesson_evidence.py |  | Compatibility scope fallback corrected the canonical-evidence validator. | open |  | 2026-07-24T12:20:20.107Z |  |
+| 13 | 01 | deviation | .planning/research/lesson-packets |  | Existing lesson packets received required canonical uncertainty entries for full-inventory validation. | open |  | 2026-07-24T12:20:20.176Z |  |
 
 ````json
 [
@@ -159,6 +161,30 @@ last_updated: 2026-07-24T10:36:13.437Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-07-24T10:36:13.437Z",
+    "resolved_at": null
+  },
+  {
+    "id": 12,
+    "kind": "deviation",
+    "phase": "01",
+    "file": "tests/phase1/test_lesson_evidence.py",
+    "line": null,
+    "description": "Compatibility scope fallback corrected the canonical-evidence validator.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T12:20:20.107Z",
+    "resolved_at": null
+  },
+  {
+    "id": 13,
+    "kind": "deviation",
+    "phase": "01",
+    "file": ".planning/research/lesson-packets",
+    "line": null,
+    "description": "Existing lesson packets received required canonical uncertainty entries for full-inventory validation.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T12:20:20.176Z",
     "resolved_at": null
   }
 ]
