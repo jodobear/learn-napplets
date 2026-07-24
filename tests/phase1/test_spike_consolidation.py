@@ -1,12 +1,15 @@
-"""Immutable spike impact-fragment validation tests."""
+"""Immutable spike impact validation and consolidation transaction tests."""
 
 from __future__ import annotations
 
 import copy
 import hashlib
+import os
+import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -15,6 +18,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = ROOT / "tools" / "validate-research.py"
+PLANNING = ROOT / ".planning"
 SHA = "a" * 64
 FRAGMENT = {
     "schemaVersion": 1,
@@ -30,11 +34,37 @@ FRAGMENT = {
     "uncertainty": {"state": "limited", "reason": "Fixture-only result."},
     "proposedImpacts": [{"type": "adr", "id": "ADR-0005", "rationale": "Requires human review."}],
 }
+CANONICAL_TARGETS = (
+    "compatibility-matrix.yaml",
+    "drift-register.yaml",
+    "open-questions.yaml",
+)
 
 
 class SpikeConsolidationTests(unittest.TestCase):
     def run_fragment(self, fragment: Path, planning_root: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run([sys.executable, str(VALIDATOR), "validate-impact-fragment", str(fragment), "--root", str(planning_root)], cwd=ROOT, text=True, capture_output=True, check=False)
+
+    def run_consolidation(
+        self,
+        planning_root: Path,
+        audit: Path,
+        *extra: str,
+        env: dict[str, str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        command = [
+            sys.executable,
+            str(VALIDATOR),
+            "consolidate-spike-impacts",
+            "--spikes",
+            str(planning_root / "spikes"),
+            "--research",
+            str(planning_root / "research"),
+            "--audit",
+            str(audit),
+            *extra,
+        ]
+        return subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False, env=env)
 
     def write_fixture_root(self, fragment: dict) -> tuple[Path, Path, tempfile.TemporaryDirectory[str]]:
         temp = tempfile.TemporaryDirectory()
@@ -59,6 +89,14 @@ class SpikeConsolidationTests(unittest.TestCase):
         fragment_path = planning / "spikes" / "spk-test-001" / "impact.yaml"
         fragment_path.write_text(yaml.safe_dump(fragment), encoding="utf-8")
         return fragment_path, planning, temp
+
+    def copy_planning(self, directory: Path) -> Path:
+        planning = directory / ".planning"
+        shutil.copytree(PLANNING, planning, ignore=shutil.ignore_patterns(".cache", "validation.md", "replay-manifest.yaml", "security-egress-findings.md", "spike-consolidation.md"))
+        return planning
+
+    def canonical_bytes(self, planning: Path) -> dict[str, bytes]:
+        return {name: (planning / "research" / name).read_bytes() for name in CANONICAL_TARGETS}
 
     def test_fragment_resolves_source_and_measurement_digests(self) -> None:
         fragment_path, planning, temp = self.write_fixture_root(copy.deepcopy(FRAGMENT))
@@ -85,7 +123,7 @@ class SpikeConsolidationTests(unittest.TestCase):
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn("ERROR IMP", result.stdout)
 
-    def test_spk_h_fragment_requires_security_egress_extension(self) -> None:
+    def test_spk_h_fragment_requires_complete_transitive_provenance(self) -> None:
         fragment = copy.deepcopy(FRAGMENT)
         fragment.update({"id": "SPK-IMPACT-H-001", "spikeId": "SPK-H-001", "metadataPath": "spikes/spk-h-001/metadata.yaml", "reportPath": "spikes/spk-h-001/report.md"})
         with tempfile.TemporaryDirectory() as temp:
@@ -94,6 +132,88 @@ class SpikeConsolidationTests(unittest.TestCase):
             result = self.run_fragment(path, Path(temp))
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("securityEgress", result.stdout)
+
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            fragment_path = planning / "spikes" / "spk-h-browser-egress" / "impact-fragment.yaml"
+            fragment = yaml.safe_load(fragment_path.read_text(encoding="utf-8"))
+            fragment["sourceIds"] = ["SRC-POLICY-001"]
+            fragment_path.write_text(yaml.safe_dump(fragment, sort_keys=False), encoding="utf-8")
+            result = self.run_fragment(fragment_path, planning)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("ERROR IMP", result.stdout)
+
+    def test_dry_run_accounts_for_all_spikes_and_preserves_canonical_targets(self) -> None:
+        before = self.canonical_bytes(PLANNING)
+        with tempfile.TemporaryDirectory() as temp:
+            audit = Path(temp) / "audit.md"
+            result = self.run_consolidation(PLANNING, audit, "--dry-run")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue(audit.is_file())
+            text = audit.read_text(encoding="utf-8")
+            for spike_id in "ABCDEFGHIJKL":
+                self.assertIn(f"SPK-{spike_id}", text)
+            self.assertIn("SPK-C-IMPACT-001", text)
+            self.assertIn("no-impact-fragment", text)
+        self.assertEqual(before, self.canonical_bytes(PLANNING))
+
+    def test_duplicate_fragment_is_a_single_no_op_and_order_is_stable(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            source = planning / "spikes" / "spk-c-boundary-harness" / "impact-fragment.yaml"
+            duplicate = source.with_name("impact-fragment-duplicate.yaml")
+            duplicate.write_bytes(source.read_bytes())
+            audit = planning / "research" / "reports" / "audit.md"
+            result = self.run_consolidation(planning, audit, "--dry-run")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            text = audit.read_text(encoding="utf-8")
+            self.assertEqual(1, text.count("SPK-C-IMPACT-001 | no-op-duplicate"))
+            reverse_audit = planning / "research" / "reports" / "reverse-audit.md"
+            reverse = self.run_consolidation(planning, reverse_audit, "--dry-run", "--input-order", "reverse")
+            self.assertEqual(reverse.returncode, 0, reverse.stdout + reverse.stderr)
+            self.assertEqual(audit.read_bytes(), reverse_audit.read_bytes())
+
+    def test_conflicting_stable_id_is_blocked_without_replacing_canonical_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            before = self.canonical_bytes(planning)
+            source = planning / "spikes" / "spk-c-boundary-harness" / "impact-fragment.yaml"
+            conflict = yaml.safe_load(source.read_text(encoding="utf-8"))
+            conflict["uncertainty"]["reason"] = "Incompatible immutable evidence proposal."
+            source.with_name("impact-fragment-conflict.yaml").write_text(yaml.safe_dump(conflict, sort_keys=False), encoding="utf-8")
+            audit = planning / "research" / "reports" / "audit.md"
+            result = self.run_consolidation(planning, audit)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("OQ-CONSOLIDATION-SPK-C-IMPACT-001", result.stdout)
+            self.assertEqual(before, self.canonical_bytes(planning))
+
+    def test_contention_and_injected_precommit_failure_preserve_byte_identical_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            audit = planning / "research" / "reports" / "audit.md"
+            before = self.canonical_bytes(planning)
+            env = os.environ | {"CONSOLIDATION_TEST_HOLD_LOCK_SECONDS": "0.4"}
+            winner = subprocess.Popen(
+                [sys.executable, str(VALIDATOR), "consolidate-spike-impacts", "--spikes", str(planning / "spikes"), "--research", str(planning / "research"), "--audit", str(audit)],
+                cwd=ROOT,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=env,
+            )
+            time.sleep(0.1)
+            loser = self.run_consolidation(planning, audit, "--lock-timeout", "0.05")
+            winner_stdout, winner_stderr = winner.communicate(timeout=10)
+            self.assertEqual(winner.returncode, 0, winner_stdout + winner_stderr)
+            self.assertNotEqual(loser.returncode, 0)
+            self.assertIn("CONSOLIDATION_LOCK_CONFLICT", loser.stdout)
+            after_success = self.canonical_bytes(planning)
+            failing_env = os.environ | {"CONSOLIDATION_INJECT_PRECOMMIT_FAILURE": "1"}
+            failed = self.run_consolidation(planning, audit, env=failing_env)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertIn("CONSOLIDATION_INJECTED_FAILURE", failed.stdout)
+            self.assertEqual(after_success, self.canonical_bytes(planning))
+            self.assertNotEqual(before, after_success)
 
 
 if __name__ == "__main__":
