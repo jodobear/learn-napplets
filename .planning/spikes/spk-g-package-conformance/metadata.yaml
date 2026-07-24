@@ -1,0 +1,130 @@
+schemaVersion: 1
+id: SPK-G-PACKAGE-CONFORMANCE
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  A released public package export can be measured only when its exact package
+  version, public export locator, registry/project provenance, license,
+  integrity, implemented-source baseline, and CLM relation all resolve to
+  complete immutable records. The current catalog supplies no such candidate,
+  so SPK-G must retain a blocked consumption contract rather than import or
+  substitute an unpublished or private surface.
+variables:
+  independent:
+    - cataloged released public package/export candidate eligibility
+    - human approval status for an exact package/version and declared command
+  dependent:
+    - eligible public package count
+    - public export import/compile/conformance observations
+    - consume, wrap, avoid, or blocked disposition
+  controlled:
+    - disposable SPK-G-local ignored experiment path
+    - public package entry points only; no deep or monorepo paths
+    - immutable SRC/CLM bindings and recorded source-baseline comparison
+    - tools/phase1-python contract validation and no package installation before review
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance --contract
+  - >-
+    Blocked: no exact package installation command exists because no cataloged
+    public package release/version/export is tied through CLM-CMP-PACKAGE-001
+    to a complete immutable public-release and implemented-source SRC baseline.
+  - >-
+    Blocked: no exact import, compile, or conformance command exists until a
+    reviewer approves a qualifying exact public package/version in the isolated
+    SPK-G experiment directory.
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-001
+    claimId: CLM-CMP-PACKAGE-001
+    primitive: released public package and export eligibility
+    relation: affects
+    plan: 01-15
+    expectedClassification: blocked
+    immutable:
+      commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+      path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+      locator: Source and claim record model
+      contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: planning-archive
+      evidenceClass: project-policy
+      maturity: accepted
+  - sourceId: SRC-POLICY-002
+    claimId: CLM-CMP-PACKAGE-001
+    primitive: supply-chain approval and source-baseline gate
+    relation: supports
+    plan: 01-15
+    expectedClassification: blocked
+    immutable:
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Required fields and verification rule
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: project-policy
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  After dated human approval, every selected exact public package/version has a
+  cataloged official registry and project provenance, license, release
+  integrity, documented public export locator, browser-support claim, and a
+  CLM relation to distinct complete immutable released-package and
+  implemented-source SRC records; its declared isolated import/compile/
+  conformance replay then records five reproducible observations.
+failureOutcome: >-
+  If an approved, fully qualified package import, compile, or public
+  conformance command produces an inconsistent result, retain the exact command
+  and error as implementation evidence and make no protocol-authority claim.
+blockedOutcome: >-
+  If any required public release, export locator, provenance, license,
+  integrity, source baseline, CLM relation, or human approval is absent, make
+  no package-manager call or substitute. Retain the catalog discovery pointer,
+  scope, fallback, and blocked compatibility/ADR impacts.
+replay:
+  input: fixture.md
+  command: >-
+    Validate this contract through tools/phase1-python and inspect the fixture
+    rules. If and only if a later exact candidate is cataloged and human-
+    approved, run its recorded isolated install and public-export conformance
+    command; otherwise replay outcome remains blocked without execution.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: material
+  reason: >-
+    CAND-NAPPLET-WEB-PACKAGE and CAND-NAPPLET-WEB-REPOSITORY remain discovery
+    pointers. The registry contains only project-policy/archive SRC records,
+    not an official released-package record or an implemented public-export
+    source revision. Browser support, release/current-work drift, and public
+    conformance surface are therefore unknown.
+recommendation: >-
+  Keep package consumption blocked. Do not select, install, compile against,
+  wrap, or import napplet/web until a public exact release and public export
+  locator are cataloged with official provenance and distinct immutable source
+  baselines, then receive a dated per-candidate human approval.
+disposition: blocked
+packageApproval:
+  reviewedAt: null
+  reviewer: null
+  status: pending-human-review
+  candidates:
+    - name: CAND-NAPPLET-WEB-PACKAGE
+      version: unavailable — no released package version is cataloged
+      registryUrl: unavailable — no official registry release URL is cataloged
+      projectUrl: unavailable — no official project release URL is cataloged
+      license: unavailable — no released-package license evidence is cataloged
+      integrity: unavailable — no release tarball integrity is cataloged
+      hashSourceDecision: >-
+        Blocked by CLM-CMP-PACKAGE-001: the public package is an unpinned
+        discovery pointer and has no complete immutable public-release or
+        implemented-source SRC baseline. This pending approval record is not a
+        human approval and makes the entry ineligible for installation.
+      approval: pending
+      isolationPath: .planning/spikes/spk-g-package-conformance/.experiment/public-release-if-qualified
+      installCommand: >-
+        BLOCKED — no package-manager command is authorized because no exact
+        public package name/version is cataloged. Do not replace this with a
+        guessed, alternative, deep, private, workspace, or monorepo import.
