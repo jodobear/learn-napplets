@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-18-PLAN.md (SPK-J least-authority editing evidence recorded; Firefox block preserved)
-last_updated: "2026-07-24T09:49:41.100Z"
+stopped_at: Completed 01-19-PLAN.md (SPK-K local-only deployment evidence recorded; external probe blocked)
+last_updated: "2026-07-24T10:05:04.888Z"
 last_activity: 2026-07-24
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 28
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 20 of 28
+Plan: 21 of 28
 Status: Ready to execute
 Last activity: 2026-07-24 — Phase 01 execution started
 
-Progress: [███████░░░] 68%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Progress: [███████░░░] 68%
 | Phase 01-research-and-truth-baseline P15 | 710s | 3 tasks | 7 files |
 | Phase 01 P17 | 1201s | 2 tasks | 7 files |
 | Phase 01-research-and-truth-baseline P18 | 1224s | 3 tasks | 8 files |
+| Phase 01 P19 | 13m | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -129,6 +130,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: SPK-I remains blocked for cross-browser recommendation because direct-installed Firefox exited before Playwright attached; no launcher or configuration workaround was used.
 - [Phase ?]: SPK-J proposes fixed tested variants as the default and controlled native textarea only for the declared bounded edit; no arbitrary learner code executes in trusted context.
 - [Phase ?]: SPK-J does not select CodeMirror despite bounded Chromium success; CodeJar and cross-browser ADR-0009 evidence remain blocked.
+- [Phase ?]: SPK-K Task 2 selected local-only on 2026-07-24; external deployment/publication remains scoped blocked evidence.
+- [Phase ?]: SPK-K local replay uses digest-pinned static inspection and rollback with no listener, external command, target, account, or credential access.
 
 ### Pending Todos
 
@@ -152,6 +155,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T09:49:41.093Z
-Stopped at: Completed 01-18-PLAN.md (SPK-J least-authority editing evidence recorded; Firefox block preserved)
+Last session: 2026-07-24T10:05:04.879Z
+Stopped at: Completed 01-19-PLAN.md (SPK-K local-only deployment evidence recorded; external probe blocked)
 Resume file: None

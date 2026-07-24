@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 4
+open_count: 6
 waived_count: 0
 fixed_count: 1
-total_count: 5
-last_updated: 2026-07-24T01:58:26.678Z
+total_count: 7
+last_updated: 2026-07-24T10:04:33.290Z
 ---
 
 # Broken Windows Ledger
@@ -20,6 +20,8 @@ last_updated: 2026-07-24T01:58:26.678Z
 | 3 | 01 | unrun-verify | .planning/spikes/spk-c-boundary-harness/runner.py |  | Firefox 152.0.4 could not launch under approved Playwright 1.61.0; SPK-C cross-browser replay remains blocked | open |  | 2026-07-24T01:36:37.590Z |  |
 | 4 | 01 | deviation | .planning/spikes/spk-d-verified-loader/measurements.yaml |  | Recorded five actual fixture-integrity replays before retaining five raw measurement values. | open |  | 2026-07-24T01:58:26.617Z |  |
 | 5 | 01 | deviation | .planning/spikes/spk-d-verified-loader/metadata.yaml |  | Added the validator-required --root .planning argument to the SPK-D impact-fragment command. | open |  | 2026-07-24T01:58:26.678Z |  |
+| 6 | 01 | stub | .planning/spikes/spk-k-deployment/fixture.md | 33 | Intentional lab-artifact placeholder prevents a teaching-host deployment claim pending evidence and ADR approval. | open |  | 2026-07-24T10:04:33.212Z |  |
+| 7 | 01 | stub | .planning/spikes/spk-k-deployment/fixture.md | 36 | Intentional portable-output placeholder prevents a portability claim while ADR-0007 remains unresolved. | open |  | 2026-07-24T10:04:33.290Z |  |
 
 ````json
 [
@@ -81,6 +83,30 @@ last_updated: 2026-07-24T01:58:26.678Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-07-24T01:58:26.678Z",
+    "resolved_at": null
+  },
+  {
+    "id": 6,
+    "kind": "stub",
+    "phase": "01",
+    "file": ".planning/spikes/spk-k-deployment/fixture.md",
+    "line": 33,
+    "description": "Intentional lab-artifact placeholder prevents a teaching-host deployment claim pending evidence and ADR approval.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:04:33.212Z",
+    "resolved_at": null
+  },
+  {
+    "id": 7,
+    "kind": "stub",
+    "phase": "01",
+    "file": ".planning/spikes/spk-k-deployment/fixture.md",
+    "line": 36,
+    "description": "Intentional portable-output placeholder prevents a portability claim while ADR-0007 remains unresolved.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-24T10:04:33.290Z",
     "resolved_at": null
   }
 ]
