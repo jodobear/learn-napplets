@@ -7,10 +7,10 @@
 
 ### Research and Evidence Integrity
 
-- [x] **EVID-01**: Maintainers can trace every blocking protocol-sensitive claim to an immutable upstream revision, path/locator, digest, retrieval date, authority tier, evidence class, and maturity label.
-- [x] **EVID-02**: Maintainers can see conflicts, uncertainty, known drift, affected requirements/phases, and refresh triggers for each volatile claim.
-- [x] **EVID-03**: Maintainers can review compatibility across selected protocol sources, packages, runtimes, examples, and current work before architecture is accepted.
-- [x] **EVID-04**: Decision makers can review measurable mandatory-spike evidence before accepting repository, framework, deployment, content, teaching-host, fixture, or portable-target recommendations.
+- [ ] **EVID-01**: Maintainers can trace every blocking protocol-sensitive claim to an immutable upstream revision, path/locator, digest, retrieval date, authority tier, evidence class, and maturity label.
+- [ ] **EVID-02**: Maintainers can see conflicts, uncertainty, known drift, affected requirements/phases, and refresh triggers for each volatile claim.
+- [ ] **EVID-03**: Maintainers can review compatibility across selected protocol sources, packages, runtimes, examples, and current work before architecture is accepted.
+- [ ] **EVID-04**: Decision makers can review measurable mandatory-spike evidence before accepting repository, framework, deployment, content, teaching-host, fixture, or portable-target recommendations.
 
 ### Learning and Content Contract
 
@@ -44,9 +44,9 @@
 
 - [ ] **KNOW-01**: Human pages and machine-readable artifacts derive essential definitions, ownership, relationships, status, and source IDs from common structured content.
 - [ ] **KNOW-02**: An LLM can answer the fixed evaluation set using generated artifacts and return relevant concept/source IDs.
-- [x] **OPER-01**: Maintainers can detect upstream source/package/runtime drift, map impact, and create review work without silently rewriting accepted claims.
+- [ ] **OPER-01**: Maintainers can detect upstream source/package/runtime drift, map impact, and create review work without silently rewriting accepted claims.
 - [ ] **OPER-02**: Release is blocked when required browser, performance, security, accessibility, content, artifact, source-freshness, learning, or verification gates fail.
-- [x] **OPER-03**: Every phase has explicit owner/approver roles, measurable exit evidence, GSD verification status, and traceability to requirements.
+- [ ] **OPER-03**: Every phase has explicit owner/approver roles, measurable exit evidence, GSD verification status, and traceability to requirements.
 
 ## v2 Requirements
 
@@ -72,10 +72,10 @@ Each v1 requirement has exactly one owning phase. Supporting work in other phase
 
 | Requirement | Owning Phase | Status |
 |-------------|--------------|--------|
-| EVID-01 | Phase 1 | Complete |
-| EVID-02 | Phase 1 | Complete |
-| EVID-03 | Phase 1 | Complete |
-| EVID-04 | Phase 1 | Complete |
+| EVID-01 | Phase 1 | Gaps Found |
+| EVID-02 | Phase 1 | Gaps Found |
+| EVID-03 | Phase 1 | Gaps Found |
+| EVID-04 | Phase 1 | Gaps Found |
 | LEARN-01 | Phase 2 | Pending |
 | LEARN-02 | Phase 6 | Pending |
 | LEARN-03 | Phase 5 | Pending |
@@ -94,9 +94,9 @@ Each v1 requirement has exactly one owning phase. Supporting work in other phase
 | LABS-03 | Phase 7 | Pending |
 | KNOW-01 | Phase 10 | Pending |
 | KNOW-02 | Phase 10 | Pending |
-| OPER-01 | Phase 1 | Complete |
+| OPER-01 | Phase 1 | Gaps Found |
 | OPER-02 | Phase 11 | Pending |
-| OPER-03 | Phase 1 | Complete |
+| OPER-03 | Phase 1 | Gaps Found |
 
 ### Cross-Phase Support (Non-Owning)
 
