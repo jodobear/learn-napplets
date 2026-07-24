@@ -62,8 +62,9 @@ successThreshold: >-
   persistence, and an unchanged trusted-context sentinel. A package editor can
   be measured only if every exact package version, registry/repository source,
   public export locator, license, integrity, immutable source revision,
-  maintenance/bundle evidence, dependency closure, and dated human decision is
-  recorded before installation.
+  maintenance/bundle evidence, and dated human decision is recorded before
+  installation. The normal dependency-closure review is required unless the
+  dated decision explicitly accepts a narrowly scoped non-production exception.
 failureOutcome: >-
   If a local fixed or controlled candidate loses keyboard, visible-focus,
   status-announcement, static-equivalence, reset/replay, containment, or
@@ -72,11 +73,12 @@ failureOutcome: >-
   input, adding a production component, or substituting an unreviewed editor.
 blockedOutcome: >-
   If a candidate lacks a complete exact package record, immutable source/API
-  evidence, dependency closure, or Task 2 dated human approval, it remains
-  blocked and no install/import/measurement occurs. If an approved browser
-  cannot launch through the approved direct-installed route, record that exact
-  browser scope as blocked without downloading a browser or changing flags,
-  profiles, or preferences.
+  evidence, or Task 2 dated human approval, it remains blocked and no
+  install/import/measurement occurs. An incomplete dependency closure also
+  remains blocked unless the human decision explicitly accepts a scoped
+  non-production exception. If an approved browser cannot launch through the
+  approved direct-installed route, record that exact browser scope as blocked
+  without downloading a browser or changing flags, profiles, or preferences.
 replay:
   input: fixture.html
   command: >-
@@ -95,21 +97,21 @@ uncertainty:
     This planned fixture can establish only local browser behavior for synthetic
     text. It cannot establish learner comprehension, screen-reader speech,
     production bundle behavior, upstream protocol behavior, or a selected
-    editor. The CodeMirror direct records are source-complete but have no human
-    approval or complete resolved dependency lock; CodeJar has a source-version
-    mismatch and is not eligible.
+    editor. CodeMirror is approved only for this isolated non-production
+    experiment under a dated human exception to complete resolved dependency-lock
+    review; CodeJar has a source-version mismatch and remains ineligible.
 recommendation: >-
   Start comparison with fixed tested variants and a controlled textarea. Retain
-  the native lightweight shell as an inspection-only candidate. Keep CodeJar
-  blocked for its source-version mismatch and keep the CodeMirror direct package
-  set blocked pending dependency-closure evidence and a dated Task 2 human
-  supply-chain decision. ADR-0009 receives proposed evidence only; no editor is
-  selected or installed by Task 1.
+  the native lightweight shell as an inspection-only candidate. CodeJar remains
+  blocked for its source-version mismatch. The exact CodeMirror direct package
+  set is approved only for the SPK-J-local non-production experiment under the
+  dated human exception to dependency-lock review. ADR-0009 receives proposed
+  evidence only; no production editor is selected.
 disposition: retain-as-fixture
 packageApproval:
-  reviewedAt: null
-  reviewer: null
-  status: pending-human-review
+  reviewedAt: '2026-07-24'
+  reviewer: project operator via 01-18 blocking-human checkpoint
+  status: approved
   candidates:
     - name: codejar
       version: 4.3.0
@@ -127,9 +129,9 @@ packageApproval:
         dist/codejar.js (with ./cursor -> dist/cursor.js), 26,112 unpacked
         bytes and no declared dependencies, but the registry 4.3.0 gitHead's
         immutable package.json says 4.2.0. Do not install, import, or treat the
-        gitHead as 4.3.0 API/license proof. Task 2 must retain or explicitly
-        record this block; Task 1 makes no approval mutation.
-      approval: pending
+        gitHead as 4.3.0 API/license proof. Blocked by the project operator on
+        2026-07-24 via the 01-18 blocking-human checkpoint.
+      approval: blocked
       isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codejar-4.3.0
       installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codejar-4.3.0 install --ignore-scripts --package-lock=false codejar@4.3.0
     - name: '@codemirror/state'
@@ -148,9 +150,12 @@ packageApproval:
         dist/index.js or dist/index.cjs; public API is exported from
         src/index.ts at the recorded gitHead, including EditorState, StateField,
         Compartment, Transaction, and StateEffect. Registry reports 431,834
-        unpacked bytes/9 files. It remains operationally blocked until Task 2
-        approves it and the full resolved dependency lock is recorded.
-      approval: pending
+        unpacked bytes/9 files. Approved by the project operator on 2026-07-24
+        via the 01-18 blocking-human checkpoint for this SPK-J-local,
+        non-production experiment only. The reviewer explicitly accepts the
+        incomplete resolved dependency-lock review; this is not production or
+        ADR approval.
+      approval: approved
       isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
       installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
     - name: '@codemirror/view'
@@ -169,9 +174,12 @@ packageApproval:
         dist/index.js or dist/index.cjs; public API is exported from
         src/index.ts at the recorded gitHead, including EditorView, keymap,
         KeyBinding, lineNumbers, and placeholder. Registry reports 1,195,929
-        unpacked bytes/9 files. It remains operationally blocked until Task 2
-        approves it and the full resolved dependency lock is recorded.
-      approval: pending
+        unpacked bytes/9 files. Approved by the project operator on 2026-07-24
+        via the 01-18 blocking-human checkpoint for this SPK-J-local,
+        non-production experiment only. The reviewer explicitly accepts the
+        incomplete resolved dependency-lock review; this is not production or
+        ADR approval.
+      approval: approved
       isolationPath: .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core
       installCommand: npm --prefix .planning/spikes/spk-j-code-editing/.experiment/codemirror-6-core install --ignore-scripts --package-lock=false @codemirror/state@6.5.2 @codemirror/view@6.38.6 @codemirror/commands@6.8.1 @codemirror/lang-javascript@6.2.3
     - name: '@codemirror/commands'
