@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Phase 1 is not started. Source Phase 0 evidence does not yet exist, no ADR is accepted, and no production application scaffold is authorized. Phase 1 requires deep plan-review convergence before execution.
+**Current gate:** Phase 1 evidence closeout is pending required human review. Its ADR 0001–0011 records remain proposed, no human closeout or residual-risk acceptance has occurred, and no production application scaffold is authorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -135,7 +135,9 @@ Plans:
 
 **Goal**: The project owner can approve a buildable, evidence-derived product and learning contract before production implementation begins.
 
-**Depends on**: Phase 1
+**Depends on**: a human-recorded passed Phase 1 evidence baseline plus the evidence-backed, still-proposed ADR 0001–0011 handoff.
+
+**Entry boundary**: Phase 2 may define the product/content contract from the proposed ADR evidence. Human ADR acceptance, rejection, or explicit deferral and Phase 2 contract approval remain separate prerequisites for any production application/framework scaffolding.
 
 **Requirements**: LEARN-01
 

@@ -187,7 +187,9 @@ def phase1_completion_errors() -> list[str]:
 
     required_paths = (
         "research/phase-governance.yaml",
+        "research/adr-handoff.yaml",
         "research/lesson-packets/index.yaml",
+        "research/reports/phase-gate.md",
         "research/reports/spike-consolidation.md",
         "spikes/replay-manifest.yaml",
         "research/candidate-source-manifest.yaml",
@@ -239,6 +241,25 @@ def phase1_completion_errors() -> list[str]:
 
     governance = PLANNING / "research/phase-governance.yaml"
     errors.extend(phase1_command_errors("validate-governance", str(governance)))
+    phase_gate = PLANNING / "research/reports/phase-gate.md"
+    errors.extend(phase1_command_errors("validate-report", str(phase_gate)))
+    handoff_path = PLANNING / "research/adr-handoff.yaml"
+    try:
+        handoff = load_yaml(handoff_path)
+        entry = handoff.get("phase2Entry")
+        handoff_adrs = handoff.get("adrs")
+        expected_adrs = {f"ADR-{number:04d}" for number in range(1, 12)}
+        indexed_adrs = {item.get("id"): item for item in handoff_adrs if isinstance(item, dict)} if isinstance(handoff_adrs, list) else {}
+        if not isinstance(entry, dict) or not entry.get("interimRestriction"):
+            errors.append("GATE010: ADR handoff lacks the Phase 2 interim no-scaffold restriction")
+        if set(indexed_adrs) != expected_adrs:
+            errors.append("GATE011: ADR handoff must account for ADR-0001 through ADR-0011 exactly")
+        for adr_id, record in indexed_adrs.items():
+            missing = [field for field in ("owner", "approver", "evidenceIds", "status", "acceptanceDeadline", "affectedRequirements", "affectedPhases") if not record.get(field)]
+            if record.get("status") != "proposed" or missing:
+                errors.append(f"GATE012: ADR handoff {adr_id} lacks complete proposed handoff fields")
+    except ValueError as exc:
+        errors.append(f"GATE013: {exc}")
     errors.extend(phase1_command_errors("replay-spikes", "--manifest", str(PLANNING / "spikes/replay-manifest.yaml"), "--check"))
     errors.extend(phase1_citation_and_inventory_errors())
     return errors

@@ -1,0 +1,64 @@
+schemaVersion: 1
+phases:
+  1:
+    sourcePhase: 0
+    name: Research and Truth Baseline
+    productionScaffoldAllowed: false
+    requiredReviews: [plan-check, plan-review-convergence, verifier]
+    requiredArtifacts:
+      - research/executive-summary.md
+      - research/decision-summary.md
+      - research/protocol-map.md
+      - research/terminology-map.yaml
+      - research/source-registry.yaml
+      - research/claims.yaml
+      - research/compatibility-matrix.yaml
+      - research/teaching-scope.yaml
+      - research/domain-catalog.yaml
+      - research/archetype-convention-catalog.yaml
+      - research/example-napplet-catalog.yaml
+      - research/drift-register.yaml
+      - research/open-questions.yaml
+      - research/open-work-snapshot.json
+      - research/open-work-analysis.md
+      - research/package-map.md
+      - research/runtime-comparison.md
+      - research/pedagogy-review.md
+      - research/audiences.md
+      - research/jobs-to-be-done.yaml
+      - research/delivery-mode-recommendation.md
+      - research/security-egress-findings.md
+      - research/risks.md
+    lessonPackets: 13
+    mandatoryEvidence:
+      - immutable-source-revisions
+      - ten-drift-check-outcomes
+      - boundary-harness-spike
+      - content-rendering-spike
+      - verified-loader-feasibility
+      - browser-egress-findings
+      - workspace-framework-deployment-recommendations
+      - portable-target-adr-recommendation
+    reportFields:
+      - research-question
+      - sources-and-immutable-revisions
+      - observations
+      - conflicts
+      - inference
+      - prototype-or-measurement
+      - recommendation
+      - uncertainty
+      - affected-phases-and-requirements
+      - owner-and-approval
+  2:
+    sourcePhase: 1
+    name: Product and Content Contract
+    prerequisites: [phase-1-passed-evidence-baseline, evidence-backed-proposed-adrs-0001-0011]
+    productionScaffoldAllowed: false
+    approvalBoundary:
+      requiredBeforeProductionScaffold: [phase-2-product-content-contract, explicit-owner-adr-decision]
+      note: Phase 2 may define the product/content contract while every ADR remains proposed; owner acceptance, rejection, or explicit deferral is a separate human gate before production scaffolding.
+  3:
+    sourcePhase: 2
+    name: Independent Repository Foundation
+    prerequisites: [phase-2-product-contract]

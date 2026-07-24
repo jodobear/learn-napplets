@@ -9,7 +9,9 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -852,7 +854,9 @@ def input_snapshot_digest(reports: list[tuple[str, Path, str]], fragments: list[
 def security_egress_synthesis(fragment: dict[str, Any]) -> str:
     digest = fragment["_digest"]
     source_ids = ", ".join(fragment["sourceIds"])
-    return f"""# Security and egress synthesis\n\n## Research question\n\nWhat does the validated SPK-H local fixture support without converting local browser behavior or project policy into an upstream protocol conclusion?\n\n## Sources and immutable revisions\n\n- Fragment: `{fragment['fragmentId']}` SHA-256 `{digest}`.\n- Report: `{fragment['reportPath']}` SHA-256 `{fragment['reportSha256']}`.\n- Metadata: `{fragment['metadataPath']}` SHA-256 `{fragment['metadataSha256']}`.\n- Measurement: `{fragment['measurementPath']}` SHA-256 `{fragment['measurementSha256']}`.\n- Canonical source and claim provenance: {source_ids}; `CLM-UPSTREAM-BASELINE-001` and `CLM-POLICY-001`.\n\n## Upstream-fact status\n\nNo current immutable upstream egress statement was collected. `SRC-POLICY-001` and `CLM-UPSTREAM-BASELINE-001` record that absence as blocked project evidence; they are not upstream browser or protocol proof.\n\n## Browser observations\n\nThe exact opaque-origin `srcdoc` guest with `sandbox=allow-scripts` only produced five bounded Chromium local-loopback observations. Firefox exited before Playwright attached, so no Firefox channel or CSP behavior was observed. These are fixture observations only.\n\n## Proposed project policy\n\n`{fragment['securityEgressFindingProposal']['id']}` is a proposed project policy: use a restrictive, reviewable public-site CSP only after the named security and protocol review. It is not an upstream NIP requirement or cross-browser conclusion.\n\n## Unresolved questions\n\n{'; '.join(item['id'] for item in fragment['proposedOpenQuestions'])} remain blocked pending immutable upstream evidence and, for Firefox, attached-context measurements under the approved toolchain.\n\n## Conflicts\n\n`DRF-EGRESS-001` and the Firefox launcher blocker retain the distinct local observation and unresolved upstream question. No conflict is silently resolved by this synthesis.\n\n## Inference\n\nThe supported inference is limited to the named local fixture, browser version, sandbox tokens, CSP inputs, and loopback endpoints. It does not select a production host profile.\n\n## Uncertainty\n\n{fragment['uncertainty']['reason']}\n\n## Owner and required approval\n\nOwner: `{fragment['securityEgressFindingProposal']['owner']}`. Required approval: {fragment['securityEgressFindingProposal']['requiredApproval']} Revisit trigger: {fragment['securityEgressFindingProposal'].get('revisitTrigger', 'Collect immutable evidence and review it.')}\n"""
+    questions = "; ".join(item["id"] for item in fragment["proposedOpenQuestions"])
+    proposal = fragment["securityEgressFindingProposal"]
+    return f"""# Security and egress synthesis\n\n## Research question\n\nWhat does the validated SPK-H local fixture support without converting local browser behavior or project policy into an upstream protocol conclusion?\n\n## Sources and immutable revisions\n\n- Fragment: `{fragment['fragmentId']}` SHA-256 `{digest}`.\n- Report: `{fragment['reportPath']}` SHA-256 `{fragment['reportSha256']}`.\n- Metadata: `{fragment['metadataPath']}` SHA-256 `{fragment['metadataSha256']}`.\n- Measurement: `{fragment['measurementPath']}` SHA-256 `{fragment['measurementSha256']}`.\n- Canonical source and claim provenance: {source_ids}; `CLM-UPSTREAM-BASELINE-001` and `CLM-POLICY-001`.\n\n## Observations\n\nNo current immutable upstream egress statement was collected. The source and claim records document that absence as blocked project evidence, not upstream browser or protocol proof.\n\n**Browser observations:** the exact opaque-origin `srcdoc` guest with `sandbox=allow-scripts` only produced five bounded Chromium local-loopback observations. Firefox exited before Playwright attached, so no Firefox channel or CSP behavior was observed. These are fixture observations only.\n\n## Conflicts\n\n`DRF-EGRESS-001` and `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001` retain the distinct local observation, missing Firefox attachment, and unresolved upstream question. No conflict is silently resolved by this synthesis.\n\n## Inference\n\nThe supported inference is limited to the named local fixture, browser version, sandbox tokens, CSP inputs, and loopback endpoints. It does not select a production host profile or establish upstream egress behavior.\n\n## Prototype or measurement\n\nSPK-H records five bounded Chromium measurements plus an explicit Firefox pre-attachment blocked result. The local replay validates the referenced digest-pinned report, metadata, and measurement only; it does not test an external endpoint or production CSP.\n\n## Recommendation\n\n**Proposed project policy:** `{proposal['id']}` proposes a restrictive, reviewable public-site CSP only after named security and protocol review. It is not an upstream NIP requirement or cross-browser conclusion.\n\n## Uncertainty\n\n**Unresolved questions:** {questions} remain blocked pending immutable upstream evidence and, for Firefox, attached-context measurements under the approved toolchain. {fragment['uncertainty']['reason']}\n\n## Affected phases and requirements\n\n- Requirements: `EVID-04`, `OPER-03`.\n- Phases: 01 evidence baseline, 02 product/content contract, 03 static-site foundation, and 05 teaching-host work.\n- Impact: do not authorize a host profile, external egress, or browser-support conclusion; preserve deterministic static fallback and the Firefox blocker.\n\n## Owner and required approval\n\nOwner: `{proposal['owner']}`. Required approval: {proposal['requiredApproval']} Revisit trigger: {proposal.get('revisitTrigger', 'Collect immutable evidence and review it.')}\n"""
 
 
 def replay_manifest(spikes: Path, reports: list[tuple[str, Path, str]]) -> dict[str, Any]:
@@ -922,6 +926,42 @@ def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
                 errors.append("ERROR RPL005: replay manifest digest does not match local input")
     if seen != set(SPIKE_REPORTS):
         errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
+    return errors
+
+
+def replay_spikes(manifest_path: Path, planning_root: Path) -> list[str]:
+    """Validate immutable replay inputs and execute every declared local replay."""
+    errors = validate_replay_manifest(manifest_path, planning_root)
+    if errors:
+        return errors
+    try:
+        manifest = load_yaml(manifest_path)
+    except ValueError as exc:
+        return [f"ERROR RPL001: {exc}"]
+    entries = manifest.get("entries", [])
+    for entry in sorted(entries, key=lambda item: str(item.get("spikeId", "")) if isinstance(item, dict) else ""):
+        if not isinstance(entry, dict):
+            errors.append("ERROR RPL007: replay manifest entry must be an object")
+            continue
+        spike_id = entry.get("spikeId", "<unknown>")
+        command = entry.get("replayCommand")
+        if not isinstance(command, str) or not command.strip():
+            errors.append(f"ERROR RPL008: {spike_id} lacks a replay command")
+            continue
+        try:
+            result = subprocess.run(
+                shlex.split(command),
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+        except (OSError, ValueError) as exc:
+            errors.append(f"ERROR RPL009: {spike_id} replay could not start: {exc}")
+            continue
+        if result.returncode:
+            detail = (result.stdout or result.stderr).strip().replace("\n", " | ")
+            errors.append(f"ERROR RPL010: {spike_id} replay failed: {detail or 'non-zero exit'}")
     return errors
 
 
@@ -1056,7 +1096,7 @@ def main() -> int:
     elif args.command == "consolidate-spike-impacts":
         errors = consolidate_spike_impacts(args.spikes, args.research, args.audit, args.dry_run, args.lock_timeout, args.input_order)[:100]
     elif args.command == "replay-spikes":
-        errors = validate_replay_manifest(args.manifest, args.manifest.parents[1])[:100] if args.check else []
+        errors = replay_spikes(args.manifest, args.manifest.parents[1])[:100] if args.check else []
     else:
         errors = []
     if args.command != "validate":

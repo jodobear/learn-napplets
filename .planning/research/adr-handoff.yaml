@@ -1,0 +1,98 @@
+schemaVersion: 1
+kind: phase-2-adr-handoff
+phase: '01'
+createdAt: '2026-07-24T12:25:40Z'
+phase2Entry:
+  requires: [phase-1-passed-evidence-baseline, evidence-backed-proposed-adrs-0001-0011]
+  permits: Phase 2 product/content-contract definition only.
+  interimRestriction: No production application/framework scaffolding is permitted until the owner records each needed ADR as accepted, rejected, or explicitly deferred and the Phase 2 product/content contract is approved.
+  approvalBoundary: Human owner decision and Phase 2 contract approval remain separate from this evidence handoff.
+adrs:
+  - id: ADR-0001
+    status: proposed
+    owner: technical-owner
+    approver: product-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CLM-UPSTREAM-BASELINE-001, CMP-BASELINE-001, DRF-DISCOVERY-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '03']
+  - id: ADR-0002
+    status: proposed
+    owner: technical-owner
+    approver: product-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CMP-BASELINE-001, DRF-ARTIFACT-001, OQ-UPSTREAM-BASELINE-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '03']
+  - id: ADR-0003
+    status: proposed
+    owner: release-owner
+    approver: product-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CMP-BASELINE-001, DRF-METADATA-001, OQ-UPSTREAM-BASELINE-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '03', '11']
+  - id: ADR-0004
+    status: proposed
+    owner: content-technical-owner
+    approver: product-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CLM-POLICY-001, CMP-BASELINE-001, DRF-INTENT-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '03', '10']
+  - id: ADR-0005
+    status: proposed
+    owner: technical-owner
+    approver: security-reviewer
+    evidenceIds: [SPK-C-IMPACT-001, SPK-D-IMPACT-001, SPK-G-IMPACT-001, SPK-H-IMPACT-001, OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '05']
+  - id: ADR-0006
+    status: proposed
+    owner: ui-owner
+    approver: accessibility-reviewer
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CLM-POLICY-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001, OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-04, OPER-03]
+    affectedPhases: ['02', '04', '05']
+  - id: ADR-0007
+    status: proposed
+    owner: product-owner
+    approver: product-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CMP-BASELINE-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001, OQ-PUBLIC-PACKAGE-BASELINE-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '05', '08']
+  - id: ADR-0008
+    status: proposed
+    owner: test-owner
+    approver: protocol-technical-owner
+    evidenceIds: [SPK-D-IMPACT-001, SPK-G-IMPACT-001, CLM-CMP-FIXTURE-001, CLM-CMP-PACKAGE-001, OQ-VERIFIED-LOADER-VERIFIER-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '05']
+  - id: ADR-0009
+    status: proposed
+    owner: ui-technical-owner
+    approver: accessibility-reviewer
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CLM-POLICY-001, CMP-BASELINE-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-04, OPER-03]
+    affectedPhases: ['02', '03', '05']
+  - id: ADR-0010
+    status: proposed
+    owner: technical-owner
+    approver: release-owner
+    evidenceIds: [SPK-G-IMPACT-001, CLM-CMP-PACKAGE-001, CMP-BASELINE-001, DRF-ARTIFACT-001, DRF-CONFORMANCE-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-03, EVID-04, OPER-03]
+    affectedPhases: ['02', '03', '05', '11']
+  - id: ADR-0011
+    status: proposed
+    owner: research-owner
+    approver: protocol-technical-owner
+    evidenceIds: [SRC-POLICY-001, SRC-POLICY-002, CLM-POLICY-001, CMP-BASELINE-001, OQ-UPSTREAM-BASELINE-001]
+    acceptanceDeadline: '2026-08-07'
+    affectedRequirements: [EVID-02, EVID-04, OPER-01, OPER-03]
+    affectedPhases: ['02', '03', '05', '11']
