@@ -107,9 +107,9 @@ recommendation: >-
   baselines, then receive a dated per-candidate human approval.
 disposition: blocked
 packageApproval:
-  reviewedAt: null
-  reviewer: null
-  status: pending-human-review
+  reviewedAt: '2026-07-24'
+  reviewer: project operator via 01-15 blocking-human checkpoint
+  status: blocked
   candidates:
     - name: CAND-NAPPLET-WEB-PACKAGE
       version: unavailable — no released package version is cataloged
@@ -118,11 +118,12 @@ packageApproval:
       license: unavailable — no released-package license evidence is cataloged
       integrity: unavailable — no release tarball integrity is cataloged
       hashSourceDecision: >-
-        Blocked by CLM-CMP-PACKAGE-001: the public package is an unpinned
-        discovery pointer and has no complete immutable public-release or
-        implemented-source SRC baseline. This pending approval record is not a
-        human approval and makes the entry ineligible for installation.
-      approval: pending
+        Blocked 2026-07-24 by the project operator via the 01-15
+        blocking-human checkpoint. CLM-CMP-PACKAGE-001 records an unpinned
+        discovery pointer with no complete immutable public-release or
+        implemented-source SRC baseline. Preserve this absence; install
+        nothing, substitute nothing, and do not use a private or deep path.
+      approval: blocked
       isolationPath: .planning/spikes/spk-g-package-conformance/.experiment/public-release-if-qualified
       installCommand: >-
         BLOCKED — no package-manager command is authorized because no exact
