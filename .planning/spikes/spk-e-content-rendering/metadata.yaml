@@ -1,0 +1,66 @@
+schemaVersion: 1
+id: SPK-E-CONTENT-RENDERING
+kind: spike
+nonProduction: true
+status: planned
+hypothesis: >-
+  One bounded, local structured content record can deterministically render static
+  HTML, guest content, Markdown, a glossary entry, a transcript, and knowledge
+  JSON while preserving the same canonical evidence/status field values.
+variables:
+  independent: [representation target]
+  dependent: [output digest, canonical-field parity, replay result]
+  controlled: [one local YAML fixture, local renderer, approved Phase 1 Python wrapper, no network or package installation]
+commands:
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-e-content-rendering --contract
+  - tools/phase1-python .planning/spikes/spk-e-content-rendering/render.py --fixture .planning/spikes/spk-e-content-rendering/fixture.yaml --out /tmp/spk-e-content-rendering
+  - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-e-content-rendering --complete
+  - tools/phase1-python tools/validate-research.py validate-report .planning/spikes/spk-e-content-rendering/report.md
+  - tools/phase1-python tools/validate-research.py validate --root .planning/research --report /tmp/spk-e-research-validation.md
+environmentManifest: environment.json
+sourceBindings:
+  - sourceId: SRC-POLICY-002
+    claimId: CLM-POLICY-001
+    primitive: shared content evidence/status fields
+    relation: measures
+    plan: 01-13
+    expectedClassification: project-policy
+    immutable:
+      commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+      path: .planning/governance/evidence-policy.md
+      locator: Required fields and verification rule
+      contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      retrievedAt: '2026-07-24T00:00:00Z'
+      authorityTier: project-policy
+      evidenceClass: project-policy
+      maturity: accepted
+successThreshold: >-
+  All six declared representations are generated from fixture.yaml; each retains
+  sourceId, claimId, terminology, maturity, uncertaintyState, and status exactly
+  as the fixture declares; every per-output digest and replay manifest matches.
+failureOutcome: >-
+  If a target cannot preserve any required canonical field or deterministic output
+  digest, retain its local output evidence and record a failed ADR-0004 proposal
+  input; do not hand-author a compensating representation.
+blockedOutcome: >-
+  If the approved local toolchain cannot execute the renderer, retain an
+  impact-scoped blocked result for ADR-0004 and Phase 02 without adding a package,
+  framework, application route, or second authoring source.
+replay:
+  input: fixture.yaml
+  command: >-
+    Run render.py through tools/phase1-python into an isolated /tmp directory,
+    inspect its manifest, then validate this completed spike and report.
+safety:
+  noSecrets: true
+  noDestructiveState: true
+  liveProbe: not-used
+uncertainty:
+  state: limited
+  reason: >-
+    This fixture proves local representation parity only. It does not establish
+    production rendering architecture, upstream protocol behavior, or approval of ADR-0004.
+recommendation: >-
+  Retain this non-production fixture as proposed ADR-0004 schema/render/LLM parity
+  evidence; any production content pipeline remains deferred pending human review.
+disposition: retain-as-fixture

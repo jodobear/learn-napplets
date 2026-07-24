@@ -1,0 +1,83 @@
+schemaVersion: 1
+spikeId: SPK-E-CONTENT-RENDERING
+localOnly: true
+nonProduction: true
+purpose: Bounded synthetic content fixture for local representation-parity measurement only.
+canonicalInputs:
+  sourceRegistry: .planning/research/source-registry.yaml
+  claims: .planning/research/claims.yaml
+  terminology: .planning/research/terminology-map.yaml
+  teachingScope: .planning/research/teaching-scope.yaml
+canonicalFieldValues:
+  sourceId: SRC-POLICY-002
+  claimId: CLM-POLICY-001
+  terminology: immutable source record
+  maturity: accepted
+  uncertaintyState: limited
+  status: provisional
+fieldParityContract:
+  requiredFields: [sourceId, claimId, terminology, maturity, uncertaintyState, status]
+  equality: exact-string-and-value
+  canonicalVocabularyNote: >-
+    sourceId and claimId are stable canonical IDs. terminology, maturity,
+    uncertaintyState, and status are the exact controlled values supplied by the
+    canonical records; those records define no separate IDs for those vocabularies.
+  targetRepresentations:
+    - id: static-html
+      path: static.html
+      format: static HTML
+      parityEncoding: data-parity JSON attribute
+    - id: guest-content
+      path: guest-content.json
+      format: guest content representation
+      parityEncoding: canonicalFields JSON member
+    - id: markdown
+      path: content.md
+      format: Markdown
+      parityEncoding: parity JSON comment
+    - id: glossary
+      path: glossary.md
+      format: glossary entry
+      parityEncoding: parity JSON comment
+    - id: transcript
+      path: transcript.txt
+      format: transcript
+      parityEncoding: PARITY JSON line
+    - id: knowledge-json
+      path: knowledge.json
+      format: knowledge JSON
+      parityEncoding: canonicalFields JSON member
+contentRecord:
+  id: CONTENT-SPK-E-001
+  title: Immutable source record parity fixture
+  summary: A bounded local fixture for checking that essential evidence state is not hidden in one representation.
+  statement: Phase 1 policy requires immutable source identity and human review before a claim can be verified.
+  glossaryDefinition: A project record retaining identity, revision, locator, digest, retrieval timestamp, classification, uncertainty, impacts, and refresh trigger.
+  transcript: The fixture states its source, claim, terminology, maturity, uncertainty, and status explicitly for inspection.
+  classification: project-policy
+  maturity: accepted
+  uncertainty:
+    state: limited
+    reason: The source controls evidence handling and does not establish an upstream protocol fact.
+  status: provisional
+  source:
+    id: SRC-POLICY-002
+    locator: Required fields and verification rule
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  claim:
+    id: CLM-POLICY-001
+    state: provisional
+  terminology:
+    term: immutable source record
+    state: provisional
+bounds:
+  syntheticOnly: true
+  noCredentials: true
+  noNetwork: true
+  noProtocolBehaviorClaim: true
+  noProductionRoutesOrFramework: true
+  secondAuthoringSource: prohibited
+expectedResult:
+  status: passed
+  adr0004: proposed-parity-evidence
+  failureHandling: Preserve isolated generated outputs and report the mismatched field; do not edit a representation by hand.
