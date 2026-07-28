@@ -90,21 +90,24 @@ Gap Closure Plans:
 **Wave 6**
 
 - [ ] 01-36-PLAN.md — Run approval-gated package/conformance measurement or retain a precise blocker.
+
+**Wave 7** *(blocked on Plan 01-36)*
+
 - [ ] 01-43-PLAN.md — Append observed upstream refresh records and retain blocker routing.
 
-**Wave 7**
+**Wave 8** *(blocked on all upstream gap plans, including Plan 01-43)*
 
 - [ ] 01-37-PLAN.md — Execute the complete repaired Phase 1 gate sequence.
 
-**Wave 8**
+**Wave 9**
 
 - [ ] 01-38-PLAN.md — Complete Nyquist probes and reconcile validation evidence.
 
-**Wave 9**
+**Wave 10**
 
 - [ ] 01-39-PLAN.md — Record ASVS L1 security remediation review.
 
-**Wave 10**
+**Wave 11**
 
 - [ ] 01-40-PLAN.md — Freshly verify Phase 1 and synchronize factual status/accounting.
 
