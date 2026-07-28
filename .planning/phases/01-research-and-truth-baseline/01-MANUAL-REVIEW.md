@@ -4,7 +4,7 @@ review_source: 01-REVIEWS.md
 authority: human-plan-review
 status: in_progress
 started: 2026-07-28
-completed_items: 5
+completed_items: 6
 total_items: 8
 ---
 
@@ -19,9 +19,9 @@ Review each current external finding separately before targeted replanning.
 | 3 | HIGH | Plan 01-40 terminal publication ordering | Stage, validate, publish | Writing live terminal artifacts before validation can expose a contradictory or mixed authoritative generation after failure or interruption. | Human authors staged `REVERIFICATION`/`STATE`/`ROADMAP`; terminal validator checks the bound staged set; Plan 01-42 journal/recovery atomically publishes all three only after pass; add interruption coverage. |
 | 4 | HIGH | Plan 01-39 ASVS finding extensibility | Allow SEC findings | A complete ASVS review must represent new issues it discovers; an exact-CR/WR-only global set can omit or misclassify a newly discovered HIGH issue. | Keep CR-01..CR-09 and WR-01..WR-03 as exact required subset; add stable optional `SEC-*` findings linked to applicable ASVS controls; require evidence/results; count unresolved HIGH across both sets and block pass. |
 | 5 | HIGH | Plans 01-39/01-40 identity policy | Role-bound same person | Locked D-27/D-28 permits one user across roles while requiring separate dated per-role determinations; distinct-person requirements would make legitimate completion impossible and invite fabricated identities. | Allow repeated human principal across roles; require separate role, timestamp, commit/artifact digests, determination, and rationale records; forbid generic approval reuse and automation/executor human sign-off. |
+| 6 | MEDIUM | Plans 01-29/01-36/01-42 task-local regressions | Require task-local tests | A task cannot claim its core boundary behavior when its own completion command never executes the named regression; aggregate closeout is later defense, not primary evidence. | Add exact wrapper-routed test addresses for duplicate authorization sections, sandbox escape/unavailability, direct validate-planning recovery, and all-reader recovery to owning task verify blocks; missing method must fail. |
 
 ## Pending
 
-6. Task-local boundary regressions.
 7. Direct registry receipt validation.
 8. Toolchain freshness and transitive-lock approval authority.
