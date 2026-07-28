@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 1
+current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: ready_to_execute
+status: executing
 stopped_at: execution paused before Plan 01-29 Task 1; resume in fresh context
-last_updated: "2026-07-28T19:55:10Z"
+last_updated: "2026-07-28T20:04:31.109Z"
 last_activity: 2026-07-29
-last_activity_desc: Exact-commit review passed; Plan 01-29 dispatch paused before edits due context pressure
+last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
@@ -23,14 +23,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 **Core value:** Learners can accurately understand and exercise the boundary where focused, untrusted napplet code delegates dangerous or repetitive authority to a trusted host.
-**Current focus:** Phase 1 — research-and-truth-baseline
+**Current focus:** Phase 01 — research-and-truth-baseline
 
 ## Current Position
 
-Phase: 1 (research-and-truth-baseline) — READY TO EXECUTE GAP CLOSURE
-Plan: 28 of 43 executed; Plans 01-29 through 01-43 remain incomplete
-Status: Exact-commit Codex review `8f61695` records 0 HIGH / 0 actionable against plan commit `1191190`
-Last activity: 2026-07-29 — Plan 01-29 dispatched twice; both stopped before edits (missing executor identity, then context pressure)
+Phase: 01 (research-and-truth-baseline) — EXECUTING
+Plan: 1 of 43
+Status: Executing Phase 01
+Last activity: 2026-07-29 — Phase 01 execution started
 
 Progress: [███████░░░] 65%
 
@@ -195,6 +195,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-28T19:35:24.666Z
-Stopped at: context exhaustion at 75% (2026-07-28)
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
+Last session: 2026-07-29
+Stopped at: Session resumed; proceeding to Phase 1 gap execution from Plan 01-29 Task 1
+Resume file: None — structured handoff consumed
