@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: gaps_found
-stopped_at: context exhaustion at 76% (2026-07-28)
-last_updated: "2026-07-28T12:39:19.873Z"
-last_activity: 2026-07-24
-last_activity_desc: Verification recorded `gaps_found`; next command is `/gsd-plan-phase 1 --gaps`
+stopped_at: manual review selected after plan convergence maxed at 3 cycles
+last_updated: "2026-07-28T14:50:19Z"
+last_activity: 2026-07-28
+last_activity_desc: Plan convergence stopped after 3 cycles with 5 HIGH and 3 actionable findings; manual review required
 progress:
   total_phases: 1
   completed_phases: 0
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — GAPS FOUND
-Plan: 28 of 28 original plans executed; focused gap plans not yet created
-Status: Verification failed with 1/5 must-haves verified
-Last activity: 2026-07-24 — Verification recorded `gaps_found`; next command is `/gsd-plan-phase 1 --gaps`
+Plan: 28 of 43 executed; Plans 01-29 through 01-43 drafted and internally checker-passed
+Status: Deep plan-review convergence did not pass after 3 cycles; 5 HIGH and 3 actionable findings remain
+Last activity: 2026-07-28 — Manual review selected; see `01-REVIEWS.md` and phase checkpoint
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 65%
 
 ## Performance Metrics
 
@@ -167,14 +167,17 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Pending Todos
 
-- Create focused Phase 1 gap-closure plans with `/gsd-plan-phase 1 --gaps`.
-- Execute confirmed review/verification fixes with fail-closed regression coverage.
-- Complete Nyquist validation and security review after fixes.
-- Re-run Phase 1 verification; only `status: passed` can unblock Phase 2.
+- Manually resolve the 5 HIGH and 3 actionable current findings in `01-REVIEWS.md`.
+- Re-run `/gsd-plan-review-convergence 1` only after targeted plan corrections.
+- Execute gap plans only after deep convergence passes.
+- Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Phase 1 verification is `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
+- Deep plan-review convergence stopped after 3 cycles with 5 HIGH and 3 actionable findings; see the current sections of `01-REVIEWS.md`. Execution is prohibited.
+- Remaining HIGH themes: wrapper-before-bootstrap ordering; unowned post-check validators; validate-before-atomic-publication ordering; ASVS finding extensibility; reviewer identity rules conflicting with the locked one-user/multi-role model.
+- Remaining actionable themes: task-local boundary regressions; direct registry-receipt validation; toolchain freshness and transitive-lock approval authority.
+- Phase 1 verification remains `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
 - Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
 - `01-VALIDATION.md` remains draft/noncompliant, and no Phase 1 security review artifact exists.
 - Upstream-sensitive terms and protocol behavior must remain labeled as uncertain until immutable-source evidence is reviewed.
@@ -192,6 +195,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-28T12:39:19.844Z
-Stopped at: context exhaustion at 76% (2026-07-28)
+Last session: 2026-07-28T14:50:19Z
+Stopped at: Manual review selected after convergence reached 3/3 cycles with 5 HIGH and 3 actionable findings
 Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
