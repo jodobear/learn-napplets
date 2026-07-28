@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Phase 1 has a human-recorded `passed` evidence baseline only for Phase 2 product/content-contract readiness and awaits orchestrator verification. ADR 0001–0011 remain proposed; no residual-risk acceptance, production application scaffold, deployment/release, external action, or Phase 2 transition is authorized.
+**Current gate:** Phase 1 verification is `gaps_found` with 1/5 must-haves verified. Focused gap plans, corrected trust-critical enforcement, Nyquist validation, security review, and fresh passing verification are required before Phase 2. ADR 0001–0011 remain proposed; no residual-risk acceptance, production application scaffold, deployment/release, external action, or Phase 2 transition is authorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -15,7 +15,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 **Phase Numbering:**
 
 - Integer phases are planned work.
-- Decimal phases are reserved for urgent inserted work only.
+- Decimal phases are reserved for explicitly approved inserted work only.
 
 - [ ] **Phase 1: Research and Truth Baseline** - Source Phase 0 research, spikes, and recommendations establish an evidence-backed decision baseline.
 - [ ] **Phase 2: Product and Content Contract** - Source Phase 1 turns accepted research and decisions into a buildable learning contract.
@@ -59,7 +59,54 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 28/28 plans executed
+**Plans**: 43 plans (28 original plans executed, 15 gap-closure plans planned)
+
+Gap Closure Plans:
+
+**Wave 1**
+
+- [ ] 01-29-PLAN.md — Lock toolchain integrity and collect immutable upstream candidates.
+
+**Wave 2** *(blocked on Plan 01-29)*
+
+- [ ] 01-30-PLAN.md — Obtain human authority classifications before source ingestion.
+- [ ] 01-32-PLAN.md — Repair citation provenance, strict review parsing, and wrapper invocation.
+- [ ] 01-33-PLAN.md — Bind retained spike evidence and remove manifest command authority.
+
+**Wave 3**
+
+- [ ] 01-31-PLAN.md — Ingest reviewed source/normative evidence or impact-scoped blockers.
+- [ ] 01-34-PLAN.md — Close CR-05 path/source confinement and CR-08 observed-local versus normative classification.
+
+**Wave 4**
+
+- [ ] 01-41-PLAN.md — Independently intake package registry evidence and retain scoped package blockers.
+- [ ] 01-42-PLAN.md — Close CR-07 durable crash-atomic canonical publication and recovery.
+
+**Wave 5**
+
+- [ ] 01-35-PLAN.md — Migrate and evaluate substantive compatibility eligibility.
+
+**Wave 6**
+
+- [ ] 01-36-PLAN.md — Run approval-gated package/conformance measurement or retain a precise blocker.
+- [ ] 01-43-PLAN.md — Append observed upstream refresh records and retain blocker routing.
+
+**Wave 7**
+
+- [ ] 01-37-PLAN.md — Execute the complete repaired Phase 1 gate sequence.
+
+**Wave 8**
+
+- [ ] 01-38-PLAN.md — Complete Nyquist probes and reconcile validation evidence.
+
+**Wave 9**
+
+- [ ] 01-39-PLAN.md — Record ASVS L1 security remediation review.
+
+**Wave 10**
+
+- [ ] 01-40-PLAN.md — Freshly verify Phase 1 and synchronize factual status/accounting.
 
 Plans:
 **Wave 1**
@@ -412,7 +459,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 28/28 | Awaiting orchestrator verification |  |
+| 1. Research and Truth Baseline | 28/43 | Gaps found — 28 original executed; 15 gap-closure plans planned |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

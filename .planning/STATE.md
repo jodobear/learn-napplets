@@ -4,15 +4,15 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: executing
-stopped_at: Completed 01-24-PLAN.md; awaiting orchestrator verification
-last_updated: "2026-07-24T12:46:57.319Z"
+status: gaps_found
+stopped_at: context exhaustion at 76% (2026-07-28)
+last_updated: "2026-07-28T12:39:19.873Z"
 last_activity: 2026-07-24
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Verification recorded `gaps_found`; next command is `/gsd-plan-phase 1 --gaps`
 progress:
   total_phases: 1
-  completed_phases: 1
-  total_plans: 28
+  completed_phases: 0
+  total_plans: 43
   completed_plans: 28
 ---
 
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 28 of 28
-Status: Awaiting orchestrator verification
-Last activity: 2026-07-24 — Phase 01 execution started
+Phase: 01 (research-and-truth-baseline) — GAPS FOUND
+Plan: 28 of 28 original plans executed; focused gap plans not yet created
+Status: Verification failed with 1/5 must-haves verified
+Last activity: 2026-07-24 — Verification recorded `gaps_found`; next command is `/gsd-plan-phase 1 --gaps`
 
 Progress: [██████████] 100%
 
@@ -161,17 +161,22 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: The static public-site path remains a proposed post-Phase-2 direction; host, package, portable, external-delivery, and complex interactive capabilities remain deferred.
 - [Phase ?]: The lesson index is a complete, ordered thirteen-entry contract rather than a directory convention.
 - [Phase ?]: Build, runtime, package, deployment, and contribution content remains deterministic conceptual research until canonical evidence and human review resolve its blockers.
-- [Phase ?]: Phase 1 passed only for Phase 2 product/content-contract readiness; it neither approves a transition nor authorizes production work.
+- [Phase ?]: Phase 1 verification is `gaps_found` (1/5 must-haves verified); focused gap closure, Nyquist validation, security review, and fresh passing verification are required before Phase 2.
 - [Phase ?]: All six dated scoped role approvals retain Firefox, VitePress, package, manifest/identity/verifier, delivery, portable, editor, dynamic-diagram, and freshness blockers or deferrals.
 - [Phase ?]: ADR 0001–0011 remain proposed; no residual risk, CSP behavior, teaching-host architecture, deployment, release, publication, or external action is accepted.
 
 ### Pending Todos
 
-None yet.
+- Create focused Phase 1 gap-closure plans with `/gsd-plan-phase 1 --gaps`.
+- Execute confirmed review/verification fixes with fail-closed regression coverage.
+- Complete Nyquist validation and security review after fixes.
+- Re-run Phase 1 verification; only `status: passed` can unblock Phase 2.
 
 ### Blockers/Concerns
 
-- Phase 1 source registry, compatibility matrix, mandatory spike evidence, and lesson research packets do not yet exist.
+- Phase 1 verification is `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
+- Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
+- `01-VALIDATION.md` remains draft/noncompliant, and no Phase 1 security review artifact exists.
 - Upstream-sensitive terms and protocol behavior must remain labeled as uncertain until immutable-source evidence is reviewed.
 - Do not create a production scaffold before Phase 1 and Phase 2 gates pass.
 - SPK-C Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; no cross-browser fixture evidence exists for ADR-0005.
@@ -187,6 +192,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-24T12:46:57.308Z
-Stopped at: Completed 01-24-PLAN.md; awaiting orchestrator verification
-Resume file: None
+Last session: 2026-07-28T12:39:19.844Z
+Stopped at: context exhaustion at 76% (2026-07-28)
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
