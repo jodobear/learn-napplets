@@ -1,11 +1,11 @@
 {
   "version": "1.0",
-  "timestamp": "2026-07-28T15:54:43.880Z",
+  "timestamp": "2026-07-28T16:24:21.181Z",
   "phase": "01",
   "phase_name": "research-and-truth-baseline",
   "phase_dir": ".planning/phases/01-research-and-truth-baseline",
   "plan": 43,
-  "task": 5,
+  "task": 6,
   "total_tasks": 8,
   "status": "paused",
   "completed_tasks": [
@@ -31,7 +31,7 @@
       "id": 4,
       "name": "Review each remaining finding with the user",
       "status": "in_progress",
-      "progress": "Items 1-4 reviewed and accepted; next is item 5, identity rules versus one-user multi-role governance"
+      "progress": "Items 1-5 reviewed and accepted; next is item 6, task-local boundary regression commands"
     }
   ],
   "remaining_tasks": [
@@ -86,6 +86,6 @@
     ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md (pre-existing modification)",
     "Pre-existing untracked .claude/, planning bootstrap/governance/traceability files, research reports, CLAUDE.md, demo-out/, and graphify-out/"
   ],
-  "next_action": "Resume with /gsd-resume-work, then review finding 5/8: Plans 01-39 and 01-40 require distinct people, conflicting with locked one-user multi-role governance. Compare exact plan identity constraints with CONTEXT D-27/D-28, then ask whether to use separate dated role-bound sign-offs by the same person or explicitly amend the locked policy.",
+  "next_action": "Resume with /gsd-resume-work, then review finding 6/8: Plans 01-29, 01-36, and 01-42 promise duplicate-section, sandbox-escape, and direct/all-reader recovery regressions but omit them from owning task verification commands. Inspect each task's behavior versus verify block and ask whether every boundary regression must run task-locally as well as in integrated closeout.",
   "context_notes": "Canonical STATE.md commit 327b6b7 records convergence blocked. Latest external review commit e94e0ee contains the authoritative current 5 HIGH + 3 actionable sections at 01-REVIEWS.md lines 294-308. Latest broad plan revision commit is 91446ee. Internal checkers passed, but external convergence intentionally remains failed. Placeholder/TBD scan flagged summaries 01-07, 01-08, 01-13, 01-16, 01-19, 01-20, and 01-27; inspect only if those summaries become relevant. No server, watcher, async job, deployment, or external write is running."
 }
