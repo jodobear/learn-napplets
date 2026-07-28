@@ -1,11 +1,11 @@
 {
   "version": "1.0",
-  "timestamp": "2026-07-28T14:57:28.720Z",
+  "timestamp": "2026-07-28T15:42:21.668Z",
   "phase": "01",
   "phase_name": "research-and-truth-baseline",
   "phase_dir": ".planning/phases/01-research-and-truth-baseline",
   "plan": 43,
-  "task": 1,
+  "task": 4,
   "total_tasks": 8,
   "status": "paused",
   "completed_tasks": [
@@ -31,7 +31,7 @@
       "id": 4,
       "name": "Review each remaining finding with the user",
       "status": "in_progress",
-      "progress": "Not started; begin with Plan 01-29 bootstrap ordering"
+      "progress": "Items 1-3 reviewed and accepted; next is item 4, ASVS extensible finding model"
     }
   ],
   "remaining_tasks": [
@@ -86,6 +86,6 @@
     ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md (pre-existing modification)",
     "Pre-existing untracked .claude/, planning bootstrap/governance/traceability files, research reports, CLAUDE.md, demo-out/, and graphify-out/"
   ],
-  "next_action": "Resume with /gsd-resume-work, then review current finding 1/8: Plan 01-29 must run a stdlib-only python -I -S bootstrap before any tools/phase1-python authorization invocation. Ask the user whether to accept the reviewer correction, inspect exact plan lines together, then record the decision before moving to finding 2.",
+  "next_action": "Resume with /gsd-resume-work, then review finding 4/8: Plan 01-39 must retain CR/WR as a required subset while allowing new SEC-* findings discovered by the complete ASVS applicability review. Show the failure scenario and ask the user to accept, adjust, or reject the extensible finding model.",
   "context_notes": "Canonical STATE.md commit 327b6b7 records convergence blocked. Latest external review commit e94e0ee contains the authoritative current 5 HIGH + 3 actionable sections at 01-REVIEWS.md lines 294-308. Latest broad plan revision commit is 91446ee. Internal checkers passed, but external convergence intentionally remains failed. Placeholder/TBD scan flagged summaries 01-07, 01-08, 01-13, 01-16, 01-19, 01-20, and 01-27; inspect only if those summaries become relevant. No server, watcher, async job, deployment, or external write is running."
 }

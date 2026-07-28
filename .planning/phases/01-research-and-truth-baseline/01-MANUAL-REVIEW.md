@@ -20,7 +20,6 @@ Review each current external finding separately before targeted replanning.
 
 ## Pending
 
-3. Validate-before-atomic-terminal-publication ordering.
 4. ASVS extensible finding model.
 5. Identity rules versus one-user multi-role governance.
 6. Task-local boundary regressions.
