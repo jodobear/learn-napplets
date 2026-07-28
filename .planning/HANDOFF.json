@@ -1,88 +1,91 @@
 {
   "version": "1.0",
-  "timestamp": "2026-07-28T11:14:45.646Z",
+  "timestamp": "2026-07-28T14:57:28.720Z",
   "phase": "01",
   "phase_name": "research-and-truth-baseline",
   "phase_dir": ".planning/phases/01-research-and-truth-baseline",
   "plan": 43,
-  "task": 3,
-  "total_tasks": 4,
+  "task": 1,
+  "total_tasks": 8,
   "status": "paused",
   "completed_tasks": [
     {
       "id": 1,
-      "name": "Refresh upstream research for kehto/web, napplet/web, and napplet/naps",
+      "name": "Draft and internally check Plans 01-29 through 01-43",
       "status": "done",
-      "progress": "Eight merged PRs fully enumerated; immutable candidate evidence reports and Phase 1 research synthesis written"
+      "progress": "All 15 gap plans exist and repeatedly passed gsd-plan-checker after targeted revisions"
     },
     {
       "id": 2,
-      "name": "Create focused Phase 1 gap-closure plans",
+      "name": "Run three-cycle external plan convergence",
       "status": "done",
-      "progress": "Draft Plans 01-29 through 01-43 created across dependency-safe waves; executed Plans 01-01 through 01-28 unchanged"
+      "progress": "Cycle counts: 2 HIGH/1 actionable, then 7/3, then 5/3; max cycles reached without convergence"
     },
     {
       "id": 3,
-      "name": "Converge gap plans through independent plan checking",
-      "status": "in_progress",
-      "progress": "Multiple revision rounds resolved upstream eligibility, schema migration, six-role approval, package split, test-filter, ROADMAP accounting, scope, and CR-07/CR-08 ownership issues; final checker still reports 2 blockers and 3 warnings"
-    }
-  ],
-  "remaining_tasks": [
-    {
-      "id": 3,
-      "name": "Apply final targeted plan-checker fixes",
-      "status": "not_started"
+      "name": "Choose convergence escalation outcome",
+      "status": "done",
+      "progress": "User selected manual review; proceed-anyway was rejected"
     },
     {
       "id": 4,
-      "name": "Re-run plan checker and deep plan-review convergence, then finalize planning state",
-      "status": "not_started"
+      "name": "Review each remaining finding with the user",
+      "status": "in_progress",
+      "progress": "Not started; begin with Plan 01-29 bootstrap ordering"
     }
+  ],
+  "remaining_tasks": [
+    {"id": 1, "name": "Review Plan 01-29 safe-bootstrap ordering", "status": "not_started"},
+    {"id": 2, "name": "Review ownership of security and terminal validators", "status": "not_started"},
+    {"id": 3, "name": "Review validate-before-atomic-terminal-publication ordering", "status": "not_started"},
+    {"id": 4, "name": "Review ASVS extensible finding model", "status": "not_started"},
+    {"id": 5, "name": "Resolve identity rules versus one-user multi-role governance", "status": "not_started"},
+    {"id": 6, "name": "Review task-local boundary regression commands", "status": "not_started"},
+    {"id": 7, "name": "Review direct registry receipt validation", "status": "not_started"},
+    {"id": 8, "name": "Define toolchain freshness and transitive-lock approval authority", "status": "not_started"}
   ],
   "blockers": [
     {
-      "description": "Plan 01-40 invokes test_drift.DriftSchemas.test_drift_records_sort_ids_observations_impacts_and_history, but no earlier plan explicitly creates that method.",
+      "description": "Plan convergence stopped after 3 cycles with 5 current HIGH findings and 3 actionable non-HIGH findings.",
       "type": "technical",
-      "workaround": "Add the exact RED-first deterministic ordering test to Plan 01-34 and its wrapper verification."
+      "workaround": "Review and resolve each current finding in 01-REVIEWS.md, then rerun convergence."
     },
     {
-      "description": "Plan 01-40 does not require or machine-check an exact 12-row fresh Review Finding Adjudication table mapping CR-01..CR-09 and WR-01..WR-03 to commands, results/evidence locators, and repaired source paths.",
-      "type": "technical",
-      "workaround": "Extend Plan 01-40 Task 2 report contract and parser using the correct mappings already defined in Plan 01-39."
-    },
-    {
-      "description": "Plan-checker warnings remain: nonexistent security-asvs-levels.md reference, broad Plan 01-34 task, broad Plan 01-35 task.",
-      "type": "technical",
-      "workaround": "Replace ASVS reference with real config/source; split migration work from behavior/security repair in Plans 01-34 and 01-35 or create dependent plans."
+      "description": "Plans 01-39/01-40 require distinct people, conflicting with locked policy that one user may sign separate dated roles.",
+      "type": "human_action",
+      "workaround": "Choose role-bound same-person sign-offs or explicitly amend locked context before plan changes."
     }
   ],
   "async_jobs": [],
-  "human_actions_pending": [],
+  "human_actions_pending": [
+    {
+      "action": "Review all eight current findings one by one and approve the intended plan correction or policy interpretation.",
+      "context": "External convergence did not pass; execution remains prohibited.",
+      "blocking": true
+    }
+  ],
   "decisions": [
     {
-      "decision": "Stop rather than accept unverified plans after checker non-convergence.",
-      "rationale": "Phase 1 planning must pass independent checking and deep review convergence before execution.",
+      "decision": "Stop after max convergence cycles and perform manual item-by-item review.",
+      "rationale": "Five HIGH and three actionable findings remain at authorization, security, publication, and evidence boundaries.",
       "phase": "01"
     },
     {
-      "decision": "Treat kehto/web and napplet/web merge commits as candidate observed implementation evidence, not protocol authority.",
-      "rationale": "Repository identities and immutable anchors are now known, but normative NIP/NAP, published-package integrity, runtime, example, fixture, and conformance evidence remain separately review-gated.",
+      "decision": "Do not execute Phase 1 gap plans before deep convergence passes.",
+      "rationale": "Project instructions make deep convergence a mandatory pre-execution gate.",
       "phase": "01"
     },
     {
-      "decision": "Final verification must emit gaps_found whenever substantive evidence remains incomplete.",
-      "rationale": "Structural completeness or green tests cannot manufacture EVID-03/EVID-04 truth.",
+      "decision": "Preserve locked one-user, multi-role governance unless the user explicitly changes it.",
+      "rationale": "Same person may fill roles, but determinations must remain separate and dated.",
       "phase": "01"
     }
   ],
   "uncommitted_files": [
-    ".planning/phases/01-research-and-truth-baseline/01-29-PLAN.md through 01-43-PLAN.md (unfinalized gap-plan drafts)",
-    ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md (upstream refresh section)",
-    ".planning/research/reports/upstream-refresh-*-2026-07-28.md (four new research reports)",
-    ".planning/ROADMAP.md, .planning/STATE.md, .planning/HANDOFF.json, and phase .continue-here.md",
-    "Pre-existing untracked .claude/, planning bootstrap/governance/traceability files, CLAUDE.md, demo-out/, and graphify-out/"
+    ".planning/HANDOFF.json and phase .continue-here.md (pause artifacts)",
+    ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md (pre-existing modification)",
+    "Pre-existing untracked .claude/, planning bootstrap/governance/traceability files, research reports, CLAUDE.md, demo-out/, and graphify-out/"
   ],
-  "next_action": "Resume with /gsd-resume-work. Read the final plan-checker findings in this handoff, revise Plans 01-34, 01-35, 01-39, and 01-40 (plus dependencies if split), then re-run gsd-plan-checker. Do not execute until checker passes and /gsd-plan-review-convergence succeeds.",
-  "context_notes": "Phase 1 remains gaps_found. Upstream refresh is complete: kehto/web 5 merges, napplet/web 3, napplet/naps 0. Draft gap plans now cover upstream acquisition, authoritative human role determinations, schema migrations, package intake, validator/replay/path/publication repairs, Nyquist, ASVS L1, and fresh verification. Remaining work is plan-quality correction only; no production, Phase 2, ADR acceptance, external write, browser workaround, or residual-risk acceptance is authorized."
+  "next_action": "Resume with /gsd-resume-work, then review current finding 1/8: Plan 01-29 must run a stdlib-only python -I -S bootstrap before any tools/phase1-python authorization invocation. Ask the user whether to accept the reviewer correction, inspect exact plan lines together, then record the decision before moving to finding 2.",
+  "context_notes": "Canonical STATE.md commit 327b6b7 records convergence blocked. Latest external review commit e94e0ee contains the authoritative current 5 HIGH + 3 actionable sections at 01-REVIEWS.md lines 294-308. Latest broad plan revision commit is 91446ee. Internal checkers passed, but external convergence intentionally remains failed. Placeholder/TBD scan flagged summaries 01-07, 01-08, 01-13, 01-16, 01-19, 01-20, and 01-27; inspect only if those summaries become relevant. No server, watcher, async job, deployment, or external write is running."
 }
