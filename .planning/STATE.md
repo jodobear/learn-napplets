@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 01
+current_phase: 1
 current_phase_name: research-and-truth-baseline
-status: planning_converged_pending_binding
-stopped_at: convergence cycle 2 reached zero findings; creating exact reviewed-commit binding
-last_updated: "2026-07-28T18:46:02Z"
+status: ready_to_execute
+stopped_at: execution paused before Plan 01-29 Task 1; resume in fresh context
+last_updated: "2026-07-28T19:55:10Z"
 last_activity: 2026-07-29
-last_activity_desc: Manual review completed, six plans corrected, and external convergence reached 0 HIGH / 0 actionable on cycle 2
+last_activity_desc: Exact-commit review passed; Plan 01-29 dispatch paused before edits due context pressure
 progress:
   total_phases: 1
   completed_phases: 0
@@ -23,14 +23,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 **Core value:** Learners can accurately understand and exercise the boundary where focused, untrusted napplet code delegates dangerous or repetitive authority to a trusted host.
-**Current focus:** Phase 01 — research-and-truth-baseline
+**Current focus:** Phase 1 — research-and-truth-baseline
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — GAP CLOSURE PLANS CONVERGED
-Plan: 28 of 43 executed; Plans 01-29 through 01-43 corrected, internally verified, and externally converged
-Status: Cycle 2 reached 0 HIGH / 0 actionable against exact worktree bytes; local plan snapshot commit and binding review remain before execution
-Last activity: 2026-07-29 — Manual review completed and convergence passed; preparing exact reviewed-commit binding
+Phase: 1 (research-and-truth-baseline) — READY TO EXECUTE GAP CLOSURE
+Plan: 28 of 43 executed; Plans 01-29 through 01-43 remain incomplete
+Status: Exact-commit Codex review `8f61695` records 0 HIGH / 0 actionable against plan commit `1191190`
+Last activity: 2026-07-29 — Plan 01-29 dispatched twice; both stopped before edits (missing executor identity, then context pressure)
 
 Progress: [███████░░░] 65%
 
@@ -195,6 +195,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-28T18:46:02Z
-Stopped at: Convergence passed; creating plan snapshot commit and exact reviewed-commit binding
+Last session: 2026-07-28T19:35:24.666Z
+Stopped at: context exhaustion at 75% (2026-07-28)
 Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
