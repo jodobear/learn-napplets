@@ -4,11 +4,11 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: gaps_found
-stopped_at: manual review selected after plan convergence maxed at 3 cycles
-last_updated: "2026-07-28T14:50:19Z"
-last_activity: 2026-07-28
-last_activity_desc: Plan convergence stopped after 3 cycles with 5 HIGH and 3 actionable findings; manual review required
+status: planning_converged_pending_binding
+stopped_at: convergence cycle 2 reached zero findings; creating exact reviewed-commit binding
+last_updated: "2026-07-28T18:46:02Z"
+last_activity: 2026-07-29
+last_activity_desc: Manual review completed, six plans corrected, and external convergence reached 0 HIGH / 0 actionable on cycle 2
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — GAPS FOUND
-Plan: 28 of 43 executed; Plans 01-29 through 01-43 drafted and internally checker-passed
-Status: Deep plan-review convergence did not pass after 3 cycles; 5 HIGH and 3 actionable findings remain
-Last activity: 2026-07-28 — Manual review selected; see `01-REVIEWS.md` and phase checkpoint
+Phase: 01 (research-and-truth-baseline) — GAP CLOSURE PLANS CONVERGED
+Plan: 28 of 43 executed; Plans 01-29 through 01-43 corrected, internally verified, and externally converged
+Status: Cycle 2 reached 0 HIGH / 0 actionable against exact worktree bytes; local plan snapshot commit and binding review remain before execution
+Last activity: 2026-07-29 — Manual review completed and convergence passed; preparing exact reviewed-commit binding
 
 Progress: [███████░░░] 65%
 
@@ -167,16 +167,16 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Pending Todos
 
-- Manually resolve the 5 HIGH and 3 actionable current findings in `01-REVIEWS.md`.
-- Re-run `/gsd-plan-review-convergence 1` only after targeted plan corrections.
-- Execute gap plans only after deep convergence passes.
+- Commit only the converged plan/manual-review state, excluding unrelated working-tree changes.
+- Re-run one exact-commit binding review and commit `01-REVIEWS.md`.
+- Execute gap plans after the binding review records 0 HIGH / 0 actionable.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Deep plan-review convergence stopped after 3 cycles with 5 HIGH and 3 actionable findings; see the current sections of `01-REVIEWS.md`. Execution is prohibited.
-- Remaining HIGH themes: wrapper-before-bootstrap ordering; unowned post-check validators; validate-before-atomic-publication ordering; ASVS finding extensibility; reviewer identity rules conflicting with the locked one-user/multi-role model.
-- Remaining actionable themes: task-local boundary regressions; direct registry-receipt validation; toolchain freshness and transitive-lock approval authority.
+- Substantive plan convergence passed on cycle 2 with 0 HIGH and 0 actionable findings.
+- Execution remains blocked only until `01-REVIEWS.md` binds the converged plan bytes to a local Git commit.
+- Plans preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
 - Phase 1 verification remains `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
 - Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
 - `01-VALIDATION.md` remains draft/noncompliant, and no Phase 1 security review artifact exists.
@@ -195,6 +195,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-28T14:50:19Z
-Stopped at: Manual review selected after convergence reached 3/3 cycles with 5 HIGH and 3 actionable findings
+Last session: 2026-07-28T18:46:02Z
+Stopped at: Convergence passed; creating plan snapshot commit and exact reviewed-commit binding
 Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
