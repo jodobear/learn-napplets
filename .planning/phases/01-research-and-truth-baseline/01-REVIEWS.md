@@ -1,16 +1,16 @@
 ---
 phase: 1
 reviewers: [codex]
-reviewed_at: 2026-07-28T19:18:02Z
-reviewed_commit: 4ee22dbf69c5138fb406c7b2c867e67ae8fafd86
-reviewed_head: 4ee22dbf69c5138fb406c7b2c867e67ae8fafd86
-review_binding_status: exact-commit-plan-snapshot-not-converged
+reviewed_at: 2026-07-28T19:47:52Z
+reviewed_commit: 1191190d2f2008e04923509ad17b72849b513064
+reviewed_head: 1191190d2f2008e04923509ad17b72849b513064
+review_binding_status: exact-commit-plan-snapshot-converged
 reviewer_identity: "codex-cli/0.145.0:external-read-only"
-reviewer_access: "Codex --sandbox read-only against an isolated review root"
-review_context: "exact committed plan bytes plus current workspace support artifacts for source grounding"
-review_prompt_sha256: b9c7f53633ddc28482aa546b006ca4b01f024fb66f100f9496dea196269d463c
-current_high: 4
-current_actionable: 4
+reviewer_access: "Codex --sandbox read-only against an isolated archive of the reviewed commit"
+review_context: "exact committed repository snapshot only; no current-workspace support artifact was used as review evidence"
+review_prompt_sha256: 8c01c26c729681d6f857aa4ac696d56bacb98886e5bdcdd40ff8faa444dcf8f3
+current_high: 0
+current_actionable: 0
 current_actionable_non_high: 0
 plans_reviewed:
   - 01-01-PLAN.md
@@ -58,268 +58,100 @@ plans_reviewed:
   - 01-43-PLAN.md
 plan_snapshot:
   count: 43
-  total_bytes: 566912
-  aggregate_sha256: a5d80f0c0708e63c9950dbe398d4da22e707394e5866b7143e2836af3abd560b
+  total_bytes: 574856
+  aggregate_sha256: 1447960dbefa56188a1c842d899ec18655ef69a9715f641c08866794b162ef2a
   algorithm: "lexically ordered basename + NUL + file bytes + NUL"
-  files:
-    - filename: 01-01-PLAN.md
-      bytes: 12952
-      sha256: 2526ed4fcd262872dc35513de8907e2ad10eb844e069fbcabd2c11a30a1e3787
-    - filename: 01-02-PLAN.md
-      bytes: 12891
-      sha256: 061bfe0b03c376e8d79431755b738df21b56c8bf914f8fe3c8e9a877931f185b
-    - filename: 01-03-PLAN.md
-      bytes: 10159
-      sha256: 53ee9d29a65d461e8a01637f49bf924ab90b4ddc36cb4686b18b6cf21bcc577a
-    - filename: 01-04-PLAN.md
-      bytes: 18610
-      sha256: 15d4b0412da6a7828d84b7b9cb99ee4a500f344d9e39a9d4d7419bb287508233
-    - filename: 01-05-PLAN.md
-      bytes: 13174
-      sha256: a30fa024dec1c30e00319fed7398010ac7bd9e3c73d747896025c39ee74ff7f4
-    - filename: 01-06-PLAN.md
-      bytes: 12586
-      sha256: ecdadad334e6d1da40ec5f65da36ec4eb98796ce145bddcef590e636ff4465a4
-    - filename: 01-07-PLAN.md
-      bytes: 8617
-      sha256: 90cb03fb1b3e2cb06616c7ed0435cda1e20614bee141433c8829375b7e6ebdf1
-    - filename: 01-08-PLAN.md
-      bytes: 8991
-      sha256: 1b6ffaee5a861c4aaf855d52b23558f4dd77f79bb72e172e41ac9dc296866cb9
-    - filename: 01-09-PLAN.md
-      bytes: 8093
-      sha256: 477fafe2bb035d69d2a63fc974e124ef0c1aecc9583fa6c8182736a1890aeb94
-    - filename: 01-10-PLAN.md
-      bytes: 10253
-      sha256: 2023f0aa2b86e25087da4362cb230fe2d188e6760ceb57dcd10acf4e554db5a8
-    - filename: 01-11-PLAN.md
-      bytes: 10706
-      sha256: 12b6a9cc52415a9c0fcfb57d99a81027f35680b306e899875b78f0025f313cf8
-    - filename: 01-12-PLAN.md
-      bytes: 10499
-      sha256: 7772dac233d3e5b7e92e0904ada7f828a3b2001a41fbb72c7caf3c58f18f664b
-    - filename: 01-13-PLAN.md
-      bytes: 8176
-      sha256: 00be025ab163b163604075da258d75932b2bbd4c38e3db216406c91f1734ab60
-    - filename: 01-14-PLAN.md
-      bytes: 10269
-      sha256: 23d8917b9525229529b24797f49ee114e4272f5e40315067992a3952bb4dec89
-    - filename: 01-15-PLAN.md
-      bytes: 11981
-      sha256: 080adf61a9f41a57e0a10b6e16a704ffcc0bd6973196f46201d0107c9bd7c389
-    - filename: 01-16-PLAN.md
-      bytes: 11207
-      sha256: 0f368a1e8fca458750cfbb10f698961177ebb847b6cce0801151fc5fcbe55223
-    - filename: 01-17-PLAN.md
-      bytes: 8844
-      sha256: be0bc7d2aff6975f1b69b3f859473fe0ab2fcbee750134749468271c717e2314
-    - filename: 01-18-PLAN.md
-      bytes: 10695
-      sha256: 379ac55d1cdaf4dc897038fbc571876d978ed220d0301e3ac3afcf3eb7814051
-    - filename: 01-19-PLAN.md
-      bytes: 11100
-      sha256: 5bda0f5506c6600abc1b1acc18b7cafa09eeb38e0b48233207c280033343486a
-    - filename: 01-20-PLAN.md
-      bytes: 9013
-      sha256: 5f3801b7d0fe15bdc0586821d8b08c27ea831dadddb47b3e70d49aef0a837edd
-    - filename: 01-21-PLAN.md
-      bytes: 9191
-      sha256: 6e35f6d01af50665ab8bf01acfbfc81aae851d6e518b113074a0348fb59d0dd5
-    - filename: 01-22-PLAN.md
-      bytes: 9871
-      sha256: 2110b7986bfe3cda150efc6d803d5e963ca7d36dd5a3fd46402515f9bd88c47c
-    - filename: 01-23-PLAN.md
-      bytes: 11306
-      sha256: e2f8ee29aee7a03640a00ed86d06254ade6c61731628c59ed1567fadaaccb94b
-    - filename: 01-24-PLAN.md
-      bytes: 31878
-      sha256: 3d00dacb77163d121c54efc2d12e5b532c0dd774ade94457a59780bae7a37b82
-    - filename: 01-25-PLAN.md
-      bytes: 15698
-      sha256: da4ed7de3612a8cd7236d355da1eadfe175e098db7008b2a7963c6e90cfc9b85
-    - filename: 01-26-PLAN.md
-      bytes: 9163
-      sha256: 5364b4eae2a5eba2d4b5775d74d82ac44c3f084644a4015981735c009d816733
-    - filename: 01-27-PLAN.md
-      bytes: 12357
-      sha256: 31818b11bec7d21f9570048aaafe42f81896cba92e3c76e6f64d18d380910c33
-    - filename: 01-28-PLAN.md
-      bytes: 19289
-      sha256: 277c6c0e42ad8247a04eed5d15fa7e7eab767db21104626e3f12fce4a64c83a5
-    - filename: 01-29-PLAN.md
-      bytes: 26155
-      sha256: 3c093f5187adde3caca1a201d64c7fac040be84429fe7d8e65b883f4c5be36cd
-    - filename: 01-30-PLAN.md
-      bytes: 9697
-      sha256: 0fec92409c2ed45e00ea2932864e4e477f935cab0b35882224b38f0a34f52e04
-    - filename: 01-31-PLAN.md
-      bytes: 14076
-      sha256: 5d1400a54771a4a43664ff6e8398ad88a7b1f129fa48930b4378c289468deb84
-    - filename: 01-32-PLAN.md
-      bytes: 10720
-      sha256: 5945d69f8a1f13e036ab0ea3aa5b99a63acd7cd1d196a871f1754ffdbeb4f978
-    - filename: 01-33-PLAN.md
-      bytes: 10374
-      sha256: f117bfd132b28af7b877e4b9f53d22a04514fca772754b9003ce550c30ee0a19
-    - filename: 01-34-PLAN.md
-      bytes: 13101
-      sha256: 15cd5806d640a637cd8cc68b6588369fe1525c9dd727a9e060a2e9279fb7a319
-    - filename: 01-35-PLAN.md
-      bytes: 12820
-      sha256: 3df7647ad8a17ba85b1814073c9cb755a7ed7619bc27a78a8c48440d2fc44e5b
-    - filename: 01-36-PLAN.md
-      bytes: 17124
-      sha256: b06292dd9a9048455060e45ab8a0cee0345129b165e26494d3a4b627847cde62
-    - filename: 01-37-PLAN.md
-      bytes: 9966
-      sha256: 30f272045e99316dfb1671e806d285c75f491fc3fd3b6b9871f3e261b6969db1
-    - filename: 01-38-PLAN.md
-      bytes: 11060
-      sha256: 15afec9429c90dbcc8b73e49a1a8ec2428c2e3719a0a291a13622064653c5945
-    - filename: 01-39-PLAN.md
-      bytes: 21844
-      sha256: 1e8d213a6c0f7a4fa019459450f188312cc96612257561eb7e685f804081aba2
-    - filename: 01-40-PLAN.md
-      bytes: 32800
-      sha256: f2e0b484f332af7eb12f2f336fc52f37d23ab8eef13fbafa3f1e89116b841c19
-    - filename: 01-41-PLAN.md
-      bytes: 12287
-      sha256: 90eda71888684777cb0f4f15d89a2595217bad5a460d6a25d4b071675fcc9fd3
-    - filename: 01-42-PLAN.md
-      bytes: 14167
-      sha256: f355e47366d7bb63abdb2eb4b740239bd900c50cd80affaf496f41ffa3dedb5e
-    - filename: 01-43-PLAN.md
-      bytes: 13152
-      sha256: b0639b2cd78384eb044fcb4c748545510c5da49158af36da349de164f99352ee
 ---
 
 # Cross-AI Plan Review — Phase 1
 
 ## Review Scope and Binding
 
-This record binds the exact 43 `*-PLAN.md` bytes from commit `4ee22dbf69c5138fb406c7b2c867e67ae8fafd86`. The per-file digest manifest in the front matter was recomputed from those committed bytes immediately before this review record was written: 43 files, 566,912 bytes, aggregate SHA-256 `a5d80f0c0708e63c9950dbe398d4da22e707394e5866b7143e2836af3abd560b`.
+This final review binds the exact 43 `*-PLAN.md` byte sequences from commit `1191190d2f2008e04923509ad17b72849b513064` (`docs(01): close final convergence gaps`). The plan manifest was recomputed from that commit immediately before recording this result: 43 files, 574,856 bytes, aggregate SHA-256 `1447960dbefa56188a1c842d899ec18655ef69a9715f641c08866794b162ef2a`.
 
-Codex ran independently through `codex exec` (`codex-cli 0.145.0`) in a read-only isolated review root. Current workspace support artifacts were provided only for source grounding; they are intentionally not asserted as members of the reviewed-plan commit or staged by this review.
+Codex ran independently through `codex exec` (`codex-cli 0.145.0`) with a read-only sandbox against an archive containing only the reviewed commit. It reviewed the actual plans plus the committed roadmap, project, requirements, context, research, and manual-review records. No mutable workspace artifact is asserted as evidence or staged by this review.
 
 ## Convergence Status
 
-**NOT CONVERGED; HIGH=4; actionable=4**
+**CONVERGED; HIGH=0; actionable=0**
 
-The actionable total includes the four HIGH findings below. There are no separate actionable non-HIGH findings.
+The prior four HIGH findings are resolved in the bound plan snapshot. No actionable non-HIGH finding remains.
 
 ## Codex Review
 
-CURRENT_HIGH_COUNT: 4
-CURRENT_ACTIONABLE_COUNT: 4
+CURRENT_HIGH_COUNT: 0
 
-## Summary
+CURRENT_ACTIONABLE_COUNT: 0
 
-The 43-plan set is not ready for execution. Four unresolved HIGH plan-design defects remain, concentrated in command ownership, canonical publication, and Wave 6 ordering.
+### Summary
 
-All 43 plans were assessed against the current support evidence. No medium or low actionable findings remain.
+The exact 43-plan snapshot is converged for this review scope. All four formerly HIGH execution-contract defects are resolved, and no new actionable concern was found. Residual risk is implementation and test-execution risk, not a remaining plan-design defect.
 
-## Strengths
+### Strengths
 
-- The plans preserve Phase 1 as research/spike work and prohibit production scaffolding.
-- Review validity is correctly content-addressed; no elapsed-time expiry was reintroduced.
-- Transitive dependency locking is automated under top-level human tool approval.
-- Security and terminal validators are now owned before their human checkpoints.
-- Security findings allow additional `SEC-*` entries and block on every unresolved HIGH.
-- One non-executor human may fill multiple roles through separate dated, role-bound records.
-- The proposed recovery architecture is fail-closed and digest-bound once its missing execution interfaces are supplied.
+- Command ownership is explicit: Plan 31 owns its receipt validator, and Plan 42 owns the shared canonical publisher CLI used verbatim by Plans 40 and 43 ([01-31-PLAN.md:90-94](01-31-PLAN.md#L90-L94); [01-42-PLAN.md:78-83](01-42-PLAN.md#L78-L83)).
+- Publication is fail-closed, profile-allowlisted, digest-bound, journaled, and interruption-tested ([01-42-PLAN.md:72-83](01-42-PLAN.md#L72-L83)).
+- The final gap sequence is serialized from package measurement through publication, closeout, validation, security review, and terminal verification ([ROADMAP.md:90-112](../../ROADMAP.md#L90-L112)).
 
-## Current Findings by severity
-
-### HIGH
-
-1. **Plan 01-31 invokes a receipt-aware validator interface that no plan owns.**
-
-   Plan 01-31 limits its tooling changes to `tools/acquire-sources.py` and related tests ([01-31-PLAN.md:7](.planning/phases/01-research-and-truth-baseline/01-31-PLAN.md:7)), and explicitly places the new authority functions there ([01-31-PLAN.md:91](.planning/phases/01-research-and-truth-baseline/01-31-PLAN.md:91)). Its completion command nevertheless calls `validate-research.py validate-governance ... --receipt ...` ([01-31-PLAN.md:92](.planning/phases/01-research-and-truth-baseline/01-31-PLAN.md:92)).
-
-   The current parser accepts only the positional governance path ([validate-research.py:1052](tools/validate-research.py:1052)) and passes only that path to validation ([validate-research.py:1082](tools/validate-research.py:1082)). Execution therefore fails on the unrecognized `--receipt` argument even if the planned acquisition guard is implemented correctly, blocking all downstream source intake.
-
-   **Narrow correction:** Either make Plan 01-31 explicitly own and test the receipt-aware `validate-research.py` CLI extension, or change the command to a receipt-validation subcommand in `tools/acquire-sources.py`, which the plan already owns.
-
-2. **Plan 01-40 depends on an unplanned terminal-publisher CLI.**
-
-   Plan 01-42 defines only the Python API `publish_validated_canonical_set(profile, staged_targets, attestation)` ([01-42-PLAN.md:80](.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:80)); its task-local verification exercises API behavior but does not require a CLI entry point ([01-42-PLAN.md:81](.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:81)). Plan 01-40 later invokes `canonical-recovery.py publish-validated-terminal-set` as an exact checkpoint command ([01-40-PLAN.md:125](.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:125), [01-40-PLAN.md:128](.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:128)), but Plan 01-40 does not own `canonical-recovery.py`.
-
-   The terminal checkpoint can therefore reach a valid attestation and then fail because its exact publication command was never required to exist.
-
-   **Narrow correction:** Make Plan 01-42 own a tested CLI—preferably one generic `publish-validated-canonical-set --profile terminal|observed-refresh` command—and update Plan 01-40 to invoke that exact tested interface.
-
-3. **Plan 01-43 does not execute or attest the real observed-refresh publication path.**
-
-   Plan 01-43 says the real five-file set must be staged and passed to the recovery API ([01-43-PLAN.md:80](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:80)), but lists the five live canonical files as direct task outputs ([01-43-PLAN.md:7](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:7)). Its completion command runs fixture tests, recovery, ordinary validation, and compatibility tests, but never stages, attests, or publishes the actual five-file generation ([01-43-PLAN.md:81](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:81)).
-
-   An executor could edit the live files directly and still satisfy every named verification command, leaving the claimed crash-atomic publication provenance unproved.
-
-   **Narrow correction:** Add a deterministic staging root and attestation artifact, then require explicit staged validation and publisher invocation in Task 1’s completion command. Verify that the published live hashes equal the attested staged hashes.
-
-4. **Plans 01-36 and 01-43 have an unordered producer-consumer handoff.**
-
-   Both plans are Wave 6 and depend only on Plans 01-35 and 01-42 ([01-36-PLAN.md:5](.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:5), [01-43-PLAN.md:5](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:5)); workspace parallelization is enabled ([config.json:4](.planning/config.json:4)).
-
-   Plan 01-36 produces the new SPK-G report and impact fragment and declares that outcome must reach CMP/DRF/OQ records ([01-36-PLAN.md:45](.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:45), [01-36-PLAN.md:102](.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:102)). Plan 01-43 reads the SPK-G report and publishes the corresponding canonical blocker records ([01-43-PLAN.md:73](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:73), [01-43-PLAN.md:80](.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:80)). Running them concurrently permits Plan 01-43 to consume the old SPK-G result, while no later plan consolidates the new impact fragment into canonical records. Plan 01-36’s assertion that the same-wave paths are disjoint is therefore false ([01-36-PLAN.md:113](.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:113)).
-
-   **Narrow correction:** Make Plan 01-43 depend on Plan 01-36, move it to the following wave, add the SPK-G impact fragment to its declared inputs, and require the staged five-file generation to incorporate that validated outcome before Plan 01-37.
-
-### MEDIUM
+## Current HIGH Concerns
 
 None.
 
-### LOW
+## Current Actionable Non-HIGH Concerns
 
 None.
 
-## Resolved / Not Reintroduced
+## Verified H1–H4 Corrections and Authoritative Package Policy
 
-The eight manual-review findings remain corrected:
+1. **H1 — Plan 31 owns the receipt CLI.** Resolved. Plan 31 owns `tools/acquire-sources.py`, specifies and tests `validate-authority-receipt --determinations PATH --receipt RECEIPT`, and invokes that exact command during verification ([01-31-PLAN.md:15](01-31-PLAN.md#L15); [01-31-PLAN.md:90-94](01-31-PLAN.md#L90-L94)). It no longer relies on an unowned receipt option for `validate-research.py`.
+
+2. **H2 — Plan 42 owns the canonical publisher CLI; Plan 40 uses its exact invocation.** Resolved. Plan 42 owns and tests `publish-validated-canonical-set --profile {terminal,observed-refresh} --staged-root PATH --attestation PATH`; Plan 40 invokes that terminal-profile interface exactly ([01-42-PLAN.md:78-83](01-42-PLAN.md#L78-L83); [01-40-PLAN.md:125-129](01-40-PLAN.md#L125-L129)).
+
+3. **H3 — Plan 43 executes and attests the actual five-file path.** Resolved. Its task stages the five live records, validates the semantic overlay, emits a digest-bound attestation, invokes the real publisher, performs recovery and canonical validation, and verifies all five published hashes ([01-43-PLAN.md:85-93](01-43-PLAN.md#L85-L93)). This is a real publication path, not fixture-only proof.
+
+4. **H4 — Plan 43 follows Plan 36 and the final waves are serial.** Resolved. Plan 43 is Wave 7 and directly depends on Plan 36; Plans 37–40 then occupy Waves 8–11, which the roadmap records consistently ([01-43-PLAN.md:5-6](01-43-PLAN.md#L5-L6); [01-37-PLAN.md:5-6](01-37-PLAN.md#L5-L6); [01-38-PLAN.md:5-6](01-38-PLAN.md#L5-L6); [01-39-PLAN.md:5-6](01-39-PLAN.md#L5-L6); [01-40-PLAN.md:5-6](01-40-PLAN.md#L5-L6); [ROADMAP.md:90-112](../../ROADMAP.md#L90-L112)).
+
+5. **Plan 36 bounded package measurement is an authorised conditional branch, not a forbidden operation.** The plan recovers before evidence parsing or operation construction; incomplete substantive eligibility or approval produces a no-operation blocker. Only qualified evidence, a separate dated approval, recovery guard, and enforceable OS sandbox allow the bounded five-run measurement ([01-36-PLAN.md:23-26](01-36-PLAN.md#L23-L26); [01-36-PLAN.md:86-94](01-36-PLAN.md#L86-L94); [01-36-PLAN.md:98-104](01-36-PLAN.md#L98-L104)).
+
+## Preserved Manual Decisions and Binding Non-Regressions
+
+The following remain settled and were not reclassified or tightened by this review:
 
 - Bootstrap verification precedes wrapper authorization.
-- Security and terminal validators are implemented before checkpoints.
-- Terminal artifacts remain staged until validation.
-- The security register supports additional `SEC-*` findings.
-- Same-principal, separate-role human review is permitted.
-- Required task-local regressions are present for Plans 01-29, 01-36, and 01-42.
+- Security and terminal validators are implemented before their checkpoints.
+- Terminal artifacts stay staged until validation.
+- The security register accepts additional `SEC-*` findings.
+- One non-executor human may hold multiple roles through separate dated, role-bound records; a distinct-person requirement is not introduced ([01-MANUAL-REVIEW.md:17-24](01-MANUAL-REVIEW.md#L17-L24); [01-40-PLAN.md:112-115](01-40-PLAN.md#L112-L115)).
+- Required task-local regressions remain present for Plans 29, 36, and 42.
 - Registry collection directly exercises and rehashes fixture/live receipts.
-- Review validity is digest/commit/supersession based, and transitive closure approval remains automated.
+- Review validity remains content-addressed: matching plan bytes do not expire with elapsed time; only digest/commit mismatch or explicit supersession invalidates the result ([01-29-PLAN.md:105-111](01-29-PLAN.md#L105-L111)). No review clock is introduced.
+- A top-level human scope approval continues to permit automated transitive dependency resolution, locking, and policy checks; ordinary in-scope transitive dependencies do not require separate human approval ([01-29-PLAN.md:124-130](01-29-PLAN.md#L124-L130)). No per-transitive-package approval is introduced.
 
-The current publication-interface findings are distinct from the resolved live-before-validation finding: the ordering policy is correct, but two required execution interfaces are incomplete.
+This review does not accept ADRs, risks, package operations, a terminal result, or a Phase 2 transition.
 
 ## Risk Assessment
 
-Execution should remain blocked until all four HIGH findings are corrected and the changed plan set receives a new content-addressed review. The defects do not challenge the settled project decisions; they are narrow execution-contract and dependency-graph failures that could otherwise stop closeout or permit unverifiable canonical publication.
+Plan-design risk is acceptably bounded for the reviewed snapshot. Execution remains gated by the exact content-addressed review preflight and the plans' own operational approval and validation checkpoints. A changed plan byte, commit mismatch, or explicit supersession requires a new review; elapsed time alone does not.
 
 ## Snapshot Attestation
 
 - Plan files: **43**
-- Total bytes: **566,912**
-- Aggregate SHA-256: `a5d80f0c0708e63c9950dbe398d4da22e707394e5866b7143e2836af3abd560b`
+- Total bytes: **574,856**
+- Aggregate SHA-256: `1447960dbefa56188a1c842d899ec18655ef69a9715f641c08866794b162ef2a`
 - Algorithm: lexical basename + NUL + file bytes + NUL
-- Per-file size/hash mismatches: **0**
-- Claimed plan commit: `4ee22dbf69c5138fb406c7b2c867e67ae8fafd86`
-- The review root is intentionally not a Git checkout, so commit-object membership was not independently queried; the supplied content-addressed manifest matched every plan byte.
-- Supporting current artifacts were used as grounding and were not treated as plan-digest members.
-- No files were edited.
+- Claimed plan commit: `1191190d2f2008e04923509ad17b72849b513064`
+- Per-file membership was derived directly from that commit; the isolated review root was an archive of the same committed tree.
+- No production or plan file was edited by this review.
 
 ---
 
 ## Consensus Summary
 
-The requested review lane was one independent, prompt-fed Codex session; no multi-reviewer consensus is claimed. Its four HIGH findings were independently source-checked before recording this binding result:
-
-1. **01-31 receipt validator ownership:** the exact verify command passes `--receipt` to `validate-research.py`, while the plan assigns authority functions to `tools/acquire-sources.py`; the current validator parser has no `--receipt` option.
-2. **01-40 terminal publisher interface:** Plan 01-42 specifies and tests a Python publication API, while Plan 01-40 invokes an unplanned `canonical-recovery.py publish-validated-terminal-set` CLI.
-3. **01-43 live observed-refresh execution:** the plan describes staged, attested publication but its named completion command does not stage, attest, invoke the publisher, or bind live hashes to the attestation.
-4. **01-36 → 01-43 ordering:** both are Wave 6 peers, but 01-43 consumes and publishes the SPK-G outcome produced by 01-36; no dependency serializes that producer-consumer handoff.
+The requested review lane was one independent, prompt-fed Codex session; no multi-reviewer consensus is claimed. It found the exact `1191190` plan snapshot converged with no current HIGH or non-HIGH actionable concerns.
 
 ### Current HIGH Findings
 
-- H1: Plan 01-31's receipt-aware governance validation command has no owned implementation.
-- H2: Plan 01-40 invokes an unplanned terminal-publication CLI.
-- H3: Plan 01-43 lacks a named real staged-publication/attestation execution path.
-- H4: Plan 01-43 lacks a dependency on Plan 01-36 despite consuming its SPK-G output.
+None.
 
 ### Current Actionable Non-HIGH Findings
 
@@ -327,7 +159,6 @@ None.
 
 ### Binding Non-Regressions
 
-- Review validity remains content-addressed: unchanged matching plan bytes do not expire with elapsed time; only byte/commit mismatch or explicit supersession invalidates a review.
-- The approved top-level research-tool scope continues to allow automated transitive dependency resolution, locking, and policy checks without per-transitive-package human approval.
-- Same-principal, separately role-bound human records remain allowed; no distinct-person requirement was introduced.
-- This review does not accept ADRs, risks, package operations, a terminal result, or a Phase 2 transition.
+- No elapsed review clock.
+- No per-transitive-package human approval.
+- Plan 36's carefully guarded bounded-measurement branch remains authorised only after all named gates and otherwise yields a no-operation blocker.
