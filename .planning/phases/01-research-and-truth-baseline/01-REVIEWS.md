@@ -1,9 +1,8 @@
 ---
 phase: 1
 reviewers: [codex]
-reviewed_at: 2026-07-28T14:43:03+00:00
-reviewed_commit: 91446eed0cda3be857cb5516922736b747ede4ff
-reviewed_worktree: true
+reviewed_at: 2026-07-28T17:54:56Z
+reviewed_commit: b667e8077a23e66f8e5bbd4f74d0ff08cb1314dc
 plans_reviewed:
   - 01-01-PLAN.md
   - 01-02-PLAN.md
@@ -106,7 +105,7 @@ plan_snapshot:
   - filename: 01-28-PLAN.md
     sha256: 277c6c0e42ad8247a04eed5d15fa7e7eab767db21104626e3f12fce4a64c83a5
   - filename: 01-29-PLAN.md
-    sha256: 340e9d18087dbf472acdc933b18ef71ca41923e0da66a4f1edb3e6711722d53c
+    sha256: c61a54b7b82734c7b928e11b942e9b9cf7e1b75319f8c46242fab42072a4c194
   - filename: 01-30-PLAN.md
     sha256: 0fec92409c2ed45e00ea2932864e4e477f935cab0b35882224b38f0a34f52e04
   - filename: 01-31-PLAN.md
@@ -120,22 +119,26 @@ plan_snapshot:
   - filename: 01-35-PLAN.md
     sha256: 3df7647ad8a17ba85b1814073c9cb755a7ed7619bc27a78a8c48440d2fc44e5b
   - filename: 01-36-PLAN.md
-    sha256: bbc04fc90e00e2a5d9b329b7ced6ae473901d19ca54914fbdf6a04506d31677f
+    sha256: ef1b8ab56a368e7b920190e03cd614ffe973084356a6e48e0f862d5cc0271285
   - filename: 01-37-PLAN.md
     sha256: 30f272045e99316dfb1671e806d285c75f491fc3fd3b6b9871f3e261b6969db1
   - filename: 01-38-PLAN.md
     sha256: 15afec9429c90dbcc8b73e49a1a8ec2428c2e3719a0a291a13622064653c5945
   - filename: 01-39-PLAN.md
-    sha256: 10c0b82d6ba502f8ce04257cd48acdc7a1466be31d960c53afb704957816a616
+    sha256: 1e8d213a6c0f7a4fa019459450f188312cc96612257561eb7e685f804081aba2
   - filename: 01-40-PLAN.md
-    sha256: 3fdb9590c22190b04dd7aec9737517c917f1fa579b20db114dba95524913ef34
+    sha256: f2e0b484f332af7eb12f2f336fc52f37d23ab8eef13fbafa3f1e89116b841c19
   - filename: 01-41-PLAN.md
-    sha256: a76e7c5fe71154987b67874624c175183d49faa66778e2527d9d195f28949812
+    sha256: 1deda1e6a8ce5be3df5e3b4bd0d144ee37b7ff67eca5f9fcaeb1ffad6e77e3fd
   - filename: 01-42-PLAN.md
-    sha256: f5f1b84ba91ceefc53e01e1bdbbb5fd8350f07559727bdef502628ae7bbfd95e
+    sha256: 2a08b0359669eb43f9d5d66e87b047d34ad4ac6b17de309fe4f3075b8279bc87
   - filename: 01-43-PLAN.md
     sha256: 884d8c662c5c2daa665ab7577452869412dcee59ebf5bdcc1808f809ac28509c
+review_inputs:
+  project_instructions_sha256: a6ad6037a92fcdf0a1208415b07eb1b1413c3739497804d057bc043dcad318ab
+  manual_review_sha256: 1457ebcbf502974d7d82e74534fb1e193fff60543b38ac101c0cb323017c1b54
 ---
+
 # Cross-AI Plan Review — Phase 1
 
 ## Codex Review
@@ -144,165 +147,169 @@ plan_snapshot:
 
 ## Summary
 
-**Verdict: NOT CONVERGED. Overall risk: HIGH.**
+The 43 repository plan hashes match the supplied exact bytes. The plan set is not converged: three unresolved HIGH concerns remain and there are no separate actionable MEDIUM or LOW concerns.
 
-The 43-plan dependency graph is complete, acyclic, and correctly wave-ordered. Plans 01-01–01-28 are historical execution records; Plans 01-29–01-43 form a coherent gap-closure program around real defects in the current validators and evidence records. The latest revisions successfully address most findings from the previous review.
-
-Five HIGH plan defects remain: unsafe bootstrap ordering, two unowned post-check validators, non-transactional terminal-state publication, a closed rather than open-ended ASVS review model, and human-identity requirements that conflict with locked one-user governance. Four MEDIUM issues concern incomplete task-level verification, registry collector evidence, Plan 43 bypassing the new transaction mechanism, and underdefined toolchain approval/freshness policy.
-
-Current execution remains correctly blocked: `01-REVIEWS.md` is bound to commit `4c6ac29...` and still says `NOT CONVERGED; HIGH=7`, while the latest plans are at a newer commit and have different hashes ([01-REVIEWS.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-REVIEWS.md:4), [review manifest](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-REVIEWS.md:55)). Plan 29’s fresh-review precondition therefore cannot yet pass, as intended ([01-29-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:93)).
+The eight binding manual-review decisions are otherwise substantially incorporated. The old `5 HIGH / 3 actionable` figures in `.planning/STATE.md:30-33` describe the preceding review cycle and are not counted here.
 
 ## Strengths
 
-- The phase boundary remains disciplined: no production scaffold, no accepted ADRs, and explicit separation between upstream fact, implementation observation, policy, and inference ([CLAUDE.md](/workspace/projects/learn-napplets/CLAUDE.md:14), [CLAUDE.md](/workspace/projects/learn-napplets/CLAUDE.md:23)).
+- The plans preserve Phase 1 as non-production research. The repository prohibits production scaffolding and requires disposable spikes to remain isolated (`CLAUDE.md:14-19`); Plans 09–20 consistently frame their work as evidence rather than production, for example `.planning/phases/01-research-and-truth-baseline/01-11-PLAN.md:45-48`.
 
-- The gap-plan graph has 43 existing nodes, no missing dependencies, no cycles, and no dependency on a later wave. The integrated closeout correctly waits for provenance, compatibility, sandbox, recovery, and refresh work ([01-37-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-37-PLAN.md:5)).
+- Evidence classes remain properly separated. Project policy distinguishes upstream fact, proposal, observed implementation, project policy, and inference (`CLAUDE.md:23-30`). Plans 35, 36, 41, and 43 enforce that distinction at compatibility, package, measurement, and refresh boundaries (`01-35-PLAN.md:47-50`, `01-36-PLAN.md:77-82`, `01-41-PLAN.md:70-76`, `01-43-PLAN.md:63-65`).
 
-- Compatibility is now substantive rather than a field-presence test. Plan 35 separates seven evidence dimensions, rejects wrong authority, and keeps structural validity distinct from human approval ([01-35-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-35-PLAN.md:89)).
+- The approved tool scope is correctly implemented conceptually. Plan 29 derives and locks the full dependency closure, checks versions, artifact hashes, licenses, integrity, and security policy, and escalates only scope or policy failures—without per-transitive-package approval (`01-29-PLAN.md:123-132`). This matches the binding human disposition (`01-MANUAL-REVIEW.md:24`).
 
-- Authority ingestion is now durable and correctly cardinalized. Plan 30 permits one user to make six separate role decisions and digest-binds them; Plan 31 validates exact scope, roles, freshness, and receipt bytes before intake ([01-30-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-30-PLAN.md:62), [01-31-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-31-PLAN.md:81)).
+- Review validity is content-addressed rather than time-expiring. Plan 29 accepts unchanged bytes regardless of elapsed time and invalidates on digest/commit change or explicit supersession (`01-29-PLAN.md:103-113`), matching `01-MANUAL-REVIEW.md:24`.
 
-- Plan 36 now specifies a genuine OS-level package sandbox—no network, minimal environment, read-only repository, isolated writes, and resource limits—with a fail-closed outcome if unavailable ([01-36-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:76)).
+- The one-user governance model is now respected. Plans 39 and 40 allow one human principal to occupy multiple roles while requiring separate dated, role-bound, commit/digest-bound determinations and prohibiting generic reuse or executor self-sign-off (`01-39-PLAN.md:80-88`, `01-40-PLAN.md:109-117`). This matches D-27/D-28 (`01-CONTEXT.md:47-50`) and the binding disposition (`01-MANUAL-REVIEW.md:21`).
 
-- Plan 42’s proposed recovery mechanism addresses the real current weakness: canonical consolidation presently performs sequential `os.replace` operations followed by only in-process rollback ([validate-research.py](/workspace/projects/learn-napplets/tools/validate-research.py:997), [validate-research.py](/workspace/projects/learn-napplets/tools/validate-research.py:1022)). The revised plan covers journals, fsync, interruption recovery, contention, and all reader entry points ([01-42-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:62)).
+- Security-review extensibility is corrected. Plan 39 requires the fixed CR/WR subset while permitting additional stable `SEC-*` findings and blocks a pass on any unresolved HIGH finding (`01-39-PLAN.md:81-88`), as required by `01-MANUAL-REVIEW.md:20`.
 
-- Plan 39 now pins the complete ASVS catalog rather than relying on an introductory page. The named `v5.0.0_release` and commit are corroborated by the [official OWASP ASVS 5.0.0 release](https://github.com/OWASP/ASVS/releases/tag/v5.0.0_release).
+- Registry evidence is collected directly without executing package code. Plan 41 runs the actual bounded collector, rehashes exact response bytes, distinguishes fixture from live evidence, and retains an impact-scoped blocker when live collection is unavailable (`01-41-PLAN.md:66-76`).
 
-- Plan 40 now preserves D-26: Phase 1 may pass with properly approved, impact-scoped upstream blockers without relabeling blocked evidence as verified ([01-40-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:81), [01-CONTEXT.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-CONTEXT.md:47)).
-
-- Plans 37–40 maintain a good authority split: automation prepares evidence dossiers; independent review supplies security and terminal judgments; state transition remains separately gated.
+- Terminal publication follows stage → validate → journaled publish. Plan 40 keeps candidate evidence non-terminal, validates an exact staged three-file set, and invokes Plan 42’s publisher only after validation (`01-40-PLAN.md:109-128`). Plan 42 adds interruption, journal-tampering, contention, and altered-after-validation coverage (`01-42-PLAN.md:68-78`).
 
 ## Concerns
 
 ### HIGH
 
-- **Plan 29 still runs its first authorization gate through the vulnerable wrapper before repairing it.** The current wrapper starts site-enabled Python before checking the interpreter ([tools/phase1-python](/workspace/projects/learn-napplets/tools/phase1-python:18)). Task 1 invokes that wrapper for the plan-review authorization gate ([01-29 task 1](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:104)), while the `python -I -S` bootstrap is not introduced until Task 2 ([01-29 task 2](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:120)). Thus startup-hook code could execute before the first supposedly fail-closed authorization. The prior finding is fixed for later commands, but not for the initial gate.
+#### H1 — Plan 01-29’s first authorization task cannot execute its own verification command
 
-- **Plans 39 and 40 declare essential validators that no task actually implements.** Plan 39 lists `tools/validate-phase1-security.py` as an artifact, but Task 1 owns only the tests/reference report and Task 2 owns only the evidence dossier; the checkpoint then attempts to run the nonexistent tool ([01-39 artifact](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:29), [task files](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:74), [checkpoint](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:100)). Plan 40 has the same gap for `tools/validate-phase1-terminal.py` ([01-40 artifact](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:26), [task files](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:80), [checkpoint](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:112)). Neither tool currently exists.
+- **Severity:** HIGH
+- **Exact plan:** 01-29
+- **Evidence:** Plan 29 extracts a nonexistent `"pythonExecutable"` field and then invokes test modules with `PYTHONPATH=tests/phase1` under `-I -S` (`.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:111-113`). The committed environment record instead exposes `isolatedInterpreter` and `resolvedExecutable` (`.planning/spikes/_shared/toolchain-environment.json:18-23`). The target test is located outside the isolated interpreter’s standard-library search path (`tests/phase1/test_preflight.py:10-14`, `tests/phase1/test_preflight.py:33`).
+- **Failure mechanism:** The shell extraction produces an empty `RECORDED_PYTHON`, so `test -n` fails immediately. Even after correcting the key, Python isolated mode ignores `PYTHONPATH`; therefore `-m unittest test_preflight...` cannot import the module. Wave 1 stops before establishing the bootstrap or review gate, blocking every dependent gap plan.
+- **Concrete PLAN change:** In Plan 29 Task 1, extract and safely resolve `python.isolatedInterpreter` relative to the repository root, while having the bootstrap verify it against `resolvedExecutable`. Replace the three direct `-I -S -m unittest` commands with script-path invocations that do not depend on `PYTHONPATH`, such as:
+  `"$RECORDED_PYTHON" -I -S tests/phase1/test_preflight.py Phase1ExecutionPreflightTests.<method>`.
+  Alternatively, put the startup-hook regressions behind a stdlib-only `phase1-bootstrap.py --self-test` command. The exact revised command must be the Task 1 acceptance command.
 
-- **Plan 40 publishes live terminal state before validating it.** The checkpoint tells humans to author `01-REVERIFICATION.md` and update `STATE.md`/`ROADMAP.md`, then run the validator ([01-40 task 3](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:112)). A crash or validation failure can therefore leave invalid or contradictory live state visible, despite the acceptance criterion claiming state cannot move before checks ([01-40 acceptance](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:116)). Plan 42’s journal protects research consolidation, not this three-file terminal publication.
+#### H2 — Plan 42’s closed-reader guarantee is ordered before Plan 36 creates the package reader
 
-- **Plan 39 is not yet an open-ended ASVS assessment.** It requires an applicability row for every L1 control, but the machine-checked finding register is constrained to exactly the twelve historical CR/WR findings ([01-39 behavior](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:76), [01-39 action](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:81)). Applicable controls have no required verification result, command/evidence, or pass/finding link. A previously unknown security defect therefore has no machine-enforced finding representation, while a complete-looking matrix can still be produced.
+- **Severity:** HIGH
+- **Exact plans:** 01-36 and 01-42
+- **Evidence:** Plan 42 runs in Wave 4 and depends only on Plan 34 (`01-42-PLAN.md:3-13`), yet claims ownership of `tools/measure-package-conformance.py` and requires every route in that tool to call the recovery guard (`01-42-PLAN.md:67-77`). Plan 36 runs later, depends only on Plan 35, and explicitly creates that same tool before executing it against canonical compatibility and package evidence (`01-36-PLAN.md:3-8`, `01-36-PLAN.md:73-83`).
+- **Failure mechanism:** Plan 42 cannot conclusively test a closed inventory containing the final Plan 36 reader before Plan 36 creates or replaces it. Plan 36 has no requirement to preserve, register, or task-locally test `recover_before_canonical_read()`. It can therefore evaluate package eligibility—and potentially initiate the sandboxed package operation—from a mixed interrupted canonical generation before Plan 37’s later aggregate suite notices the regression.
+- **Concrete PLAN change:** Make Plan 36 depend on both `01-35` and `01-42`. Add `tools/canonical-recovery.py` and `01-42-SUMMARY.md` to Task 1’s `read_first`; require `measure-package-conformance.py` to call `recover_before_canonical_read()` before parsing any canonical evidence and register every command entry point in Plan 42’s closed reader registry. Add and execute a task-local regression such as `test_spk_g_reader_recovers_or_refuses_before_canonical_read` before `--check` or `--run-five`. Plan 42 should no longer claim final ownership of the not-yet-created reader unless it deliberately creates a tested skeleton that Plan 36 must extend.
 
-- **Plans 39 and 40 contradict the locked one-user governance model.** Context says the user currently fills all roles and requires separate dated *role sign-offs*, not separate people ([01-CONTEXT.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-CONTEXT.md:47)). Plan 30 implements that correctly by allowing one person to sign all six roles ([01-30-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-30-PLAN.md:65)). Plan 39 instead requires distinct human auditor and rechecker identities ([01-39-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-39-PLAN.md:100)); Plan 40 similarly requires separate verifier and project-owner rechecker identities ([01-40-PLAN.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:112)). Under current staffing this can make closure impossible.
+#### H3 — Plan 43 publishes a five-file canonical generation outside the durable transaction
+
+- **Severity:** HIGH
+- **Exact plans:** 01-42 and 01-43
+- **Evidence:** Plan 43 modifies five related canonical records (`01-43-PLAN.md:7-12`) and expressly says it will do so “without coupling” to the durable recovery transaction (`01-43-PLAN.md:33-37`). Its task edits those records directly and only runs validation followed by `recover-consolidation` afterward (`01-43-PLAN.md:59-65`). Current consolidation publishes multiple targets through sequential `os.replace` operations with only in-process rollback (`tools/validate-research.py:997-1035`); Plan 42 exists specifically to replace this with a fsynced journal and recovery-before-read boundary (`01-42-PLAN.md:68-78`).
+- **Failure mechanism:** A hard interruption while Plan 43 is updating claims, drift, open questions, package map, and the current-work snapshot can leave an unjournaled mixed generation. The later `recover-consolidation` command has no Plan 43 transaction to recover, so a recovery-guarded reader can still consume mutually inconsistent records.
+- **Concrete PLAN change:** Amend Plan 43 to stage all five outputs, validate the staged set, bind their paths and SHA-256 digests, and publish them through Plan 42’s locked journaled canonical-set API. Add task-local interruption tests after every replacement position and prove recovery yields the complete old or complete new five-file generation. Remove the statement that this publication is intentionally uncoupled from durable recovery.
 
 ### MEDIUM
 
-- **Several plans advertise critical negative tests but do not run them in their task-local verification.** Plan 29 omits its duplicate authorization-section test from Task 1 verification ([behavior](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:97), [verify](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:104)); Plan 36 omits its sandbox-escape test ([behavior](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:76), [verify](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-36-PLAN.md:83)); Plan 42 omits its direct-`validate-planning` and all-reader-registry tests ([behavior](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:62), [verify](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:70)). Plan 37’s later full suite may catch these, but dependent work can proceed after an incompletely verified task.
+None.
 
-- **Plan 41’s collector is specified but not directly exercised by its acceptance command.** The action defines transport bounds and an immutable receipt, but the task `<files>` omits both the collector and receipt, and verification invokes only one unit test ([01-41 task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-41-PLAN.md:55)). A fixture test may validate logic, but it does not demonstrate that the live collector created the claimed receipt from the selected registry response.
+### LOW
 
-- **Plan 43 bypasses the transaction it depends on.** It edits five related canonical records directly while explicitly saying it is not coupled to the durable recovery transaction ([01-43 objective](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:33), [01-43 action](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:63)). Calling `recover-consolidation` afterward cannot repair a mixed generation that never created a journal, yet the plan’s done condition promises one durable generation ([01-43 verify](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-43-PLAN.md:64)).
-
-- **Plan 29’s lock/freshness authority remains underdefined.** The current approval explicitly authorizes only three top-level packages while merely capturing resolver dependencies ([toolchain approval](/workspace/projects/learn-napplets/.planning/research/toolchain-approval.yaml:89)). Plan 29 autonomously converts ten distributions into a hash lock and refers to an “approval addendum” without assigning a human sign-off or owning it in Task 2 ([01-29 task 2](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:114)). It also requires a “configured freshness window,” but `.planning/config.json` enables convergence without defining that window ([config](/workspace/projects/learn-napplets/.planning/config.json:47)).
+None.
 
 ## Suggestions
 
-1. Split Plan 29 bootstrap into a pre-site Task 1A using only shell/stdlib and `python -I -S`; run the review-manifest gate only after that bootstrap passes. Add the omitted duplicate-section test to the immediate verification.
+- In Plan 32, replace “RFC 3339 freshness” and “freshness fixtures” with “recorded RFC 3339 review timestamp” and “content-binding/supersession fixtures” (`01-32-PLAN.md:86-88`). Plan 29 already prohibits age-based invalidation, so this is terminology cleanup rather than a separate finding.
 
-2. Make Plan 39 Task 1 explicitly create and test `tools/validate-phase1-security.py`. Make Plan 40 Task 2 explicitly create and test `tools/validate-phase1-terminal.py`.
+- Keep `.planning/STATE.md` at `gaps_found` until the three HIGH concerns are corrected and a new exact-byte review is recorded. Deep convergence is an execution prerequisite (`CLAUDE.md:43-45`).
 
-3. Stage `01-REVERIFICATION.md`, `STATE.md`, and `ROADMAP.md` in a transaction directory, validate the staged set, then journal and publish it atomically. A failed validator must leave the old live state intact.
-
-4. Give each applicable ASVS control `verificationStatus`, evidence/command, observed result, and linked finding IDs. Keep CR/WR-01…03 as a required subset, but allow new `SEC-*` findings. Security can pass only when every applicable control is verified or explicitly mitigated and no blocking finding remains.
-
-5. Align identity requirements with D-27/D-28: enforce distinct role-bound, dated sign-offs, while allowing one user to fill those roles. If multiple humans are truly required, amend `01-CONTEXT.md` before execution.
-
-6. Add the exact sandbox, all-reader, and duplicate-section tests to their owning tasks’ verification commands—not only the eventual full-suite closeout.
-
-7. Have Plan 41 invoke the collector in fixture mode and, when public access is available, its exact bounded live mode; validate the resulting receipt digest directly.
-
-8. Publish Plan 43’s five-file update through Plan 42’s journaled transaction API.
-
-9. Define a concrete review maximum age in configuration and either obtain an explicit toolchain-closure approval addendum or label transitive hashes as derived lock evidence under the existing approval.
-
-## Plan-by-plan Assessment
-
-| Plan | Assessment |
-|---|---|
-| 01 | Keep as historical bootstrap; Plan 29 must repair its wrapper boundary ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-01-PLAN.md:74)). |
-| 02 | Sound source/claim tracer; later citation enforcement belongs to Plan 32 ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-02-PLAN.md:86)). |
-| 03 | Sound conflict contracts; Plan 34 correctly migrates the inadequate v1 drift shape ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-03-PLAN.md:76)). |
-| 04 | Good spike/governance foundation; Plans 31 and 38 complete its semantic checks ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-04-PLAN.md:100)). |
-| 05 | Bounded acquisition was appropriate but insufficient; Plans 29–31 are necessary ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-05-PLAN.md:82)). |
-| 06 | Good drift intent; Plans 33/35 supply missing reduction and eligibility semantics ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-06-PLAN.md:84)). |
-| 07 | Keep; catalogs remain descriptive rather than authoritative ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-07-PLAN.md:73)). |
-| 08 | Keep; lesson structure is useful but derivative of repaired provenance ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-08-PLAN.md:82)). |
-| 09 | Keep after Plan 33 binds retained evidence and replay ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-09-PLAN.md:69)). |
-| 10 | Keep; package installation remains properly human-gated ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-10-PLAN.md:69)). |
-| 11 | Keep as blocked browser evidence; Firefox limitation remains honest ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-11-PLAN.md:73)). |
-| 12 | Keep; verified-loader uncertainty is not overstated ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-12-PLAN.md:73)). |
-| 13 | Keep after retained-output repair ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-13-PLAN.md:68)). |
-| 14 | Keep; portable scope stays optional and proposed ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-14-PLAN.md:68)). |
-| 15 | Historical blocked route; Plan 36 safely supersedes any positive execution path ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-15-PLAN.md:72)). |
-| 16 | Keep after Plans 34/42 repair classification and publication ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-16-PLAN.md:73)). |
-| 17 | Keep; deterministic accessibility evidence is appropriately scoped ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-17-PLAN.md:67)). |
-| 18 | Keep in its current blocked/least-authority disposition ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-18-PLAN.md:68)). |
-| 19 | Keep; external deployment remains an explicit human choice ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-19-PLAN.md:78)). |
-| 20 | Keep after Plan 33’s idempotency and ambiguity repair ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-20-PLAN.md:69)). |
-| 21 | Keep; ADRs remain proposed and evidence-bound ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-21-PLAN.md:74)). |
-| 22 | Keep; host/security ADRs remain proposal-only ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-22-PLAN.md:76)). |
-| 23 | Keep; package conclusions and executive summaries retain blockers ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-23-PLAN.md:82)). |
-| 24 | Historical closeout only; cannot serve as terminal evidence after the failed verification ([01-VERIFICATION.md](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-VERIFICATION.md:77)). |
-| 25 | Keep; exact lesson inventory is useful but provenance-dependent ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-25-PLAN.md:92)). |
-| 26 | Keep; correctly permits an evidence-scoped blocker ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-26-PLAN.md:73)). |
-| 27 | Keep; packet work remains separated and reviewable ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-27-PLAN.md:78)). |
-| 28 | Historical consolidation; Plans 34/42 must supersede its unsafe mechanisms ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-28-PLAN.md:101)). |
-| 29 | **Revise:** pre-site repair happens after the first security-sensitive gate; approval/freshness also need definition. |
-| 30 | Accept; latest bytes resolve the prior per-scope authority-handoff finding. |
-| 31 | Accept; latest bytes validate and consume the exact authority artifact. |
-| 32 | Accept; strong citation, convergence, and child-wrapper repair ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-32-PLAN.md:67)). |
-| 33 | Accept; strong retained-output, replay, and refresh-reduction coverage ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-33-PLAN.md:72)). |
-| 34 | Accept; migration and observed-local separation are well bounded ([task](/workspace/projects/learn-napplets/.planning/phases/01-research-and-truth-baseline/01-34-PLAN.md:76)). |
-| 35 | Accept; substantive eligibility and D-26 interpretation are now coherent. |
-| 36 | Accept after adding its sandbox regression to immediate verification. |
-| 37 | Accept once all upstream gap plans pass; integrated ordering is sound. |
-| 38 | Accept; exactly-once probe mapping and non-approval boundary are strong. |
-| 39 | **Revise:** assign validator implementation, permit new findings, and align human identities with D-27/D-28. |
-| 40 | **Revise:** assign terminal-validator implementation and stage/atomically publish terminal state. |
-| 41 | Revise verification/task ownership for the collector and live receipt. |
-| 42 | Accept after running all advertised reader/recovery tests locally. |
-| 43 | Revise to publish through Plan 42’s transaction mechanism. |
+- Preserve the strong task-local regression rule from the manual disposition (`01-MANUAL-REVIEW.md:22`) when adding the two recovery tests above; the later full closeout suite should remain defense in depth.
 
 ## Risk Assessment
 
-**Overall risk: HIGH.**
+Current execution risk is **HIGH**. Plan 29’s Wave-1 verification command is deterministically unusable, so execution cannot legitimately begin. Separately, the recovery design does not compose safely with the later package reader or Plan 43’s canonical writes.
 
-The phase goal is achievable and most evidence, authority, migration, compatibility, sandbox, and closeout design is strong. However, the remaining HIGH findings sit exactly at authorization, security certification, and sole-live-state transition boundaries. Execution should not begin until Plans 29, 39, and 40 are corrected and a fresh digest-bound all-43-plan review records convergence. No repository files were changed during this review.
+The broader architecture is otherwise appropriately bounded: it remains non-production, preserves source-class distinctions, keeps ADRs proposed, supports impact-scoped blockers, and places human decisions at security and terminal boundaries. Correcting the three findings is targeted and should not require restructuring the 43-plan roadmap.
+
+## Plan-by-plan Assessment
+
+Plans 01-01 through 01-28 are historical executed plans; retaining them is appropriate because current state records 28 completed plans and 15 planned gap closures (`.planning/STATE.md:12-16`, `.planning/STATE.md:30-32`).
+
+| Plan | Assessment |
+|---|---|
+| 01-01 | Historical—appropriately retained toolchain approval/isolation baseline (`01-01-PLAN.md:47-50`). |
+| 01-02 | Historical—appropriately retained source-to-claim validation tracer (`01-02-PLAN.md:51-54`). |
+| 01-03 | Historical—appropriately retained drift/open-question/compatibility contracts (`01-03-PLAN.md:46-49`). |
+| 01-04 | Historical—appropriately retained reproducible non-production spike governance (`01-04-PLAN.md:57-60`). |
+| 01-05 | Historical—appropriately retained immutable-source acquisition attempt (`01-05-PLAN.md:52-55`). |
+| 01-06 | Historical—appropriately retained drift and refresh groundwork (`01-06-PLAN.md:52-55`). |
+| 01-07 | Historical—appropriately retained ecosystem catalogs without architecture promotion (`01-07-PLAN.md:40-43`). |
+| 01-08 | Historical—appropriately retained fixed lesson index and initial packets (`01-08-PLAN.md:50-53`). |
+| 01-09 | Historical—appropriately retained disposable workspace evidence (`01-09-PLAN.md:41-44`). |
+| 01-10 | Historical—appropriately retained framework evidence without application acceptance (`01-10-PLAN.md:41-44`). |
+| 01-11 | Historical—appropriately retained browser-boundary evidence and blocker (`01-11-PLAN.md:45-48`). |
+| 01-12 | Historical—appropriately retained verified-loader feasibility evidence (`01-12-PLAN.md:45-48`). |
+| 01-13 | Historical—appropriately retained shared-content parity evidence (`01-13-PLAN.md:41-44`). |
+| 01-14 | Historical—appropriately retained portable-target blocker evidence (`01-14-PLAN.md:41-44`). |
+| 01-15 | Historical—appropriately retained package/conformance attempt and blocker (`01-15-PLAN.md:45-48`). |
+| 01-16 | Historical—appropriately retained egress/CSP observations (`01-16-PLAN.md:45-48`). |
+| 01-17 | Historical—appropriately retained diagram accessibility evidence (`01-17-PLAN.md:41-44`). |
+| 01-18 | Historical—appropriately retained least-authority editor evidence (`01-18-PLAN.md:41-44`). |
+| 01-19 | Historical—appropriately retained local-only delivery evidence (`01-19-PLAN.md:41-44`). |
+| 01-20 | Historical—appropriately retained freshness-spike evidence (`01-20-PLAN.md:41-44`). |
+| 01-21 | Historical—appropriately retained proposed ADR 0001–0004 drafts (`01-21-PLAN.md:43-46`). |
+| 01-22 | Historical—appropriately retained proposed ADR 0005–0008 drafts (`01-22-PLAN.md:43-46`). |
+| 01-23 | Historical—appropriately retained proposed ADR 0009–0011 and summaries (`01-23-PLAN.md:48-51`). |
+| 01-24 | Historical—appropriately retained failed initial gate evidence (`01-24-PLAN.md:96-99`). |
+| 01-25 | Historical—appropriately retained final lesson-packet group (`01-25-PLAN.md:57-60`). |
+| 01-26 | Historical—appropriately retained first-scope synthesis without ADR acceptance (`01-26-PLAN.md:42-45`). |
+| 01-27 | Historical—appropriately retained second lesson-packet group (`01-27-PLAN.md:48-51`). |
+| 01-28 | Historical—appropriately retained consolidation baseline whose failures motivate current remediation (`01-28-PLAN.md:49-52`). |
+| 01-29 | **Blocked by H1.** Scope, transitive-lock, and content-addressed review policies are sound, but Task 1’s exact command is unusable (`01-29-PLAN.md:99-113`). |
+| 01-30 | Sound authority-classification checkpoint; automation cannot approve its own sources (`01-30-PLAN.md:38-41`). |
+| 01-31 | Sound reviewed ingestion-or-blocker route (`01-31-PLAN.md:52-55`). |
+| 01-32 | Sound citation, strict parser, and wrapper remediation; only terminology cleanup suggested (`01-32-PLAN.md:39-42`, `01-32-PLAN.md:86-88`). |
+| 01-33 | Sound retained-output and fixed-replay remediation (`01-33-PLAN.md:44-47`). |
+| 01-34 | Sound confinement, schema migration, and evidence-class separation (`01-34-PLAN.md:48-51`). |
+| 01-35 | Sound substantive seven-dimension compatibility evaluator (`01-35-PLAN.md:47-50`). |
+| 01-36 | **Blocked by H2.** Sandbox and eligibility controls are strong, but recovery-reader ownership is not preserved (`01-36-PLAN.md:73-84`). |
+| 01-37 | Sound integration closeout, contingent on corrected upstream plans (`01-37-PLAN.md:31-34`). |
+| 01-38 | Sound fourteen-probe Nyquist reconciliation (`01-38-PLAN.md:38-41`). |
+| 01-39 | Sound pre-checkpoint validator ownership, extensible findings, and role-bound human security review (`01-39-PLAN.md:76-89`). |
+| 01-40 | Sound candidate/staging/human-recheck design and no-transition boundary (`01-40-PLAN.md:109-130`). |
+| 01-41 | Sound direct registry receipt and live-or-blocker distinction (`01-41-PLAN.md:66-76`). |
+| 01-42 | Strong durable recovery foundation, but incomplete composition with Plan 36 and Plan 43 under H2/H3 (`01-42-PLAN.md:68-79`). |
+| 01-43 | **Blocked by H3.** Evidence classification and append-only intent are sound, but publication bypasses the durable transaction (`01-43-PLAN.md:33-37`, `01-43-PLAN.md:59-66`). |
+
+## Current Findings Ledger
+
+| ID | Status | Severity | Exact plans | Required correction |
+|---|---|---:|---|---|
+| H1 | Newly raised | HIGH | 01-29 | Use the existing `isolatedInterpreter` record and execute direct isolated tests without relying on `PYTHONPATH` under `-I`. |
+| H2 | Newly raised | HIGH | 01-36, 01-42 | Make Plan 36 recovery-aware after Plan 42 and add a task-local reader-entry regression before any package operation. |
+| H3 | Carried forward | HIGH | 01-42, 01-43 | Publish Plan 43’s complete five-file canonical generation through the journaled transaction with interruption recovery coverage. |
 
 ---
 
 ## Consensus Summary
 
-Only Codex was selected with `--codex`; this is a source-grounded independent review, not a cross-model vote. The review was run against the current 43-plan snapshot and completed successfully without editing repository files. Its five HIGH findings each identify a missing change in the latest plan bytes.
-
-The reviewer also raised four MEDIUM findings. Three need a PLAN.md change and are counted below. The Plan 43 transaction-coupling suggestion is excluded from the actionable count: its current plan explicitly says that the five-file update is not coupled to the durable recovery transaction, so it is an explicitly unadopted/deferred coupling rather than an omitted requirement under this review contract. The fresh-review precondition is likewise excluded because this committed digest-bound record makes that gate executable; it does not need another PLAN.md edit.
+Only Codex was selected with `--codex`. Its review was source-grounded against the exact current 43-plan snapshot, the project instructions, and the authoritative manual-review dispositions. The three findings below are current plan defects; they are not historical counts from `STATE.md` or the previous review record.
 
 ### Agreed Strengths
 
-- The revised authority handoff, OS-level sandbox, all-reader recovery design, ASVS catalog pin, and D-26 compatibility interpretation close the corresponding prior-review gaps.
-- The 43-plan dependency graph is complete, acyclic, and preserves the no-production, immutable-evidence, and human-authority boundaries.
+- All eight manual-review corrections are substantively reflected in the relevant plans: isolated bootstrap ordering is specified, security and terminal validators are task-owned before checkpoints, terminal publication is staged and journaled, `SEC-*` findings are supported, and one-person role separation is digest-bound rather than identity-bound.
+- The plans correctly reject calendar-based review expiration and per-transitive-package human approval. Plan 29 instead binds review validity to plan/commit bytes and restricts escalation to scope or policy failures.
+- Source classes, non-production limits, direct registry receipts, and terminal human-verification boundaries remain well scoped.
 
 ### Agreed Concerns
 
-- The current unresolved defects concentrate at the first authorization boundary, security/terminal-validator ownership, terminal-state publication, open-ended ASVS assessment, and role-sign-off semantics.
+- **H1 — newly raised / partially resolves Manual items 1 and 6:** Plan 29 correctly moved bootstrap work before wrapper authorization, but its exact Task 1 command cannot obtain the recorded interpreter or run its isolated tests. The manifest has `python.isolatedInterpreter` and `python.resolvedExecutable`, not `pythonExecutable`; moreover, `-I -S` ignores `PYTHONPATH`, and the current `test_preflight.py` imports `validate-planning.py`, which imports PyYAML. Correct Task 1 by extracting and resolving the isolated interpreter path, retaining the bootstrap's comparison to the resolved executable, and separating a stdlib-only bootstrap self-test from validator tests run through the bootstrap-protected wrapper. The revised direct command must itself be task-local verification.
+- **H2 — newly raised:** Plan 42 claims a closed recovery-guarded reader inventory before the later Plan 36 creates/replaces `tools/measure-package-conformance.py`. Make Plan 36 depend on Plan 42, preserve/register `recover_before_canonical_read()` in every package-reader entry path, and execute a reader-recovery regression before `--check` or `--run-five` can parse canonical evidence or construct package argv.
+- **H3 — carried forward and elevated to HIGH:** Plan 43 intentionally publishes five mutually related canonical records outside the transaction that Plan 42 introduces. A human disposition does not authorize a mixed canonical generation, and this is a crash-integrity boundary rather than rejected approval bureaucracy. Stage, validate, hash-bind, journal, and atomically publish the full five-file set through Plan 42's shared publisher; prove interruption recovery returns only the complete old or complete new generation.
 
 ### Divergent Views
 
-- Historical concerns were not re-counted where the latest plan bytes now own concrete repairs. The prior review's Plan 43 preference is deliberately excluded because the latest plan expressly does not adopt the coupling.
+- The earlier review treated Plan 43's explicit non-coupling statement as sufficient to exclude it from the prior non-HIGH actionable count. The current source-grounded review finds that statement leaves a concrete hard-interruption integrity failure, so it remains a current HIGH concern unless an authoritative human disposition explicitly accepts that safety tradeoff.
+- The Codex review suggested a direct `-I -S` script-path invocation for all of Plan 29's tests. Current `tests/phase1/test_preflight.py` imports `tools/validate-planning.py`, which imports `yaml`; with `-S`, that package is not importable. The safe correction is a stdlib-only bootstrap self-test plus wrapper-routed validator tests, not merely a script-path change.
 
-CYCLE_SUMMARY: current_high=5 current_actionable=3
+CYCLE_SUMMARY: current_high=3 current_actionable=0
 
 ## Current HIGH Concerns
 
-- **Plan 01-29 — first authorization gate precedes the safe bootstrap.** Change Task 1 to run a pre-site, stdlib-only `python -I -S` bootstrap before it invokes any review-manifest authorization through `tools/phase1-python`; retain a direct malicious-startup regression.
-- **Plans 01-39 and 01-40 — required post-check validators have no implementation owner.** Assign creation and tests for `tools/validate-phase1-security.py` and `tools/validate-phase1-terminal.py` to explicit tasks before their human checkpoints invoke them.
-- **Plan 01-40 — terminal state is published before validation.** Stage `01-REVERIFICATION.md`, `STATE.md`, and `ROADMAP.md`, validate the staged set, then journal and atomically publish it so a failed check cannot expose contradictory live state.
-- **Plan 01-39 — ASVS review cannot represent newly discovered security findings.** Require per-applicable-control status, evidence/command, observed result, and linked finding IDs; retain CR/WR as a required subset but allow new `SEC-*` findings and fail blocking controls.
-- **Plans 01-39 and 01-40 — distinct-person identity rules conflict with locked one-user governance.** Require dated, role-bound sign-offs that one user may supply across roles, or explicitly amend the locked context before execution.
+- **H1 — Plan 01-29 Task 1 verification is unexecutable.** Replace the nonexistent `pythonExecutable` lookup with the recorded isolated interpreter path and split stdlib-only direct bootstrap testing from post-bootstrap wrapper tests; do not rely on `PYTHONPATH` or PyYAML under `-I -S`.
+- **H2 — Plans 01-36/01-42 do not preserve the recovery guard across the package reader's creation.** Order Plan 36 after Plan 42 and require a registered, task-locally tested `recover_before_canonical_read()` before any canonical package-evidence read or package operation.
+- **H3 — Plans 01-42/01-43 leave Plan 43's five-file canonical update outside the durable journal.** Stage, validate, digest-bind, and atomically publish the entire set through Plan 42's transaction API with interruption recovery proof.
 
 ## Current Actionable Non-HIGH Concerns
 
-- **Plans 01-29, 01-36, and 01-42 — task-local verification omits promised boundary regressions.** Add each plan's duplicate-section, sandbox-escape, and direct/all-reader recovery tests to its owning task's verification commands rather than relying only on integrated closeout.
-- **Plan 01-41 — collector acceptance does not directly exercise the claimed receipt.** Own the collector and receipt in the task and validate a generated receipt digest in bounded fixture mode (and bounded live mode when access permits).
-- **Plan 01-29 — toolchain approval and freshness policy remain underdefined.** Own a concrete configured maximum review age and an explicit sign-off/derivation rule for the transitive hash-lock addendum.
+None.
