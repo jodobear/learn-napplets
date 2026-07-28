@@ -4,11 +4,11 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: executing
-stopped_at: execution paused before Plan 01-29 Task 1; resume in fresh context
-last_updated: "2026-07-28T20:04:31.109Z"
+status: blocked
+stopped_at: exact-commit review found 2 actionable plan-contract gaps before Plan 01-29 Task 1
+last_updated: "2026-07-28T21:22:31Z"
 last_activity: 2026-07-29
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Fresh exact-commit Codex review recorded 0 HIGH / 2 actionable; execution halted before edits
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 1 of 43
-Status: Executing Phase 01
-Last activity: 2026-07-29 — Phase 01 execution started
+Phase: 1 (research-and-truth-baseline) — BLOCKED ON PLAN RECONVERGENCE
+Plan: 28 of 43 executed; Plan 01-29 Task 1 has no edits or commits
+Status: Exact-commit Codex review `5445d45` records 0 HIGH / 2 actionable against plan bytes in `0096dd5`
+Last activity: 2026-07-29 — execution preflight exposed missing per-file binding; fresh review supplied it and found two plan-contract defects
 
 Progress: [███████░░░] 65%
 
@@ -164,19 +164,24 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Phase 1 verification is `gaps_found` (1/5 must-haves verified); focused gap closure, Nyquist validation, security review, and fresh passing verification are required before Phase 2.
 - [Phase ?]: All six dated scoped role approvals retain Firefox, VitePress, package, manifest/identity/verifier, delivery, portable, editor, dynamic-diagram, and freshness blockers or deferrals.
 - [Phase ?]: ADR 0001–0011 remain proposed; no residual risk, CSP behavior, teaching-host architecture, deployment, release, publication, or external action is accepted.
+- [Phase ?]: Plan 01-29 execution requires exactly one independent authorization record plus a sorted one-to-one SHA-256 map for all 43 active plan files; aggregate-only binding is insufficient.
+- [Phase ?]: Fresh exact-commit Codex review of `0096dd5` found 0 HIGH and 2 actionable ownership-traceability defects: Plan 01-29 misassigns T-29-04/T-29-05 task ownership, and Plan 01-31 retains obsolete package-work claims now owned by Plan 01-41.
+- [Phase ?]: No Plan 01-29 tracked edit or commit exists; approved toolchain seeding was temporary, gitignored, digest-verified, and removed with the clean executor worktree.
 
 ### Pending Todos
 
-- Commit only the converged plan/manual-review state, excluding unrelated working-tree changes.
-- Re-run one exact-commit binding review and commit `01-REVIEWS.md`.
-- Execute gap plans after the binding review records 0 HIGH / 0 actionable.
+- Correct Plan 01-29 threat ownership: T-29-04 belongs to Task 2; T-29-05 belongs to Task 3.
+- Remove or explicitly redirect Plan 01-31's obsolete package-work boundary, threat, verification, and success claims to Plan 01-41.
+- Commit only the two targeted plan corrections, then rerun exact-commit Codex review with the mandatory 43-entry SHA-256 map.
+- Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Substantive plan convergence passed on cycle 2 with 0 HIGH and 0 actionable findings.
-- Execution remains blocked only until `01-REVIEWS.md` binds the converged plan bytes to a local Git commit.
-- Plans preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
+- Fresh exact-commit review `5445d45` is bound to reviewed commit `0096dd5` with a validated 43-entry per-file SHA-256 map, but it records 0 HIGH / 2 actionable and explicitly withholds execution authorization.
+- Execution is blocked before Plan 01-29 Task 1 until targeted corrections to Plans 01-29 and 01-31 are committed and a new independent exact-commit review records 0 HIGH / 0 actionable.
+- Prior H1–H4 corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering all passed fresh review.
+- Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
 - Phase 1 verification remains `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
 - Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
 - `01-VALIDATION.md` remains draft/noncompliant, and no Phase 1 security review artifact exists.
@@ -196,5 +201,5 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 ## Session Continuity
 
 Last session: 2026-07-29
-Stopped at: Session resumed; proceeding to Phase 1 gap execution from Plan 01-29 Task 1
-Resume file: None — structured handoff consumed
+Stopped at: Phase 1 execution halted before Plan 01-29 Task 1 edits; exact-commit review found two actionable plan-contract defects
+Resume file: None — use `01-REVIEWS.md` commit `5445d45` and targeted replanning for Plans 01-29/01-31
