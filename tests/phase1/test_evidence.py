@@ -173,5 +173,40 @@ class BoundedCollectorTests(unittest.TestCase):
             self.assertFalse(cache.exists())
 
 
+class ToolchainCertificationTests(unittest.TestCase):
+    """Exercise the stdlib-only archive-to-target certification boundary."""
+
+    VERIFIER = ROOT / "tools" / "verify-phase1-toolchain.py"
+
+    def run_case(self, case: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(self.VERIFIER), "--self-test-case", case],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    def test_toolchain_certification_rejects_unverified_wheelhouse_before_install(self) -> None:
+        result = self.run_case("wheelhouse-rejection")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("wheelhouse rejection checks passed", result.stdout)
+
+    def test_toolchain_certification_binds_fresh_install_to_verified_wheels(self) -> None:
+        result = self.run_case("fresh-install-binding")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("fresh install binding checks passed", result.stdout)
+
+    def test_toolchain_integrity_blocks_untrusted_forwarding(self) -> None:
+        result = self.run_case("forwarding-integrity")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("forwarding integrity checks passed", result.stdout)
+
+    def test_toolchain_scope_or_policy_failure_requires_escalation(self) -> None:
+        result = self.run_case("scope-policy-escalation")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("scope and policy escalation checks passed", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()
