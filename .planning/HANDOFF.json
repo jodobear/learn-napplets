@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-29T03:07:20.228Z",
+  "phase": "01",
+  "phase_name": "research-and-truth-baseline",
+  "phase_dir": ".planning/phases/01-research-and-truth-baseline",
+  "plan": 29,
+  "task": 1,
+  "total_tasks": 92,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Run exact-commit external review of f8adcf6", "status": "done", "commit": "341884f"},
+    {"id": 2, "name": "Record two Codex HIGH review blockers", "status": "done", "commit": "910ed3f"},
+    {"id": 3, "name": "Tighten Plan 34/36/43 scope ownership boundaries", "status": "done", "commit": "e09ef4c"},
+    {"id": 4, "name": "Repair reviewed source snapshot and six-path authorization", "status": "done", "commit": "69e82fa"},
+    {"id": 5, "name": "Verify 45 plans, 92 tasks, six requirements, 39 decisions", "status": "done"}
+  ],
+  "remaining_tasks": [
+    {"id": 6, "name": "Run fresh exact-commit Codex-only review of HEAD", "status": "not_started"},
+    {"id": 7, "name": "Execute Plan 01-29 Task 1 only after review reports HIGH=0 and ACTIONABLE=0", "status": "blocked"}
+  ],
+  "blockers": [
+    {"description": "Execution is blocked pending a fresh exact-commit Codex review of commit 69e82fa and plan aggregate 908e20cd14e68fe88c1b48f9a2a795dce8ec7f489d5d54878c5e2187797763b4.", "type": "external", "workaround": "Run /gsd-review --phase 1 --codex; do not execute if any actionable finding remains."}
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "Use only Codex for the next external review; exclude OpenCode, Ollama, and llama.cpp.", "rationale": "User explicitly directed this; prior lanes were empty, ungrounded, or context-rejected.", "phase": "01"},
+    {"decision": "Bind project, context, and four refresh reports as one closed six-path Git-blob input set.", "rationale": "Prevents mutable/untracked source inputs from satisfying exact-review or execution authority.", "phase": "01"},
+    {"decision": "Keep execution blocked after internal checker pass.", "rationale": "Project requires fresh exact-commit external convergence before Plan 01-29 Task 1.", "phase": "01"}
+  ],
+  "uncommitted_files": [
+    ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md (pre-existing modified)",
+    ".claude/ (untracked)",
+    ".planning/config.json (untracked)",
+    ".planning/governance/ (untracked)",
+    ".planning/graphs/ (untracked)",
+    ".planning/phases/01-research-and-truth-baseline/01-DISCUSSION-LOG.md (untracked)",
+    ".planning/research/.cache/ (untracked)",
+    ".planning/traceability/ and .planning/validation/ supporting files (untracked)",
+    "CLAUDE.md, demo-out/, graphify-out/ (untracked)"
+  ],
+  "next_action": "Run /gsd-review --phase 1 --codex against HEAD 69e82fa; independently verify 45 plans, 652857 bytes, aggregate 908e20cd14e68fe88c1b48f9a2a795dce8ec7f489d5d54878c5e2187797763b4, and all six mandatory Git blobs.",
+  "context_notes": "Phase 1 remains blocked. Internal planner/checker convergence passed with zero warnings. Do not run OpenCode, Ollama, or llama.cpp. Do not execute Plan 01-29 before a Codex review records HIGH=0 and ACTIONABLE=0. Existing unrelated working-tree changes were intentionally untouched."
+}
