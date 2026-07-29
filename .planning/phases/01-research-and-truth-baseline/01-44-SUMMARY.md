@@ -93,7 +93,6 @@ status: complete
 - `tools/verify-phase1-toolchain.py` - Standard-library certification and forwarding verifier.
 - `tools/phase1-python` - Bootstrap-first verified forwarding wrapper.
 - `tests/phase1/test_evidence.py` - Four named toolchain certification regressions.
-- `.planning/phases/01-research-and-truth-baseline/deferred-items.md` - Out-of-scope full-suite fixture absence recorded for the orchestrator.
 
 ## Decisions Made
 
@@ -133,7 +132,7 @@ status: complete
 
 ## Issues Encountered
 
-- A full `tests/phase1/test_evidence.py` run remains out of scope in this durable worktree because the pre-existing untracked `.planning/traceability/pack-v3-file-manifest.json` fixture is absent. The three affected source-validation tests fail with `TRC001`; the four Plan 01-44 focused tests pass. This is recorded in `deferred-items.md`.
+- The four Plan 01-44 focused certification tests pass in the durable worktree. The full `tests/phase1/test_evidence.py` integration run depends on the orchestrator checkout's traceability fixture and is post-merge orchestration work, not a durable-worktree deferral.
 - The first two isolated certification targets discovered RECORD translation and attestation-binding defects. They are intentionally retained as ignored runtime assets per durable-worktree instruction; the final verified target is `.research/phase1-certified-tools-4`.
 
 ## Known Stubs
