@@ -4,11 +4,11 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 1
 current_phase_name: research-and-truth-baseline
-status: blocked
-stopped_at: plan convergence and supplemental connector guard clean; human PR #4 merge approval pending
-last_updated: "2026-07-29T14:00:04Z"
+status: ready_to_execute
+stopped_at: PR #4 merge approved; Plan 01-29 Task 1 is next after merged-state synchronization
+last_updated: "2026-07-29T14:25:10Z"
 last_activity: 2026-07-29
-last_activity_desc: GitHub Codex connector reviewed pushed convergence head 32b4e69 with zero inline findings
+last_activity_desc: human approved merge-commit integration after exact plan convergence and clean final-head connector review
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 1 (research-and-truth-baseline) — PLAN CONVERGED; BLOCKED PENDING HUMAN PR #4 MERGE APPROVAL
-Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
-Status: Exact detached Codex review converged on plan commit `1a9449b` with 0 HIGH / 0 actionable; GitHub connector reviewed pushed head `32b4e69` with zero inline findings
-Last activity: 2026-07-29 — convergence and supplemental pushed-diff guard completed; merge remains a human authority gate
+Phase: 1 (research-and-truth-baseline) — PLAN CONVERGED; READY TO EXECUTE AFTER MERGED-STATE SYNC
+Plan: 28 of 45 executed; Plan 01-29 Task 1 is next
+Status: Human approved merge-commit integration for PR #4 after exact detached Codex convergence and clean GitHub connector review; governed PLAN.md bytes remain bound to `1a9449b`
+Last activity: 2026-07-29 — merge approved; preparing final reviewed head and merged-state synchronization
 
 Progress: [██████░░░░] 62%
 
@@ -187,21 +187,22 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: The repaired committed 45-plan snapshot at `51bd4da` totals 659132 bytes with aggregate SHA-256 `f5f924b6347e74311e2c3e0567241d3232adbe1550a122f6990eb35f56f7e24e`; final reviewed commit will be PR #4 head after continuity updates.
 - [Phase ?]: Convergence cycle 1 found one MEDIUM/actionable finite-ledger closure defect; Plans 01-38 and 01-40 now close fixed fourteen-attempt canonical ledgers before later digest-bound post-closure verification.
 - [Phase ?]: Exact detached external Codex review of plan commit `1a9449b` converged with 0 HIGH / 0 actionable, 45 plans, 670650 bytes, aggregate SHA-256 `722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc`, and six mandatory source Git blobs; committed record `51ce445` is current plan-review authorization.
-- [Phase ?]: GitHub Codex connector submitted a review for pushed head `32b4e69` with zero inline findings; this satisfies the supplemental PR guard but does not replace the exact detached plan-review authority.
+- [Phase ?]: GitHub Codex connector submitted exact-head reviews with zero inline findings; this satisfies the supplemental PR guard but does not replace the exact detached plan-review authority.
+- [Phase ?]: Human approved merge-commit integration of PR #4 on 2026-07-29 so reviewed commit identities remain reachable from `master`; squash/rebase integration was not selected.
 
 ### Pending Todos
 
-- Obtain human approval to merge PR #4 into `master`; do not merge autonomously.
-- Keep issues #1 and #2 linked to their plan repairs and issue #3 as the convergence ledger; close only through merged verified PR state.
+- Merge PR #4 into `master` with a merge commit, then synchronize local merged state.
+- Close issues #1–#3 only after confirming their repaired bytes and review record are reachable from merged `master`.
 - Preserve exact review binding: 45 plans, 670650 bytes, aggregate `722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc`, six mandatory source Git blobs, reviewed commit `1a9449b`.
-- After merge, resume `/gsd-execute-phase 1` at Plan 01-29 Task 1; rerun exact plan review if any PLAN.md byte changes before execution.
+- Resume `/gsd-execute-phase 1` at Plan 01-29 Task 1; rerun exact plan review if any PLAN.md byte changes before execution.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector submitted an exact-head review for `32b4e69` with zero inline findings and remains supplemental, not cross-plan authority.
+- Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector submitted exact-head reviews with zero inline findings and remains supplemental, not cross-plan authority.
 - Historical review records `341884f`, `9b5794f`, and the superseded cycle-1 record remain audit evidence only; current authorization is the committed exact review record at `51ce445` for plan commit `1a9449b`.
-- Execution remains blocked before Plan 01-29 Task 1 on human PR #4 merge approval and merged-state synchronization; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
+- Human merge approval is recorded. Execution may begin only from synchronized merged `master`; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
@@ -223,6 +224,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T14:00:04Z
-Stopped at: Exact plan convergence and supplemental connector guard complete; awaiting human PR #4 merge approval
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — after approved merge, resume Plan 01-29 Task 1
+Last session: 2026-07-29T14:25:10Z
+Stopped at: PR #4 merge approved; synchronizing reviewed commits into `master`
+Resume file: None — next command after merged-state verification is `/gsd-execute-phase 1`
