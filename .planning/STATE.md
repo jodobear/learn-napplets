@@ -213,6 +213,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T03:01:51.643Z
-Stopped at: review-mode replan verified; fresh exact-commit Codex review required
-Resume file: `.planning/STATE.md` — run `/gsd-review --phase 1 --codex` against the committed revised snapshot
+Last session: 2026-07-29T07:45:44.494Z
+Stopped at: session resumed; awaiting fresh exact-commit Codex review
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — next action `/gsd-review --phase 1 --codex`
