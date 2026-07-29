@@ -111,7 +111,7 @@ class Phase1ExecutionPreflightTests(unittest.TestCase):
                 "omitted": original.replace("  01-01-PLAN.md:", "  01-02-PLAN.md:"),
                 "extra": original.replace("reviewed_source_inputs:", "  01-02-PLAN.md: " + "0" * 64 + "\nreviewed_source_inputs:"),
                 "duplicate": original.replace("reviewed_source_inputs:", "  01-01-PLAN.md: " + "0" * 64 + "\nreviewed_source_inputs:"),
-                "altered": original.replace("plan bytes", "altered bytes"),
+                "altered": original.replace(hashlib.sha256((root / plan_paths[0]).read_bytes()).hexdigest(), "f" * 64),
                 "malformed": original.replace("  01-01-PLAN.md:", "  invalid plan name:"),
                 "wrong-commit": original.replace("reviewed_commit:", "reviewed_commit: " + "0" * 40 + "\n# reviewed_commit:"),
             }
