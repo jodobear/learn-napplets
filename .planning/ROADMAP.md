@@ -91,9 +91,9 @@ Gap Closure Plans:
 - [ ] 01-41-PLAN.md — Independently intake package registry evidence and retain scoped package blockers.
 - [ ] 01-42-PLAN.md — Close CR-07 durable crash-atomic canonical publication, transactional reads, and recovery.
 
-**Wave 7**
+**Wave 7** *(blocked on Plans 01-34, 01-41, and 01-42)*
 
-- [ ] 01-35-PLAN.md — Migrate and evaluate substantive compatibility eligibility.
+- [ ] 01-35-PLAN.md — Migrate and evaluate substantive compatibility eligibility from one registered transactional snapshot.
 
 **Wave 8**
 

@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: blocked
-stopped_at: exact review of 7c151cc found one HIGH Plan 01-35 transactional-reader gap; targeted replan required before Plan 01-29 Task 1
-last_updated: "2026-07-29T00:46:32Z"
+stopped_at: Plan 01-35/01-42 transactional-reader correction verified; fresh exact-commit review required before Plan 01-29 Task 1
+last_updated: "2026-07-29T01:15:36Z"
 last_activity: 2026-07-29
-last_activity_desc: exact review reproduced the 45-plan binding, confirmed four prior repairs, and found one HIGH Plan 01-35/01-42 reader-registration defect
+last_activity_desc: targeted planner and independent checker closed the sole HIGH reader-registration finding; external exact-snapshot convergence remains required
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 1 (research-and-truth-baseline) — BLOCKED ON TARGETED REPLAN AND FRESH EXACT-COMMIT REVIEW
+Phase: 1 (research-and-truth-baseline) — BLOCKED ON FRESH EXACT-COMMIT PLAN REVIEW
 Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
-Status: Exact review of `7c151cc` reproduced all 45 plan bytes and found one HIGH actionable Plan 01-35 transactional-reader propagation gap
-Last activity: 2026-07-29 — four prior findings passed regression; Plan 01-35 must depend on and consume Plan 01-42’s registered transactional snapshot before re-review
+Status: Plan 01-35 now depends on Plan 01-42, consumes only its registered in-memory snapshot/index, and carries successful-publication overlap plus post-acquisition-open regressions
+Last activity: 2026-07-29 — independent GSD checker passed the targeted Plans 01-35/01-42 correction with all six requirements and 39 context decisions retained
 
 Progress: [██████░░░░] 62%
 
@@ -171,19 +171,20 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: The revised 45-plan snapshot totals 609276 bytes with aggregate SHA-256 `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5` using lexical basename + NUL + file bytes + NUL.
 - [Phase ?]: Exact-commit review of `7c151cc` independently reproduced that binding, confirmed the wheelhouse provenance, terminal digest, receipt preservation, and Plan 01-29/01-44/01-45 split repairs, and found one remaining HIGH Plan 01-35 transactional-reader propagation defect.
 - [Phase ?]: Plan 01-35 must depend on Plan 01-42, consume only the registered in-memory canonical snapshot/index without reopening live paths, carry an overlap/open-instrumentation regression, and be included in Plan 01-42 future-reader propagation.
+- [Phase ?]: Targeted replanning now enforces that contract across Plans 01-35 and 01-42; independent GSD verification passed with no blocker or warning.
+- [Phase ?]: The corrected 45-plan snapshot totals 616221 bytes with aggregate SHA-256 `24e34efc006adc9b547d46e6e1406ba4ed042b071fdeeba5e2f658bd50e6d136` using lexical basename + NUL + file bytes + NUL.
 
 ### Pending Todos
 
-- Run `/gsd-plan-phase 1 --reviews` to repair the Plan 01-35/01-42 transactional-reader registration and concurrency-proof gap.
-- Rerun exact-commit external review against the corrected sorted 45-entry SHA-256 map.
+- Commit the verified Plans 01-35/01-42 correction, then rerun exact-commit external review against the corrected sorted 45-entry SHA-256 map.
 - Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Exact-commit review of `7c151cc` binds all 45 plan files and aggregate `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5`, but records `HIGH=1` and `actionable=1`.
-- Execution is blocked before Plan 01-29 Task 1 until Plans 01-35/01-42 close the transactional-reader propagation gap and a new independent exact-commit review records 0 HIGH / 0 actionable.
-- Plan 01-35 currently runs after Plan 01-42 can complete its registered-reader proof, yet does not depend on Plan 01-42 or prohibit compatibility evaluation from reopening live canonical paths; this can reintroduce mixed-generation reads.
+- Exact-review record `4021c7d` remains historical evidence for the corrected Plan 01-35 finding, but changed Plans 01-35/01-42 bytes invalidate its authorization binding.
+- Execution is blocked before Plan 01-29 Task 1 until a new independent exact-commit review binds all 45 corrected plan files and records 0 HIGH / 0 actionable.
+- Current corrected-plan aggregate is `24e34efc006adc9b547d46e6e1406ba4ed042b071fdeeba5e2f658bd50e6d136`; external review must independently reproduce the sorted 45-entry map and aggregate.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
 - Phase 1 verification remains `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
@@ -205,5 +206,5 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 ## Session Continuity
 
 Last session: 2026-07-29
-Stopped at: exact review found one HIGH Plan 01-35 transactional-reader propagation gap
-Resume file: None — run `/gsd-plan-phase 1 --reviews`, then rerun `/gsd-review --phase 1 --all`
+Stopped at: Plan 01-35/01-42 transactional-reader correction verified; fresh exact-commit external review required
+Resume file: None — rerun `/gsd-review --phase 1 --all` against the committed corrected 45-plan snapshot
