@@ -61,6 +61,7 @@
       "wheel": "typing_extensions-4.16.0-py3-none-any.whl"
     }
   ],
+  "installerReportPath": ".research/phase1-installer-report-4.json",
   "installerReportSha256": "7fbac720e835d1124f5a8f11fb96a2721686584b5785f7d6537eb95a7ce3b5f5",
   "lockSha256": "f7aaf1fd1408f2d32c3a131433aeed68ad4337ad3df84f04aa2bf3bb027d0060",
   "manifestSha256": "6a8f9da6be8a93782521ec1a091dc1851cb20a017f4fad80ea1aea3cabf58eda",
@@ -116,10 +117,11 @@
       "recordVerified": true
     }
   ],
-  "schemaVersion": 1,
-  "targetInterpreter": "/workspace/projects/learn-napplets/.claude/worktrees/worktree-agent-plan01-44/.research/phase1-certified-tools-4/bin/python",
-  "targetInterpreterPath": "/workspace/projects/learn-napplets/.claude/worktrees/worktree-agent-plan01-44/.research/phase1-certified-tools-4/bin/python",
+  "schemaVersion": 2,
+  "targetInterpreter": ".research/phase1-certified-tools-4/bin/python",
+  "targetInterpreterPath": ".research/phase1-certified-tools-4/bin/python",
   "targetInterpreterSha256": "eca90b668424db6f2105504128f02cac91c2805de9a928abcc272d1444abfde0",
   "targetPyvenvCfgSha256": "dedc2a3195cc684833c56d634658f1413830c6c51a3a78c89b60724b0604a550",
-  "targetRoot": "/workspace/projects/learn-napplets/.claude/worktrees/worktree-agent-plan01-44/.research/phase1-certified-tools-4"
+  "targetRoot": ".research/phase1-certified-tools-4",
+  "wheelhousePath": ".research/phase1-wheelhouse"
 }

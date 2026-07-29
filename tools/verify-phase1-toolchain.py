@@ -45,15 +45,40 @@ def fail(message: str) -> None:
     raise ValueError(f"toolchain: {message}")
 
 
-def safe_file_url(value: object, wheelhouse: Path) -> Path:
-    if not isinstance(value, str) or not value.startswith("file://"):
+def repository_relative(path: Path) -> str:
+    """Return a non-escaping repo-relative reference, never a host path."""
+    root = ROOT.absolute()
+    candidate = path.absolute()
+    if root not in (candidate, *candidate.parents):
+        fail(f"path escapes repository root: {path}")
+    return candidate.relative_to(root).as_posix()
+
+
+def resolve_repository_relative(value: object, label: str) -> Path:
+    if not isinstance(value, str) or not value:
+        fail(f"{label} must be a nonempty repo-relative path")
+    candidate = Path(value)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        fail(f"{label} must be repo-relative and non-escaping")
+    resolved = (ROOT / candidate).absolute()
+    root = ROOT.absolute()
+    if root not in (resolved, *resolved.parents):
+        fail(f"{label} escapes repository root")
+    return resolved
+
+
+def file_url_wheel_filename(value: object) -> str:
+    """Accept a historical file URL but bind it to the current wheelhouse bytes."""
+    if not isinstance(value, str):
         fail("installer report must identify a file:// wheelhouse archive")
     parsed = urlparse(value)
-    path = Path(unquote(parsed.path)).resolve()
-    root = wheelhouse.resolve()
-    if root not in (path, *path.parents):
-        fail("installer report archive escapes the verified wheelhouse")
-    return path
+    if parsed.scheme != "file" or parsed.netloc or parsed.query or parsed.fragment:
+        fail("installer report must identify a plain file:// wheelhouse archive")
+    decoded = unquote(parsed.path)
+    filename = Path(decoded).name
+    if not filename or filename in {".", ".."}:
+        fail("installer report archive lacks a wheel filename")
+    return filename
 
 
 def parse_lock(path: Path) -> dict[str, dict[str, str]]:
@@ -209,11 +234,12 @@ def verify_report(report_path: Path, wheelhouse: Path, records: list[dict[str, A
         metadata = item.get("metadata", {})
         name = normalized(str(metadata.get("name", "")))
         version = str(metadata.get("version", ""))
-        source = safe_file_url(item.get("download_info", {}).get("url"), wheelhouse)
+        filename = file_url_wheel_filename(item.get("download_info", {}).get("url"))
+        source = wheelhouse / filename
         if name not in expected or name in seen:
             fail("installer report has undeclared or duplicate distribution")
         wheel = expected[name]
-        if version != wheel["version"] or source.name != wheel["filename"] or digest_file(source) != wheel["sha256"]:
+        if not source.is_file() or version != wheel["version"] or filename != wheel["filename"] or digest_file(source) != wheel["sha256"]:
             fail("installer report does not bind distribution to its verified archive")
         seen.add(name)
         mapping.append({"normalizedName": name, "version": version, "wheel": source.name, "sha256": wheel["sha256"]})
@@ -283,6 +309,11 @@ def verify_installed_records(target: Path, records: list[dict[str, Any]]) -> lis
 
 
 def verify_all(lock: Path, policy: Path, wheelhouse: Path, manifest: Path, report: Path, target: Path, attestation: Path) -> dict[str, Any]:
+    # All runtime inputs remain below the checkout. This prevents a copied
+    # attestation from silently selecting a prior worktree or ambient target.
+    repository_relative(wheelhouse)
+    repository_relative(report)
+    repository_relative(target)
     lock_entries = parse_lock(lock)
     policy_results = policy_scope(policy, lock_entries)
     records = inspect_wheelhouse(wheelhouse, lock_entries, policy_results)
@@ -294,24 +325,34 @@ def verify_all(lock: Path, policy: Path, wheelhouse: Path, manifest: Path, repor
         fail(f"missing installation attestation: {attestation}")
     actual = json.loads(attestation.read_text(encoding="utf-8"))
     expected = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "lockSha256": digest_file(lock),
         "manifestSha256": digest_file(manifest),
+        "wheelhousePath": repository_relative(wheelhouse),
+        "installerReportPath": repository_relative(report),
         "installerReportSha256": digest_file(report),
-        "targetRoot": str(target.absolute()),
-        "targetInterpreterPath": str((target / "bin" / "python").absolute()),
-        "targetInterpreter": str((target / "bin" / "python").resolve()),
+        "targetRoot": repository_relative(target),
+        "targetInterpreterPath": repository_relative(target / "bin" / "python"),
+        "targetInterpreter": repository_relative(target / "bin" / "python"),
         "targetInterpreterSha256": digest_file((target / "bin" / "python").resolve()),
         "targetPyvenvCfgSha256": digest_file(target / "pyvenv.cfg"),
         "archiveToInstalledDistribution": mapping,
         "recordResults": record_results,
     }
+    for field in ("wheelhousePath", "installerReportPath", "targetRoot", "targetInterpreterPath", "targetInterpreter"):
+        value = actual.get(field) if isinstance(actual, dict) else None
+        resolved = resolve_repository_relative(value, field)
+        if resolved != (ROOT / expected[field]).absolute():
+            fail(f"{field} does not identify the current certification asset")
     if actual != expected:
         fail("installation attestation does not bind current certification inputs and target")
     return expected
 
 
 def certify(args: argparse.Namespace) -> None:
+    repository_relative(args.wheelhouse)
+    repository_relative(args.report)
+    repository_relative(args.target)
     lock_entries = parse_lock(args.lock)
     policy_results = policy_scope(args.policy, lock_entries)
     records = inspect_wheelhouse(args.wheelhouse, lock_entries, policy_results)
@@ -332,22 +373,40 @@ def certify(args: argparse.Namespace) -> None:
             shutil.rmtree(path)
         else:
             path.unlink()
+    write_attestation(args, records)
+    verify_all(args.lock, args.policy, args.wheelhouse, args.manifest, args.report, args.target, args.attestation)
+
+
+def write_attestation(args: argparse.Namespace, records: list[dict[str, Any]]) -> None:
+    installer = args.target / "bin" / "python"
     mapping = verify_report(args.report, args.wheelhouse, records)
     record_results = verify_installed_records(args.target, records)
     attestation = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "lockSha256": digest_file(args.lock),
         "manifestSha256": digest_file(args.manifest),
+        "wheelhousePath": repository_relative(args.wheelhouse),
+        "installerReportPath": repository_relative(args.report),
         "installerReportSha256": digest_file(args.report),
-        "targetRoot": str(args.target.absolute()),
-        "targetInterpreterPath": str(installer.absolute()),
-        "targetInterpreter": str(installer.resolve()),
+        "targetRoot": repository_relative(args.target),
+        "targetInterpreterPath": repository_relative(installer),
+        "targetInterpreter": repository_relative(installer),
         "targetInterpreterSha256": digest_file(installer.resolve()),
         "targetPyvenvCfgSha256": digest_file(args.target / "pyvenv.cfg"),
         "archiveToInstalledDistribution": mapping,
         "recordResults": record_results,
     }
     args.attestation.write_text(json.dumps(attestation, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def attest_existing(args: argparse.Namespace) -> None:
+    repository_relative(args.wheelhouse)
+    repository_relative(args.report)
+    repository_relative(args.target)
+    lock_entries = parse_lock(args.lock)
+    records = inspect_wheelhouse(args.wheelhouse, lock_entries, policy_scope(args.policy, lock_entries))
+    verify_manifest(args.manifest, manifest_for(args.lock, args.policy, records))
+    write_attestation(args, records)
     verify_all(args.lock, args.policy, args.wheelhouse, args.manifest, args.report, args.target, args.attestation)
 
 
@@ -437,6 +496,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--verify-toolchain", action="store_true")
     parser.add_argument("--certify", action="store_true")
+    parser.add_argument("--attest-existing", action="store_true")
     parser.add_argument("--self-test-case")
     defaults(parser)
     args = parser.parse_args()
@@ -446,11 +506,14 @@ def main() -> int:
         elif args.certify:
             certify(args)
             print("toolchain certification passed")
+        elif args.attest_existing:
+            attest_existing(args)
+            print("toolchain attestation refresh passed")
         elif args.verify_toolchain:
             verify_all(args.lock, args.policy, args.wheelhouse, args.manifest, args.report, args.target, args.attestation)
             print("toolchain verification passed")
         else:
-            fail("select --certify, --verify-toolchain, or --self-test-case")
+            fail("select --certify, --attest-existing, --verify-toolchain, or --self-test-case")
     except (OSError, ValueError, zipfile.BadZipFile, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 1

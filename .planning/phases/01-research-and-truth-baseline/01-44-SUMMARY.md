@@ -44,6 +44,9 @@ coverage:
       - kind: unit
         ref: tests/phase1/test_evidence.py#SourceEvidenceTests.test_toolchain_certification_binds_fresh_install_to_verified_wheels
         status: pass
+      - kind: integration
+        ref: tests/phase1/test_evidence.py#SourceEvidenceTests.test_toolchain_certification_survives_checkout_relocation_and_rejects_stale_paths
+        status: pass
     human_judgment: false
   - id: D2
     description: Wrapper forwarding fails closed for altered archives, lock/policy/report/attestation inputs, target inventory, and installed RECORDs.
@@ -64,7 +67,7 @@ status: complete
 
 # Phase 01 Plan 44: Fresh Offline Toolchain Certification Summary
 
-**A complete hash-locked Python wheel closure now produces a fresh, attested Phase 1 target whose wrapper forwarding is blocked unless archive, policy, installer report, inventory, and RECORD checks all pass.**
+**A complete hash-locked Python wheel closure now produces a checkout-relocatable fresh Phase 1 target whose wrapper forwarding is blocked unless archive, policy, installer report, inventory, attestation-path, and RECORD checks all pass.**
 
 ## Performance
 
@@ -77,7 +80,7 @@ status: complete
 
 - Replaced the three top-level-only requirements list with the complete ten-distribution, exact SHA-256 closure while retaining the dated human top-level approval boundary.
 - Downloaded one approved compatible binary wheel per closure member into the ignored offline wheelhouse and generated a sorted tracked manifest for all archive hashes and policy outcomes.
-- Built a new isolated certification target from `--require-hashes --no-index --find-links --no-deps --only-binary=:all:`, then bound every installed distribution to its `file://` installer-report archive and wheel/installed RECORD hashes.
+- Built a new isolated certification target from `--require-hashes --no-index --find-links --no-deps --only-binary=:all:`, then bound every installed distribution to its `file://` installer-report wheel filename/hash and wheel/installed RECORD hashes without retaining a stale worktree path.
 - Added a standard-library verifier and made `tools/phase1-python` bootstrap first, verify all certification inputs, and only then forward argv to the fresh target.
 
 ## Task Commits
@@ -98,7 +101,7 @@ status: complete
 
 - The approved PyYAML, jsonschema, and Playwright pins remain the sole human-authorized top-level scope; resolver-selected closure members need no new sign-off when their exact binary archive and policy checks pass.
 - A fresh certification target, rather than the bootstrap interpreter or a prior target, is the only wrapper forwarding destination.
-- The attestation also binds the target root, venv configuration, interpreter location/digest, installer report, and installed RECORD digests.
+- The attestation stores wheelhouse, report, target, and interpreter references as non-escaping repo-relative paths, then binds the current checkout's venv configuration, interpreter digest, installer report, and installed RECORD digests.
 
 ## Deviations from Plan
 
@@ -128,7 +131,15 @@ status: complete
 - **Verification:** Fresh certification, standalone verifier, and wrapper verifier all pass.
 - **Committed in:** `5b35ee7`
 
-**Total deviations:** 3 auto-fixed (2 Rule 1 bugs, 1 Rule 2 critical integrity binding).
+**4. [Rule 1 - Bug] Made attestation and installer-report provenance checkout-relocatable**
+- **Found during:** Post-run merge portability review.
+- **Issue:** The tracked attestation serialized durable-worktree absolute paths, and report verification required those original paths, so moving identical ignored runtime assets into the merged checkout would fail.
+- **Fix:** Store and validate only non-escaping repo-relative wheelhouse, report, target, and interpreter references. Treat report `file://` locations as historical provenance while binding their exact declared filename, distribution, and hash to the current verified wheelhouse.
+- **Files modified:** `tools/verify-phase1-toolchain.py`, `.planning/research/toolchain-install-attestation.json`, `tests/phase1/test_evidence.py`
+- **Verification:** A copied identical certification asset set verifies under a distinct checkout root; every absolute attestation reference is rejected.
+- **Committed in:** portability correction commit after this summary update.
+
+**Total deviations:** 4 auto-fixed (3 Rule 1 bugs, 1 Rule 2 critical integrity binding).
 
 ## Issues Encountered
 
@@ -149,3 +160,4 @@ None.
 - Confirmed `tools/verify-phase1-toolchain.py`, the tracked wheelhouse manifest, and the tracked installation attestation exist.
 - Confirmed TDD RED commit `d4e9d23` and GREEN commit `5b35ee7` exist on the worktree branch.
 - Confirmed no tracked-file deletion was introduced and no Known Stubs were found in task artifacts.
+- Confirmed copied identical runtime assets verify from a distinct checkout root while stale absolute attestation paths are rejected.

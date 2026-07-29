@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import shutil
 import subprocess
 import sys
@@ -206,6 +207,34 @@ class SourceEvidenceTests(unittest.TestCase):
         result = self.run_case("scope-policy-escalation")
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
         self.assertIn("scope and policy escalation checks passed", result.stdout)
+
+    def test_toolchain_certification_survives_checkout_relocation_and_rejects_stale_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "relocated-checkout"
+            (copied / "tools").mkdir(parents=True)
+            (copied / ".planning/research").mkdir(parents=True)
+            (copied / ".research").mkdir(parents=True)
+            shutil.copy2(self.VERIFIER, copied / "tools" / "verify-phase1-toolchain.py")
+            for name in ("requirements-phase1-tools.txt",):
+                shutil.copy2(ROOT / name, copied / name)
+            for name in ("toolchain-approval.yaml", "toolchain-wheelhouse-manifest.json", "toolchain-install-attestation.json"):
+                shutil.copy2(ROOT / ".planning/research" / name, copied / ".planning/research" / name)
+            shutil.copytree(ROOT / ".research/phase1-wheelhouse", copied / ".research/phase1-wheelhouse")
+            shutil.copytree(ROOT / ".research/phase1-certified-tools-4", copied / ".research/phase1-certified-tools-4")
+            shutil.copy2(ROOT / ".research/phase1-installer-report-4.json", copied / ".research/phase1-installer-report-4.json")
+            command = [sys.executable, str(copied / "tools" / "verify-phase1-toolchain.py"), "--verify-toolchain"]
+            relocated = subprocess.run(command, cwd=copied, text=True, capture_output=True, check=False)
+            self.assertEqual(relocated.returncode, 0, relocated.stderr + relocated.stdout)
+            attestation = copied / ".planning/research/toolchain-install-attestation.json"
+            document = json.loads(attestation.read_text())
+            for field in ("wheelhousePath", "installerReportPath", "targetRoot", "targetInterpreterPath", "targetInterpreter"):
+                stale_document = copy.deepcopy(document)
+                stale_document[field] = str((ROOT / stale_document[field]).absolute())
+                attestation.write_text(json.dumps(stale_document), encoding="utf-8")
+                stale = subprocess.run(command, cwd=copied, text=True, capture_output=True, check=False)
+                self.assertNotEqual(stale.returncode, 0)
+                self.assertIn("repo-relative", stale.stderr)
+            attestation.write_text(json.dumps(document), encoding="utf-8")
 
 
 if __name__ == "__main__":
