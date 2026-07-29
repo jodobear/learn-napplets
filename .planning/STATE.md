@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: research-and-truth-baseline
 status: blocked
-stopped_at: GitHub Codex connector environment setup required for PR #4 (2026-07-29)
-last_updated: "2026-07-29T11:03:19Z"
+stopped_at: exact plan convergence complete; final PR #4 synchronization and connector guard pending
+last_updated: "2026-07-29T13:28:42Z"
 last_activity: 2026-07-29
-last_activity_desc: supplemental local Codex review found two actionable MEDIUM plan contradictions; targeted repairs passed independent GSD checking and moved to GitHub PR #4
+last_activity_desc: external Codex review converged on exact plan commit 1a9449b with 0 HIGH and 0 actionable findings
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 1 (research-and-truth-baseline) — BLOCKED PENDING GITHUB CODEX CONNECTOR CONVERGENCE
+Phase: 1 (research-and-truth-baseline) — PLAN CONVERGED; BLOCKED PENDING FINAL PR #4 GUARD
 Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
-Status: GitHub PR #4 carries targeted fixes and review rules; `chatgpt-codex-connector` is blocked because no Codex cloud environment/code-review configuration exists for this repository
-Last activity: 2026-07-29 — requested `@codex review`; connector required repository environment setup before review can run
+Status: Exact detached Codex review converged on plan commit `1a9449b` with 0 HIGH / 0 actionable; committed review record `51ce445` binds 45 plans and six mandatory source blobs
+Last activity: 2026-07-29 — completed convergence cycle 2; final PR push and supplemental connector review remain
 
 Progress: [██████░░░░] 62%
 
@@ -185,21 +185,23 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Targeted repairs align Plans 01-38/01-40 on a parser-backed canonical probe-attempt ledger, preserve content-addressed authorization in Plan 01-32, and add `AGENTS.md` review rules for GitHub Codex.
 - [Phase ?]: Independent GSD checking passed the repaired plan set with no blocker or warning; GitHub issues #1–#3 and PR #4 now carry the external connector convergence loop.
 - [Phase ?]: The repaired committed 45-plan snapshot at `51bd4da` totals 659132 bytes with aggregate SHA-256 `f5f924b6347e74311e2c3e0567241d3232adbe1550a122f6990eb35f56f7e24e`; final reviewed commit will be PR #4 head after continuity updates.
+- [Phase ?]: Convergence cycle 1 found one MEDIUM/actionable finite-ledger closure defect; Plans 01-38 and 01-40 now close fixed fourteen-attempt canonical ledgers before later digest-bound post-closure verification.
+- [Phase ?]: Exact detached external Codex review of plan commit `1a9449b` converged with 0 HIGH / 0 actionable, 45 plans, 670650 bytes, aggregate SHA-256 `722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc`, and six mandatory source Git blobs; committed record `51ce445` is current plan-review authorization.
 
 ### Pending Todos
 
-- Human/account action: create a Codex cloud environment for `jodobear/learn-napplets` and enable repository code review in ChatGPT Codex settings.
-- Re-request GitHub Codex connector review on PR #4 with `@codex review`, verify comments against repo evidence, and iterate fixes/reviews until 0 HIGH / 0 actionable or a real blocker.
+- Push convergence commits and final state/checkpoint to PR #4; keep issues #1–#3 synchronized.
+- Request supplemental GitHub Codex connector review on final pushed PR head and reconcile any verified finding.
 - Keep issues #1 and #2 linked to their plan repairs and issue #3 as the convergence ledger; close only through merged verified PR state.
-- Regenerate the exact 45-plan map/aggregate and six-source Git-blob binding at final PR head before treating connector convergence as execution authorization.
-- Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
+- Preserve exact review binding: 45 plans, 670650 bytes, aggregate `722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc`, six mandatory source Git blobs, reviewed commit `1a9449b`.
+- Resume `/gsd-execute-phase 1` only after final PR synchronization/guard; rerun exact plan review if any PLAN.md byte changes.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- `chatgpt-codex-connector` cannot review PR #4 until a Codex cloud environment is created and code review is enabled for `jodobear/learn-napplets`; this requires human/account configuration in ChatGPT Codex settings.
-- Historical review records `341884f` and the supplemental local review in `01-REVIEWS.md` do not authorize current PR #4 plan bytes; they remain audit evidence only.
-- Execution is blocked before Plan 01-29 Task 1 until GitHub Codex connector review converges on final PR #4 head, the exact 45-plan map/aggregate and six mandatory Git blobs are reproduced for that commit, and the resulting record reports 0 HIGH / 0 actionable.
+- Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector remains a supplemental final pushed-diff guard, not cross-plan authority.
+- Historical review records `341884f`, `9b5794f`, and the superseded cycle-1 record remain audit evidence only; current authorization is the committed exact review record at `51ce445` for plan commit `1a9449b`.
+- Execution remains blocked before Plan 01-29 Task 1 until convergence commits are pushed to PR #4 and the supplemental connector guard reports no verified actionable finding; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
@@ -221,6 +223,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T10:56:46Z
-Stopped at: PR #4 ready, but GitHub Codex connector requires repository environment/code-review setup
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — after setup, re-request `@codex review` and reconcile issues #1–#3
+Last session: 2026-07-29T13:28:42Z
+Stopped at: Exact plan convergence complete; pushing final PR #4 state and requesting supplemental connector guard
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — do not execute Plan 01-29 until final PR synchronization/guard completes
