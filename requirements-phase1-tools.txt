@@ -1,8 +1,13 @@
-# Phase 1 research-only tooling. Do not use this file for production dependencies.
-# Approved artifact URLs and SHA-256 values are recorded in
-# .planning/research/toolchain-approval.yaml; resolver dependencies are captured
-# in the reproducibility manifest after installation.
+# Phase 1 research-only closure. Every distribution is exact and archive-hash locked.
+# Install only offline from .research/phase1-wheelhouse with --require-hashes.
 --only-binary=:all:
-PyYAML==6.0.3
-jsonschema==4.26.0
-playwright==1.61.0
+attrs==26.1.0 --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
+greenlet==3.5.4 --hash=sha256:9c53ff01a5c53a40f2c16820ebc56d7c61a77f5fbe009dadd96292d5682f80f8
+jsonschema==4.26.0 --hash=sha256:d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce
+jsonschema-specifications==2025.9.1 --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
+playwright==1.61.0 --hash=sha256:54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e
+pyee==13.0.1 --hash=sha256:af2f8fede4171ef667dfded53f96e2ed0d6e6bd7ee3bb46437f77e3b57689228
+PyYAML==6.0.3 --hash=sha256:c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5
+referencing==0.37.0 --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
+rpds-py==2026.6.3 --hash=sha256:dc319e5a1de4b6913aac94bf6a2f9e847371e0a140a43dd4991db1a09bc2d504
+typing_extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8

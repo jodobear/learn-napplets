@@ -1,0 +1,127 @@
+{
+  "archiveToInstalledDistribution": [
+    {
+      "normalizedName": "attrs",
+      "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+      "version": "26.1.0",
+      "wheel": "attrs-26.1.0-py3-none-any.whl"
+    },
+    {
+      "normalizedName": "greenlet",
+      "sha256": "9c53ff01a5c53a40f2c16820ebc56d7c61a77f5fbe009dadd96292d5682f80f8",
+      "version": "3.5.4",
+      "wheel": "greenlet-3.5.4-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    {
+      "normalizedName": "jsonschema",
+      "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce",
+      "version": "4.26.0",
+      "wheel": "jsonschema-4.26.0-py3-none-any.whl"
+    },
+    {
+      "normalizedName": "jsonschema-specifications",
+      "sha256": "98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe",
+      "version": "2025.9.1",
+      "wheel": "jsonschema_specifications-2025.9.1-py3-none-any.whl"
+    },
+    {
+      "normalizedName": "playwright",
+      "sha256": "54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e",
+      "version": "1.61.0",
+      "wheel": "playwright-1.61.0-py3-none-manylinux1_x86_64.whl"
+    },
+    {
+      "normalizedName": "pyee",
+      "sha256": "af2f8fede4171ef667dfded53f96e2ed0d6e6bd7ee3bb46437f77e3b57689228",
+      "version": "13.0.1",
+      "wheel": "pyee-13.0.1-py3-none-any.whl"
+    },
+    {
+      "normalizedName": "pyyaml",
+      "sha256": "c458b6d084f9b935061bc36216e8a69a7e293a2f1e68bf956dcd9e6cbcd143f5",
+      "version": "6.0.3",
+      "wheel": "pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    {
+      "normalizedName": "referencing",
+      "sha256": "381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231",
+      "version": "0.37.0",
+      "wheel": "referencing-0.37.0-py3-none-any.whl"
+    },
+    {
+      "normalizedName": "rpds-py",
+      "sha256": "dc319e5a1de4b6913aac94bf6a2f9e847371e0a140a43dd4991db1a09bc2d504",
+      "version": "2026.6.3",
+      "wheel": "rpds_py-2026.6.3-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    {
+      "normalizedName": "typing-extensions",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "version": "4.16.0",
+      "wheel": "typing_extensions-4.16.0-py3-none-any.whl"
+    }
+  ],
+  "installerReportPath": ".research/phase1-installer-report-4.json",
+  "installerReportSha256": "7fbac720e835d1124f5a8f11fb96a2721686584b5785f7d6537eb95a7ce3b5f5",
+  "lockSha256": "f7aaf1fd1408f2d32c3a131433aeed68ad4337ad3df84f04aa2bf3bb027d0060",
+  "manifestSha256": "6a8f9da6be8a93782521ec1a091dc1851cb20a017f4fad80ea1aea3cabf58eda",
+  "recordResults": [
+    {
+      "installedRecordSha256": "65b5537e6941067545675b31532859555cb4a4bae7dd55f40848e97d2b5bec67",
+      "normalizedName": "attrs",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "ae2798fc3180d1d71ab3f3d4a29ccdc1823706db87eb83481a5e568114760c23",
+      "normalizedName": "greenlet",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "c50f2e8adb5972cf3b85a72eed19d4dc59b725c61663f05ab4a912dee5b9fcd8",
+      "normalizedName": "jsonschema",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "01628f7a91ed26d539f168a0fdcc58ffd960d54dbc6040871f0adcdc68adc9bb",
+      "normalizedName": "jsonschema-specifications",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "19f47c6718f985b8d1e68981d3eed548449dbb6293aac1d3d395534bbb984871",
+      "normalizedName": "playwright",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "28b668aefea0e300051b90103dd9fdad1949848c7c407d90bf558192d381ad80",
+      "normalizedName": "pyee",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "5d984d02d01ada01da55ab59826be76516ed3ecbb4aae128bd926ee2852d899e",
+      "normalizedName": "pyyaml",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "c2c3154bb2f451205f04cfdf1646b15e55139c097c00f86a9ed392801a024d03",
+      "normalizedName": "referencing",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "2353dd2d439221f19457734e85aa3b359a2e08665cf20e3da2c83b5de2ffa6d5",
+      "normalizedName": "rpds-py",
+      "recordVerified": true
+    },
+    {
+      "installedRecordSha256": "79f6b51544fa415e5600a0d185dd8ea916e99fe0fbaeed1cf433fc5c6024f492",
+      "normalizedName": "typing-extensions",
+      "recordVerified": true
+    }
+  ],
+  "schemaVersion": 2,
+  "targetInterpreter": ".research/phase1-certified-tools-4/bin/python",
+  "targetInterpreterPath": ".research/phase1-certified-tools-4/bin/python",
+  "targetInterpreterSha256": "eca90b668424db6f2105504128f02cac91c2805de9a928abcc272d1444abfde0",
+  "targetPyvenvCfgSha256": "dedc2a3195cc684833c56d634658f1413830c6c51a3a78c89b60724b0604a550",
+  "targetRoot": ".research/phase1-certified-tools-4",
+  "wheelhousePath": ".research/phase1-wheelhouse"
+}

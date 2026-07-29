@@ -1,13 +1,15 @@
 #!/bin/sh
-# Bootstrap the recorded interpreter before any Phase 1 Python process.
+# Bootstrap and certify the recorded Phase 1 interpreter before forwarding argv.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 MANIFEST="$ROOT/.planning/spikes/_shared/toolchain-environment.json"
 BOOTSTRAP="$ROOT/tools/phase1-bootstrap.py"
+VERIFIER="$ROOT/tools/verify-phase1-toolchain.py"
+TARGET="$ROOT/.research/phase1-certified-tools-4"
 
-if [ ! -r "$MANIFEST" ] || [ ! -r "$BOOTSTRAP" ]; then
-  printf '%s\n' "phase1-python: bootstrap inputs are unavailable" >&2
+if [ ! -r "$MANIFEST" ] || [ ! -r "$BOOTSTRAP" ] || [ ! -r "$VERIFIER" ]; then
+  printf '%s\n' "phase1-python: bootstrap or toolchain verification inputs are unavailable" >&2
   exit 1
 fi
 
@@ -25,12 +27,13 @@ if [ ! -x "$INTERPRETER" ]; then
 fi
 
 "$INTERPRETER" -I -S "$BOOTSTRAP" --environment "$MANIFEST"
+"$INTERPRETER" -I -S "$VERIFIER" --verify-toolchain
 
-ATTESTATION="$ROOT/.planning/spikes/_shared/phase1-wheelhouse-attestation.json"
-VERIFIER="$ROOT/tools/verify-phase1-wheelhouse.py"
-if [ ! -r "$ATTESTATION" ] || [ ! -x "$VERIFIER" ]; then
-  printf '%s\n' "phase1-python: ordinary forwarding is denied until Plan 01-44 wheelhouse certification is present and valid" >&2
+if [ "${1-}" = "--verify-toolchain" ] && [ "$#" -eq 1 ]; then
+  exit 0
+fi
+if [ ! -x "$TARGET/bin/python" ]; then
+  printf '%s\n' "phase1-python: fresh certified target is unavailable" >&2
   exit 1
 fi
-"$INTERPRETER" -I -S "$VERIFIER" --attestation "$ATTESTATION"
-exec "$INTERPRETER" "$@"
+exec "$TARGET/bin/python" "$@"

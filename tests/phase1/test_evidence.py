@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import shutil
 import subprocess
 import sys
@@ -40,7 +41,7 @@ VALID_SOURCE = {
 }
 
 
-class SourceEvidenceTests(unittest.TestCase):
+class SourceEvidenceValidationTests(unittest.TestCase):
     def run_validator(self, research_root: Path, report: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, str(VALIDATOR), "validate", "--root", str(research_root), "--report", str(report)],
@@ -171,6 +172,69 @@ class BoundedCollectorTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("not allowlisted", result.stderr)
             self.assertFalse(cache.exists())
+
+
+class SourceEvidenceTests(unittest.TestCase):
+    """Exercise the stdlib-only archive-to-target certification boundary."""
+
+    VERIFIER = ROOT / "tools" / "verify-phase1-toolchain.py"
+
+    def run_case(self, case: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(self.VERIFIER), "--self-test-case", case],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    def test_toolchain_certification_rejects_unverified_wheelhouse_before_install(self) -> None:
+        result = self.run_case("wheelhouse-rejection")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("wheelhouse rejection checks passed", result.stdout)
+
+    def test_toolchain_certification_binds_fresh_install_to_verified_wheels(self) -> None:
+        result = self.run_case("fresh-install-binding")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("fresh install binding checks passed", result.stdout)
+
+    def test_toolchain_integrity_blocks_untrusted_forwarding(self) -> None:
+        result = self.run_case("forwarding-integrity")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("forwarding integrity checks passed", result.stdout)
+
+    def test_toolchain_scope_or_policy_failure_requires_escalation(self) -> None:
+        result = self.run_case("scope-policy-escalation")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("scope and policy escalation checks passed", result.stdout)
+
+    def test_toolchain_certification_survives_checkout_relocation_and_rejects_stale_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "relocated-checkout"
+            (copied / "tools").mkdir(parents=True)
+            (copied / ".planning/research").mkdir(parents=True)
+            (copied / ".research").mkdir(parents=True)
+            shutil.copy2(self.VERIFIER, copied / "tools" / "verify-phase1-toolchain.py")
+            for name in ("requirements-phase1-tools.txt",):
+                shutil.copy2(ROOT / name, copied / name)
+            for name in ("toolchain-approval.yaml", "toolchain-wheelhouse-manifest.json", "toolchain-install-attestation.json"):
+                shutil.copy2(ROOT / ".planning/research" / name, copied / ".planning/research" / name)
+            shutil.copytree(ROOT / ".research/phase1-wheelhouse", copied / ".research/phase1-wheelhouse")
+            shutil.copytree(ROOT / ".research/phase1-certified-tools-4", copied / ".research/phase1-certified-tools-4")
+            shutil.copy2(ROOT / ".research/phase1-installer-report-4.json", copied / ".research/phase1-installer-report-4.json")
+            command = [sys.executable, str(copied / "tools" / "verify-phase1-toolchain.py"), "--verify-toolchain"]
+            relocated = subprocess.run(command, cwd=copied, text=True, capture_output=True, check=False)
+            self.assertEqual(relocated.returncode, 0, relocated.stderr + relocated.stdout)
+            attestation = copied / ".planning/research/toolchain-install-attestation.json"
+            document = json.loads(attestation.read_text())
+            for field in ("wheelhousePath", "installerReportPath", "targetRoot", "targetInterpreterPath", "targetInterpreter"):
+                stale_document = copy.deepcopy(document)
+                stale_document[field] = str((ROOT / stale_document[field]).absolute())
+                attestation.write_text(json.dumps(stale_document), encoding="utf-8")
+                stale = subprocess.run(command, cwd=copied, text=True, capture_output=True, check=False)
+                self.assertNotEqual(stale.returncode, 0)
+                self.assertIn("repo-relative", stale.stderr)
+            attestation.write_text(json.dumps(document), encoding="utf-8")
 
 
 if __name__ == "__main__":
