@@ -3,10 +3,11 @@ phase: 1
 reviewers: [codex, opencode, ollama, llama_cpp]
 successful_reviewers: [codex]
 failed_reviewers: [opencode, ollama, llama_cpp]
-reviewed_at: 2026-07-28T23:15:21Z
-reviewed_commit: fbaa88640b32898c8094a2fcda1853f984348b78
-reviewed_head: fbaa88640b32898c8094a2fcda1853f984348b78
+reviewed_at: 2026-07-29T00:46:32Z
+reviewed_commit: 7c151cc5dfe37de5e151fbde6b8bd278b420b0ac
+reviewed_head: 7c151cc5dfe37de5e151fbde6b8bd278b420b0ac
 review_binding_status: exact-commit-plan-snapshot-not-converged
+supersedes_reviewed_commit: fbaa88640b32898c8094a2fcda1853f984348b78
 reviewer_identity:
   codex: "codex-cli/0.145.0:external-read-only"
   opencode: "opencode/1.2.17:no-assistant-text"
@@ -16,15 +17,15 @@ reviewer_access:
   codex: "read-only review against isolated archive of reviewed commit"
   opencode: "isolated archive supplied; reviewer returned no assistant text"
   ollama: "prompt-only local completion; no filesystem/tool access; timed out"
-  llama_cpp: "prompt-only local completion; no filesystem/tool access; rejected 159789-token request against 16384-token context"
+  llama_cpp: "prompt-only local completion; no filesystem/tool access; rejected 167967-token request against 16384-token context"
 review_context: "exact committed repository snapshot only; no mutable current-workspace artifact used as evidence"
-current_high: 3
-current_medium: 1
+current_high: 1
+current_medium: 0
 current_low: 0
-current_actionable: 4
-current_actionable_non_high: 1
+current_actionable: 1
+current_actionable_non_high: 0
 authorization:
-  verdict: "NOT CONVERGED; HIGH=3; actionable=4; actionable_non_high=1"
+  verdict: "NOT CONVERGED; HIGH=1; actionable=1; actionable_non_high=0"
   superseded: false
 plans_reviewed:
   - 01-01-PLAN.md
@@ -70,10 +71,12 @@ plans_reviewed:
   - 01-41-PLAN.md
   - 01-42-PLAN.md
   - 01-43-PLAN.md
+  - 01-44-PLAN.md
+  - 01-45-PLAN.md
 plan_snapshot:
-  count: 43
-  total_bytes: 573866
-  aggregate_sha256: cb0edec575be0362fe1b6964de016f46b243c09a7db2ee80913a831839835bae
+  count: 45
+  total_bytes: 609276
+  aggregate_sha256: 122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5
   algorithm: "lexically ordered basename + NUL + file bytes + NUL"
 plan_file_sha256:
   01-01-PLAN.md: 2526ed4fcd262872dc35513de8907e2ad10eb844e069fbcabd2c11a30a1e3787
@@ -104,112 +107,99 @@ plan_file_sha256:
   01-26-PLAN.md: 5364b4eae2a5eba2d4b5775d74d82ac44c3f084644a4015981735c009d816733
   01-27-PLAN.md: 31818b11bec7d21f9570048aaafe42f81896cba92e3c76e6f64d18d380910c33
   01-28-PLAN.md: 277c6c0e42ad8247a04eed5d15fa7e7eab767db21104626e3f12fce4a64c83a5
-  01-29-PLAN.md: 97fbbb12be393306a74f7ae00aeb75fcb104e9ff7b3516ad99d307f2b34db0bd
-  01-30-PLAN.md: 0fec92409c2ed45e00ea2932864e4e477f935cab0b35882224b38f0a34f52e04
-  01-31-PLAN.md: 741af7a29ec4f29602261ef36817e9162f5b586c362f2d35519ef0cceb71fb1d
-  01-32-PLAN.md: 5945d69f8a1f13e036ab0ea3aa5b99a63acd7cd1d196a871f1754ffdbeb4f978
-  01-33-PLAN.md: f117bfd132b28af7b877e4b9f53d22a04514fca772754b9003ce550c30ee0a19
-  01-34-PLAN.md: 15cd5806d640a637cd8cc68b6588369fe1525c9dd727a9e060a2e9279fb7a319
-  01-35-PLAN.md: 3df7647ad8a17ba85b1814073c9cb755a7ed7619bc27a78a8c48440d2fc44e5b
-  01-36-PLAN.md: 009593819887b2b3c1b2d3c917f1541832cbcf54abad5f653f3676e467c4685f
-  01-37-PLAN.md: a608e174b05e5b6a1c40a5fa0b0fecc14db55645d1bfc04485194b2ad7b7f485
-  01-38-PLAN.md: f44eaac4ef6c343d6fd8ee47db7b5001f787367720c79c6c6d03ad8c60dbfef5
-  01-39-PLAN.md: 70a11288d25eeb393a1651d3086d6f06f7a7ea3cda453de3c835fe92ddfdee5b
-  01-40-PLAN.md: 5e4bc139096745d87d8ff4ba8f8fc7239ae6b74684e9a13c2615ae3b43b038b1
-  01-41-PLAN.md: 90eda71888684777cb0f4f15d89a2595217bad5a460d6a25d4b071675fcc9fd3
-  01-42-PLAN.md: 69116c08d1380316e5f5de44ef2034e7b56bff22897f910ac8359f1ca49bf64e
-  01-43-PLAN.md: efd00c91c4f05ce02d711e1d7939474d843f1f8ad8e1a1d0f02fa3343f4b1c3a
+  01-29-PLAN.md: 3b5f7d92a05180beb29027c4b64879ad69f0b70d01240f356cc29199120f8f15
+  01-30-PLAN.md: 5a4b9366f0e559e7419b1c2240ae85e65dc2bfb9f1de1a520d0d7c1b7ad4e2e1
+  01-31-PLAN.md: 01db6359d2f55c13f6a401c78f227351b81841373bf7081d60e6789875f30418
+  01-32-PLAN.md: d306b94d0d3878ba21deeca20784e9b1763ed2785cf479077b878496717f3a0d
+  01-33-PLAN.md: f76a22c952f56d8d35eb8287a0ec2e5e8f8cdce9f1369a549b51ffbc2b4e87a8
+  01-34-PLAN.md: b840d2d466679b815ce9c726b197354c24582eca93f84c889416d5535624505f
+  01-35-PLAN.md: 68899212b5db57a4c975806502aad09b3bbe9e28c50ed12751ccefc4da0624f2
+  01-36-PLAN.md: df335bb2c1b3cc2378fa482ef5618ce1b412c7b458c706d48e5be9c295d08827
+  01-37-PLAN.md: c8aea9b7c549962cbca9b4bb0752c5e974ab139bdfef538bc27a5803ead492d2
+  01-38-PLAN.md: 8ee8a056885d6e54c32b3867a9f1c8e8727678784e484fcefe205d3cc640a331
+  01-39-PLAN.md: 507f0a2c6a0fef5763900dec9d88eff43f383246b23835fda1baf85631878b18
+  01-40-PLAN.md: c1b7f271d18cfcf02f820522af2779a4d20299451355603b89f88a06b198fc27
+  01-41-PLAN.md: 2c639de3f1646b38a6beb5c8fa85762cf1ff8838951cf388f9a12c87cb01d317
+  01-42-PLAN.md: 1abbd397271ca89d81b61494d2cb552ffeb1e0fc9f6f3440875b22e6550dbc66
+  01-43-PLAN.md: 7a4b7fdd6a1e82ed39cd9bc3a575d5f96aa5bcb3ae0da1e802d75a8ffd2a41d9
+  01-44-PLAN.md: 818445bda196ee002339afa777b74581f893f79e24a8ebdf9e4537e227f59881
+  01-45-PLAN.md: 781442d38d682b91fc30845f9da757dc7e5b9fb79b0e04186eaac8b0ee1dab36
 ---
 
 # Cross-AI Plan Review — Phase 1
 
 ## Review Scope and Binding
 
-This review binds all 43 Phase 1 plan files to immutable commit `fbaa88640b32898c8094a2fcda1853f984348b78` and aggregate `cb0edec575be0362fe1b6964de016f46b243c09a7db2ee80913a831839835bae`. Reviewers received an isolated archive of that commit; mutable working-tree files were excluded from evidence.
+This review binds all 45 Phase 1 plan files to immutable commit `7c151cc5dfe37de5e151fbde6b8bd278b420b0ac` and aggregate `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5`. Reviewers received an isolated archive of that commit; mutable working-tree files were excluded from evidence.
 
-All detected independent lanes were invoked sequentially. Codex completed a substantive source-grounded review. OpenCode returned no assistant text. Ollama timed out after 600 seconds with no response. llama.cpp rejected the 159,789-token prompt because its configured context is 16,384 tokens. Failed lanes remain recorded below; they do not contribute verdict weight.
+All detected independent lanes were invoked sequentially. Codex completed a substantive source-grounded review. OpenCode returned no assistant text. Ollama timed out after 600 seconds with no response. llama.cpp rejected the 167,967-token prompt because its configured context is 16,384 tokens. Failed lanes remain recorded below; they do not contribute verdict weight.
 
 ## Codex Review
 
-## Summary
+# Summary
 
-Reviewed all 43 plans against the exact snapshot. The plan count and aggregate SHA-256 reproduce exactly as `cb0edec575be0362fe1b6964de016f46b243c09a7db2ee80913a831839835bae`.
+The snapshot binding verified: 45 plans and aggregate SHA-256 `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5`.
 
-Repository files were readable. The snapshot contains no Git metadata, so the commit object itself could not be independently resolved, but the supplied content binding is exact.
+One actionable HIGH plan defect remains.
 
-Four actionable findings remain: three HIGH and one MEDIUM. The two findings from the older review no longer reproduce: Plan 29 now assigns integrity and acquisition-history controls to the correct tasks (`01-29-PLAN.md:172`, `01-29-PLAN.md:176`), and Plan 31 explicitly delegates package intake to Plan 41 (`01-31-PLAN.md:97`).
+| Mandatory regression target | Result |
+|---|---|
+| Verified hash-locked wheelhouse provenance | PASS |
+| Transactional concurrent multi-file reads | PARTIAL — Plan 35 gap |
+| Non-self-referential terminal digest | PASS |
+| Separate fixture/live registry receipts | PASS |
+| Plan 29/44/45 ownership and dependency split | PASS |
 
-## Strengths
+# Strengths
 
-- The execution authorization is genuinely content-addressed. Plan 29 requires the exact 43-plan digest map, reviewed-commit consistency, independent reviewer/executor identities, and zero actionable findings before later work (`01-29-PLAN.md:100`, `01-29-PLAN.md:105`, `01-29-PLAN.md:111`). This correctly replaces the stale current review, which is bound to another commit and remains non-converged (`01-REVIEWS.md:5`, `01-REVIEWS.md:15`).
+- Plan 44 now requires a complete hashed transitive closure, rejects missing/surplus/substituted wheels before target creation, performs an offline hash-required installation, binds the installer report to wheel archives, verifies installed RECORD content, and blocks wrapper forwarding on any mismatch. This directly repairs the previous provenance defect. [01-44-PLAN.md:20](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-44-PLAN.md:20) [01-44-PLAN.md:90](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-44-PLAN.md:90)
 
-- Compatibility eligibility is substantive rather than label-based. Plan 35 independently checks all seven evidence dimensions and rejects wrong-authority, source-only, stale, or pending-review inputs (`01-35-PLAN.md:95`, `01-35-PLAN.md:99`). Plan 36 then requires recovered eligibility, a dated approval, and an OS-enforced sandbox before package execution (`01-36-PLAN.md:89`, `01-36-PLAN.md:92`).
+- The terminal digest domain is computable: only the three final target files participate, using sorted logical paths plus NUL-delimited exact bytes; the resulting map and aggregate live in an external attestation excluded from its own digest domain. Both validator and publisher recompute it. [01-40-PLAN.md:137](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:137) [01-40-PLAN.md:141](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-40-PLAN.md:141)
 
-- The gap-plan dependency spine is coherent. Compatibility waits for schema and registry work (`01-35-PLAN.md:6`), package measurement waits for compatibility and recovery (`01-36-PLAN.md:6`), observed refresh waits for all three (`01-43-PLAN.md:6`), and full closeout waits for the resulting canonical generation (`01-37-PLAN.md:6`).
+- Registry evidence now has distinct immutable fixture and live-or-blocker receipt paths and attempt IDs. Both are revalidated after collection, neither may overwrite the other, and downstream evidence must retain both attributions. [01-41-PLAN.md:74](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-41-PLAN.md:74) [01-41-PLAN.md:79](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-41-PLAN.md:79) [01-41-PLAN.md:89](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-41-PLAN.md:89)
 
-- Publisher-side durability is carefully specified. Plan 42 requires fsynced staging, backups, journal states, deterministic replacement, digest verification, recovery, fixed target profiles, and failure-preserving publication (`01-42-PLAN.md:76`, `01-42-PLAN.md:81`). Plan 43 binds its five-file refresh overlay to exact digests before invoking that publisher (`01-43-PLAN.md:85`, `01-43-PLAN.md:91`).
+- The 29→44→45 split has clear ownership: Plan 29 owns bootstrap/review authorization and forbids forwarding before certification; Plan 44 owns wheelhouse certification; Plan 45 alone owns public-source acquisition and defers canonical authority to Plans 30/31. Dependencies are exactly `44 → 29`, `45 → 44`, followed by Plans 30, 32, and 33 depending on 45. [01-29-PLAN.md:17](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-29-PLAN.md:17) [01-44-PLAN.md:6](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-44-PLAN.md:6) [01-45-PLAN.md:6](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-45-PLAN.md:6) [01-45-PLAN.md:39](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-45-PLAN.md:39)
 
-- Normative, observed, package, and approval authority remain separated. Plan 31 limits repository evidence to observed/history authority and retains missing normative sources as blockers (`01-31-PLAN.md:81`, `01-31-PLAN.md:86`); Plan 41 independently collects registry evidence without installing or importing package code (`01-41-PLAN.md:70`, `01-41-PLAN.md:74`).
+- Plan 42’s core transactional design is sound: shared-reader/exclusive-writer locking, recovery before snapshot acquisition, a complete in-memory mapping before lock release, deterministic paused-reader overlap tests, and fixed-profile attested publishers. [01-42-PLAN.md:72](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:72) [01-42-PLAN.md:82](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:82)
 
-## Concerns
+# Concerns
 
-### HIGH
+## HIGH
 
-1. **Plan 29 cannot prove that the installed environment came from the declared wheel artifacts.**
+1. **Plan 35 can add an unguarded canonical multi-file reader after Plan 42’s registration proof runs.**
 
-   The existing installation used ordinary `pip install -r` without hash enforcement (`.planning/research/toolchain-approval.yaml:89`, `.planning/research/toolchain-approval.yaml:92`), while the requirements file contains version pins but no hashes (`requirements-phase1-tools.txt:5`). Plan 29 proposes verifying both wheel artifact hashes and installed `RECORD` files using installed-distribution metadata (`01-29-PLAN.md:124`, `01-29-PLAN.md:130`) while prohibiting package installation (`01-29-PLAN.md:61`).
+   Plan 35 executes in Wave 7, modifies `tools/validate-research.py`, and depends only on Plans 34 and 41—not Plan 42. [01-35-PLAN.md:5](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-35-PLAN.md:5) [01-35-PLAN.md:8](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-35-PLAN.md:8)
 
-   Mechanism: installed metadata can validate the current files and their `RECORD`, but it does not prove which wheel archive supplied them. A substituted same-name/version wheel with a self-consistent `RECORD` can pass while the expected artifact hash remains only a declaration.
+   Its evaluator resolves multiple canonical families—SRC, CLM, package, SPK, and OQ records—but does not require receiving Plan 42’s in-memory transactional snapshot or prohibit reopening live paths. [01-35-PLAN.md:91](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-35-PLAN.md:91) [01-35-PLAN.md:99](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-35-PLAN.md:99)
 
-2. **Plan 42’s recovery guard does not prevent a live reader/writer mixed-generation race.**
+   Plan 42’s regression covers “currently registered” readers and explicitly delegates future registration only to Plans 36 and 43, omitting Plan 35. [01-42-PLAN.md:76](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:76) [01-42-PLAN.md:82](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/.planning/phases/01-research-and-truth-baseline/01-42-PLAN.md:82)
 
-   The plan requires `recover_before_canonical_read()` only before the first canonical read and gives the publisher an exclusive lock (`01-42-PLAN.md:81`). Its tests cover interrupted publishers, journal tampering, and writer contention (`01-42-PLAN.md:72`, `01-42-PLAN.md:79`), but not a reader whose multi-file read overlaps a successful publication.
+   Consequently, Plan 35 can reintroduce the prior H2 race by combining canonical files from different generations during a successful concurrent publication. This is a plan defect, not merely missing implementation.
 
-   The current validator reads files separately (`tools/validate-research.py:41`) while publication replaces targets sequentially (`tools/validate-research.py:1024`). A reader can pass the guard, read an old file, then observe new files after the publisher starts. That contradicts the stated guarantee that no canonical reader can consume a mixed generation (`01-42-PLAN.md:20`).
-
-3. **Plan 40 requires a self-referential terminal staged-set digest without defining a computable digest domain.**
-
-   The two human role records must contain a `staged-set digest`, while those records are part of staged `01-REVERIFICATION.md`, one of the exact three files whose bytes and hashes form the staged set (`01-40-PLAN.md:115`, `01-40-PLAN.md:125`). Plan 42 then binds the exact staged file bytes in the external attestation (`01-42-PLAN.md:76`, `01-42-PLAN.md:81`).
-
-   Mechanism: inserting the aggregate digest into a file changes that file and therefore changes the aggregate. No exclusion rule, canonical placeholder, or external role-record location is defined, so the terminal validator lacks a deterministic positive contract and closeout may be impossible to satisfy.
-
-### MEDIUM
-
-1. **Plan 41 reuses one receipt path for fixture and live collection without preserving or validating the final generation.**
-
-   The plan promises fixture and live provenance in the retained receipt (`01-41-PLAN.md:20`, `01-41-PLAN.md:28`), but its command sequence writes fixture output, validates it, and then writes live-or-blocker output to the same path without another receipt validation (`01-41-PLAN.md:74`, `01-41-PLAN.md:75`).
-
-   Mechanism: the live invocation may overwrite the validated fixture receipt, and the final committed receipt is not explicitly revalidated. The acceptance test therefore does not prove that both attempt histories remain attributable.
-
-### LOW
+## MEDIUM
 
 None.
 
-## Suggestions
+## LOW
 
-- Revise Plan 29 to obtain an exact wheelhouse, verify every archive before installation, and build a fresh environment using a complete hash-locked closure such as `--require-hashes --no-index --find-links`. Then validate installed `RECORD` entries before wrapper forwarding.
+None.
 
-- Make canonical reads transactional: hold a shared lock across the entire logical multi-file read or read through one immutable generation directory selected by an atomic pointer. Add a test that pauses a reader after its first file while a writer publishes and proves the reader obtains entirely old or entirely new bytes.
+# Suggestions
 
-- Remove the terminal digest self-reference. Put target-file hashes and the staged-set aggregate exclusively in the external attestation, or define a precise canonical digest algorithm that excludes the role-record digest fields and test that algorithm directly.
+- Add `01-42` to Plan 35’s `depends_on`.
+- Require `evaluate_compatibility_baseline()` to consume only the already-acquired snapshot/index from the registered `validate --root` reader, with no canonical path reopen.
+- Add a Plan 35 regression that pauses compatibility evaluation during a successful publication and proves an all-old or all-new result, or instruments canonical file opens and proves none occur after snapshot acquisition.
+- Add Plan 35 to Plan 42’s future-reader propagation language, then regenerate the content-addressed review binding.
 
-- Give fixture and live registry attempts separate immutable receipt files, or define an append-only multi-attempt receipt. Run `validate-receipt` after the live/blocker invocation and assert both attempt records survive.
+# Risk Assessment
 
-- After these plan edits, regenerate the exact 43-plan aggregate and independent review binding before execution.
+Current implementation still contains direct independent reads and sequential publication—for example, `load_yaml()` reads live paths directly and consolidation replaces targets one at a time. [tools/validate-research.py:41](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/tools/validate-research.py:41) [tools/validate-research.py:1022](/tmp/gsd-review-3qWogF/repo-7c151cc5dfe37de5e151fbde6b8bd278b420b0ac/tools/validate-research.py:1022) Those are implementation defects the plans explicitly undertake to repair, so they are not counted as additional plan findings.
 
-## Risk Assessment
+Execution risk remains high until the transactional and wheelhouse plans pass their negative and concurrency tests. With the Plan 35 reader gap repaired, the remaining plan architecture is appropriately fail-closed.
 
-Overall risk is **HIGH**.
+# Convergence Verdict
 
-- Supply-chain integrity remains unproven despite the proposed wrapper certification.
-- A successful concurrent publication can expose mixed canonical evidence.
-- Terminal publication may be blocked by an undefined self-digest contract.
-- Registry receipt history has a narrower MEDIUM preservation gap.
-- Authority separation, package execution gating, dependency sequencing, and publisher crash recovery are otherwise strong.
-
-## Convergence Verdict
-
-**NOT CONVERGED — HIGH=3, MEDIUM=1, LOW=0, actionable=4**
+**NOT CONVERGED — HIGH=1, MEDIUM=0, LOW=0, actionable=1.**
 
 ---
 
@@ -224,31 +214,30 @@ stderr:
 ## Ollama Review
 
 Ollama review failed or returned empty output.
-curl: (28) Operation timed out after 600000 milliseconds with 0 bytes received
+curl: (28) Operation timed out after 600001 milliseconds with 0 bytes received
 
 ---
 
 ## llama.cpp Review
 
 llama.cpp review failed or returned empty output.
-request (159789 tokens) exceeds the available context size (16384 tokens), try increasing it
+request (167967 tokens) exceeds the available context size (16384 tokens), try increasing it
 
 ---
 
 ## Consensus Summary
 
-No multi-reviewer consensus can be claimed: one of four invoked lanes produced substantive review output. Codex is the sole source-grounded verdict and found three HIGH plus one MEDIUM current actionable defects. Execution authorization therefore remains blocked regardless of missing corroboration because Phase 1 policy requires zero actionable findings.
+No multi-reviewer consensus can be claimed: one of four invoked lanes produced substantive review output. Codex is the sole source-grounded verdict and found one HIGH current actionable defect. Execution authorization remains blocked because Phase 1 policy requires zero actionable findings.
 
 ### Agreed Strengths
 
-None qualify as multi-reviewer agreement. Sole grounded reviewer found strong content-addressed authorization, compatibility gating, dependency sequencing, crash-recovery publication design, and authority separation.
+None qualify as multi-reviewer agreement. Sole grounded reviewer confirmed the previous wheel provenance, terminal digest, receipt preservation, and Plan 29/44/45 ownership findings are repaired. Plan 42’s core shared-reader/exclusive-writer snapshot design is sound.
 
-### Grounded Current Findings
+### Grounded Current Finding
 
-1. **HIGH — Plan 29 wheel provenance:** installed metadata cannot prove installed distributions came from declared wheel archives.
-2. **HIGH — Plan 42 mixed-generation read race:** recovery-before-read plus writer lock does not protect a reader across a multi-file logical read.
-3. **HIGH — Plan 40 self-referential staged-set digest:** digest embedded in a file inside its own digest domain lacks a computable canonical rule.
-4. **MEDIUM — Plan 41 receipt overwrite:** fixture and live collection reuse one receipt path; final generation is not explicitly revalidated.
+1. **HIGH — Plan 35 transactional-reader propagation gap:** Plan 35 runs after Plan 42, modifies the canonical compatibility evaluator, and reads multiple canonical record families, but does not depend on Plan 42 or require evaluation exclusively from its in-memory transactional snapshot. Plan 42’s future-reader registration names Plans 36 and 43 but omits Plan 35. Plan 35 can therefore reintroduce a mixed-generation read after Plan 42’s registered-reader proof has passed.
+
+Required correction: add Plan 42 as a Plan 35 dependency; require `evaluate_compatibility_baseline()` to consume only the registered in-memory snapshot/index with no live-path reopen; add overlap or file-open instrumentation regression; add Plan 35 to Plan 42 future-reader propagation language.
 
 ### Agreed Concerns
 
@@ -260,6 +249,6 @@ No substantive divergent view exists because three lanes failed before producing
 
 ### Authorization Result
 
-**NOT CONVERGED — HIGH=3, MEDIUM=1, LOW=0, actionable=4. Phase 1 execution remains blocked.**
+**NOT CONVERGED — HIGH=1, MEDIUM=0, LOW=0, actionable=1. Phase 1 execution remains blocked.**
 
-Targeted replanning must fix Plans 29, 40, 41, and 42, regenerate the exact 43-plan aggregate, then obtain a fresh independent exact-snapshot review.
+Targeted replanning must repair Plans 35 and 42, regenerate the exact active-plan aggregate, then obtain a fresh independent exact-snapshot review.
