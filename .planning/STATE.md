@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: research-and-truth-baseline
 status: blocked
-stopped_at: context exhaustion at 93% (2026-07-29)
-last_updated: "2026-07-29T03:01:51.655Z"
+stopped_at: GitHub PR #4 awaiting Codex connector review (2026-07-29)
+last_updated: "2026-07-29T10:56:46Z"
 last_activity: 2026-07-29
-last_activity_desc: independent GSD checker passed 45 plans, 92 tasks, all six requirements, all 39 decisions, DAG/waves, and prior regression preservation
+last_activity_desc: supplemental local Codex review found two actionable MEDIUM plan contradictions; targeted repairs passed independent GSD checking and moved to GitHub PR #4
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 1 (research-and-truth-baseline) — BLOCKED PENDING FRESH EXACT-COMMIT CODEX REVIEW
+Phase: 1 (research-and-truth-baseline) — BLOCKED PENDING GITHUB CODEX CONNECTOR CONVERGENCE
 Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
-Status: Nine targeted plans now fail closed on one reviewed six-path Git-blob snapshot; canonical project/context and four refresh reports join the committed planning snapshot
-Last activity: 2026-07-29 — independent GSD checker passed 45 plans, 92 tasks, all six requirements, all 39 decisions, DAG/waves, and prior regression preservation
+Status: GitHub PR #4 carries targeted fixes for two supplemental Codex MEDIUM/actionable findings plus repository review rules; connector review and exact head binding remain pending
+Last activity: 2026-07-29 — repaired Plans 01-32/01-38/01-40 passed independent GSD checking with zero blockers/warnings and were pushed to PR #4
 
 Progress: [██████░░░░] 62%
 
@@ -180,18 +180,24 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Review-mode replanning repairs both Codex findings across Plans 01-29/30/31/35/40/43/45 and adds explicit scope ownership boundaries to Plans 01-34/36/43 without adding plans or changing waves.
 - [Phase ?]: The revised source-input authorization is a closed six-path set of regular Git blobs from one reviewed commit, with per-path digests, tracked-worktree byte equality, Git-blob-only loading, downstream receipt/snapshot consumption, and fail-closed terminal revalidation.
 - [Phase ?]: Independent plan checking passes all 45 plans, 92 tasks, six requirements, 39 context decisions, dependency DAG/waves, threat boundaries, and prior regressions with zero blockers or warnings.
-- [Phase ?]: The latest 45-plan snapshot totals 652857 bytes with aggregate SHA-256 `908e20cd14e68fe88c1b48f9a2a795dce8ec7f489d5d54878c5e2187797763b4` using lexical basename + NUL + file bytes + NUL.
+- [Phase ?]: The pre-PR 45-plan snapshot totals 652857 bytes with aggregate SHA-256 `908e20cd14e68fe88c1b48f9a2a795dce8ec7f489d5d54878c5e2187797763b4` using lexical basename + NUL + file bytes + NUL.
+- [Phase ?]: Supplemental local Codex review of exact commit `243e72f` independently reproduced that plan/source binding, passed mandatory regressions A–H, and found two MEDIUM/actionable contradictions: Plan 01-32 calendar-age ambiguity and Plan 01-40 globally-exactly-once probe execution.
+- [Phase ?]: Targeted repairs align Plans 01-38/01-40 on a parser-backed canonical probe-attempt ledger, preserve content-addressed authorization in Plan 01-32, and add `AGENTS.md` review rules for GitHub Codex.
+- [Phase ?]: Independent GSD checking passed the repaired plan set with no blocker or warning; GitHub issues #1–#3 and PR #4 now carry the external connector convergence loop.
+- [Phase ?]: The repaired committed 45-plan snapshot at `51bd4da` totals 659132 bytes with aggregate SHA-256 `f5f924b6347e74311e2c3e0567241d3232adbe1550a122f6990eb35f56f7e24e`; final reviewed commit will be PR #4 head after continuity updates.
 
 ### Pending Todos
 
-- Run a fresh exact-commit Codex-only review against the committed nine-plan repair, six canonical source inputs, sorted 45-entry SHA-256 map, and aggregate `908e20cd14e68fe88c1b48f9a2a795dce8ec7f489d5d54878c5e2187797763b4`.
+- Request GitHub Codex connector review on PR #4 with `@codex review`, verify comments against repo evidence, and iterate fixes/reviews until 0 HIGH / 0 actionable or a real blocker.
+- Keep issues #1 and #2 linked to their plan repairs and issue #3 as the convergence ledger; close only through merged verified PR state.
+- Regenerate the exact 45-plan map/aggregate and six-source Git-blob binding at final PR head before treating connector convergence as execution authorization.
 - Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Exact-review record `341884f` is historical: the revised plan bytes and newly committed six-path source-input set supersede its authorization binding.
-- Execution is blocked before Plan 01-29 Task 1 until a fresh Codex exact-commit review independently reproduces the 45-plan map/aggregate, confirms all six mandatory Git blobs, and records 0 HIGH / 0 actionable.
+- Historical review records `341884f` and the supplemental local review in `01-REVIEWS.md` do not authorize current PR #4 plan bytes; they remain audit evidence only.
+- Execution is blocked before Plan 01-29 Task 1 until GitHub Codex connector review converges on final PR #4 head, the exact 45-plan map/aggregate and six mandatory Git blobs are reproduced for that commit, and the resulting record reports 0 HIGH / 0 actionable.
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
@@ -213,6 +219,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T07:45:44.494Z
-Stopped at: session resumed; awaiting fresh exact-commit Codex review
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — next action `/gsd-review --phase 1 --codex`
+Last session: 2026-07-29T10:56:46Z
+Stopped at: GitHub PR #4 opened with targeted plan repairs; awaiting Codex connector review and iterative convergence
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — monitor PR #4, request `@codex review`, and reconcile issues #1–#3
