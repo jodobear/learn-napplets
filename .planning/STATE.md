@@ -5,8 +5,8 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: research-and-truth-baseline
 status: blocked
-stopped_at: GitHub PR #4 awaiting Codex connector review (2026-07-29)
-last_updated: "2026-07-29T10:56:46Z"
+stopped_at: GitHub Codex connector environment setup required for PR #4 (2026-07-29)
+last_updated: "2026-07-29T11:03:19Z"
 last_activity: 2026-07-29
 last_activity_desc: supplemental local Codex review found two actionable MEDIUM plan contradictions; targeted repairs passed independent GSD checking and moved to GitHub PR #4
 progress:
@@ -29,8 +29,8 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 Phase: 1 (research-and-truth-baseline) — BLOCKED PENDING GITHUB CODEX CONNECTOR CONVERGENCE
 Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
-Status: GitHub PR #4 carries targeted fixes for two supplemental Codex MEDIUM/actionable findings plus repository review rules; connector review and exact head binding remain pending
-Last activity: 2026-07-29 — repaired Plans 01-32/01-38/01-40 passed independent GSD checking with zero blockers/warnings and were pushed to PR #4
+Status: GitHub PR #4 carries targeted fixes and review rules; `chatgpt-codex-connector` is blocked because no Codex cloud environment/code-review configuration exists for this repository
+Last activity: 2026-07-29 — requested `@codex review`; connector required repository environment setup before review can run
 
 Progress: [██████░░░░] 62%
 
@@ -188,7 +188,8 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Pending Todos
 
-- Request GitHub Codex connector review on PR #4 with `@codex review`, verify comments against repo evidence, and iterate fixes/reviews until 0 HIGH / 0 actionable or a real blocker.
+- Human/account action: create a Codex cloud environment for `jodobear/learn-napplets` and enable repository code review in ChatGPT Codex settings.
+- Re-request GitHub Codex connector review on PR #4 with `@codex review`, verify comments against repo evidence, and iterate fixes/reviews until 0 HIGH / 0 actionable or a real blocker.
 - Keep issues #1 and #2 linked to their plan repairs and issue #3 as the convergence ledger; close only through merged verified PR state.
 - Regenerate the exact 45-plan map/aggregate and six-source Git-blob binding at final PR head before treating connector convergence as execution authorization.
 - Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
@@ -196,6 +197,7 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Blockers/Concerns
 
+- `chatgpt-codex-connector` cannot review PR #4 until a Codex cloud environment is created and code review is enabled for `jodobear/learn-napplets`; this requires human/account configuration in ChatGPT Codex settings.
 - Historical review records `341884f` and the supplemental local review in `01-REVIEWS.md` do not authorize current PR #4 plan bytes; they remain audit evidence only.
 - Execution is blocked before Plan 01-29 Task 1 until GitHub Codex connector review converges on final PR #4 head, the exact 45-plan map/aggregate and six mandatory Git blobs are reproduced for that commit, and the resulting record reports 0 HIGH / 0 actionable.
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
@@ -220,5 +222,5 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 ## Session Continuity
 
 Last session: 2026-07-29T10:56:46Z
-Stopped at: GitHub PR #4 opened with targeted plan repairs; awaiting Codex connector review and iterative convergence
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — monitor PR #4, request `@codex review`, and reconcile issues #1–#3
+Stopped at: PR #4 ready, but GitHub Codex connector requires repository environment/code-review setup
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — after setup, re-request `@codex review` and reconcile issues #1–#3
