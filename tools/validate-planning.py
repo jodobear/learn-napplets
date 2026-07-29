@@ -6,12 +6,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import stat
 import subprocess
 import sys
 from pathlib import Path
-
-import yaml
+from types import MappingProxyType
 
 ROOT = Path(__file__).resolve().parents[1]
 PLANNING = ROOT / ".planning"
@@ -29,61 +30,166 @@ def requirement_ids(text: str) -> set[str]:
     return set(re.findall(r"\*\*([A-Z][A-Z0-9]{3,4}-\d{2})\*\*", v1_section))
 
 
-def markdown_section(text: str, heading: str) -> str:
-    """Return a review-record section body, or an empty string."""
-    match = re.search(
-        rf"^#{{2,6}}\s+{re.escape(heading)}\s*$([\s\S]*?)(?=^#{{1,2}}\s|\Z)",
-        text,
+REQUIRED_PHASE1_SOURCE_INPUTS = (
+    ".planning/PROJECT.md",
+    ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md",
+    ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md",
+    ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md",
+    ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md",
+    ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md",
+)
+
+
+def _frontmatter(text: str) -> str:
+    match = re.match(r"\A---\n([\s\S]*?)\n---\n", text)
+    if not match:
+        raise ValueError("PRE100: review record lacks a bounded frontmatter manifest")
+    return match.group(1)
+
+
+def _single_frontmatter_value(frontmatter: str, name: str) -> str:
+    values = re.findall(rf"^{re.escape(name)}:\s*(\S.*?)\s*$", frontmatter, re.MULTILINE)
+    if len(values) != 1:
+        raise ValueError(f"PRE101: expected exactly one {name} field")
+    return values[0].strip().strip('"')
+
+
+def _git(root: Path, *args: str) -> str:
+    completed = subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=False)
+    if completed.returncode:
+        detail = (completed.stderr or completed.stdout).strip()
+        raise ValueError(f"PRE102: git {' '.join(args)} failed: {detail}")
+    return completed.stdout
+
+
+def _blob_at(root: Path, revision: str, path: str) -> tuple[str, bytes]:
+    listing = _git(root, "ls-tree", revision, "--", path).strip()
+    match = re.fullmatch(r"100644 blob ([0-9a-f]{40})\t(.+)", listing)
+    if not match or match.group(2) != path:
+        raise ValueError(f"PRE103: {path} is not a regular 100644 blob at {revision}")
+    return match.group(1), _git(root, "show", f"{revision}:{path}").encode()
+
+
+def _parse_review_manifest(review_text: str) -> tuple[str, str, dict[str, str], dict[str, tuple[str, str, str]], bool]:
+    frontmatter = _frontmatter(review_text)
+    reviewed_commit = _single_frontmatter_value(frontmatter, "reviewed_commit")
+    identity_block = re.search(r'^reviewer_identity:\n((?:  [^\n]+\n)+)', frontmatter, re.MULTILINE)
+    reviewer = re.search(r'^  [^\s:#]+:\s*"?([^"\n]+?)"?\s*$', identity_block.group(1), re.MULTILINE) if identity_block else None
+    if not reviewer or not reviewer.group(1).strip():
+        raise ValueError("PRE104: missing independent reviewer identity")
+    reviewer_identity = reviewer.group(1).strip()
+    verdict_match = re.search(r'^  verdict:\s*"?([^"\n]+?)"?\s*$', frontmatter, re.MULTILINE)
+    if not verdict_match or verdict_match.group(1).strip() != "CONVERGED; HIGH=0; actionable=0":
+        raise ValueError("PRE105: convergence verdict must equal CONVERGED; HIGH=0; actionable=0")
+    if _single_frontmatter_value(frontmatter, "current_high") != "0" or _single_frontmatter_value(frontmatter, "current_actionable") != "0":
+        raise ValueError("PRE106: review record has unresolved HIGH or actionable findings")
+    superseded_rows = re.findall(r'^  superseded:\s*(true|false)\s*$', frontmatter, re.MULTILINE | re.IGNORECASE)
+    if len(superseded_rows) != 1:
+        raise ValueError("PRE107: superseded state must be explicit exactly once")
+    superseded = superseded_rows[0].lower()
+
+    plan_block = re.search(r'^plan_file_sha256:\n([\s\S]*?)(?=^reviewed_source_inputs:)', frontmatter, re.MULTILINE)
+    if not plan_block:
+        raise ValueError("PRE108: missing active-plan manifest")
+    plan_text = plan_block.group(1).split("\nplan_snapshot:", 1)[0]
+    plans: dict[str, str] = {}
+    plan_rows = re.findall(r'^\s{0,2}([^\s:]+):\s*([0-9a-f]{64})\s*$', plan_text, re.MULTILINE)
+    if not plan_rows or len(plan_rows) != len(plan_text.strip().splitlines()):
+        raise ValueError("PRE109: malformed active-plan manifest entry")
+    for name, digest in plan_rows:
+        if name in plans:
+            raise ValueError(f"PRE110: duplicate active-plan manifest entry: {name}")
+        plans[name] = digest
+
+    source_block = re.search(r'^reviewed_source_inputs:\n[\s\S]*?^  paths:\n([\s\S]*)\Z', frontmatter, re.MULTILINE)
+    if not source_block:
+        raise ValueError("PRE111: missing reviewed source-input manifest")
+    source_rows = re.findall(
+        r'^    - path: ([^\n]+)\n      mode: "?(\d+)"?\n      git_blob: ([0-9a-f]{40})\n      sha256: ([0-9a-f]{64})\s*$',
+        source_block.group(1),
         re.MULTILINE,
     )
-    return match.group(1) if match else ""
+    if len(source_rows) != len(source_block.group(1).strip().split("\n    - path: ")):
+        raise ValueError("PRE112: malformed source-input manifest entry")
+    sources: dict[str, tuple[str, str, str]] = {}
+    for path, mode, blob, digest in source_rows:
+        if path in sources:
+            raise ValueError(f"PRE113: duplicate source-input manifest entry: {path}")
+        sources[path] = (mode, blob, digest)
+    for heading in ("Execution authorization", "Convergence"):
+        if len(re.findall(rf'^##\s+{re.escape(heading)}\s*$', review_text, re.MULTILINE)) > 1:
+            raise ValueError(f"PRE114: duplicate bounded {heading} section")
+    return reviewed_commit, reviewer_identity, plans, sources, superseded == "true"
 
 
-def phase1_execution_preflight_errors(review_text: str) -> list[str]:
-    """Fail closed unless the Phase 1 convergence record authorizes execution."""
-    errors: list[str] = []
-    authorization = markdown_section(review_text, "Execution authorization")
-    successful_reviewer = re.search(
-        r"^-\s+Successful reviewer:\s+(.+?)\s*$", authorization, re.MULTILINE | re.IGNORECASE
-    )
-    reviewer_response = successful_reviewer.group(1) if successful_reviewer else ""
-    if not reviewer_response or re.search(
-        r"failed|expired|transport|authentication|error", reviewer_response, re.IGNORECASE
-    ):
-        errors.append("PRE001: missing successful reviewer response")
+def review_manifest_errors(review_text: str, *, root: Path = ROOT, executor_identity: str | None = None) -> list[str]:
+    """Validate current bytes against the independent content-addressed review record."""
+    try:
+        reviewed_commit, reviewer, plans, sources, superseded = _parse_review_manifest(review_text)
+        if superseded:
+            raise ValueError("PRE115: review record is explicitly superseded")
+        if not executor_identity:
+            raise ValueError("PRE116: missing nonempty executor identity")
+        if executor_identity == reviewer:
+            raise ValueError("PRE117: executor identity must differ from reviewer identity")
+        _git(root, "rev-parse", "--verify", f"{reviewed_commit}^{{commit}}")
+        active = sorted(path.name for path in (root / ".planning/phases/01-research-and-truth-baseline").glob("01-*-PLAN.md"))
+        if sorted(plans) != active:
+            raise ValueError("PRE118: review plan manifest is not the exact active plan set")
+        for name in active:
+            path = ".planning/phases/01-research-and-truth-baseline/" + name
+            current = (root / path).read_bytes()
+            expected = plans[name]
+            if hashlib.sha256(current).hexdigest() != expected:
+                raise ValueError(f"PRE119: active plan digest differs: {name}")
+            _, reviewed_bytes = _blob_at(root, reviewed_commit, path)
+            if hashlib.sha256(reviewed_bytes).hexdigest() != expected:
+                raise ValueError(f"PRE120: reviewed commit plan differs: {name}")
+        if tuple(sorted(sources)) != REQUIRED_PHASE1_SOURCE_INPUTS:
+            raise ValueError("PRE121: source-input manifest is not the closed sorted six-path set")
+        for path in REQUIRED_PHASE1_SOURCE_INPUTS:
+            mode, declared_blob, declared_digest = sources[path]
+            if mode != "100644":
+                raise ValueError(f"PRE122: source input mode is not 100644: {path}")
+            blob, reviewed_bytes = _blob_at(root, reviewed_commit, path)
+            if blob != declared_blob or hashlib.sha256(reviewed_bytes).hexdigest() != declared_digest:
+                raise ValueError(f"PRE123: reviewed source blob differs: {path}")
+            head_blob, head_bytes = _blob_at(root, "HEAD", path)
+            if head_blob != declared_blob or head_bytes != reviewed_bytes:
+                raise ValueError(f"PRE124: HEAD source blob differs: {path}")
+            working = root / path
+            if working.is_symlink() or not working.is_file() or not stat.S_ISREG(working.stat().st_mode):
+                raise ValueError(f"PRE125: working source input is not a tracked regular file: {path}")
+            _git(root, "ls-files", "--error-unmatch", "--", path)
+            if working.read_bytes() != reviewed_bytes or hashlib.sha256(working.read_bytes()).hexdigest() != declared_digest:
+                raise ValueError(f"PRE126: working source input bytes differ: {path}")
+    except (OSError, ValueError) as exc:
+        return [str(exc)]
+    return []
 
-    current_high = markdown_section(review_text, "Current HIGH")
-    if current_high and not re.search(r"\bnone\b", current_high, re.IGNORECASE):
-        finding_ids = sorted(
-            {f"HIGH-{number}" for number in re.findall(r"\bHIGH[- ]?(\d+)\b", current_high, re.IGNORECASE)}
-        )
-        if not finding_ids:
-            errors.append("PRE002: current HIGH finding lacks disposition with rationale")
-        for finding_id in finding_ids:
-            disposition = re.search(
-                rf"^\|[^\n|]*\b{re.escape(finding_id)}\b[^\n|]*\|\s*"
-                r"(?:addressed|deferred|rejected)\s*\|\s*[^|\n\s][^|\n]*\|?\s*$",
-                review_text,
-                re.MULTILINE | re.IGNORECASE,
-            )
-            if not disposition:
-                errors.append(
-                    f"PRE002: current HIGH finding {finding_id} lacks disposition with rationale"
-                )
 
-    authorized = re.search(r"^-\s+Decision:\s+authorized\s*$", authorization, re.MULTILINE | re.IGNORECASE)
-    dated = re.search(
-        r"^-\s+Authorized date:\s+\d{4}-\d{2}-\d{2}\s*$",
-        authorization,
-        re.MULTILINE | re.IGNORECASE,
-    )
-    if not authorized or not dated:
-        errors.append("PRE003: missing authorized dated convergence decision")
+def phase1_execution_preflight_errors(review_text: str, *, root: Path = ROOT, executor_identity: str | None = None) -> list[str]:
+    return review_manifest_errors(review_text, root=root, executor_identity=executor_identity)
 
-    return errors
+
+def load_reviewed_phase1_source_snapshot(review_path: Path, *, root: Path = ROOT, executor_identity: str) -> MappingProxyType:
+    """Return immutable bytes sourced only from exact reviewed Git blobs."""
+    text = review_path.read_text(encoding="utf-8")
+    errors = review_manifest_errors(text, root=root, executor_identity=executor_identity)
+    if errors:
+        raise ValueError("; ".join(errors))
+    reviewed_commit, _, _, sources, _ = _parse_review_manifest(text)
+    snapshot = {path: _blob_at(root, reviewed_commit, path)[1] for path in REQUIRED_PHASE1_SOURCE_INPUTS}
+    if any(hashlib.sha256(snapshot[path]).hexdigest() != sources[path][2] for path in snapshot):
+        raise ValueError("PRE127: reviewed source snapshot digest changed during loading")
+    return MappingProxyType(snapshot)
 
 
 def load_yaml(path: Path) -> dict:
+    try:
+        import yaml
+    except ImportError as exc:
+        raise ValueError("cannot read YAML without the certified Phase 1 environment") from exc
     try:
         document = yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
@@ -277,6 +383,13 @@ def main() -> int:
         action="store_true",
         help="Require the committed Phase 1 review convergence record to authorize execution.",
     )
+    parser.add_argument(
+        "--verify-phase1-source-inputs",
+        action="store_true",
+        help="Read-only verification of the closed reviewed Phase 1 source-input map.",
+    )
+    parser.add_argument("--review", type=Path, help="Review record for --verify-phase1-source-inputs.")
+    parser.add_argument("--executor-identity", help="Nonempty identity that must match GSD_EXECUTOR_ID.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -288,12 +401,51 @@ def main() -> int:
     def warn(code: str, message: str) -> None:
         warnings.append(f"{code}: {message}")
 
-    if args.phase_1_execution_preflight:
-        review_path = PLANNING / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
-        if not review_path.is_file():
-            error("PRE000", f"missing Phase 1 review record: {review_path.relative_to(ROOT)}")
+    execution_gate_requested = args.phase_1_execution_preflight or args.phase_1_complete
+    if execution_gate_requested:
+        environment_identity = os.environ.get("GSD_EXECUTOR_ID", "")
+        if not args.executor_identity or not environment_identity or args.executor_identity != environment_identity:
+            error("PRE116", "missing or mismatched --executor-identity and GSD_EXECUTOR_ID")
         else:
-            errors.extend(phase1_execution_preflight_errors(review_path.read_text()))
+            review_path = PLANNING / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
+            if not review_path.is_file():
+                error("PRE000", f"missing Phase 1 review record: {review_path.relative_to(ROOT)}")
+            else:
+                errors.extend(
+                    phase1_execution_preflight_errors(
+                        review_path.read_text(encoding="utf-8"), executor_identity=args.executor_identity
+                    )
+                )
+        if errors:
+            for message in errors:
+                print(f"ERROR {message}")
+            print(f"Planning validation failed: {len(errors)} error(s), 0 warning(s).")
+            return 1
+
+    if args.verify_phase1_source_inputs:
+        if not args.review:
+            error("PRE128", "--verify-phase1-source-inputs requires --review")
+        elif not args.review.is_file():
+            error("PRE129", f"review record is unavailable: {args.review}")
+        else:
+            review_text = args.review.read_text(encoding="utf-8")
+            verification_identity = args.executor_identity or "source-input-verifier"
+            errors.extend(review_manifest_errors(review_text, executor_identity=verification_identity))
+            if not errors:
+                reviewed_commit, _, _, sources, _ = _parse_review_manifest(review_text)
+                print(f"reviewed_commit={reviewed_commit}")
+                for path in REQUIRED_PHASE1_SOURCE_INPUTS:
+                    print(f"{path} {sources[path][2]}")
+        if errors:
+            for message in errors:
+                print(f"ERROR {message}")
+            print(f"Planning validation failed: {len(errors)} error(s), 0 warning(s).")
+            return 1
+        return 0
+
+    if args.phase_1_execution_preflight and not args.phase_1_complete:
+        print("Phase 1 execution preflight passed")
+        return 0
 
     contract_path = PLANNING / "validation/required-artifacts.json"
     if not contract_path.exists():
