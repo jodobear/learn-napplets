@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: blocked
-stopped_at: targeted plan corrections verified; fresh exact-commit review required before Plan 01-29 Task 1
-last_updated: "2026-07-28T22:42:27Z"
+stopped_at: 45-plan review-mode replan verified; fresh exact-commit review required before Plan 01-29 Task 1
+last_updated: "2026-07-29T00:18:14Z"
 last_activity: 2026-07-29
-last_activity_desc: targeted Plan 01-29 and 01-31 corrections passed independent GSD plan verification; external review rebinding remains required
+last_activity_desc: all four exact-review defects incorporated; independent GSD checker passed 45 plans and 92 tasks; external exact-snapshot convergence remains required
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 43
+  total_plans: 45
   completed_plans: 28
 ---
 
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 1 (research-and-truth-baseline) — BLOCKED ON FRESH EXACT-COMMIT PLAN REVIEW
-Plan: 28 of 43 executed; Plan 01-29 Task 1 remains unexecuted
-Status: Targeted Plan 01-29/01-31 corrections pass independent GSD plan verification; review `5445d45` no longer binds changed plan bytes
-Last activity: 2026-07-29 — corrected both actionable ownership-traceability defects and passed 43-plan verification
+Plan: 28 of 45 executed; Plan 01-29 Task 1 remains unexecuted
+Status: Review-mode replan incorporates all four findings from review `ea45866`; independent GSD verification passes 45 plans, but that review no longer binds the revised plan bytes
+Last activity: 2026-07-29 — split toolchain/source-ingress scope into Plans 01-29/01-44/01-45, repaired Plans 01-40/01-41/01-42, and passed 45-plan verification
 
-Progress: [███████░░░] 65%
+Progress: [██████░░░░] 62%
 
 ## Performance Metrics
 
@@ -164,21 +164,24 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Phase 1 verification is `gaps_found` (1/5 must-haves verified); focused gap closure, Nyquist validation, security review, and fresh passing verification are required before Phase 2.
 - [Phase ?]: All six dated scoped role approvals retain Firefox, VitePress, package, manifest/identity/verifier, delivery, portable, editor, dynamic-diagram, and freshness blockers or deferrals.
 - [Phase ?]: ADR 0001–0011 remain proposed; no residual risk, CSP behavior, teaching-host architecture, deployment, release, publication, or external action is accepted.
-- [Phase ?]: Plan 01-29 execution requires exactly one independent authorization record plus a sorted one-to-one SHA-256 map for all 43 active plan files; aggregate-only binding is insufficient.
-- [Phase ?]: Exact-commit Codex review `5445d45` of `0096dd5` found 0 HIGH and 2 actionable ownership-traceability defects; targeted replanning corrected Plan 01-29 threat-task ownership and removed Plan 01-31 package-work claims owned by Plan 01-41.
-- [Phase ?]: Independent GSD plan verification passed all 43 corrected plans, 81 executable tasks, all six Phase 1 requirement IDs, the dependency DAG, and all 39 tracked context decisions; this does not replace fresh external review binding.
+- [Phase ?]: Plan 01-29 execution requires exactly one independent authorization record plus a sorted one-to-one SHA-256 map for every active plan file; aggregate-only binding and stale fixed plan counts are insufficient.
+- [Phase ?]: Exact-commit review `ea45866` of `fbaa886` found 3 HIGH and 1 MEDIUM actionable defects: installed-wheel provenance, mixed-generation canonical reads, terminal digest self-reference, and package receipt overwrite/revalidation.
+- [Phase ?]: Review-mode replanning incorporated all four defects, split toolchain/source-ingress scope across Plans 01-29/01-44/01-45, and propagated transactional-reader contracts through Plans 01-36/01-42/01-43.
+- [Phase ?]: Independent GSD plan verification passed all 45 revised plans, 92 executable tasks, all six Phase 1 requirement IDs, the dependency DAG, and all 39 tracked context decisions; this does not replace fresh external review binding.
+- [Phase ?]: The revised 45-plan snapshot totals 609276 bytes with aggregate SHA-256 `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5` using lexical basename + NUL + file bytes + NUL.
 
 ### Pending Todos
 
-- Rerun exact-commit Codex review against the committed targeted corrections with the mandatory sorted 43-entry SHA-256 map.
+- Commit the verified 45-plan replan, then rerun exact-commit external review with the mandatory sorted 45-entry SHA-256 map.
 - Resume `/gsd-execute-phase 1` only after the bound review records 0 HIGH / 0 actionable.
 - Complete Nyquist validation, security review, and fresh independent re-verification after execution.
 
 ### Blockers/Concerns
 
-- Exact-commit review `5445d45` remains historical evidence for the two corrected findings, but changed Plan 01-29/01-31 bytes invalidate its authorization binding.
-- Execution is blocked before Plan 01-29 Task 1 until a new independent exact-commit review binds all 43 corrected plan files and records 0 HIGH / 0 actionable.
-- Prior H1–H4 corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering all passed fresh review.
+- Exact-commit review `ea45866` remains historical evidence for the four incorporated findings, but the 45-plan replan invalidates its authorization binding.
+- Execution is blocked before Plan 01-29 Task 1 until a new independent exact-commit review binds all 45 revised plan files and records 0 HIGH / 0 actionable.
+- Current revised-plan aggregate is `122c58add51ebb1030cb9e3544c9915c386cb8a408aee7adb2bfd7112b50ccd5`; external review must independently reproduce the sorted 45-entry map and aggregate.
+- Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
 - Phase 1 verification remains `gaps_found` with 1/5 must-haves verified; see `01-VERIFICATION.md` and `01-REVIEW.md`.
 - Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
@@ -199,5 +202,5 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 ## Session Continuity
 
 Last session: 2026-07-29
-Stopped at: targeted Plan 01-29/01-31 corrections verified; fresh exact-commit external review required
-Resume file: None — rerun `/gsd-review --phase 1 --all` against the committed corrected 43-plan snapshot
+Stopped at: 45-plan review-mode replan verified; fresh exact-commit external review required
+Resume file: None — rerun `/gsd-review --phase 1 --all` against the committed revised 45-plan snapshot

@@ -59,55 +59,63 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 43 plans (28 original plans executed, 15 gap-closure plans planned)
+**Plans**: 45 plans (28 original plans executed, 17 gap-closure plans planned)
 
 Gap Closure Plans:
 
 **Wave 1**
 
-- [ ] 01-29-PLAN.md — Lock toolchain integrity and collect immutable upstream candidates.
+- [ ] 01-29-PLAN.md — Establish the stdlib-only bootstrap and content-addressed independent review authorization.
 
 **Wave 2** *(blocked on Plan 01-29)*
+
+- [ ] 01-44-PLAN.md — Build and certify a complete hash-locked fresh environment from verified wheel artifacts.
+
+**Wave 3** *(blocked on Plan 01-44)*
+
+- [ ] 01-45-PLAN.md — Trace bounded immutable public-source acquisition and retain complete acquisition history.
+
+**Wave 4** *(blocked on Plan 01-45)*
 
 - [ ] 01-30-PLAN.md — Obtain human authority classifications before source ingestion.
 - [ ] 01-32-PLAN.md — Repair citation provenance, strict review parsing, and wrapper invocation.
 - [ ] 01-33-PLAN.md — Bind retained spike evidence and remove manifest command authority.
 
-**Wave 3**
+**Wave 5**
 
 - [ ] 01-31-PLAN.md — Ingest reviewed source/normative evidence or impact-scoped blockers.
 - [ ] 01-34-PLAN.md — Close CR-05 path/source confinement and CR-08 observed-local versus normative classification.
 
-**Wave 4**
+**Wave 6**
 
 - [ ] 01-41-PLAN.md — Independently intake package registry evidence and retain scoped package blockers.
-- [ ] 01-42-PLAN.md — Close CR-07 durable crash-atomic canonical publication and recovery.
+- [ ] 01-42-PLAN.md — Close CR-07 durable crash-atomic canonical publication, transactional reads, and recovery.
 
-**Wave 5**
+**Wave 7**
 
 - [ ] 01-35-PLAN.md — Migrate and evaluate substantive compatibility eligibility.
 
-**Wave 6**
+**Wave 8**
 
 - [ ] 01-36-PLAN.md — Run approval-gated package/conformance measurement or retain a precise blocker.
 
-**Wave 7** *(blocked on Plan 01-36)*
+**Wave 9** *(blocked on Plan 01-36)*
 
 - [ ] 01-43-PLAN.md — Append observed upstream refresh records and retain blocker routing.
 
-**Wave 8** *(blocked on all upstream gap plans, including Plan 01-43)*
+**Wave 10** *(blocked on all upstream gap plans, including Plan 01-43)*
 
 - [ ] 01-37-PLAN.md — Execute the complete repaired Phase 1 gate sequence.
 
-**Wave 9**
+**Wave 11**
 
 - [ ] 01-38-PLAN.md — Complete Nyquist probes and reconcile validation evidence.
 
-**Wave 10**
+**Wave 12**
 
 - [ ] 01-39-PLAN.md — Record ASVS L1 security remediation review.
 
-**Wave 11**
+**Wave 13**
 
 - [ ] 01-40-PLAN.md — Freshly verify Phase 1 and synchronize factual status/accounting.
 
