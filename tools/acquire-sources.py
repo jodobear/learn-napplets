@@ -94,7 +94,7 @@ REVIEWED_REFRESH_REPORTS = (
     ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md",
 )
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40,64}$")
-_CANDIDATE_ROW_RE = re.compile(r"^\|\s*(CAND-[A-Z0-9][A-Z0-9-]*)\s*\|", re.MULTILINE)
+_CANDIDATE_ROW_RE = re.compile(r"^\|\s*`?(CAND-[A-Z0-9][A-Z0-9-]*)`?\s*\|", re.MULTILINE)
 
 
 class HttpsTransport:
@@ -336,9 +336,12 @@ def load_reviewed_refresh_candidates(root: Path, review_path: Path, executor_ide
         if content is None or hashlib.sha256(content).hexdigest() != report_digests[report]:
             raise ValueError("reviewed report digest changed before candidate parsing")
         found = _CANDIDATE_ROW_RE.findall(content.decode("utf-8"))
-        if not found:
-            raise ValueError(f"reviewed report contains no recognized candidate rows: {report}")
+        # Detail reports can be evidence-only (including a bounded zero-result
+        # window); the synthesis owns the aggregate candidate table. Every blob
+        # remains digest-bound before this parser permits that distinction.
         candidates.extend({"id": candidate_id, "reportPath": report} for candidate_id in found)
+    if not candidates:
+        raise ValueError("reviewed report set contains no recognized candidate rows")
     binding: dict[str, Any] = {
         "reviewedCommit": reviewed_commit,
         "sourceSnapshotCommit": reviewed_commit,

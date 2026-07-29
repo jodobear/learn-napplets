@@ -211,10 +211,15 @@ class BoundedCollectorTests(unittest.TestCase):
             ".planning/PROJECT.md": "# Fixture Project\n",
             ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md": "# Fixture Context\n",
             ".planning/phases/01-research-and-truth-baseline/01-01-PLAN.md": "# Fixture plan\n",
-            self.REPORT_PATHS[0]: "| CAND-KEHTO-WEB-PR204-20260728 | observed implementation |\n",
-            self.REPORT_PATHS[1]: "| CAND-NAPPLET-WEB-PR186-20260728 | observed implementation |\n",
-            self.REPORT_PATHS[2]: "| CAND-NAPS-WINDOW-20260728 | zero-result observation |\n",
-            self.REPORT_PATHS[3]: "| CAND-NAPPLET-WEB-PR188-20260728 | release metadata |\n",
+            self.REPORT_PATHS[0]: "# Kehto detail report without a candidate table\n",
+            self.REPORT_PATHS[1]: "# Napplet detail report without a candidate table\n",
+            self.REPORT_PATHS[2]: "# Naps zero-result detail report without a candidate table\n",
+            self.REPORT_PATHS[3]: (
+                "| CAND-KEHTO-WEB-PR204-20260728 | observed implementation |\n"
+                "| CAND-NAPPLET-WEB-PR186-20260728 | observed implementation |\n"
+                "| CAND-NAPS-WINDOW-20260728 | zero-result observation |\n"
+                "| CAND-NAPPLET-WEB-PR188-20260728 | release metadata |\n"
+            ),
         }
         for relative, content in files.items():
             target = root / relative
