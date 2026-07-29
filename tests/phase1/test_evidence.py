@@ -40,7 +40,7 @@ VALID_SOURCE = {
 }
 
 
-class SourceEvidenceTests(unittest.TestCase):
+class SourceEvidenceValidationTests(unittest.TestCase):
     def run_validator(self, research_root: Path, report: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, str(VALIDATOR), "validate", "--root", str(research_root), "--report", str(report)],
@@ -173,7 +173,7 @@ class BoundedCollectorTests(unittest.TestCase):
             self.assertFalse(cache.exists())
 
 
-class ToolchainCertificationTests(unittest.TestCase):
+class SourceEvidenceTests(unittest.TestCase):
     """Exercise the stdlib-only archive-to-target certification boundary."""
 
     VERIFIER = ROOT / "tools" / "verify-phase1-toolchain.py"
