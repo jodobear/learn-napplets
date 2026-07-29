@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-29T15:15:11.788Z",
+  "phase": "01",
+  "phase_name": "research-and-truth-baseline",
+  "phase_dir": ".planning/phases/01-research-and-truth-baseline",
+  "plan": 29,
+  "task": 1,
+  "total_tasks": 92,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": 1,
+      "name": "Complete bounded external Codex plan-review convergence",
+      "status": "done",
+      "commit": "51ce445"
+    },
+    {
+      "id": 2,
+      "name": "Merge reviewed convergence PR #4 with exact commit provenance",
+      "status": "done",
+      "commit": "1d80bb2"
+    },
+    {
+      "id": 3,
+      "name": "Close convergence issues #1-#3 and synchronize local master",
+      "status": "done",
+      "commit": "1d80bb2"
+    },
+    {
+      "id": 4,
+      "name": "Start Phase 1 execution preflight",
+      "status": "done",
+      "commit": null,
+      "progress": "Parsed Phase 1 invocation with no optional flags; confirmed runtime=claude, workflow.use_worktrees=true, context_window=200000, MVP mode=false, and cleared stale auto-chain. No executor was dispatched because context reached 83%."
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": 5,
+      "name": "Run /gsd-execute-phase 1 from fresh context, beginning Plan 01-29 Task 1",
+      "status": "not_started"
+    },
+    {
+      "id": 6,
+      "name": "Execute remaining gap plans 01-29 through 01-45 by dependency wave",
+      "status": "not_started"
+    },
+    {
+      "id": 7,
+      "name": "Run Nyquist validation, security review, code review, and fresh phase verification",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [
+    {
+      "description": "The execution orchestrator reached 83% context during preflight after a long convergence/merge session; dispatching Plan 01-29 in that context would risk incomplete orchestration.",
+      "type": "technical",
+      "workaround": "Resume in a fresh context, load this handoff, then run /gsd-execute-phase 1. Enforce the execute-phase context guard before every wave."
+    }
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {
+      "decision": "Abort before executor dispatch when context reached 83%.",
+      "rationale": "Plan 01-29 is trust-critical and starts a 17-plan, multi-wave gap closure; fresh orchestration context is required.",
+      "phase": "01"
+    },
+    {
+      "decision": "Preserve exact reviewed plan bytes and begin execution only from merged master.",
+      "rationale": "The current authorization binds all 45 PLAN.md files at commit 1a9449b; any PLAN.md byte change requires fresh exact review.",
+      "phase": "01"
+    }
+  ],
+  "uncommitted_files": [
+    ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md",
+    ".claude/",
+    ".planning/config.json",
+    ".planning/governance/",
+    ".planning/graphs/",
+    ".planning/phases/01-research-and-truth-baseline/01-DISCUSSION-LOG.md",
+    ".planning/research/.cache/",
+    ".planning/traceability/pack-v3-file-manifest.json",
+    ".planning/traceability/pack-v3-import.md",
+    ".planning/traceability/phase-crosswalk.md",
+    ".planning/validation/required-artifacts.json",
+    "CLAUDE.md",
+    "demo-out/",
+    "graphify-out/"
+  ],
+  "next_action": "Run /gsd-resume-work in a fresh context. It must route to /gsd-execute-phase 1 and begin Plan 01-29 Task 1 without replanning or rerunning convergence.",
+  "context_notes": "Current branch is master at merge commit 1d80bb2493c61fa12f8e4094e979ff29e9c62f2f, synchronized with origin/master. PR #4 is merged; issues #1-#3 are closed. Exact detached Codex authorization is committed in 01-REVIEWS.md at 51ce445 for plan commit 1a9449b: 45 plans, 670650 bytes, aggregate SHA-256 722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc, six mandatory source Git blobs, HIGH=0, actionable=0. Final GitHub connector review of e06864f found no major issues. No executor agent, worktree, plan task, async job, or background process was started. Use gsd-tools phase-plan-index for inventory; a manual jq projection over init.execute-phase failed because the plans field is not uniformly object-shaped. Preserve all listed pre-existing dirty/untracked files. Placeholder scans hit historical prose in existing summaries 01-07, 01-08, 01-13, 01-16, 01-19, 01-20, and 01-27; they are not newly incomplete executions."
+}
