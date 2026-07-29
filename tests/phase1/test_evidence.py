@@ -210,6 +210,7 @@ class BoundedCollectorTests(unittest.TestCase):
         files = {
             ".planning/PROJECT.md": "# Fixture Project\n",
             ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md": "# Fixture Context\n",
+            ".planning/phases/01-research-and-truth-baseline/01-01-PLAN.md": "# Fixture plan\n",
             self.REPORT_PATHS[0]: "| CAND-KEHTO-WEB-PR204-20260728 | observed implementation |\n",
             self.REPORT_PATHS[1]: "| CAND-NAPPLET-WEB-PR186-20260728 | observed implementation |\n",
             self.REPORT_PATHS[2]: "| CAND-NAPS-WINDOW-20260728 | zero-result observation |\n",
@@ -231,6 +232,9 @@ class BoundedCollectorTests(unittest.TestCase):
             blob = self.run_git(root, "rev-parse", f"HEAD:{relative}")
             digest = __import__("hashlib").sha256((root / relative).read_bytes()).hexdigest()
             rows.append(f"    - path: {relative}\n      mode: \"100644\"\n      git_blob: {blob}\n      sha256: {digest}")
+        plan_digest = __import__("hashlib").sha256(
+            (root / ".planning/phases/01-research-and-truth-baseline/01-01-PLAN.md").read_bytes()
+        ).hexdigest()
         review = root / "review.md"
         review.write_text(
             "---\n"
@@ -238,7 +242,7 @@ class BoundedCollectorTests(unittest.TestCase):
             "reviewer_identity:\n  fixture: fixture-reviewer\n"
             "current_high: 0\ncurrent_actionable: 0\n"
             "authorization:\n  verdict: \"CONVERGED; HIGH=0; actionable=0\"\n  superseded: false\n"
-            "plan_file_sha256:\n"
+            f"plan_file_sha256:\n  01-01-PLAN.md: {plan_digest}\n"
             "reviewed_source_inputs:\n  status: fixture\n  paths:\n"
             + "\n".join(rows)
             + "\n---\n# Fixture review\n",
@@ -321,7 +325,7 @@ class BoundedCollectorTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "working source input bytes differ"):
                 collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
             altered.unlink()
-            with self.assertRaisesRegex(ValueError, "HEAD source blob differs"):
+            with self.assertRaisesRegex(ValueError, "working source input|HEAD source blob differs"):
                 collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
 
         root, review, temp = self.reviewed_fixture()
