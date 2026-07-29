@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Wave 2 complete; Plan 01-45 Task 1 is next
-last_updated: "2026-07-29T20:38:28Z"
+stopped_at: Plan 01-45 Task 1 complete; waiting for approval before bounded public HTTPS reads
+last_updated: "2026-07-29T20:52:42Z"
 last_activity: 2026-07-30
-last_activity_desc: Plan 01-44 complete; certified relocatable hash-locked Phase 1 toolchain
+last_activity_desc: Plan 01-45 Task 1 complete; external-action checkpoint reached before Task 2
 progress:
   total_phases: 1
   completed_phases: 0
@@ -28,9 +28,9 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 30 of 45 executed; Plan 01-45 Task 1 is next
-Status: Wave 2 complete; Plan 01-44 merged and post-merge verification passed
-Last activity: 2026-07-30 — Plan 01-44 complete; certified relocatable hash-locked Phase 1 toolchain
+Plan: 30 of 45 executed; Plan 01-45 Task 1 complete, Task 2 pending
+Status: CHECKPOINT — explicit approval required before bounded public HTTPS reads
+Last activity: 2026-07-30 — Plan 01-45 fixture-only tracer complete; no network request made
 
 Progress: [███████░░░] 67%
 
@@ -223,6 +223,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T20:38:28Z
-Stopped at: Wave 2 complete; proceeding to Wave 3 / Plan 01-45 Task 1
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — Wave 2 completion checkpoint; Plan 01-45 Task 1 next
+Last session: 2026-07-29T20:52:42Z
+Stopped at: Plan 01-45 Task 1 complete; waiting for human decision on bounded public HTTPS reads
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — durable worktree and exact external-action checkpoint
