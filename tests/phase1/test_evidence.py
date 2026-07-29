@@ -174,6 +174,169 @@ class BoundedCollectorTests(unittest.TestCase):
             self.assertFalse(cache.exists())
 
 
+class BoundedCollectorTests(unittest.TestCase):
+    """Exercise the fixture-only source-ingress boundary without live HTTPS."""
+
+    COLLECTOR = ROOT / "tools" / "acquire-sources.py"
+    REPORT_PATHS = (
+        ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md",
+        ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md",
+        ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md",
+        ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md",
+    )
+
+    @classmethod
+    def collector(cls):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("phase1_acquire_sources", cls.COLLECTOR)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        return module
+
+    def run_git(self, root: Path, *args: str) -> str:
+        result = subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return result.stdout.strip()
+
+    def reviewed_fixture(self) -> tuple[Path, Path, tempfile.TemporaryDirectory[str]]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "reviewed-source-fixture"
+        root.mkdir()
+        self.run_git(root, "init")
+        self.run_git(root, "config", "user.email", "fixture@example.invalid")
+        self.run_git(root, "config", "user.name", "Fixture")
+        files = {
+            ".planning/PROJECT.md": "# Fixture Project\n",
+            ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md": "# Fixture Context\n",
+            self.REPORT_PATHS[0]: "| CAND-KEHTO-WEB-PR204-20260728 | observed implementation |\n",
+            self.REPORT_PATHS[1]: "| CAND-NAPPLET-WEB-PR186-20260728 | observed implementation |\n",
+            self.REPORT_PATHS[2]: "| CAND-NAPS-WINDOW-20260728 | zero-result observation |\n",
+            self.REPORT_PATHS[3]: "| CAND-NAPPLET-WEB-PR188-20260728 | release metadata |\n",
+        }
+        for relative, content in files.items():
+            target = root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        self.run_git(root, "add", ".")
+        self.run_git(root, "commit", "-m", "fixture source inputs")
+        commit = self.run_git(root, "rev-parse", "HEAD")
+        rows = []
+        for relative in (
+            ".planning/PROJECT.md",
+            ".planning/phases/01-research-and-truth-baseline/01-CONTEXT.md",
+            *self.REPORT_PATHS,
+        ):
+            blob = self.run_git(root, "rev-parse", f"HEAD:{relative}")
+            digest = __import__("hashlib").sha256((root / relative).read_bytes()).hexdigest()
+            rows.append(f"    - path: {relative}\n      mode: \"100644\"\n      git_blob: {blob}\n      sha256: {digest}")
+        review = root / "review.md"
+        review.write_text(
+            "---\n"
+            f"reviewed_commit: {commit}\n"
+            "reviewer_identity:\n  fixture: fixture-reviewer\n"
+            "current_high: 0\ncurrent_actionable: 0\n"
+            "authorization:\n  verdict: \"CONVERGED; HIGH=0; actionable=0\"\n  superseded: false\n"
+            "plan_file_sha256:\n"
+            "reviewed_source_inputs:\n  status: fixture\n  paths:\n"
+            + "\n".join(rows)
+            + "\n---\n# Fixture review\n",
+            encoding="utf-8",
+        )
+        return root, review, temp
+
+    def test_candidate_acquisition_tracer_blocks_incomplete_dimensions(self) -> None:
+        collector = self.collector()
+        commit = "dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b"
+        path = "packages/nap/src/convention-uri.ts"
+        blob_bytes = b"export const observed = 'queryless';\n"
+        transport = collector.FixtureTransport(
+            identities={"https://api.github.com/repos/napplet/web": {"html_url": "https://github.com/napplet/web", "id": 1197078677, "private": False, "archived": False, "default_branch": "main"}},
+            commits={commit: {"sha": commit, "tree": "33edc8387973f31687dfb20181a40fe936286824"}},
+            blobs={(commit, path): blob_bytes},
+            packages={"@napplet/nap": {"version": "0.29.0"}},
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            cache_root = Path(temporary) / ".research" / "upstreams"
+            record = collector.collect_immutable_candidate(
+                transport=transport,
+                identity_url="https://api.github.com/repos/napplet/web",
+                repository="napplet/web",
+                commit_sha=commit,
+                path=path,
+                cache_root=cache_root,
+                retrieved_at="2026-07-30T00:00:00Z",
+                source_id="SRC-NAPPLET-WEB-PR186-20260730",
+                impacts=["EVID-03"],
+            )
+            self.assertEqual(record["rawOrigin"], "observed-implementation")
+            self.assertEqual(record["evidenceClass"], "implementation")
+            self.assertEqual(record["contentSha256"], __import__("hashlib").sha256(blob_bytes).hexdigest())
+            self.assertNotIn("approved", record["review"])
+            root, temp = SourceEvidenceValidationTests().write_root(record)
+            with temp:
+                result = subprocess.run(
+                    [sys.executable, str(VALIDATOR), "validate", "--root", str(root), "--report", str(root / "report.md")],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+
+        classification = collector.classify_compatibility(
+            {"observed-implementation": [record["id"]]}, ["EVID-03", "OPER-03"]
+        )
+        self.assertEqual(classification["status"], "blocked")
+        self.assertEqual(
+            classification["missingDimensions"],
+            ["normative-protocol", "published-package", "runtime", "example-fixture", "current-work", "conformance"],
+        )
+        self.assertEqual(classification["affectedRequirements"], ["EVID-03", "OPER-03"])
+
+        with self.assertRaisesRegex(ValueError, "allowlisted"):
+            collector.collect_immutable_candidate(transport, "https://example.invalid/repo", "napplet/web", commit, path, cache_root, "2026-07-30T00:00:00Z", record["id"], ["EVID-03"])
+        with self.assertRaisesRegex(ValueError, "immutable commit"):
+            collector.collect_immutable_candidate(transport, "https://api.github.com/repos/napplet/web", "napplet/web", "main", path, cache_root, "2026-07-30T00:00:00Z", record["id"], ["EVID-03"])
+        with self.assertRaisesRegex(ValueError, "cache root"):
+            collector.cache_path("/tmp/escaping-cache")
+        with self.assertRaisesRegex(ValueError, "normative"):
+            collector.build_observed_source_record(record, raw_origin="upstream-fact")
+
+    def test_acquisition_queue_uses_only_reviewed_git_blob_refresh_inputs(self) -> None:
+        collector = self.collector()
+        root, review, temp = self.reviewed_fixture()
+        with temp:
+            receipt = collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
+            self.assertEqual(receipt["reviewedCommit"], subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip())
+            self.assertEqual([item["id"] for item in receipt["candidates"]], [
+                "CAND-KEHTO-WEB-PR204-20260728",
+                "CAND-NAPPLET-WEB-PR186-20260728",
+                "CAND-NAPS-WINDOW-20260728",
+                "CAND-NAPPLET-WEB-PR188-20260728",
+            ])
+            altered = root / self.REPORT_PATHS[0]
+            altered.write_text("| CAND-ALTERED-001 | mutable worktree only |\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "working source input bytes differ"):
+                collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
+            altered.unlink()
+            with self.assertRaisesRegex(ValueError, "HEAD source blob differs"):
+                collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
+
+        root, review, temp = self.reviewed_fixture()
+        with temp:
+            receipt = collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
+            bad_binding = copy.deepcopy(receipt)
+            bad_binding["reportDigests"][self.REPORT_PATHS[0]] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "digest"):
+                collector.validate_reviewed_refresh_binding(bad_binding)
+            bad_binding = copy.deepcopy(receipt)
+            bad_binding["reviewedCommit"] = "f" * 40
+            with self.assertRaisesRegex(ValueError, "reviewed commit"):
+                collector.validate_reviewed_refresh_binding(bad_binding)
+
+
 class SourceEvidenceTests(unittest.TestCase):
     """Exercise the stdlib-only archive-to-target certification boundary."""
 
