@@ -203,7 +203,11 @@ class CompatibilitySchema(unittest.TestCase):
         current = snapshot['snapshotHistory'][0]
         self.assertEqual(current['parentSnapshotId'], 'OWS-001')
         self.assertEqual(current['retrievedAt'], '2026-07-28T00:00:00Z')
-        self.assertEqual(current['items'][0]['receiptHistory'], expected_receipts)
+        self.assertEqual(
+            [tuple(item[field] for field in ('path', 'attemptId', 'receiptSha256', 'transport', 'outcome', 'classification'))
+             for item in current['items'][0]['receiptHistory']],
+            expected_receipts,
+        )
         self.assertEqual(current['items'][0]['spkGBlockerRouting'], routing)
 
 
