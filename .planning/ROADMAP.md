@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Phase 1 terminal attestation has been published after human terminal verification and project-owner recheck. This records Phase 1 closeout only; ADR 0001–0011 remain proposed, and no production application scaffold, deployment/release, external action, residual-risk acceptance, package admission, or Phase 2 transition is authorized.
+**Current gate:** Independent final verification on 2026-07-31 found Phase 1 gaps after current code review reproduced evidence-tooling trust-boundary defects. Phase 1 is reopened for focused gap closure; ADR 0001–0011 remain proposed, and no production application scaffold, deployment/release, external action, residual-risk acceptance, package admission, or Phase 2 transition is authorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -17,7 +17,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Integer phases are planned work.
 - Decimal phases are reserved for explicitly approved inserted work only.
 
-- [x] **Phase 1: Research and Truth Baseline** - Source Phase 0 research, spikes, and recommendations establish an evidence-backed decision baseline.
+- [ ] **Phase 1: Research and Truth Baseline** - Source Phase 0 research, spikes, and recommendations require focused gap closure before the evidence-backed decision baseline is verified.
 - [ ] **Phase 2: Product and Content Contract** - Source Phase 1 turns accepted research and decisions into a buildable learning contract.
 - [ ] **Phase 3: Independent Repository Foundation** - Source Phase 2 creates the static-first workspace and enforceable host/guest boundary.
 - [ ] **Phase 4: Visual and Content Primitives** - Source Phase 3 supplies accessible, data-driven learning and diagram primitives.
@@ -59,7 +59,9 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 45/45 plans executed
+**Plans**: 45/45 original plans executed; focused verification gap plans pending
+
+**Verification status**: `gaps_found` — 0/6 owning requirements independently verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
 Gap Closure Plans:
 
@@ -470,7 +472,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 45/45 | In Progress|  |
+| 1. Research and Truth Baseline | 45/45 original; gap plans pending | Gaps found |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

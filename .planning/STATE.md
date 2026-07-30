@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: completed
-stopped_at: "Phase 1 terminal attestation published; no Phase 2 transition authorized"
-last_updated: "2026-07-30T22:28:17Z"
-last_activity: 2026-07-30
-last_activity_desc: Phase 1 terminal re-verification published after human verifier and project-owner recheck
+status: gaps_found
+stopped_at: "Independent Phase 1 verification found evidence-tooling trust-boundary gaps; gap closure required"
+last_updated: "2026-07-30T23:28:50Z"
+last_activity: 2026-07-31
+last_activity_desc: Independent final verification found 0/6 Phase 1 requirements verified and routed to focused gap closure
 progress:
   total_phases: 1
-  completed_phases: 1
+  completed_phases: 0
   total_plans: 45
   completed_plans: 45
 ---
@@ -27,12 +27,12 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — COMPLETED
-Plan: 45 of 45
-Status: Phase 1 terminal attestation published; Phase 2 remains not started and is not authorized by this update.
-Last activity: 2026-07-30 — Phase 1 terminal re-verification published after human verifier and project-owner recheck
+Phase: 01 (research-and-truth-baseline) — GAPS FOUND
+Plan: 45 of 45 original plans complete; focused gap plans not yet created
+Status: Independent final verification failed 0/6 owning requirements after current code review reproduced evidence-tooling trust-boundary defects. Phase 2 remains not started and unauthorized.
+Last activity: 2026-07-31 — Independent final verification routed Phase 1 to focused gap closure
 
-Progress: [██████████] 100%
+Progress: [██████████] 100% original plan execution; phase goal not verified
 
 ## Performance Metrics
 
@@ -192,12 +192,16 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Pending Todos
 
-- Do not begin Phase 2 until separately authorized under its entry boundary.
-- Retained terminal blocker IDs and impacts: No terminal blockers.
-- Retained research constraints remain visible in Phase 1 records and are not accepted risk or transition authorization.
+- Create focused Phase 1 gap-closure plans from `01-FINAL-VERIFICATION.md` via `/gsd-plan-phase 1 --gaps`.
+- Repair and test the seven current blocker/critical evidence-tooling defects plus three warnings recorded in `01-REVIEW.md`.
+- Re-run independent Phase 1 verification after gap execution.
+- Do not begin Phase 2 until Phase 1 passes and a separate Phase 2 transition is authorized.
 
 ### Blockers/Concerns
 
+- Current independent final verification is `gaps_found` with 0/6 owning requirements verified; `01-FINAL-VERIFICATION.md` is canonical for next action.
+- Current code review found seven blocker/critical defects in repository confinement, durable canonical publication/recovery, drift synthesis, and SPK-G sandbox/package/evidence handling, plus three warnings.
+- Earlier terminal, security, and validation passes predate these current findings and do not adjudicate them.
 - Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector submitted exact-head reviews with zero inline findings and remains supplemental, not cross-plan authority.
 - Historical review records `341884f`, `9b5794f`, and the superseded cycle-1 record remain audit evidence only; current authorization is the committed exact review record at `51ce445` for plan commit `1a9449b`.
 - Human merge approval is recorded. Execution may begin only from synchronized merged `master`; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
@@ -222,6 +226,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-30T22:28:17Z
-Stopped at: Phase 1 terminal publication complete; Phase 2 has no transition authorization.
-Resume file: `.planning/STATE.md` remains canonical; await separate human authorization before Phase 2.
+Last session: 2026-07-30T23:28:50Z
+Stopped at: Independent final verification found Phase 1 gaps; next action is focused gap planning.
+Resume file: `.planning/phases/01-research-and-truth-baseline/01-FINAL-VERIFICATION.md`
