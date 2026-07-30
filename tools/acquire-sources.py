@@ -845,6 +845,20 @@ def prepare_authority_gated_intake(
     candidate_id = _required_string(outcome.get("candidateId"), "reviewed outcome candidate ID is missing")
     blocked = outcome.get("result") != "collected" or statuses & {"blocked", "rejected"}
     if blocked:
+        impact_maps = [decision.get("impactMap") for decision in decisions if isinstance(decision, Mapping)]
+
+        def scoped_impact(field: str) -> list[str]:
+            values: list[str] = []
+            for impact in impact_maps:
+                if not isinstance(impact, Mapping) or not isinstance(impact.get(field), list):
+                    continue
+                for value in impact[field]:
+                    if isinstance(value, str) and value not in values:
+                        values.append(value)
+            if not values:
+                raise ValueError(f"authority scope lacks {field} impact for blocked intake")
+            return values
+
         return {
             "status": "blocked",
             "blockedAttempt": {
@@ -856,6 +870,10 @@ def prepare_authority_gated_intake(
                 "affectedClaims": list(outcome.get("affectedClaims", [])),
                 "affectedDrift": list(outcome.get("affectedDrift", [])),
                 "affectedQuestions": list(outcome.get("affectedQuestions", [])),
+                "affectedRequirements": scoped_impact("affectedRequirements"),
+                "affectedPhases": scoped_impact("affectedPhases"),
+                "affectedAdrs": scoped_impact("affectedAdrs"),
+                "affectedLessons": scoped_impact("affectedLessons"),
                 "safeFallback": "Preserve the affected evidence as blocked and do not infer a normative claim, ADR acceptance, or production permission.",
                 "refreshTrigger": _required_string(outcome.get("refreshTrigger"), "reviewed outcome refresh trigger is missing"),
                 "reviewedSourceInputBinding": dict(binding),
