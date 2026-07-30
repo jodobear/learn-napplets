@@ -1,0 +1,448 @@
+schemaVersion: 1
+kind: human-authority-determinations
+reviewerIdentity: project-owner
+acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+scopeIds:
+  - CAND-SRC-KEHTO-WEB-PR204-20260728
+  - CAND-SRC-KEHTO-WEB-PR209-20260728
+  - CAND-SRC-KEHTO-WEB-PR211-20260728
+  - CAND-SRC-NAPPLET-WEB-PR184-20260728
+  - CAND-SRC-NAPPLET-WEB-PR186-20260728
+  - CAND-SRC-NAPPLET-WEB-PR188-20260728
+  - CAND-SRC-NAPS-WINDOW-20260728
+authorityDeterminations:
+  - scopeId: CAND-SRC-KEHTO-WEB-PR204-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR204-20260728
+    sourcePurpose: bounded research evidence intake for the reviewed kehto/web runtime observation
+    authorityClass: observed-implementation
+    evidenceClass: observed-implementation
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [DRF-HANDSHAKE-001, DRF-EGRESS-001, DRF-CONFORMANCE-001], affectedDrift: [DRF-HANDSHAKE-001, DRF-EGRESS-001, DRF-CONFORMANCE-001], affectedQuestions: [OQ-VERIFIED-LOADER-IDENTITY-001, OQ-VERIFIED-LOADER-MANIFEST-001, OQ-VERIFIED-LOADER-VERIFIER-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-PRODUCT
+        role: product
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760301Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760401Z'
+        rationale: Product use is limited to research evidence intake; it does not select a runtime product direction.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR204-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR204-20260728', relevance: reviewed immutable runtime observation only}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0005], affectedLessons: [LES-005], roleEffect: Product intake preserves the deterministic fallback and does not authorize a host or scaffold.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760302Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760402Z'
+        rationale: The bytes may be retained as observed implementation only and are never a normative specification or governance source.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR204-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR204-20260728', relevance: receipt-bound implementation locator}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0005, ADR-0008], affectedLessons: [LES-010], roleEffect: Protocol treatment retains handshake, egress, and conformance uncertainty without inferring a protocol rule.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-SECURITY
+        role: security
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760303Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760403Z'
+        rationale: Security may intake the bounded observation only; no assurance, mitigation acceptance, or residual-risk acceptance follows.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR204-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR204-20260728', relevance: observed runtime material with material uncertainty}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-006], roleEffect: Security intake keeps verifier and egress blockers open and preserves the static safe fallback.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760304Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760404Z'
+        rationale: No accessibility claim is supported by this runtime observation; the Firefox limitation remains preserved.
+        notApplicableRationale: 'Dated 2026-07-30: the receipt has no accessibility evidence and authorizes no substitute claim.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: Accessibility remains limited to the deterministic static equivalent while Firefox evidence stays unresolved.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-CONTENT
+        role: contentLearning
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760305Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760405Z'
+        rationale: Learning intake may cite the observation as an explicitly bounded example, not as a teaching fact until later claim review.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR204-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR204-20260728', relevance: non-normative example intake}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-010], roleEffect: Learning material must label this as observed behavior and retain no-runtime deterministic teaching.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-RELEASE
+        role: release
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760306Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760406Z'
+        rationale: This implementation observation supplies no release or package authority.
+        notApplicableRationale: 'Dated 2026-07-30: no release-history claim is present in this receipt outcome.'
+        impactMap: {affectedRequirements: [EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release admission, install, conformance, publication, and project release authorization remain blocked.}
+  - scopeId: CAND-SRC-KEHTO-WEB-PR209-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR209-20260728
+    sourcePurpose: bounded research evidence intake for reviewed kehto/web release metadata
+    authorityClass: observed-release-metadata
+    evidenceClass: release-metadata
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [CLM-CMP-PACKAGE-001], affectedDrift: [DRF-ARTIFACT-001], affectedQuestions: [OQ-PUBLIC-PACKAGE-BASELINE-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-PRODUCT
+        role: product
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760307Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760407Z'
+        rationale: Product intake is confined to bounded release-metadata research and cannot choose package consumption.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR209-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR209-20260728', relevance: observed package manifest metadata}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Product records the artifact history while preserving a no-install and no-scaffold boundary.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760308Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760408Z'
+        rationale: The release metadata is observable provenance context only and never normative protocol or governance authority.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR209-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR209-20260728', relevance: receipt-bound release metadata}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-007], roleEffect: Technical intake does not convert manifest fields into conformance or specification facts.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-SECURITY
+        role: security
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760309Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760409Z'
+        rationale: Security may retain this limited metadata observation without granting provenance, integrity, or supply-chain assurance.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR209-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR209-20260728', relevance: metadata remains insufficient for integrity assurance}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Security preserves the package provenance and integrity blocker instead of accepting a supply-chain control.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760310Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760410Z'
+        rationale: Release metadata contains no supported accessibility claim.
+        notApplicableRationale: 'Dated 2026-07-30: package metadata does not establish reduced-motion, keyboard, transcript, or Firefox evidence.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: Accessibility continues to require static equivalents independent of package metadata.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-CONTENT
+        role: contentLearning
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760311Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760411Z'
+        rationale: Content may intake observed release history only; no package behavior becomes a teaching fact before claim review.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR209-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR209-20260728', relevance: release-history evidence only}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-011], roleEffect: Content must present any package discussion as blocked conceptual research, not a runnable recommendation.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-RELEASE
+        role: release
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760312Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760412Z'
+        rationale: Release authority is limited to observed release-history evidence and excludes admission, installation, conformance, publication, and project release authorization.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR209-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR209-20260728', relevance: bounded release-history receipt}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release tracking can retain history but must not create an install, publication, or project-release permission.}
+  - scopeId: CAND-SRC-KEHTO-WEB-PR211-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR211-20260728
+    sourcePurpose: failed exact-locator scope with no substitute or expansion authorized
+    authorityClass: insufficient-unavailable-blocked
+    evidenceClass: observed-implementation
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [DRF-ARTIFACT-001], affectedDrift: [DRF-ARTIFACT-001], affectedQuestions: [OQ-VERIFIED-LOADER-VERIFIER-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-PRODUCT
+        role: product
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760313Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760413Z'
+        rationale: The exact reviewed locator is invalid, so product intake cannot substitute a different source or broaden the scope.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR211-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR211-20260728', relevance: failed immutable locator}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-010], roleEffect: Product preserves the deterministic fallback and records no runtime-source admission.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760314Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760414Z'
+        rationale: No exact bytes were collected, so protocol technical intake is insufficient and cannot infer verifier behavior.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR211-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR211-20260728', relevance: failure before collection}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-010], roleEffect: Technical authority remains unavailable for verifier provenance and no normative conclusion follows.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-SECURITY
+        role: security
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760315Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760415Z'
+        rationale: The failed locator provides no basis for security assurance or mitigation acceptance.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR211-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR211-20260728', relevance: bounded unavailable evidence}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-006], roleEffect: Security leaves signature, blob, aggregate, and verifier controls unaccepted.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760316Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760416Z'
+        rationale: The unavailable audit locator carries no accessibility claim.
+        notApplicableRationale: 'Dated 2026-07-30: no collected content exists from which an accessibility judgment could be made.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: The unresolved Firefox limitation remains separate from this unavailable evidence.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-CONTENT
+        role: contentLearning
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760317Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760417Z'
+        rationale: No teaching fact may be formed from an invalid locator or a substituted artifact.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR211-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR211-20260728', relevance: unavailable evidence boundary}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-010], roleEffect: Content retains conceptual treatment and cannot claim how a verifier works.}
+      - id: AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-RELEASE
+        role: release
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760318Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760418Z'
+        rationale: The failed implementation locator cannot support release, package, conformance, publication, or project release authority.
+        evidenceReferences: [{id: CAND-SRC-KEHTO-WEB-PR211-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-KEHTO-WEB-PR211-20260728', relevance: scope-bound failed outcome}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release status remains blocked until a newly authorized exact locator is reviewed.}
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    sourcePurpose: bounded research evidence intake for reviewed napplet/web implementation observation
+    authorityClass: observed-implementation
+    evidenceClass: observed-implementation
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [DRF-IDENTITY-001], affectedDrift: [DRF-IDENTITY-001], affectedQuestions: [OQ-UPSTREAM-BASELINE-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-PRODUCT
+        role: product
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760319Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760419Z'
+        rationale: Product approves this narrow research intake only; it does not approve an identity feature, runtime, or scaffold.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR184-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR184-20260728', relevance: bounded implementation receipt}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0005], affectedLessons: [LES-007], roleEffect: Product can retain identity-related evidence while the static deterministic route remains required.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760320Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760420Z'
+        rationale: Technical classification is observed implementation only and explicitly excludes normative specification or governance status.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR184-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR184-20260728', relevance: immutable code bytes without normative authority}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0005], affectedLessons: [LES-007], roleEffect: Protocol work retains the identity question as open and prohibits a specification inference.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-SECURITY
+        role: security
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760321Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760421Z'
+        rationale: Security authorizes only evidence intake, not an identity-security assurance or mitigation decision.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR184-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR184-20260728', relevance: observed identity-adjacent implementation}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-006], roleEffect: Security keeps mediated-capability and identity assurance questions unresolved.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760322Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760422Z'
+        rationale: This manifest implementation observation supports no accessibility claim.
+        notApplicableRationale: 'Dated 2026-07-30: no user interaction or accessibility evidence is contained in the receipt scope.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: Existing Firefox and static-equivalent limitations remain intact.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-CONTENT
+        role: contentLearning
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760323Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760423Z'
+        rationale: Content may preserve the observed implementation as intake only and cannot turn it into an identity teaching fact before claim review.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR184-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR184-20260728', relevance: limited evidence for later review}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-007], roleEffect: Learning retains explicit uncertainty rather than asserting an identity model.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-RELEASE
+        role: release
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760324Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760424Z'
+        rationale: No release/package authority is present in this implementation scope.
+        notApplicableRationale: 'Dated 2026-07-30: the receipt outcome is implementation evidence, not release-history evidence.'
+        impactMap: {affectedRequirements: [EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: No package admission, install, conformance, publication, or project release decision is allowed.}
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR186-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR186-20260728
+    sourcePurpose: bounded research evidence intake for reviewed napplet/web convention observation
+    authorityClass: observed-implementation
+    evidenceClass: observed-implementation
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001, DRF-IDENTITY-001], affectedDrift: [DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001, DRF-IDENTITY-001], affectedQuestions: [OQ-UPSTREAM-BASELINE-001, OQ-VERIFIED-LOADER-IDENTITY-001, OQ-VERIFIED-LOADER-MANIFEST-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-PRODUCT
+        role: product
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760325Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760425Z'
+        rationale: Product accepts the convention observation for bounded research intake without selecting a product contract.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR186-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR186-20260728', relevance: observed convention implementation}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0001], affectedLessons: [LES-009], roleEffect: Product retains this as a future-review input and does not authorize a production workspace.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760326Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760426Z'
+        rationale: Technical use is restricted to observed code and is expressly never normative specification or governance.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR186-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR186-20260728', relevance: non-normative convention bytes}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0005], affectedLessons: [LES-009], roleEffect: Protocol decisions remain blocked pending qualified NAP/NIP evidence and claim review.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-SECURITY
+        role: security
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760327Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760427Z'
+        rationale: Security can preserve the bounded code observation without accepting a manifest, identity, or verifier mitigation.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR186-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR186-20260728', relevance: material uncertainty remains}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-006], roleEffect: Security keeps capability and verifier trust boundaries unaccepted.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760328Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760428Z'
+        rationale: This convention URI observation provides no accessibility evidence.
+        notApplicableRationale: 'Dated 2026-07-30: no accessibility behavior was acquired for this source scope.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: Keyboard, reduced-motion, transcript, and Firefox requirements remain independent blockers.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-CONTENT
+        role: contentLearning
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760329Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760429Z'
+        rationale: Content may collect the observed convention for later review but cannot teach it as protocol fact now.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR186-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR186-20260728', relevance: bounded learning evidence intake}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-009], roleEffect: Lesson material must use a deterministic conceptual explanation with uncertainty labels.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-RELEASE
+        role: release
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760330Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760430Z'
+        rationale: The convention implementation is not release-history or package authority.
+        notApplicableRationale: 'Dated 2026-07-30: no release evidence is in the exact PR186 receipt scope.'
+        impactMap: {affectedRequirements: [EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release processes remain blocked and package ownership stays with Plan 01-41.}
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR188-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR188-20260728
+    sourcePurpose: bounded research evidence intake for reviewed napplet/web release metadata
+    authorityClass: observed-release-metadata
+    evidenceClass: release-metadata
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [CLM-CMP-PACKAGE-001], affectedDrift: [DRF-ARTIFACT-001], affectedQuestions: [OQ-PUBLIC-PACKAGE-BASELINE-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-PRODUCT
+        role: product
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760331Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760431Z'
+        rationale: Product permits bounded release-metadata intake only and does not authorize package adoption.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR188-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR188-20260728', relevance: observed release metadata}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Product can retain release history while the public-package baseline remains blocked.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760332Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760432Z'
+        rationale: Technical classification is observed release metadata and cannot create normative protocol authority.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR188-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR188-20260728', relevance: non-normative package metadata}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Technical records must not treat manifest fields as a specification or compatibility conclusion.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-SECURITY
+        role: security
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760333Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760433Z'
+        rationale: Security accepts limited intake but no provenance, integrity, or supply-chain assurance from this metadata.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR188-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR188-20260728', relevance: insufficient package assurance evidence}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Security maintains the integrity and root-export verification prerequisites.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760334Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760434Z'
+        rationale: No accessibility claim follows from this release metadata record.
+        notApplicableRationale: 'Dated 2026-07-30: metadata has no reviewed accessibility evidence or browser result.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: The static and transcript requirements remain the applicable accessibility route.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-CONTENT
+        role: contentLearning
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760335Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760435Z'
+        rationale: Content may use this only as observed release-history evidence, never as a package teaching fact before claim review.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR188-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR188-20260728', relevance: later claim-review input}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-011], roleEffect: Learning content may describe release-history limits but cannot recommend installing anything.}
+      - id: AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-RELEASE
+        role: release
+        decision: approved
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760336Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760436Z'
+        rationale: Release approval covers observed release history only; package admission, install, conformance, publication, and project release authorization are excluded.
+        evidenceReferences: [{id: CAND-SRC-NAPPLET-WEB-PR188-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPPLET-WEB-PR188-20260728', relevance: scoped release-history evidence}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release evidence cannot cross into package execution or project publication decisions.}
+  - scopeId: CAND-SRC-NAPS-WINDOW-20260728
+    candidateId: CAND-SRC-NAPS-WINDOW-20260728
+    sourcePurpose: zero-result default-branch observation with no content evidence
+    authorityClass: insufficient-unavailable-blocked
+    evidenceClass: repository-history-observation
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    queueImpact: {affectedClaims: [CLM-UPSTREAM-BASELINE-001], affectedDrift: [DRF-DISCOVERY-001], affectedQuestions: [OQ-UPSTREAM-BASELINE-001]}
+    determinations:
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-PRODUCT
+        role: product
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760337Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760437Z'
+        rationale: A zero-result window contains no content evidence for product intake.
+        evidenceReferences: [{id: CAND-SRC-NAPS-WINDOW-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPS-WINDOW-20260728', relevance: default-branch observation only}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-03], affectedPhases: ['01'], affectedAdrs: [ADR-0001], affectedLessons: [LES-009], roleEffect: Product cannot use a no-content result to select a learning path or runtime direction.}
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-PROTOCOL
+        role: protocolTechnical
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760338Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760438Z'
+        rationale: The observation is insufficient for protocol technical classification because no content was acquired.
+        evidenceReferences: [{id: CAND-SRC-NAPS-WINDOW-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPS-WINDOW-20260728', relevance: no-content repository history result}]
+        impactMap: {affectedRequirements: [EVID-03, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0005], affectedLessons: [LES-009], roleEffect: Protocol facts remain blocked and no NAP authority may be inferred from the window.}
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-SECURITY
+        role: security
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760339Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760439Z'
+        rationale: No security claim is supported by a default-branch and zero-result observation.
+        notApplicableRationale: 'Dated 2026-07-30: no retrieved content exists for security assessment.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0008], affectedLessons: [LES-006], roleEffect: No security property, mitigation, or residual risk can be accepted from this scope.}
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-ACCESSIBILITY
+        role: accessibility
+        decision: not-applicable
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760340Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760440Z'
+        rationale: The zero-result observation contains no accessibility material.
+        notApplicableRationale: 'Dated 2026-07-30: no user-facing content was read in the bounded window.'
+        impactMap: {affectedRequirements: [EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0002], affectedLessons: [LES-004], roleEffect: Accessibility evidence remains limited to existing deterministic and Firefox-blocked records.}
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-CONTENT
+        role: contentLearning
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760341Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760441Z'
+        rationale: A zero-result observation cannot support a teaching fact or lesson content.
+        evidenceReferences: [{id: CAND-SRC-NAPS-WINDOW-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPS-WINDOW-20260728', relevance: bounded absence of content}]
+        impactMap: {affectedRequirements: [EVID-01, EVID-04], affectedPhases: ['01'], affectedAdrs: [ADR-0004], affectedLessons: [LES-009], roleEffect: Content remains a deterministic conceptual fallback pending qualified evidence.}
+      - id: AUTH-CAND-SRC-NAPS-WINDOW-20260728-RELEASE
+        role: release
+        decision: blocked
+        determinedBy: project-owner
+        determinedAt: '2026-07-30T12:37:22.760342Z'
+        freshnessCheckedAt: '2026-07-30T12:37:22.760442Z'
+        rationale: This scope provides neither release history nor package evidence and cannot support release authority.
+        evidenceReferences: [{id: CAND-SRC-NAPS-WINDOW-20260728, locator: '.planning/research/reports/upstream-acquisition-20260728.md#CAND-SRC-NAPS-WINDOW-20260728', relevance: no release content acquired}]
+        impactMap: {affectedRequirements: [EVID-03, OPER-03], affectedPhases: ['01'], affectedAdrs: [ADR-0010], affectedLessons: [LES-011], roleEffect: Release, publication, installation, and conformance paths remain blocked.}
