@@ -204,32 +204,20 @@ drift:
   kind: drift
   topic: browser egress versus mediated access
   status: blocked
-  statusReason: No named browser measurement or immutable mediated-access source has
-    been collected.
-  normative:
-    claimId: CLM-DRF-EGRESS-NORMATIVE
-    sourceId: SRC-POLICY-002
-    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
-    path: .planning/governance/evidence-policy.md
-    locator: Freshness
-    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-    statement: Project policy requires an immutable source baseline before a protocol
-      conclusion.
-    authorityTier: project-policy
-    maturity: accepted
-    evidenceClass: project-policy
+  statusReason: A retained observed-local fixture result is blocked from normative
+    interpretation pending immutable upstream evidence and review.
+  normative: null
   observed:
-    claimId: CLM-DRF-EGRESS-OBSERVED
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Known high-risk drift to re-verify
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: The preserved research question identifies discovery comparison work
-      but is not current upstream proof.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    id: OBS-EGRESS-001
+    classification: observed-local
+    reportPath: spikes/spk-h-browser-egress/report.md
+    reportSha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
+    measurementPath: spikes/spk-h-browser-egress/measurements.yaml
+    measurementSha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
+    statement: The bounded local Chrome fixture observed its declared loopback channels
+      while Firefox produced no attached context.
+    fallback: Keep the deterministic static fallback and do not infer upstream egress
+      behavior.
   impacts:
     content:
     - LES-001
@@ -271,32 +259,20 @@ drift:
   kind: drift
   topic: firefox playwright launch 001
   status: blocked
-  statusReason: Consolidated SPK-C-IMPACT-001 retains a local blocked or uncertain
-    observation without asserting upstream behavior.
-  normative:
-    claimId: CLM-UPSTREAM-BASELINE-001
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Source and claim record model
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: Consolidated local spike observation is retained as a blocked project-evidence
-      hand-off, not an upstream fact.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+  statusReason: A retained observed-local fixture result is blocked from normative
+    interpretation pending immutable upstream evidence and review.
+  normative: null
   observed:
-    claimId: CLM-UPSTREAM-BASELINE-001
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Source and claim record model
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: Consolidated local spike observation is retained as a blocked project-evidence
-      hand-off, not an upstream fact.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    id: OBS-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    classification: observed-local
+    reportPath: spikes/spk-c-boundary-harness/report.md
+    reportSha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
+    measurementPath: spikes/spk-c-boundary-harness/measurements.yaml
+    measurementSha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+    statement: Firefox exited before the approved Playwright toolchain attached to
+      the bounded local fixture.
+    fallback: Keep the deterministic static fallback until attached-context measurements
+      and review exist.
   impacts:
     content:
     - LES-001

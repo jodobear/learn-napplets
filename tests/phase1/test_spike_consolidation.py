@@ -81,7 +81,14 @@ class SpikeConsolidationTests(unittest.TestCase):
         raw.write_text("raw measurement\n", encoding="utf-8")
         source = planning / "research" / "source-registry.yaml"
         source.parent.mkdir()
-        source.write_text("sources:\n  - id: SRC-POLICY-001\n", encoding="utf-8")
+        source.write_text(yaml.safe_dump({"sources": [{
+            "id": "SRC-POLICY-001", "kind": "source", "collectionStatus": "collected", "rawOrigin": "project-policy",
+            "repository": "example/repository", "officialUrl": "https://example.invalid/repository", "immutableUrl": "https://example.invalid/repository/blob/" + "0" * 40 + "/policy.md",
+            "ref": "0" * 40, "commitSha": "0" * 40, "path": "policy.md", "locator": "L1", "contentSha256": "a" * 64,
+            "retrievedAt": "2026-07-24T00:00:00Z", "authorityTier": "project-policy", "evidenceClass": "project-policy", "maturity": "accepted",
+            "uncertainty": {"state": "limited", "reason": "Fixture only."}, "impacts": {"requirements": ["EVID-01"], "phases": ["01"]},
+            "freshness": {"state": "current", "refreshTrigger": "Fixture only."}, "review": {"owner": "owner", "status": "pending", "requiredRoles": ["protocol"]},
+        }]}, sort_keys=False), encoding="utf-8")
         if fragment.get("sourceLinks"):
             fragment["sourceLinks"][0]["sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
         if fragment.get("measurementLinks"):

@@ -77,17 +77,22 @@ class DriftSchemas(unittest.TestCase):
         for record in records:
             self.assertTrue(record['id'].startswith('DRF-'))
             self.assertFalse(self.validate(DRIFT, record))
-            if record['id'] in MANDATORY_DRIFT_IDS:
-                self.assertNotEqual(record['normative']['claimId'], record['observed']['claimId'])
-            for side_name in ('normative', 'observed'):
-                side = record[side_name]
-                self.assertIn(side['claimId'], claims)
-                self.assertIn(side['sourceId'], sources)
-                source = sources[side['sourceId']]
-                self.assertEqual(
-                    {key: side[key] for key in ('commitSha', 'path', 'contentSha256')},
-                    {key: source[key] for key in ('commitSha', 'path', 'contentSha256')},
-                )
+            if record['normative'] is None:
+                self.assertEqual(record['observed']['classification'], 'observed-local')
+                self.assertTrue(record['observed']['id'].startswith('OBS-'))
+                self.assertNotIn('claimId', record['observed'])
+            else:
+                if record['id'] in MANDATORY_DRIFT_IDS:
+                    self.assertNotEqual(record['normative']['claimId'], record['observed']['claimId'])
+                for side_name in ('normative', 'observed'):
+                    side = record[side_name]
+                    self.assertIn(side['claimId'], claims)
+                    self.assertIn(side['sourceId'], sources)
+                    source = sources[side['sourceId']]
+                    self.assertEqual(
+                        {key: side[key] for key in ('commitSha', 'path', 'contentSha256')},
+                        {key: source[key] for key in ('commitSha', 'path', 'contentSha256')},
+                    )
             self.assertIn('dependentDecisionDisposition', record)
         for record_id, record in records_by_id.items():
             if record_id not in MANDATORY_DRIFT_IDS:
@@ -186,6 +191,7 @@ class DriftSchemas(unittest.TestCase):
             'fallback': 'Keep the deterministic static fallback.',
         }
         record = copy.deepcopy(DRIFT_RECORD)
+        record['status'] = 'blocked'
         record['normative'] = None
         record['observed'] = local
         self.assertFalse(self.validate(DRIFT, record))
@@ -226,6 +232,7 @@ class DriftSchemas(unittest.TestCase):
         collapsed['observed'] = copy.deepcopy(collapsed['normative'])
         self.assertTrue(module.validate_drift([collapsed], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))
         local = copy.deepcopy(parallel)
+        local['status'] = 'blocked'
         local['normative'] = None
         local['observed'] = {'id': 'OBS-LOCAL-001', 'classification': 'observed-local', 'reportPath': 'report.md', 'reportSha256': SHA, 'measurementPath': 'measurements.yaml', 'measurementSha256': SHA, 'statement': 'Local observation.', 'fallback': 'Use the static fallback.'}
         self.assertFalse(module.validate_drift([local], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))

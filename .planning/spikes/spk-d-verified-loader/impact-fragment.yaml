@@ -4,82 +4,100 @@ kind: spike-impact-fragment
 fragmentId: SPK-D-IMPACT-001
 spikeId: SPK-D-VERIFIED-LOADER
 metadataPath: spikes/spk-d-verified-loader/metadata.yaml
-metadataSha256: d4b83bb4d3eb6d49b5ed2ae804170bd1acba19332ec02a05e9f1c1f3a80a5781
+metadataSha256: 0cbf77e7b1a75f39a2531303e3a2b77f3af419695f23d0b72bfbf0952b8594c5
 reportPath: spikes/spk-d-verified-loader/report.md
 reportSha256: 1eb9c8634698a9487078d0a01131f597473a5966e93f679dca30bf8bf5a60b50
 measurementPath: spikes/spk-d-verified-loader/measurements.yaml
 measurementSha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
-sourceIds: [SRC-POLICY-001, SRC-POLICY-002]
+sourceIds:
+- SRC-POLICY-001
+- SRC-POLICY-002
 sourceLinks:
-  - sourceId: SRC-POLICY-001
-    relation: affects
-    path: research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
-  - sourceId: SRC-POLICY-002
-    relation: supports
-    path: research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+- sourceId: SRC-POLICY-001
+  relation: affects
+  path: research/source-registry.yaml
+  sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
+- sourceId: SRC-POLICY-002
+  relation: supports
+  path: research/source-registry.yaml
+  sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
 measurementLinks:
-  - path: spikes/spk-d-verified-loader/measurements.yaml
-    sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
+- path: spikes/spk-d-verified-loader/measurements.yaml
+  sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
 evidenceLinks:
-  - kind: source
-    path: research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
-  - kind: metadata
-    path: spikes/spk-d-verified-loader/metadata.yaml
-    sha256: d4b83bb4d3eb6d49b5ed2ae804170bd1acba19332ec02a05e9f1c1f3a80a5781
-  - kind: measurement
-    path: spikes/spk-d-verified-loader/measurements.yaml
-    sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
-  - kind: report
-    path: spikes/spk-d-verified-loader/report.md
-    sha256: 1eb9c8634698a9487078d0a01131f597473a5966e93f679dca30bf8bf5a60b50
+- kind: source
+  path: research/source-registry.yaml
+  sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
+- kind: metadata
+  path: spikes/spk-d-verified-loader/metadata.yaml
+  sha256: 0cbf77e7b1a75f39a2531303e3a2b77f3af419695f23d0b72bfbf0952b8594c5
+- kind: measurement
+  path: spikes/spk-d-verified-loader/measurements.yaml
+  sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
+- kind: report
+  path: spikes/spk-d-verified-loader/report.md
+  sha256: 1eb9c8634698a9487078d0a01131f597473a5966e93f679dca30bf8bf5a60b50
 proposedOpenQuestions:
-  - id: OQ-VERIFIED-LOADER-MANIFEST-001
-    rationale: Identify and review the current immutable manifest source and a public reviewed resolver before any manifest-resolution experiment is attempted.
-  - id: OQ-VERIFIED-LOADER-IDENTITY-001
-    rationale: Identify and review the current immutable identity mapping, including any dTag or aggregate identity tuple, before presenting or implementing identity behavior.
-  - id: OQ-VERIFIED-LOADER-VERIFIER-001
-    rationale: Identify reviewed public provenance for signature, blob, aggregate, and exact-byte loader verification before re-running SPK-D beyond local digest integrity.
+- id: OQ-VERIFIED-LOADER-MANIFEST-001
+  rationale: Identify and review the current immutable manifest source and a public
+    reviewed resolver before any manifest-resolution experiment is attempted.
+- id: OQ-VERIFIED-LOADER-IDENTITY-001
+  rationale: Identify and review the current immutable identity mapping, including
+    any dTag or aggregate identity tuple, before presenting or implementing identity
+    behavior.
+- id: OQ-VERIFIED-LOADER-VERIFIER-001
+  rationale: Identify reviewed public provenance for signature, blob, aggregate, and
+    exact-byte loader verification before re-running SPK-D beyond local digest integrity.
 proposedDriftRecords:
-  - id: DRF-MANIFEST-001
-    rationale: SPK-D retains the existing blocked manifest-source drift record; local fixture output does not settle manifest kinds or resolution behavior.
-  - id: DRF-IDENTITY-001
-    rationale: SPK-D retains the existing blocked identity drift record; no dTag or aggregate identity rule was supplied or inferred.
-  - id: DRF-ARTIFACT-001
-    rationale: SPK-D retains the existing blocked artifact drift record; synthetic bytes cannot establish release or loader behavior.
+- id: DRF-MANIFEST-001
+  rationale: SPK-D retains the existing blocked manifest-source drift record; local
+    fixture output does not settle manifest kinds or resolution behavior.
+- id: DRF-IDENTITY-001
+  rationale: SPK-D retains the existing blocked identity drift record; no dTag or
+    aggregate identity rule was supplied or inferred.
+- id: DRF-ARTIFACT-001
+  rationale: SPK-D retains the existing blocked artifact drift record; synthetic bytes
+    cannot establish release or loader behavior.
 compatibilityObservations:
-  - browser: not-applicable — SPK-D is a non-browser local fixture
-    status: blocked
-    classification: observed-browser-behavior
-    rationale: Schema-required classification label only; no browser was launched and no browser behavior was observed. The compatibility result is blocked because the reviewed verification surface is unavailable.
-affectedRequirements: [EVID-04]
-affectedPhases: ['01', '02']
+- browser: not-applicable — SPK-D is a non-browser local fixture
+  status: blocked
+  classification: observed-browser-behavior
+  rationale: Schema-required classification label only; no browser was launched and
+    no browser behavior was observed. The compatibility result is blocked because
+    the reviewed verification surface is unavailable.
+affectedRequirements:
+- EVID-04
+affectedPhases:
+- '01'
+- '02'
 uncertainty:
   state: material
-  reason: >-
-    The fixture proves only its supplied byte-digest and one-byte mutation
-    observations. Current immutable manifest/identity sources and reviewed
-    signature/blob/aggregate/loader provenance are absent, so no protocol or
-    compatibility behavior is established.
+  reason: The fixture proves only its supplied byte-digest and one-byte mutation observations.
+    Current immutable manifest/identity sources and reviewed signature/blob/aggregate/loader
+    provenance are absent, so no protocol or compatibility behavior is established.
 proposedImpacts:
-  - type: requirement
-    id: EVID-04
-    rationale: Required verified-loader feasibility evidence remains blocked until source-backed reviewed verification surfaces produce replayable observations.
-  - type: adr
-    id: ADR-0005
-    rationale: This is proposed blocked evidence only and cannot select a teaching-host or loader profile.
-  - type: adr
-    id: ADR-0008
-    rationale: This is proposed blocked evidence only and cannot support a mediated verification or authority recommendation.
-  - type: phase
-    id: '01'
-    rationale: Phase 1 retains SPK-D as an immutable local blocker hand-off pending Plan 01-28 validation and serial consolidation.
-  - type: phase
-    id: '02'
-    rationale: Phase 2 must retain a static/deferred fallback and must not implement a verified loader from this fixture.
+- type: requirement
+  id: EVID-04
+  rationale: Required verified-loader feasibility evidence remains blocked until source-backed
+    reviewed verification surfaces produce replayable observations.
+- type: adr
+  id: ADR-0005
+  rationale: This is proposed blocked evidence only and cannot select a teaching-host
+    or loader profile.
+- type: adr
+  id: ADR-0008
+  rationale: This is proposed blocked evidence only and cannot support a mediated
+    verification or authority recommendation.
+- type: phase
+  id: '01'
+  rationale: Phase 1 retains SPK-D as an immutable local blocker hand-off pending
+    Plan 01-28 validation and serial consolidation.
+- type: phase
+  id: '02'
+  rationale: Phase 2 must retain a static/deferred fallback and must not implement
+    a verified loader from this fixture.
 securityEgress:
-  sandboxMode: local deterministic fixture integrity replay; no network or verifier execution
+  sandboxMode: local deterministic fixture integrity replay; no network or verifier
+    execution
   networkTargets: []
   usedSecrets: false
