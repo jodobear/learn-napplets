@@ -433,5 +433,122 @@ class SourceEvidenceTests(unittest.TestCase):
             attestation.write_text(json.dumps(document), encoding="utf-8")
 
 
+class SourceAuthorityIntakeTests(unittest.TestCase):
+    """Exercise receipt-bound, authority-limited source intake without live network access."""
+
+    COLLECTOR = ROOT / "tools" / "acquire-sources.py"
+
+    @classmethod
+    def collector(cls):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("phase1_authority_intake", cls.COLLECTOR)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        return module
+
+    @staticmethod
+    def scope(scope_id: str, *, decision: str = "approved") -> dict:
+        roles = ("product", "protocolTechnical", "security", "accessibility", "contentLearning", "release")
+        return {
+            "scopeId": scope_id,
+            "candidateId": scope_id,
+            "sourcePurpose": "bounded fixture intake",
+            "authorityClass": "observed-implementation" if decision == "approved" else "insufficient-unavailable-blocked",
+            "evidenceClass": "observed-implementation",
+            "acquisitionReceiptSha256": "a" * 64,
+            "queueImpact": {
+                "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+                "affectedDrift": ["DRF-DISCOVERY-001"],
+                "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            },
+            "determinations": [
+                {
+                    "id": f"AUTH-{scope_id}-{role}",
+                    "role": role,
+                    "decision": decision,
+                    "determinedBy": "fixture-owner",
+                    "determinedAt": "2026-07-30T12:00:00Z",
+                    "freshnessCheckedAt": "2026-07-30T12:00:01Z",
+                    "rationale": f"{role} fixture rationale is specific to {scope_id}.",
+                    "evidenceReferences": [{"id": scope_id, "locator": "receipt#fixture", "relevance": f"{role} fixture evidence"}],
+                    "impactMap": {
+                        "affectedRequirements": ["EVID-03"],
+                        "affectedPhases": ["01"],
+                        "affectedAdrs": ["ADR-0005"],
+                        "affectedLessons": ["LES-001"],
+                        "roleEffect": f"{role} preserves the fixture boundary.",
+                    },
+                }
+                for role in roles
+            ],
+        }
+
+    def test_reviewed_source_or_normative_acquisition_preserves_scope(self) -> None:
+        collector = self.collector()
+        approved = self.scope("CAND-FIXTURE-OBSERVED-001")
+        observed = {
+            "id": "CAND-FIXTURE-OBSERVED-001",
+            "candidateId": "CAND-FIXTURE-OBSERVED-001",
+            "result": "collected",
+            "repository": "napplet/web",
+            "commitSha": "1" * 40,
+            "path": "packages/nap/src/example.ts",
+            "contentSha256": "b" * 64,
+            "retrievedAt": "2026-07-30T12:00:00Z",
+            "evidenceClass": "observed-implementation",
+            "authority": "observed-only-not-normative",
+            "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+            "affectedDrift": ["DRF-DISCOVERY-001"],
+            "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            "refreshTrigger": "Fixture refresh trigger.",
+        }
+        ready = collector.prepare_authority_gated_intake(observed, approved, "a" * 64)
+        self.assertEqual(ready["status"], "ready")
+        self.assertEqual(ready["record"]["rawOrigin"], "observed-implementation")
+        self.assertEqual(ready["record"]["authorityTier"], "official-repository-observation")
+        self.assertEqual(ready["record"]["review"]["status"], "pending")
+        self.assertEqual(ready["record"]["intakeScopeId"], observed["candidateId"])
+        self.assertEqual(ready["record"]["impacts"]["claims"], observed["affectedClaims"])
+
+        unavailable = dict(observed, id="CAND-FIXTURE-NORMATIVE-001", candidateId="CAND-FIXTURE-NORMATIVE-001", result="failed")
+        blocked = collector.prepare_authority_gated_intake(
+            unavailable,
+            self.scope("CAND-FIXTURE-NORMATIVE-001", decision="blocked"),
+            "a" * 64,
+        )
+        self.assertEqual(blocked["status"], "blocked")
+        self.assertEqual(blocked["blockedAttempt"]["candidateId"], unavailable["candidateId"])
+        self.assertEqual(blocked["blockedAttempt"]["affectedClaims"], ["CLM-UPSTREAM-BASELINE-001"])
+        self.assertIn("safeFallback", blocked["blockedAttempt"])
+        self.assertIn("refreshTrigger", blocked["blockedAttempt"])
+        self.assertNotIn("record", blocked)
+
+    def test_intake_rejects_unbound_reviewed_acquisition_receipt(self) -> None:
+        collector = self.collector()
+        outcome = {
+            "id": "CAND-FIXTURE-UNBOUND-001",
+            "candidateId": "CAND-FIXTURE-UNBOUND-001",
+            "result": "collected",
+            "repository": "napplet/web",
+            "commitSha": "1" * 40,
+            "path": "packages/nap/src/example.ts",
+            "contentSha256": "b" * 64,
+            "retrievedAt": "2026-07-30T12:00:00Z",
+            "evidenceClass": "observed-implementation",
+            "authority": "observed-only-not-normative",
+            "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+            "affectedDrift": ["DRF-DISCOVERY-001"],
+            "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            "refreshTrigger": "Fixture refresh trigger.",
+        }
+        authority = self.scope("CAND-FIXTURE-UNBOUND-001")
+        for binding in (None, {}, {"reviewedCommit": "0" * 40}, {"reviewedCommit": "0" * 40, "sourceSnapshotCommit": "1" * 40}):
+            with self.subTest(binding=binding):
+                with self.assertRaisesRegex(ValueError, "reviewed-source input binding"):
+                    collector.prepare_authority_gated_intake(outcome, authority, "a" * 64, reviewed_source_input_binding=binding)
+
+
 if __name__ == "__main__":
     unittest.main()
