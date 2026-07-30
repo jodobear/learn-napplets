@@ -1,5 +1,7 @@
 import copy
+import hashlib
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -150,6 +152,43 @@ class RefreshComparisonTests(unittest.TestCase):
                 'Inference', 'Prototype or measurement', 'Recommendation', 'Uncertainty',
                 'Affected phases and requirements', 'Owner and required approval',
             ])
+
+    def test_duplicate_refresh_observations_are_idempotent(self):
+        source = yaml.safe_load(SOURCES.read_text())['sources'][0]
+        observation = {key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            one = root / 'one.md'
+            duplicate = root / 'duplicate.md'
+            self.assertEqual(self.run_refresh([observation], one).returncode, 0)
+            result = self.run_refresh([observation, dict(observation)], duplicate)
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            self.assertEqual(duplicate.read_bytes(), one.read_bytes())
+            self.assertEqual(duplicate.read_text().count(f'`{source["id"]}`: outcome'), 1)
+
+    def test_conflicting_refresh_observations_are_one_ambiguous_result(self):
+        source = yaml.safe_load(SOURCES.read_text())['sources'][0]
+        first = {key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}
+        second = dict(first)
+        second['contentSha256'] = 'f' * 64
+        expected_digests = sorted(
+            hashlib.sha256(json.dumps(item, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
+            for item in (first, second)
+        )
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            forward = root / 'forward.md'
+            reverse = root / 'reverse.md'
+            result = self.run_refresh([first, second], forward)
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            reverse_result = self.run_refresh([second, first], reverse)
+            self.assertEqual(reverse_result.returncode, 0, reverse_result.stderr + reverse_result.stdout)
+            text = forward.read_text()
+            self.assertEqual(forward.read_bytes(), reverse.read_bytes())
+            self.assertIn('outcome `ambiguous`', text)
+            self.assertEqual(len(set(re.findall(r'RFW-[A-F0-9]+', text))), 1)
+            for digest in expected_digests:
+                self.assertIn(digest, text)
 
 
 if __name__ == '__main__':
