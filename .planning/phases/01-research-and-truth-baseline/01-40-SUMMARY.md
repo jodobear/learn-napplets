@@ -24,7 +24,7 @@ decisions:
 metrics:
   duration: "approximately 12 minutes"
   completed_date: "2026-07-30"
-  tasks_completed: 1
+  tasks_completed: 3
 status: complete
 ---
 
