@@ -92,16 +92,6 @@ class SourceEvidenceValidationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("ERROR SEM001: duplicate record ID SRC-POLICY-001", result.stdout)
 
-    def test_evidence_validation_uses_temporary_report_without_canonical_mutation(self) -> None:
-        canonical_report = ROOT / ".planning" / "research" / "reports" / "validation.md"
-        before = canonical_report.read_bytes()
-        with tempfile.TemporaryDirectory() as temporary:
-            report = Path(temporary) / "validation.md"
-            result = self.run_validator(ROOT / ".planning" / "research", report)
-            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
-            self.assertIn("Traceability mappings: valid", report.read_text())
-        self.assertEqual(canonical_report.read_bytes(), before)
-
     def write_claim_root(self, claim: dict) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
         root, temp = self.write_root(copy.deepcopy(VALID_SOURCE))
         shutil.copy2(CLAIM_SCHEMA, root / "schemas" / "claim.schema.json")
@@ -377,6 +367,22 @@ class SourceEvidenceTests(unittest.TestCase):
             capture_output=True,
             check=False,
         )
+
+    def test_evidence_validation_uses_temporary_report_without_canonical_mutation(self) -> None:
+        canonical_report = ROOT / ".planning" / "research" / "reports" / "validation.md"
+        before = canonical_report.read_bytes()
+        with tempfile.TemporaryDirectory() as temporary:
+            report = Path(temporary) / "validation.md"
+            result = subprocess.run(
+                [sys.executable, str(VALIDATOR), "validate", "--root", str(ROOT / ".planning" / "research"), "--report", str(report)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            self.assertIn("Traceability mappings: valid", report.read_text())
+        self.assertEqual(canonical_report.read_bytes(), before)
 
     def test_toolchain_certification_rejects_unverified_wheelhouse_before_install(self) -> None:
         result = self.run_case("wheelhouse-rejection")

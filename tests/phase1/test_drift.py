@@ -138,7 +138,7 @@ class RefreshComparisonTests(unittest.TestCase):
         source = yaml.safe_load(SOURCES.read_text())['sources'][0]
         changed = {key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}
         changed['contentSha256'] = 'f' * 64
-        comparison = [changed, {'id': 'SRC-POLICY-002', 'outcome': 'unavailable'}, {'id': 'SRC-POLICY-001', 'outcome': 'ambiguous'}]
+        comparison = [changed, {'id': 'SRC-POLICY-002', 'outcome': 'unavailable'}, {'id': 'SRC-UNKNOWN-001', 'outcome': 'ambiguous'}]
         with __import__('tempfile').TemporaryDirectory() as temporary:
             report = Path(temporary) / 'refresh-review-work.md'
             result = self.run_refresh(comparison, report)
