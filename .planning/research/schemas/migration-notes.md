@@ -10,6 +10,16 @@ Change notes: Version 2 preserves every drift, source, claim, observation, impac
 Compatibility: The retained `legacy/drift.schema.v1.json` and immutable v1 fixture remain audit inputs only. Ordinary research validation accepts the current v2 document after migration; migration is idempotent for v2 documents.
 Rollback: Restore the v1 schema and register from the retained v1 fixture only as a documented contract rollback; do not remove either immutable fixture or rewrite stable IDs. Re-run the deterministic migration to return to v2.
 
+## Compatibility matrix v1 to v2
+
+Schema: `compatibility.schema.json`
+Version: 1 -> 2
+Deterministic migration: `tools/phase1-python tools/migrate-phase1-records.py migrate-compatibility --input .planning/research/schemas/fixtures/compatibility-v1-legacy.yaml --output .planning/research/schemas/fixtures/compatibility-v2-current.yaml`
+Fixtures: `fixtures/compatibility-v1-legacy.yaml` SHA-256 `94ee3eb480cc616a998411ab3f01ad3f8fb99d779ad723ef3c301406ca348f0a` -> `fixtures/compatibility-v2-current.yaml` SHA-256 `aaf1de4cfc1c7d15fb161ac8fff1bf99626bc929713c89d9578c774e4dafceb2`
+Change notes: Version 2 preserves every CMP/SRC/CLM/DRF/OQ reference and historical observation while adding exactly seven closed dimension records: `normativeProtocol`, `observedImplementation`, `publishedPackage`, `runtime`, `exampleFixture`, `currentWork`, and `conformance`. Each has a stable candidate reference, locator/digest relationship, evidence-class expectation, authority expectation, blocked/not-reviewed status, and explicit missing reason. Migration does not resolve evidence, judge authority, decide eligibility, grant a review, or accept an ADR.
+Compatibility: The retained `legacy/compatibility.schema.v1.json` and immutable v1 fixture are audit inputs only. Ordinary research validation accepts only schema version 2 after migration; migration is deterministic and idempotent for a correctly closed v2 document.
+Rollback: Restore the v1 schema and compatibility register only as a documented contract rollback from the retained immutable v1 fixture; do not remove legacy/current fixtures or rewrite stable IDs and historical observations. Re-run the deterministic migration to return to v2.
+
 ## Other schema inventory
 
 | Schema | Version | Migration |

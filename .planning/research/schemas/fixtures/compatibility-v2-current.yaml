@@ -3,7 +3,8 @@ compatibility:
 - id: CMP-BASELINE-001
   kind: compatibility
   status: blocked
-  scope: Immutable release/current-work comparison baseline; public exports only; private monorepo paths are not evidence.
+  scope: Immutable release/current-work comparison baseline; public exports only;
+    private monorepo paths are not evidence.
   sourceBaseline:
   - sourceId: SRC-POLICY-001
     commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
@@ -13,12 +14,28 @@ compatibility:
     commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
     path: .planning/governance/evidence-policy.md
     contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-  packages: [CLM-CMP-PACKAGE-001]
-  runtimes: [CLM-CMP-RUNTIME-001]
-  examples: [CLM-CMP-EXAMPLE-001]
-  fixtures: [CLM-CMP-FIXTURE-001]
-  knownDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001, DRF-DISCOVERY-001, DRF-EGRESS-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001, DRF-HANDSHAKE-001, DRF-IDENTITY-001, DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001, DRF-UNKNOWN-MESSAGES-001]
-  testEvidence: [CLM-CMP-TEST-001]
+  packages:
+  - CLM-CMP-PACKAGE-001
+  runtimes:
+  - CLM-CMP-RUNTIME-001
+  examples:
+  - CLM-CMP-EXAMPLE-001
+  fixtures:
+  - CLM-CMP-FIXTURE-001
+  knownDrift:
+  - DRF-ARTIFACT-001
+  - DRF-CONFORMANCE-001
+  - DRF-DISCOVERY-001
+  - DRF-EGRESS-001
+  - DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  - DRF-HANDSHAKE-001
+  - DRF-IDENTITY-001
+  - DRF-INTENT-001
+  - DRF-MANIFEST-001
+  - DRF-METADATA-001
+  - DRF-UNKNOWN-MESSAGES-001
+  testEvidence:
+  - CLM-CMP-TEST-001
   observedAt: '2026-07-24T00:00:00Z'
   releaseState:
     sourceId: SRC-POLICY-001

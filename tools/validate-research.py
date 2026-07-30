@@ -1341,7 +1341,7 @@ def main() -> int:
             errors.extend(validate_claims(claims, source_ids, source_index))
         drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
         questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
-        compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json")
+        compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json", expected_schema_version=2)
         errors.extend(drift_errors + question_errors + compatibility_errors)
         claim_ids, claim_id_errors = record_ids(claims, "CLM-")
         drift_ids, drift_id_errors = record_ids(drift, "DRF-")

@@ -16,7 +16,11 @@ MATRIX=ROOT/'.planning/research/compatibility-matrix.yaml'
 SNAPSHOT=ROOT/'.planning/research/open-work-snapshot.json'
 SHA='a'*64; COMMIT='0'*40
 PIN={'sourceId':'SRC-POLICY-001','commitSha':COMMIT,'path':'policy.md','contentSha256':SHA}
-RECORD={'id':'CMP-POLICY-001','kind':'compatibility','sourceBaseline':[PIN],'packages':['PKG-POLICY-001'],'runtimes':['RUN-POLICY-001'],'examples':['EXM-POLICY-001'],'fixtures':['FIX-POLICY-001'],'knownDrift':['DRF-POLICY-001'],'testEvidence':['TST-POLICY-001'],'observedAt':'2026-07-24T00:00:00Z','releaseState':PIN,'currentWork':copy.deepcopy(PIN)}
+DIMENSIONS=[
+    {'name': name, 'status': 'blocked', 'evidenceClassExpectation': 'test evidence', 'authorityExpectation': 'test authority', 'references': [{'id': 'SRC-POLICY-001', 'relation': 'candidate', 'locator': 'commit:test path:policy.md', 'contentSha256': SHA}], 'missingReason': 'test-only blocked dimension'}
+    for name in ('normativeProtocol', 'observedImplementation', 'publishedPackage', 'runtime', 'exampleFixture', 'currentWork', 'conformance')
+]
+RECORD={'id':'CMP-POLICY-001','kind':'compatibility','sourceBaseline':[PIN],'packages':['PKG-POLICY-001'],'runtimes':['RUN-POLICY-001'],'examples':['EXM-POLICY-001'],'fixtures':['FIX-POLICY-001'],'knownDrift':['DRF-POLICY-001'],'testEvidence':['TST-POLICY-001'],'observedAt':'2026-07-24T00:00:00Z','releaseState':PIN,'currentWork':copy.deepcopy(PIN),'dimensions':DIMENSIONS}
 
 
 class CompatibilitySchema(unittest.TestCase):
