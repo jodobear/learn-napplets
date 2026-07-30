@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import yaml
 
@@ -32,6 +33,20 @@ REQUIRED_HEADINGS = (
 )
 PIN_FIELDS = ("commitSha", "path", "contentSha256")
 OUTCOMES = {"unchanged", "changed", "unavailable", "ambiguous"}
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _canonical_source_snapshot() -> Mapping[str, bytes]:
+    spec = importlib.util.spec_from_file_location("canonical_recovery", ROOT / "tools" / "canonical-recovery.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("canonical recovery module is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.read_canonical_snapshot(
+        "source-acquisition",
+        ("research/source-registry.yaml", "research/claims.yaml", "research/drift-register.yaml", "research/open-questions.yaml"),
+        root=ROOT / ".planning",
+    )
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -208,11 +223,24 @@ def main() -> int:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     try:
-        registry = load_yaml(args.registry)
+        expected = {
+            "registry": ROOT / ".planning/research/source-registry.yaml",
+            "claims": ROOT / ".planning/research/claims.yaml",
+            "drift": ROOT / ".planning/research/drift-register.yaml",
+            "questions": ROOT / ".planning/research/open-questions.yaml",
+        }
+        if all(getattr(args, key).resolve() == path for key, path in expected.items()):
+            snapshot = _canonical_source_snapshot()
+            registry = yaml.safe_load(snapshot["research/source-registry.yaml"])
+            claims = yaml.safe_load(snapshot["research/claims.yaml"]).get("claims", [])
+            drift = yaml.safe_load(snapshot["research/drift-register.yaml"]).get("drift", [])
+            questions = yaml.safe_load(snapshot["research/open-questions.yaml"]).get("questions", [])
+        else:
+            registry = load_yaml(args.registry)
+            claims = load_yaml(args.claims).get("claims", [])
+            drift = load_yaml(args.drift).get("drift", [])
+            questions = load_yaml(args.questions).get("questions", [])
         sources = {record["id"]: record for record in registry.get("sources", []) if isinstance(record, dict) and isinstance(record.get("id"), str)}
-        claims = load_yaml(args.claims).get("claims", [])
-        drift = load_yaml(args.drift).get("drift", [])
-        questions = load_yaml(args.questions).get("questions", [])
         if not all(isinstance(records, list) for records in (claims, drift, questions)):
             raise ValueError("claims, drift, and questions records must be lists")
         results = reduce_observations(load_comparison(args.comparison), sources)

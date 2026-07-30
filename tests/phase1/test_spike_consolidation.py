@@ -360,6 +360,43 @@ class CanonicalRecoveryTests(unittest.TestCase):
         with self.assertRaises(self.recovery.RecoveryError):
             self.recovery.publish_validated_canonical_set("fixture", staged, attestation, root=self.root, allow_unsafe_staging=True)
 
+    def test_validate_planning_reads_one_transactional_snapshot_or_refuses(self) -> None:
+        result = subprocess.run([sys.executable, str(ROOT / "tools/validate-planning.py")], cwd=ROOT, text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Planning validation passed", result.stdout)
+
+    def test_publish_validated_canonical_set_cli_contract(self) -> None:
+        result = subprocess.run([sys.executable, str(ROOT / "tools/canonical-recovery.py"), "publish-validated-canonical-set", "--help"], cwd=ROOT, text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for option in ("--profile", "--staged-root", "--attestation"):
+            self.assertIn(option, result.stdout)
+
+
+# Plan 01-42 keeps the established public test class path while isolating the
+# copied-root transaction fixtures from the legacy consolidation setup.
+def _delegate_recovery_case(name: str):
+    def delegated(_: unittest.TestCase) -> None:
+        case = CanonicalRecoveryTests(name)
+        case.setUp()
+        try:
+            getattr(case, name)()
+        finally:
+            case.tearDown()
+    return delegated
+
+
+for _recovery_test in (
+    "test_recovery_after_each_publish_interruption_is_coherent",
+    "test_recovery_rejects_tampered_or_incomplete_journal_before_reader_entry",
+    "test_validate_planning_reads_one_transactional_snapshot_or_refuses",
+    "test_transactional_multi_file_reader_never_observes_mixed_generation_during_successful_publish",
+    "test_all_canonical_reader_entrypoints_use_registered_transactional_snapshot",
+    "test_validated_canonical_set_api_rejects_wrong_profile_or_attestation",
+    "test_terminal_set_publishes_only_validated_staged_generation",
+    "test_publish_validated_canonical_set_cli_contract",
+):
+    setattr(SpikeConsolidationTests, _recovery_test, _delegate_recovery_case(_recovery_test))
+
 
 if __name__ == "__main__":
     unittest.main()

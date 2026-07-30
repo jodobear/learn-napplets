@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -17,6 +18,21 @@ from types import MappingProxyType
 
 ROOT = Path(__file__).resolve().parents[1]
 PLANNING = ROOT / ".planning"
+
+
+def read_planning_snapshot() -> MappingProxyType:
+    """Acquire registered canonical planning bytes before any multi-file preflight."""
+    spec = importlib.util.spec_from_file_location("canonical_recovery", ROOT / "tools" / "canonical-recovery.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("PRE130: canonical recovery module is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    try:
+        return module.read_canonical_snapshot(
+            "planning-preflight", ("PROJECT.md", "STATE.md", "ROADMAP.md"), root=PLANNING
+        )
+    except Exception as exc:
+        raise ValueError(f"PRE131: canonical planning snapshot refused: {exc}") from exc
 
 
 def load_json(path: Path):
@@ -414,6 +430,13 @@ def main() -> int:
 
     errors: list[str] = []
     warnings: list[str] = []
+    # The command's multi-file planning paths are consumed only after one
+    # shared-lock snapshot succeeds.  Individual helper tests retain their own
+    # copied-root APIs, but every CLI entry point refuses journal corruption first.
+    try:
+        read_planning_snapshot()
+    except ValueError as exc:
+        errors.append(str(exc))
 
     def error(code: str, message: str) -> None:
         errors.append(f"{code}: {message}")
