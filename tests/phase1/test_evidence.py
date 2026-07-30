@@ -556,5 +556,65 @@ class SourceEvidenceTests(BaseSourceEvidenceTests):
                     collector.prepare_authority_gated_intake(outcome, authority, "a" * 64, reviewed_source_input_binding=binding)
 
 
+    def test_authority_intake_failure_is_limited_to_its_evidence_scope(self) -> None:
+        collector = self.collector()
+        binding = json.loads(
+            (ROOT / ".planning/research/reports/upstream-acquisition-20260728.md").read_text(encoding="utf-8")
+        )["reviewedSourceInputBinding"]
+
+        def outcome(candidate_id: str, result: str) -> dict:
+            return {
+                "id": candidate_id,
+                "candidateId": candidate_id,
+                "result": result,
+                "repository": "napplet/web",
+                "commitSha": "2" * 40,
+                "path": "packages/nap/src/example.ts",
+                "contentSha256": "c" * 64,
+                "retrievedAt": "2026-07-30T12:00:00Z",
+                "evidenceClass": "observed-implementation",
+                "authority": "observed-only-not-normative",
+                "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+                "affectedDrift": ["DRF-DISCOVERY-001"],
+                "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+                "refreshTrigger": f"Refresh {candidate_id} only.",
+            }
+
+        independent = outcome("CAND-FIXTURE-INDEPENDENT-001", "collected")
+        blocked_outcome = outcome("CAND-FIXTURE-BLOCKED-001", "failed")
+        qualifying = collector.prepare_authority_gated_intake(
+            independent,
+            self.scope(independent["candidateId"]),
+            "a" * 64,
+            reviewed_source_input_binding=binding,
+        )
+        blocked = collector.prepare_authority_gated_intake(
+            blocked_outcome,
+            self.scope(blocked_outcome["candidateId"], decision="blocked"),
+            "a" * 64,
+            reviewed_source_input_binding=binding,
+        )
+        self.assertEqual(qualifying["status"], "ready")
+        self.assertEqual(blocked["status"], "blocked")
+        attempt = blocked["blockedAttempt"]
+        self.assertEqual(attempt["candidateId"], blocked_outcome["candidateId"])
+        self.assertEqual(attempt["affectedClaims"], blocked_outcome["affectedClaims"])
+        self.assertEqual(attempt["affectedRequirements"], ["EVID-03"])
+        self.assertEqual(attempt["affectedPhases"], ["01"])
+        self.assertEqual(attempt["affectedAdrs"], ["ADR-0005"])
+        self.assertEqual(attempt["affectedLessons"], ["LES-001"])
+        self.assertEqual(attempt["safeFallback"], "Preserve the affected evidence as blocked and do not infer a normative claim, ADR acceptance, or production permission.")
+        self.assertEqual(attempt["refreshTrigger"], "Refresh CAND-FIXTURE-BLOCKED-001 only.")
+        self.assertEqual(
+            collector.prepare_authority_gated_intake(
+                independent,
+                self.scope(independent["candidateId"]),
+                "a" * 64,
+                reviewed_source_input_binding=binding,
+            )["status"],
+            "ready",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
