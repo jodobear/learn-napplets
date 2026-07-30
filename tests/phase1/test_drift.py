@@ -139,7 +139,7 @@ class DriftSchemas(unittest.TestCase):
                 sorted(item['id'] for item in current['drift']),
             )
             for before, after in zip(sorted(old['drift'], key=lambda item: item['id']), current['drift']):
-                self.assertEqual(before['history'], after['history'])
+                self.assertEqual(sorted(before['history'], key=lambda item: (item['at'], item['state'], item['reason'])), after['history'])
                 self.assertEqual(before['normative']['claimId'], after['normative']['claimId'])
                 self.assertEqual(before['observed']['claimId'], after['observed']['claimId'])
 

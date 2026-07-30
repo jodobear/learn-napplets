@@ -162,15 +162,24 @@ def validate_claims(claims: list[dict[str, Any]], source_ids: set[str], sources:
     return errors
 
 
-def load_optional_records(root: Path, filename: str, key: str, schema: str) -> tuple[list[dict[str, Any]], list[str]]:
+def load_optional_records(
+    root: Path,
+    filename: str,
+    key: str,
+    schema: str,
+    expected_schema_version: int | None = None,
+) -> tuple[list[dict[str, Any]], list[str]]:
     path = root / filename
     if not path.exists():
         return [], []
     document = load_yaml(path)
+    errors: list[str] = []
+    if expected_schema_version is not None and document.get("schemaVersion") != expected_schema_version:
+        errors.append(f"ERROR MIG004: {filename} must use schemaVersion {expected_schema_version}; migrate legacy records first")
     records = document.get(key, [])
     if not isinstance(records, list) or not all(isinstance(item, dict) for item in records):
-        return [], [f"ERROR IO002: {filename} {key} must be a list of records"]
-    return records, schema_errors(root / "schemas" / schema, records)
+        return [], [*errors, f"ERROR IO002: {filename} {key} must be a list of records"]
+    return records, [*errors, *schema_errors(root / "schemas" / schema, records)]
 
 
 def validate_drift(records: list[dict[str, Any]], source_ids: set[str], claim_ids: set[str]) -> list[str]:
@@ -1234,7 +1243,7 @@ def main() -> int:
                 raise ValueError("claims.yaml claims must be a list of records")
             errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
             errors.extend(validate_claims(claims, source_ids, source_index))
-        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json")
+        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
         questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
         compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json")
         errors.extend(drift_errors + question_errors + compatibility_errors)
