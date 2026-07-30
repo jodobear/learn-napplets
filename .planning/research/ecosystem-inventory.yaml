@@ -34,7 +34,63 @@ items:
     candidateId: CAND-NAPPLET-WEB-PACKAGE
     disposition: blocked
     sourceId: null
-    reason: Package identity and release bytes are not pinned.
+    reason: >-
+      Package identity and release bytes are not pinned. Retained registry receipt
+      history proves collection mechanics or records an impact-scoped blocker; it
+      does not establish a published package or package-admission approval.
+    packageEvidenceHistory:
+      repositoryIdentity:
+        candidateId: CAND-NAPPLET-WEB-REPOSITORY
+        status: discovery-pointer
+        sourceId: null
+        classification: distinct-from-release-commit-and-registry-artifact
+      observedReleaseCommit:
+        status: unavailable
+        commitSha: null
+        classification: no-release-commit-observed
+      independentlyRetrievedArtifact:
+        status: blocked
+        classification: no-qualifying-live-registry-artifact
+        repositoryReleaseData: not-an-artifact-substitute
+      receiptHistory:
+        - path: reports/package-registry-fixture-receipt-20260728.yaml
+          attemptId: REG-FIXTURE-20260728-001
+          receiptSha256: 4f35050e9ee18864aeec90f88053b27dc209b32301ee82d460755af16241fc80
+          transport: fixture
+          outcome: fixture-mechanism-only
+          classification: mechanism-only-not-published-package-fact
+        - path: reports/package-registry-live-or-blocker-receipt-20260728.yaml
+          attemptId: REG-BLOCKER-20260728-001
+          receiptSha256: 40ebd1c8f1e8b0bcde03f01e936affb815fe2ed375113cce2547020c9c286a26
+          transport: live-or-blocker
+          outcome: impact-scoped-blocker
+          classification: blocked-no-live-registry-observation
+    spkGBlockerRouting:
+      disposition: blocked
+      eligibility:
+        - id: exact-public-release
+          status: incomplete
+        - id: registry-artifact-metadata
+          status: incomplete
+        - id: provenance-and-integrity
+          status: incomplete
+        - id: license-and-root-export
+          status: incomplete
+        - id: distinct-implemented-source-baseline
+          status: incomplete
+        - id: compatibility-comparison
+          status: incomplete
+        - id: separate-package-admission-approval
+          status: incomplete
+      separateApproval: required
+      affectedRequirements: [EVID-03, EVID-04, OPER-01]
+      affectedAdrs: [ADR-0005, ADR-0008, ADR-0010]
+      affectedQuestions: [OQ-PUBLIC-PACKAGE-BASELINE-001, OQ-PUBLIC-CONFORMANCE-001]
+      affectedDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001]
+      safeFallback: Keep the deterministic static learning path dependency-free.
+      refreshTrigger: >-
+        Collect and review a qualifying official registry artifact with all required
+        fields, then obtain separate package-admission approval before SPK-G work.
   - id: ECO-NAPPLET-WEB-REPOSITORY
     candidateId: CAND-NAPPLET-WEB-REPOSITORY
     disposition: blocked
