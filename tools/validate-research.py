@@ -1517,10 +1517,15 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         if validation_errors:
             shutil.rmtree(stage, ignore_errors=True)
             return validation_errors
+        if conflicts:
+            # Conflict review writes only its open-question record; compatibility and
+            # drift documents were not merged and must retain their exact bytes.
+            for target in (research / "compatibility-matrix.yaml", research / "drift-register.yaml"):
+                staged.pop(target)
         if os.environ.get("CONSOLIDATION_INJECT_PRECOMMIT_FAILURE") == "1":
             shutil.rmtree(stage, ignore_errors=True)
             return ["CONSOLIDATION_INJECTED_FAILURE: staged transaction rolled back before publication"]
-        originals = {target: target.read_bytes() if target.exists() else None for target in targets}
+        originals = {target: target.read_bytes() if target.exists() else None for target in staged}
         try:
             for target, staged_path in staged.items():
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -1618,35 +1623,68 @@ def main() -> int:
     sources: list[dict[str, Any]] = []
     claims: list[dict[str, Any]] = []
     try:
-        # The reviewed-acquisition check happens before the Plan 01-42 reader. From
-        # this point onward compatibility families are consumed exclusively from one
-        # registered immutable mapping; eligibility receives only its typed index.
-        compatibility_index = validated_compatibility_snapshot_index(root)
-        sources = [_thaw(record) for record in compatibility_index.sources.values()]
-        claims = [_thaw(record) for record in compatibility_index.claims.values()]
-        drift = [_thaw(record) for record in compatibility_index.drift.values()]
-        questions = [_thaw(record) for record in compatibility_index.questions.values()]
-        compatibility = [_thaw(record) for record in compatibility_index.compatibility]
-        errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
-        source_ids, source_id_errors = record_ids(sources, "SRC-")
-        errors.extend(source_id_errors)
-        source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
-        errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
-        errors.extend(validate_claims(claims, source_ids, source_index))
-        errors.extend(schema_errors(root / "schemas/drift.schema.json", drift))
-        errors.extend(schema_errors(root / "schemas/open-question.schema.json", questions))
-        errors.extend(schema_errors(root / "schemas/compatibility.schema.json", compatibility))
-        claim_ids, claim_id_errors = record_ids(claims, "CLM-")
-        drift_ids, drift_id_errors = record_ids(drift, "DRF-")
-        question_ids, question_id_errors = record_ids(questions, "OQ-")
-        compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
-        errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
-        errors.extend(validate_drift(drift, source_ids, claim_ids))
-        known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
-        errors.extend(validate_compatibility(compatibility, source_index, known_ids))
-        # A blocked substantive result is valid evidence; no approval or ADR state is
-        # synthesized by validation. The returned ordered reasons remain in matrix data.
-        evaluate_compatibility_baseline(compatibility_index)
+        if root.resolve() == (ROOT / ".planning/research").resolve():
+            # The reviewed-acquisition check happens before the Plan 01-42 reader. From
+            # this point onward compatibility families are consumed exclusively from one
+            # registered immutable mapping; eligibility receives only its typed index.
+            compatibility_index = validated_compatibility_snapshot_index(root)
+            sources = [_thaw(record) for record in compatibility_index.sources.values()]
+            claims = [_thaw(record) for record in compatibility_index.claims.values()]
+            drift = [_thaw(record) for record in compatibility_index.drift.values()]
+            questions = [_thaw(record) for record in compatibility_index.questions.values()]
+            compatibility = [_thaw(record) for record in compatibility_index.compatibility]
+            errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
+            source_ids, source_id_errors = record_ids(sources, "SRC-")
+            errors.extend(source_id_errors)
+            source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
+            errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
+            errors.extend(validate_claims(claims, source_ids, source_index))
+            errors.extend(schema_errors(root / "schemas/drift.schema.json", drift))
+            errors.extend(schema_errors(root / "schemas/open-question.schema.json", questions))
+            errors.extend(schema_errors(root / "schemas/compatibility.schema.json", compatibility))
+            claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+            drift_ids, drift_id_errors = record_ids(drift, "DRF-")
+            question_ids, question_id_errors = record_ids(questions, "OQ-")
+            compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
+            errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
+            errors.extend(validate_drift(drift, source_ids, claim_ids))
+            known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
+            errors.extend(validate_compatibility(compatibility, source_index, known_ids))
+            # A blocked substantive result is valid evidence; no approval or ADR state is
+            # synthesized by validation. The returned ordered reasons remain in matrix data.
+            evaluate_compatibility_baseline(compatibility_index)
+        else:
+            # Isolated source/claim fixtures predate the complete canonical snapshot
+            # contract. They validate only their supplied records and never invoke the
+            # repository-confined reviewed-acquisition preflight.
+            source_document = load_yaml(root / "source-registry.yaml")
+            sources = source_document.get("sources", [])
+            if not isinstance(sources, list) or not all(isinstance(item, dict) for item in sources):
+                raise ValueError("source-registry.yaml sources must be a list of records")
+            errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
+            source_ids, source_id_errors = record_ids(sources, "SRC-")
+            errors.extend(source_id_errors)
+            source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
+            claims_path = root / "claims.yaml"
+            if claims_path.exists():
+                claims_document = load_yaml(claims_path)
+                claims = claims_document.get("claims", [])
+                if not isinstance(claims, list) or not all(isinstance(item, dict) for item in claims):
+                    raise ValueError("claims.yaml claims must be a list of records")
+                errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
+                errors.extend(validate_claims(claims, source_ids, source_index))
+            drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
+            questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
+            compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json", expected_schema_version=2)
+            errors.extend(drift_errors + question_errors + compatibility_errors)
+            claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+            drift_ids, drift_id_errors = record_ids(drift, "DRF-")
+            question_ids, question_id_errors = record_ids(questions, "OQ-")
+            compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
+            errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
+            errors.extend(validate_drift(drift, source_ids, claim_ids))
+            known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
+            errors.extend(validate_compatibility(compatibility, source_index, known_ids))
         errors.extend(validate_reports(root.parent))
         migration_notes = root / "schemas/migration-notes.md"
         if migration_notes.exists():
