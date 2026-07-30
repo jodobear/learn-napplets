@@ -345,6 +345,20 @@ class BoundedCollectorTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "reviewed commit"):
                 collector.validate_reviewed_refresh_binding(bad_binding)
 
+    def test_reviewed_acquisition_validator_requires_identical_git_blob_binding(self) -> None:
+        collector = self.collector()
+        root, review, temp = self.reviewed_fixture()
+        with temp:
+            binding = collector.load_reviewed_refresh_candidates(root, review, "fixture-executor")
+            binding["parserVersion"] = "reviewed-refresh-v1"
+            queue = {"reviewedSourceInputBinding": binding, "entries": []}
+            receipt = {"reviewedSourceInputBinding": copy.deepcopy(binding), "outcomes": []}
+            collector.validate_reviewed_acquisition_documents(queue, receipt)
+
+            receipt["reviewedSourceInputBinding"]["reportDigests"][self.REPORT_PATHS[0]] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "digest"):
+                collector.validate_reviewed_acquisition_documents(queue, receipt)
+
 
 class SourceEvidenceTests(unittest.TestCase):
     """Exercise the stdlib-only archive-to-target certification boundary."""
