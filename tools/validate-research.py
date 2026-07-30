@@ -305,9 +305,10 @@ def evaluate_compatibility_baseline(snapshot_index: CompatibilitySnapshotIndex) 
     )
     if not reviewed:
         reasons.append("APPROVAL_NOT_GRANTED")
+    eligible = not reasons
     return {
-        "status": "eligible" if not reasons else "blocked",
-        "approval": approval if reviewed else "not-approved",
+        "status": "eligible" if eligible else "blocked",
+        "approval": approval if reviewed and eligible else "not-approved",
         "architectureApproved": False,
         "reasons": reasons,
         "familyDigests": compatibility_family_digests(snapshot_index),
