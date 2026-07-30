@@ -72,3 +72,32 @@ outcomes:
     result: observed-zero-result
     scope: napplet/naps reviewed immutable observation only; non-normative pending human authority review.
     retry: Next bounded rolling-window review; this is not an authority or content source.
+
+# Additive Plan 01-31 authority-gated intake history. Existing discovery and Plan 01-45 IDs remain unchanged.
+authorityIntakeOutcomes:
+  - id: ACQ-01-31-SRC-NAPPLET-WEB-PR184-20260728
+    date: 2026-07-30
+    action: receipt-bound-authority-gated-intake
+    sourceIds: [SRC-NAPPLET-WEB-PR184-20260728]
+    candidateIds: [CAND-SRC-NAPPLET-WEB-PR184-20260728]
+    result: collected-observed-only
+    scope: Receipt-bound napplet/web implementation observation; authority is limited to observed implementation evidence and remains pending review.
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    affectedClaims: [CLM-UPSTREAM-BASELINE-001]
+    affectedDrift: [DRF-IDENTITY-001]
+    affectedQuestions: [OQ-UPSTREAM-BASELINE-001]
+    retry: NIP-5A/NIP-5D, web release, or default-branch change.
+  - id: ACQ-01-31-BLOCKED-NORMATIVE-NIP-NAP-20260730
+    date: 2026-07-30
+    action: direct-normative-acquisition-outcome
+    sourceIds: [CAND-NIP-5A, CAND-NIP-5D, CAND-NAP-REGISTRY, CAND-NAP-PROJECTION, CAND-NAP-GOVERNANCE]
+    result: blocked
+    scope: No receipt-bound, six-role authority determination exists for direct NIP/NAP intake; no mutable refresh report, repository observation, or substitute candidate was promoted.
+    reason: The reviewed acquisition receipt supplies observed-only repository outcomes and no reviewer-classified authoritative NIP/NAP candidate scope.
+    affectedClaims: [CLM-UPSTREAM-BASELINE-001]
+    affectedDrift: [DRF-DISCOVERY-001, DRF-IDENTITY-001, DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001]
+    affectedQuestions: [OQ-UPSTREAM-BASELINE-001, OQ-VERIFIED-LOADER-IDENTITY-001, OQ-VERIFIED-LOADER-MANIFEST-001]
+    affectedAdrs: [ADR-0005, ADR-0008]
+    safeFallback: Keep dependent protocol, loader, compatibility, and teaching conclusions blocked; use only deterministic conceptual/static material.
+    retry: Obtain a new reviewer-classified, receipt-bound authoritative NIP/NAP candidate with exact official repository, commit:path bytes, digest, and six-role scope determinations.

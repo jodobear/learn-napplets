@@ -354,7 +354,7 @@ class BoundedCollectorTests(unittest.TestCase):
                 collector.validate_reviewed_acquisition_documents(queue, receipt)
 
 
-class SourceEvidenceTests(unittest.TestCase):
+class BaseSourceEvidenceTests(unittest.TestCase):
     """Exercise the stdlib-only archive-to-target certification boundary."""
 
     VERIFIER = ROOT / "tools" / "verify-phase1-toolchain.py"
@@ -431,6 +431,189 @@ class SourceEvidenceTests(unittest.TestCase):
                 self.assertNotEqual(stale.returncode, 0)
                 self.assertIn("repo-relative", stale.stderr)
             attestation.write_text(json.dumps(document), encoding="utf-8")
+
+
+class SourceEvidenceTests(BaseSourceEvidenceTests):
+    """Exercise receipt-bound, authority-limited source intake without live network access."""
+
+    COLLECTOR = ROOT / "tools" / "acquire-sources.py"
+
+    @classmethod
+    def collector(cls):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("phase1_authority_intake", cls.COLLECTOR)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        return module
+
+    @staticmethod
+    def scope(scope_id: str, *, decision: str = "approved") -> dict:
+        roles = ("product", "protocolTechnical", "security", "accessibility", "contentLearning", "release")
+        return {
+            "scopeId": scope_id,
+            "candidateId": scope_id,
+            "sourcePurpose": "bounded fixture intake",
+            "authorityClass": "observed-implementation" if decision == "approved" else "insufficient-unavailable-blocked",
+            "evidenceClass": "observed-implementation",
+            "acquisitionReceiptSha256": "a" * 64,
+            "queueImpact": {
+                "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+                "affectedDrift": ["DRF-DISCOVERY-001"],
+                "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            },
+            "determinations": [
+                {
+                    "id": f"AUTH-{scope_id}-{role}",
+                    "role": role,
+                    "decision": decision,
+                    "determinedBy": "fixture-owner",
+                    "determinedAt": "2026-07-30T12:00:00Z",
+                    "freshnessCheckedAt": "2026-07-30T12:00:01Z",
+                    "rationale": f"{role} fixture rationale is specific to {scope_id}.",
+                    "evidenceReferences": [{"id": scope_id, "locator": "receipt#fixture", "relevance": f"{role} fixture evidence"}],
+                    "impactMap": {
+                        "affectedRequirements": ["EVID-03"],
+                        "affectedPhases": ["01"],
+                        "affectedAdrs": ["ADR-0005"],
+                        "affectedLessons": ["LES-001"],
+                        "roleEffect": f"{role} preserves the fixture boundary.",
+                    },
+                }
+                for role in roles
+            ],
+        }
+
+    def test_reviewed_source_or_normative_acquisition_preserves_scope(self) -> None:
+        collector = self.collector()
+        approved = self.scope("CAND-FIXTURE-OBSERVED-001")
+        observed = {
+            "id": "CAND-FIXTURE-OBSERVED-001",
+            "candidateId": "CAND-FIXTURE-OBSERVED-001",
+            "result": "collected",
+            "repository": "napplet/web",
+            "commitSha": "1" * 40,
+            "path": "packages/nap/src/example.ts",
+            "contentSha256": "b" * 64,
+            "retrievedAt": "2026-07-30T12:00:00Z",
+            "evidenceClass": "observed-implementation",
+            "authority": "observed-only-not-normative",
+            "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+            "affectedDrift": ["DRF-DISCOVERY-001"],
+            "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            "refreshTrigger": "Fixture refresh trigger.",
+        }
+        binding = json.loads(
+            (ROOT / ".planning/research/reports/upstream-acquisition-20260728.md").read_text(encoding="utf-8")
+        )["reviewedSourceInputBinding"]
+        ready = collector.prepare_authority_gated_intake(
+            observed, approved, "a" * 64, reviewed_source_input_binding=binding
+        )
+        self.assertEqual(ready["status"], "ready")
+        self.assertEqual(ready["record"]["rawOrigin"], "observed-implementation")
+        self.assertEqual(ready["record"]["authorityTier"], "official-repository-observation")
+        self.assertEqual(ready["record"]["review"]["status"], "pending")
+        self.assertEqual(ready["record"]["contentSha256"], observed["contentSha256"])
+        self.assertEqual(ready["record"]["locator"], f"commit:{observed['commitSha']} path:{observed['path']}")
+
+        unavailable = dict(observed, id="CAND-FIXTURE-NORMATIVE-001", candidateId="CAND-FIXTURE-NORMATIVE-001", result="failed")
+        blocked = collector.prepare_authority_gated_intake(
+            unavailable,
+            self.scope("CAND-FIXTURE-NORMATIVE-001", decision="blocked"),
+            "a" * 64,
+            reviewed_source_input_binding=binding,
+        )
+        self.assertEqual(blocked["status"], "blocked")
+        self.assertEqual(blocked["blockedAttempt"]["candidateId"], unavailable["candidateId"])
+        self.assertEqual(blocked["blockedAttempt"]["affectedClaims"], ["CLM-UPSTREAM-BASELINE-001"])
+        self.assertIn("safeFallback", blocked["blockedAttempt"])
+        self.assertIn("refreshTrigger", blocked["blockedAttempt"])
+        self.assertNotIn("record", blocked)
+
+    def test_intake_rejects_unbound_reviewed_acquisition_receipt(self) -> None:
+        collector = self.collector()
+        outcome = {
+            "id": "CAND-FIXTURE-UNBOUND-001",
+            "candidateId": "CAND-FIXTURE-UNBOUND-001",
+            "result": "collected",
+            "repository": "napplet/web",
+            "commitSha": "1" * 40,
+            "path": "packages/nap/src/example.ts",
+            "contentSha256": "b" * 64,
+            "retrievedAt": "2026-07-30T12:00:00Z",
+            "evidenceClass": "observed-implementation",
+            "authority": "observed-only-not-normative",
+            "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+            "affectedDrift": ["DRF-DISCOVERY-001"],
+            "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+            "refreshTrigger": "Fixture refresh trigger.",
+        }
+        authority = self.scope("CAND-FIXTURE-UNBOUND-001")
+        for binding in (None, {}, {"reviewedCommit": "0" * 40}, {"reviewedCommit": "0" * 40, "sourceSnapshotCommit": "1" * 40}):
+            with self.subTest(binding=binding):
+                with self.assertRaisesRegex(ValueError, "reviewed-source input binding"):
+                    collector.prepare_authority_gated_intake(outcome, authority, "a" * 64, reviewed_source_input_binding=binding)
+
+
+    def test_authority_intake_failure_is_limited_to_its_evidence_scope(self) -> None:
+        collector = self.collector()
+        binding = json.loads(
+            (ROOT / ".planning/research/reports/upstream-acquisition-20260728.md").read_text(encoding="utf-8")
+        )["reviewedSourceInputBinding"]
+
+        def outcome(candidate_id: str, result: str) -> dict:
+            return {
+                "id": candidate_id,
+                "candidateId": candidate_id,
+                "result": result,
+                "repository": "napplet/web",
+                "commitSha": "2" * 40,
+                "path": "packages/nap/src/example.ts",
+                "contentSha256": "c" * 64,
+                "retrievedAt": "2026-07-30T12:00:00Z",
+                "evidenceClass": "observed-implementation",
+                "authority": "observed-only-not-normative",
+                "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+                "affectedDrift": ["DRF-DISCOVERY-001"],
+                "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+                "refreshTrigger": f"Refresh {candidate_id} only.",
+            }
+
+        independent = outcome("CAND-FIXTURE-INDEPENDENT-001", "collected")
+        blocked_outcome = outcome("CAND-FIXTURE-BLOCKED-001", "failed")
+        qualifying = collector.prepare_authority_gated_intake(
+            independent,
+            self.scope(independent["candidateId"]),
+            "a" * 64,
+            reviewed_source_input_binding=binding,
+        )
+        blocked = collector.prepare_authority_gated_intake(
+            blocked_outcome,
+            self.scope(blocked_outcome["candidateId"], decision="blocked"),
+            "a" * 64,
+            reviewed_source_input_binding=binding,
+        )
+        self.assertEqual(qualifying["status"], "ready")
+        self.assertEqual(blocked["status"], "blocked")
+        attempt = blocked["blockedAttempt"]
+        self.assertEqual(attempt["candidateId"], blocked_outcome["candidateId"])
+        self.assertEqual(attempt["affectedClaims"], blocked_outcome["affectedClaims"])
+        self.assertEqual(attempt["affectedRequirements"], ["EVID-03"])
+        self.assertEqual(attempt["affectedPhases"], ["01"])
+        self.assertEqual(attempt["affectedAdrs"], ["ADR-0005"])
+        self.assertEqual(attempt["affectedLessons"], ["LES-001"])
+        self.assertEqual(attempt["safeFallback"], "Preserve the affected evidence as blocked and do not infer a normative claim, ADR acceptance, or production permission.")
+        self.assertEqual(attempt["refreshTrigger"], "Refresh CAND-FIXTURE-BLOCKED-001 only.")
+        self.assertEqual(
+            collector.prepare_authority_gated_intake(
+                independent,
+                self.scope(independent["candidateId"]),
+                "a" * 64,
+                reviewed_source_input_binding=binding,
+            )["status"],
+            "ready",
+        )
 
 
 if __name__ == "__main__":

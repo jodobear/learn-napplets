@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 12
+open_count: 13
 waived_count: 0
 fixed_count: 1
-total_count: 13
-last_updated: 2026-07-24T12:20:20.176Z
+total_count: 14
+last_updated: 2026-07-30T14:36:24.369Z
 ---
 
 # Broken Windows Ledger
@@ -28,6 +28,7 @@ last_updated: 2026-07-24T12:20:20.176Z
 | 11 | 01 | deviation | .planning/research/schemas/spike-impact-fragment.schema.json |  | SPK-H needed a typed security-egress finding proposal schema field for required approval metadata. | open |  | 2026-07-24T10:36:13.437Z |  |
 | 12 | 01 | deviation | tests/phase1/test_lesson_evidence.py |  | Compatibility scope fallback corrected the canonical-evidence validator. | open |  | 2026-07-24T12:20:20.107Z |  |
 | 13 | 01 | deviation | .planning/research/lesson-packets |  | Existing lesson packets received required canonical uncertainty entries for full-inventory validation. | open |  | 2026-07-24T12:20:20.176Z |  |
+| 14 | 01 | unrun-verify | .planning/traceability/pack-v3-file-manifest.json |  | Full research validation could not run because the isolated worktree lacks the pre-existing traceability manifest. | open |  | 2026-07-30T14:36:24.369Z |  |
 
 ````json
 [
@@ -185,6 +186,18 @@ last_updated: 2026-07-24T12:20:20.176Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-07-24T12:20:20.176Z",
+    "resolved_at": null
+  },
+  {
+    "id": 14,
+    "kind": "unrun-verify",
+    "phase": "01",
+    "file": ".planning/traceability/pack-v3-file-manifest.json",
+    "line": null,
+    "description": "Full research validation could not run because the isolated worktree lacks the pre-existing traceability manifest.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-30T14:36:24.369Z",
     "resolved_at": null
   }
 ]

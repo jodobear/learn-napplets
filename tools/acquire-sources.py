@@ -603,6 +603,371 @@ def collect_reviewed_public_window(queue_path: Path, receipt_path: Path, cache_r
     return 0
 
 
+AUTHORITY_ROLES = (
+    "product",
+    "protocolTechnical",
+    "security",
+    "accessibility",
+    "contentLearning",
+    "release",
+)
+
+
+def _yaml_mapping(path: Path, label: str) -> Mapping[str, Any]:
+    """Parse one reviewed YAML document without accepting executable YAML features."""
+    try:
+        import yaml
+    except ImportError as exc:  # pragma: no cover - the certified wrapper supplies PyYAML
+        raise ValueError("safe YAML support is unavailable in the approved Phase 1 toolchain") from exc
+    try:
+        document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise ValueError(f"{label} is not valid YAML") from exc
+    if not isinstance(document, Mapping):
+        raise ValueError(f"{label} must be a YAML mapping")
+    return document
+
+
+def _required_string(value: Any, diagnostic: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(diagnostic)
+    return value
+
+
+def _rfc3339(value: Any, diagnostic: str) -> datetime:
+    text = _required_string(value, diagnostic)
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError(diagnostic) from exc
+    if parsed.tzinfo is None:
+        raise ValueError(diagnostic)
+    return parsed.astimezone(timezone.utc)
+
+
+def _sha256(value: Any, diagnostic: str) -> str:
+    text = _required_string(value, diagnostic)
+    if not re.fullmatch(r"[0-9a-f]{64}", text):
+        raise ValueError(diagnostic)
+    return text
+
+
+def _string_list(value: Any, diagnostic: str) -> list[str]:
+    if not isinstance(value, list) or not value or any(not isinstance(item, str) or not item for item in value):
+        raise ValueError(diagnostic)
+    return list(value)
+
+
+def validate_authority_determinations(
+    determinations: Mapping[str, Any],
+    receipt: Mapping[str, Any],
+    authority_digest: str,
+    acquisition_digest: str,
+    acquisition_retrieved_at: str | None = None,
+) -> dict[str, Mapping[str, Any]]:
+    """Validate the immutable, human-authored six-role decision boundary.
+
+    This deliberately validates record shape and byte bindings only. It never
+    turns an approved intake determination into a verified claim, ADR decision,
+    package permission, or protocol fact.
+    """
+    if determinations.get("kind") != "human-authority-determinations":
+        raise ValueError("authority determinations kind is invalid")
+    if receipt.get("kind") != "authority-determinations-receipt":
+        raise ValueError("authority receipt kind is invalid")
+    if receipt.get("authorityArtifactPath") != ".planning/research/authority-determinations.yaml":
+        raise ValueError("authority receipt path is invalid")
+    if _sha256(receipt.get("authorityArtifactSha256"), "authority receipt artifact digest is invalid") != authority_digest:
+        raise ValueError("authority receipt artifact digest does not match determination bytes")
+    bound_acquisition_digest = _sha256(receipt.get("acquisitionReceiptSha256"), "authority receipt acquisition digest is invalid")
+    if bound_acquisition_digest != acquisition_digest:
+        raise ValueError("authority receipt acquisition digest does not match the bound acquisition receipt")
+    if _required_string(receipt.get("reviewerIdentity"), "authority receipt reviewer identity is missing") != _required_string(
+        determinations.get("reviewerIdentity"), "authority reviewer identity is missing"
+    ):
+        raise ValueError("authority receipt reviewer identity differs from determination record")
+    if determinations.get("acquisitionReceiptPath") != receipt.get("acquisitionReceiptPath"):
+        raise ValueError("authority determination acquisition receipt path differs from receipt")
+    if _sha256(determinations.get("acquisitionReceiptSha256"), "authority determination acquisition digest is invalid") != bound_acquisition_digest:
+        raise ValueError("authority determination acquisition digest differs from receipt")
+
+    scope_ids = _string_list(determinations.get("scopeIds"), "authority scope IDs are missing")
+    receipt_scope_ids = _string_list(receipt.get("scopeIds"), "authority receipt scope IDs are missing")
+    if scope_ids != sorted(scope_ids) or receipt_scope_ids != scope_ids:
+        raise ValueError("authority scope IDs are not the exact sorted receipt scope set")
+    records = determinations.get("authorityDeterminations")
+    if not isinstance(records, list) or len(records) != len(scope_ids):
+        raise ValueError("authority determinations do not cover the exact scope set")
+
+    freshness_floor = _rfc3339(acquisition_retrieved_at, "bound acquisition receipt retrieval time is invalid") if acquisition_retrieved_at else None
+    by_scope: dict[str, Mapping[str, Any]] = {}
+    determination_ids: set[str] = set()
+    for scope in records:
+        if not isinstance(scope, Mapping):
+            raise ValueError("authority determination scope must be a mapping")
+        scope_id = _required_string(scope.get("scopeId"), "authority scope ID is missing")
+        if scope_id in by_scope:
+            raise ValueError("duplicate authority scope ID")
+        if scope_id not in scope_ids or scope.get("candidateId") != scope_id:
+            raise ValueError("authority scope does not match the receipt-bound candidate")
+        _required_string(scope.get("sourcePurpose"), "authority source purpose is missing")
+        _required_string(scope.get("authorityClass"), "authority class is missing")
+        _required_string(scope.get("evidenceClass"), "authority evidence class is missing")
+        if _sha256(scope.get("acquisitionReceiptSha256"), "authority scope acquisition digest is invalid") != bound_acquisition_digest:
+            raise ValueError("authority scope acquisition digest differs from receipt")
+        queue_impact = scope.get("queueImpact")
+        if not isinstance(queue_impact, Mapping):
+            raise ValueError("authority scope queue impact is missing")
+        for key in ("affectedClaims", "affectedDrift", "affectedQuestions"):
+            _string_list(queue_impact.get(key), f"authority scope {key} is missing")
+
+        decisions = scope.get("determinations")
+        if not isinstance(decisions, list) or len(decisions) != len(AUTHORITY_ROLES):
+            raise ValueError("authority scope requires exactly six role determinations")
+        roles: set[str] = set()
+        rationales: set[str] = set()
+        role_effects: set[str] = set()
+        for decision in decisions:
+            if not isinstance(decision, Mapping):
+                raise ValueError("authority role determination must be a mapping")
+            decision_id = _required_string(decision.get("id"), "authority determination ID is missing")
+            if decision_id in determination_ids:
+                raise ValueError("duplicate authority determination ID")
+            determination_ids.add(decision_id)
+            role = _required_string(decision.get("role"), "authority role is missing")
+            if role not in AUTHORITY_ROLES:
+                raise ValueError("authority role is unrecognized")
+            if role in roles:
+                raise ValueError("duplicate authority role determination")
+            roles.add(role)
+            if decision.get("decision") not in {"approved", "blocked", "rejected", "not-applicable"}:
+                raise ValueError("authority role decision is invalid")
+            _required_string(decision.get("determinedBy"), "authority determination actor is missing")
+            _rfc3339(decision.get("determinedAt"), "authority determination timestamp is invalid")
+            freshness = _rfc3339(decision.get("freshnessCheckedAt"), "authority determination freshness timestamp is invalid")
+            if freshness_floor is not None and freshness < freshness_floor:
+                raise ValueError("authority determination is stale relative to the bound acquisition receipt")
+            rationale = _required_string(decision.get("rationale"), "authority determination rationale is missing")
+            if rationale in rationales:
+                raise ValueError("authority scope has generic/shared rationale text")
+            rationales.add(rationale)
+            references = decision.get("evidenceReferences")
+            if decision.get("decision") == "not-applicable":
+                _required_string(decision.get("notApplicableRationale"), "not-applicable authority role lacks a bounded dated rationale")
+            elif not isinstance(references, list) or not references:
+                raise ValueError("authority role evidence references are missing")
+            if isinstance(references, list):
+                for reference in references:
+                    if not isinstance(reference, Mapping):
+                        raise ValueError("authority evidence reference is malformed")
+                    _required_string(reference.get("id"), "authority evidence reference ID is missing")
+                    _required_string(reference.get("locator"), "authority evidence reference locator is missing")
+                    _required_string(reference.get("relevance"), "authority evidence reference relevance is missing")
+            impact = decision.get("impactMap")
+            if not isinstance(impact, Mapping):
+                raise ValueError("authority role impact map is missing")
+            for key in ("affectedRequirements", "affectedPhases", "affectedAdrs", "affectedLessons"):
+                _string_list(impact.get(key), f"authority role {key} impact is missing")
+            role_effect = _required_string(impact.get("roleEffect"), "authority role effect is missing")
+            if role_effect in role_effects:
+                raise ValueError("authority scope has generic/shared role effect text")
+            role_effects.add(role_effect)
+        if roles != set(AUTHORITY_ROLES):
+            raise ValueError("authority scope requires exactly six unique roles")
+        by_scope[scope_id] = scope
+    if set(by_scope) != set(scope_ids):
+        raise ValueError("authority determinations do not match the declared scope IDs")
+    return by_scope
+
+
+def require_current_authority_determinations(
+    determinations: Mapping[str, Any],
+    receipt: Mapping[str, Any],
+    authority_digest: str,
+    acquisition_digest: str,
+    scope_id: str,
+    acquisition_retrieved_at: str | None = None,
+) -> Mapping[str, Any]:
+    """Return one current complete intake scope, otherwise reject before intake."""
+    scopes = validate_authority_determinations(
+        determinations, receipt, authority_digest, acquisition_digest, acquisition_retrieved_at
+    )
+    try:
+        return scopes[scope_id]
+    except KeyError as exc:
+        raise ValueError("authority determination scope is absent or scope-mismatched") from exc
+
+
+def _validate_scope_against_outcome(scope: Mapping[str, Any], outcome: Mapping[str, Any]) -> None:
+    candidate_id = _required_string(outcome.get("candidateId"), "reviewed outcome candidate ID is missing")
+    if scope.get("scopeId") != candidate_id or scope.get("candidateId") != candidate_id:
+        raise ValueError("authority determination scope does not match the reviewed outcome")
+    queue_impact = scope.get("queueImpact")
+    if not isinstance(queue_impact, Mapping):
+        raise ValueError("authority scope queue impact is missing")
+    for scope_key, outcome_key in (("affectedClaims", "affectedClaims"), ("affectedDrift", "affectedDrift"), ("affectedQuestions", "affectedQuestions")):
+        if queue_impact.get(scope_key) != outcome.get(outcome_key):
+            raise ValueError("authority determination impact scope differs from reviewed outcome")
+
+
+def _validate_reviewed_source_input_binding(binding: Any) -> Mapping[str, Any]:
+    if not isinstance(binding, Mapping):
+        raise ValueError("reviewed-source input binding is missing")
+    try:
+        validate_reviewed_refresh_binding(binding)
+    except ValueError as exc:
+        raise ValueError(f"reviewed-source input binding is invalid: {exc}") from exc
+    return binding
+
+
+def prepare_authority_gated_intake(
+    outcome: Mapping[str, Any],
+    scope: Mapping[str, Any],
+    acquisition_digest: str,
+    *,
+    reviewed_source_input_binding: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Create either a limited observed record or deterministic blocked attempt.
+
+    The caller must validate the whole determinations document before selecting a
+    scope. This function still checks the selected scope and receipt-bound input
+    relationship so an altered, unbound, or mismatched row cannot mutate a
+    canonical record.
+    """
+    binding = _validate_reviewed_source_input_binding(reviewed_source_input_binding)
+    if _sha256(scope.get("acquisitionReceiptSha256"), "authority scope acquisition digest is invalid") != acquisition_digest:
+        raise ValueError("authority scope acquisition digest differs from reviewed acquisition receipt")
+    _validate_scope_against_outcome(scope, outcome)
+    decisions = scope.get("determinations")
+    if not isinstance(decisions, list) or {decision.get("role") for decision in decisions if isinstance(decision, Mapping)} != set(AUTHORITY_ROLES):
+        raise ValueError("authority scope requires exactly six unique role determinations")
+    statuses = {decision.get("decision") for decision in decisions if isinstance(decision, Mapping)}
+    candidate_id = _required_string(outcome.get("candidateId"), "reviewed outcome candidate ID is missing")
+    blocked = outcome.get("result") != "collected" or statuses & {"blocked", "rejected"}
+    if blocked:
+        impact_maps = [decision.get("impactMap") for decision in decisions if isinstance(decision, Mapping)]
+
+        def scoped_impact(field: str) -> list[str]:
+            values: list[str] = []
+            for impact in impact_maps:
+                if not isinstance(impact, Mapping) or not isinstance(impact.get(field), list):
+                    continue
+                for value in impact[field]:
+                    if isinstance(value, str) and value not in values:
+                        values.append(value)
+            if not values:
+                raise ValueError(f"authority scope lacks {field} impact for blocked intake")
+            return values
+
+        return {
+            "status": "blocked",
+            "blockedAttempt": {
+                "id": f"ACQ-01-31-BLOCKED-{candidate_id}",
+                "candidateId": candidate_id,
+                "sourceIds": [candidate_id],
+                "result": "blocked",
+                "reason": "Receipt-bound authority scope is unavailable, incomplete, or intentionally blocked; no substitute evidence was accepted.",
+                "affectedClaims": list(outcome.get("affectedClaims", [])),
+                "affectedDrift": list(outcome.get("affectedDrift", [])),
+                "affectedQuestions": list(outcome.get("affectedQuestions", [])),
+                "affectedRequirements": scoped_impact("affectedRequirements"),
+                "affectedPhases": scoped_impact("affectedPhases"),
+                "affectedAdrs": scoped_impact("affectedAdrs"),
+                "affectedLessons": scoped_impact("affectedLessons"),
+                "safeFallback": "Preserve the affected evidence as blocked and do not infer a normative claim, ADR acceptance, or production permission.",
+                "refreshTrigger": _required_string(outcome.get("refreshTrigger"), "reviewed outcome refresh trigger is missing"),
+                "reviewedSourceInputBinding": dict(binding),
+            },
+        }
+    if scope.get("authorityClass") not in {"observed-implementation", "observed-release-metadata"}:
+        raise ValueError("approved authority scope cannot elevate unqualified material into a normative source")
+    required = ("repository", "commitSha", "path", "contentSha256", "retrievedAt")
+    for key in required:
+        _required_string(outcome.get(key), f"reviewed collected outcome {key} is missing")
+    record = {
+        "id": f"SRC-{candidate_id.removeprefix('CAND-SRC-')}",
+        "kind": "source",
+        "collectionStatus": "collected",
+        "rawOrigin": "observed-implementation",
+        "repository": outcome["repository"],
+        "officialUrl": f"https://github.com/{outcome['repository']}",
+        "immutableUrl": outcome.get("immutableLocator") or f"https://github.com/{outcome['repository']}/blob/{outcome['commitSha']}/{outcome['path']}",
+        "ref": outcome["commitSha"],
+        "commitSha": outcome["commitSha"],
+        "path": outcome["path"],
+        "locator": f"commit:{outcome['commitSha']} path:{outcome['path']}",
+        "contentSha256": outcome["contentSha256"],
+        "retrievedAt": outcome["retrievedAt"],
+        "authorityTier": "official-repository-observation",
+        "evidenceClass": "implementation",
+        "maturity": "implementation-specific",
+        "uncertainty": {"state": "material", "reason": "Receipt-bound repository bytes are observed implementation evidence, not normative protocol authority."},
+        "impacts": {"requirements": ["EVID-03"], "phases": ["01"]},
+        "freshness": {"state": "provisional", "refreshTrigger": outcome["refreshTrigger"]},
+        "review": {"owner": "research-owner", "status": "pending", "requiredRoles": ["protocol-technical"]},
+    }
+    return {"status": "ready", "record": record}
+
+
+def validate_authority_receipt_files(determinations_path: Path, receipt_path: Path) -> dict[str, Mapping[str, Any]]:
+    """Validate exact artifact bytes against its receipt and bound acquisition receipt."""
+    determinations = _yaml_mapping(determinations_path, "authority determinations")
+    receipt = _yaml_mapping(receipt_path, "authority receipt")
+    acquisition_path_text = _required_string(receipt.get("acquisitionReceiptPath"), "authority receipt acquisition path is missing")
+    acquisition_path = (ROOT / acquisition_path_text).resolve()
+    try:
+        acquisition_path.relative_to(ROOT)
+    except ValueError as exc:
+        raise ValueError("authority receipt acquisition path escapes the repository") from exc
+    try:
+        acquisition_bytes = acquisition_path.read_bytes()
+    except OSError as exc:
+        raise ValueError("bound acquisition receipt is missing") from exc
+    try:
+        acquisition = json.loads(acquisition_bytes)
+    except json.JSONDecodeError as exc:
+        raise ValueError("bound acquisition receipt is not valid JSON") from exc
+    if not isinstance(acquisition, Mapping):
+        raise ValueError("bound acquisition receipt must be a mapping")
+    retrieved_at = acquisition.get("retrievedAt")
+    return validate_authority_determinations(
+        determinations,
+        receipt,
+        hashlib.sha256(determinations_path.read_bytes()).hexdigest(),
+        hashlib.sha256(acquisition_bytes).hexdigest(),
+        retrieved_at if isinstance(retrieved_at, str) else None,
+    )
+
+
+def intake_receipt_bound_outcome(
+    outcome: Mapping[str, Any],
+    determinations_path: Path,
+    receipt_path: Path,
+    *,
+    reviewed_source_input_binding: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Authority-gate one receipt row before a caller persists any canonical result."""
+    scopes = validate_authority_receipt_files(determinations_path, receipt_path)
+    receipt = _yaml_mapping(receipt_path, "authority receipt")
+    scope = require_current_authority_determinations(
+        _yaml_mapping(determinations_path, "authority determinations"),
+        receipt,
+        hashlib.sha256(determinations_path.read_bytes()).hexdigest(),
+        _sha256(receipt.get("acquisitionReceiptSha256"), "authority receipt acquisition digest is invalid"),
+        _required_string(outcome.get("candidateId"), "reviewed outcome candidate ID is missing"),
+    )
+    # Keep the call above explicit: no record construction happens until the
+    # full immutable artifact and the exact requested scope have passed.
+    if scope["scopeId"] not in scopes:
+        raise ValueError("authority scope lookup is not stable")
+    return prepare_authority_gated_intake(
+        outcome,
+        scope,
+        _sha256(receipt.get("acquisitionReceiptSha256"), "authority receipt acquisition digest is invalid"),
+        reviewed_source_input_binding=reviewed_source_input_binding,
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate and pin bounded Tier 1 source inputs without network writes.")
     subparsers = parser.add_subparsers(dest="command")
@@ -614,6 +979,9 @@ def main() -> int:
     validate_parser.add_argument("--queue", type=Path, required=True)
     validate_parser.add_argument("--receipt", type=Path, required=True)
     validate_parser.add_argument("--review", type=Path, required=True)
+    authority_receipt_parser = subparsers.add_parser("validate-authority-receipt", help="validate exact human authority determination and acquisition receipt bindings")
+    authority_receipt_parser.add_argument("--determinations", type=Path, required=True, help="Path to the human-authored authority determinations YAML")
+    authority_receipt_parser.add_argument("--receipt", type=Path, required=True, help="Path to the digest-bound authority receipt YAML")
     parser.add_argument("--validate-url", help="validate one candidate URL against the Tier 1 HTTPS allowlist")
     parser.add_argument("--cache-root", default=str(CACHE_ROOT), help="ignored cache path; must remain under .research/upstreams/")
     parser.add_argument("--repository-dir", type=Path, help="existing local clone to inspect; this command does not clone")
@@ -632,6 +1000,10 @@ def main() -> int:
             receipt = json.loads(_checked_output_path(args.receipt).read_text(encoding="utf-8"))
             _revalidate_reviewed_binding(queue, receipt, _checked_output_path(args.review))
             print("reviewed acquisition binding passed")
+            return 0
+        if args.command == "validate-authority-receipt":
+            validate_authority_receipt_files(args.determinations, args.receipt)
+            print("authority receipt binding passed")
             return 0
         if args.validate_url:
             error = reject_unallowlisted(args.validate_url)

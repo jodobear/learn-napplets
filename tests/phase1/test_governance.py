@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import os
 import subprocess
@@ -176,6 +177,81 @@ class GovernanceValidationTests(unittest.TestCase):
             result = self.run_cli("validate-adr", str(path))
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Status: proposed", result.stdout)
+
+
+    def test_authority_determination_requires_current_complete_scope(self) -> None:
+        import importlib.util
+
+        collector_path = ROOT / "tools" / "acquire-sources.py"
+        spec = importlib.util.spec_from_file_location("phase1_governance_collector", collector_path)
+        collector = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(collector)
+        determinations_path = ROOT / ".planning/research/authority-determinations.yaml"
+        receipt_path = ROOT / ".planning/research/authority-determinations.receipt.yaml"
+        acquisition_path = ROOT / ".planning/research/reports/upstream-acquisition-20260728.md"
+        determinations = yaml.safe_load(determinations_path.read_text(encoding="utf-8"))
+        receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+        acquisition_digest = hashlib.sha256(acquisition_path.read_bytes()).hexdigest()
+        scope_id = determinations["scopeIds"][0]
+
+        accepted = collector.require_current_authority_determinations(
+            determinations,
+            receipt,
+            hashlib.sha256(determinations_path.read_bytes()).hexdigest(),
+            acquisition_digest,
+            scope_id,
+        )
+        self.assertEqual(accepted["scopeId"], scope_id)
+
+        for mutation, diagnostic in (
+            (lambda document: document["authorityDeterminations"][0]["determinations"].pop(), "exactly six"),
+            (lambda document: document["authorityDeterminations"][0]["determinations"].__setitem__(1, copy.deepcopy(document["authorityDeterminations"][0]["determinations"][0])), "duplicate"),
+            (lambda document: document["authorityDeterminations"][0].__setitem__("scopeId", "CAND-OTHER-SCOPE"), "scope"),
+        ):
+            with self.subTest(diagnostic=diagnostic):
+                malformed = copy.deepcopy(determinations)
+                mutation(malformed)
+                with self.assertRaisesRegex(ValueError, diagnostic):
+                    collector.require_current_authority_determinations(
+                        malformed,
+                        receipt,
+                        hashlib.sha256(determinations_path.read_bytes()).hexdigest(),
+                        acquisition_digest,
+                        scope_id,
+                    )
+
+    def test_validate_governance_receipt_binding(self) -> None:
+        collector = ROOT / "tools" / "acquire-sources.py"
+        determinations = ROOT / ".planning/research/authority-determinations.yaml"
+        receipt = ROOT / ".planning/research/authority-determinations.receipt.yaml"
+        command = [sys.executable, str(collector), "validate-authority-receipt", "--determinations", str(determinations), "--receipt"]
+        accepted = subprocess.run(command + [str(receipt)], cwd=ROOT, text=True, capture_output=True, check=False)
+        self.assertEqual(accepted.returncode, 0, accepted.stderr + accepted.stdout)
+        self.assertIn("authority receipt binding passed", accepted.stdout)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            copied_determinations = directory / "authority-determinations.yaml"
+            copied_receipt = directory / "authority-determinations.receipt.yaml"
+            copied_determinations.write_bytes(determinations.read_bytes())
+            copied_receipt.write_bytes(receipt.read_bytes())
+            missing = subprocess.run(command[:5] + [str(copied_determinations), "--receipt", str(directory / "missing.yaml")], cwd=ROOT, text=True, capture_output=True, check=False)
+            self.assertNotEqual(missing.returncode, 0)
+            copied_receipt.write_text("not: [valid", encoding="utf-8")
+            malformed = subprocess.run(command[:5] + [str(copied_determinations), "--receipt", str(copied_receipt)], cwd=ROOT, text=True, capture_output=True, check=False)
+            self.assertNotEqual(malformed.returncode, 0)
+            copied_receipt.write_bytes(receipt.read_bytes())
+            copied_determinations.write_text(copied_determinations.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            altered = subprocess.run(command[:5] + [str(copied_determinations), "--receipt", str(copied_receipt)], cwd=ROOT, text=True, capture_output=True, check=False)
+            self.assertNotEqual(altered.returncode, 0)
+            copied_determinations.write_bytes(determinations.read_bytes())
+            copied_receipt.write_text(copied_receipt.read_text(encoding="utf-8").replace("acquisitionReceiptSha256: 9b4c", "acquisitionReceiptSha256: 0b4c"), encoding="utf-8")
+            changed_digest = subprocess.run(command[:5] + [str(copied_determinations), "--receipt", str(copied_receipt)], cwd=ROOT, text=True, capture_output=True, check=False)
+            self.assertNotEqual(changed_digest.returncode, 0)
+            copied_receipt.write_text(receipt.read_text(encoding="utf-8").replace("CAND-SRC-KEHTO-WEB-PR204-20260728", "CAND-SRC-OTHER-001", 1), encoding="utf-8")
+            scope_mismatch = subprocess.run(command[:5] + [str(copied_determinations), "--receipt", str(copied_receipt)], cwd=ROOT, text=True, capture_output=True, check=False)
+            self.assertNotEqual(scope_mismatch.returncode, 0)
 
 
 if __name__ == "__main__":

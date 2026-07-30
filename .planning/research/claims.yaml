@@ -52,13 +52,18 @@ claims:
         role: independent-corroboration
         locator: Required fields and verification rule
         excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+      - sourceId: SRC-NAPPLET-WEB-PR184-20260728
+        relation: supports
+        role: primary
+        locator: commit:4916777862ababd09fa13cf155f4b4079c8e8cb1 path:packages/cli/src/manifest.ts
+        excerptSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
     review:
       owner: research-owner
       status: pending
       requiredRoles: [protocol-technical, content-learning]
     blocking: true
     blockedDetails:
-      scope: Current upstream protocol, implementation, and first-lab selection conclusions only.
+      scope: Current upstream protocol, implementation, and first-lab selection conclusions only; the receipt-bound observed implementation source is non-normative and cannot resolve this blocker.
       safeFallback: Defer dependent decisions and teach no asserted protocol behavior.
       approver: project-owner
       date: 2026-07-24

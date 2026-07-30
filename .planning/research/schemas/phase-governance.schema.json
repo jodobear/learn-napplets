@@ -4,7 +4,7 @@
   "title": "Reusable phase ownership and exit-evidence record",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "id", "kind", "phase", "owner", "requiredApprover", "requirements", "exitEvidence", "verification", "approval", "signoffs", "blockers", "phaseResult"],
+  "required": ["schemaVersion", "id", "kind", "phase", "owner", "requiredApprover", "requirements", "exitEvidence", "verification", "approval", "signoffs", "authorityDeterminations", "blockers", "phaseResult"],
   "properties": {
     "schemaVersion": {"const": 1},
     "id": {"type": "string", "pattern": "^PGV-[A-Z0-9][A-Z0-9-]*$"},
@@ -64,6 +64,25 @@
         "accessibility": {"$ref": "#/$defs/signoff"},
         "contentLearning": {"$ref": "#/$defs/signoff"},
         "release": {"$ref": "#/$defs/signoff"}
+      }
+    },
+    "authorityDeterminations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scopeId", "candidateId", "authorityArtifactPath", "authorityArtifactSha256", "acquisitionReceiptPath", "acquisitionReceiptSha256", "determinationIds", "reviewedSourceInputBinding"],
+        "properties": {
+          "scopeId": {"type": "string", "minLength": 1},
+          "candidateId": {"type": "string", "minLength": 1},
+          "authorityArtifactPath": {"const": ".planning/research/authority-determinations.yaml"},
+          "authorityArtifactSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "acquisitionReceiptPath": {"const": ".planning/research/reports/upstream-acquisition-20260728.md"},
+          "acquisitionReceiptSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "determinationIds": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "reviewedSourceInputBinding": {"type": "object", "minProperties": 1}
+        }
       }
     },
     "blockers": {
