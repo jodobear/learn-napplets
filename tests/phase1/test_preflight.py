@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import importlib.util
+import io
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -330,6 +333,59 @@ class Phase1ExecutionPreflightTests(unittest.TestCase):
                     "GATE016: .planning/research/z-catalog.yaml cites unknown claim CLM-Z-UNKNOWN",
                 ],
             )
+
+    def test_phase1_complete_requires_bound_preflight_and_executor_identity(self) -> None:
+        completed = patch.object(validate_planning, "phase1_completion_errors", return_value=[])
+        with completed as completion, patch.object(
+            validate_planning, "phase1_execution_preflight_errors", return_value=[]
+        ) as preflight, patch.object(
+            sys, "argv", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"]
+        ), patch.dict(os.environ, {"GSD_EXECUTOR_ID": "executor"}, clear=False), contextlib.redirect_stdout(io.StringIO()):
+            validate_planning.main()
+        preflight.assert_called_once()
+        self.assertEqual(preflight.call_args.kwargs["executor_identity"], "executor")
+        completion.assert_called_once()
+
+        for name, argv, environment in (
+            ("absent", ["validate-planning.py", "--phase-1-complete"], {}),
+            ("mismatched", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"], {"GSD_EXECUTOR_ID": "other"}),
+        ):
+            with self.subTest(name=name), patch.object(
+                validate_planning, "phase1_execution_preflight_errors", return_value=[]
+            ) as rejected_preflight, patch.object(
+                validate_planning, "phase1_completion_errors", return_value=[]
+            ) as rejected_completion, patch.object(sys, "argv", argv), patch.dict(
+                os.environ, environment, clear=True
+            ), contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(validate_planning.main(), 1)
+            self.assertNotIn("Planning validation passed", output.getvalue())
+            rejected_preflight.assert_not_called()
+            rejected_completion.assert_not_called()
+
+        with patch.object(
+            validate_planning, "phase1_execution_preflight_errors", return_value=["PRE118: bound review failed"]
+        ) as failed_preflight, patch.object(
+            validate_planning, "phase1_completion_errors", return_value=[]
+        ) as failed_completion, patch.object(
+            sys, "argv", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"]
+        ), patch.dict(os.environ, {"GSD_EXECUTOR_ID": "executor"}, clear=False), contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(validate_planning.main(), 1)
+        failed_preflight.assert_called_once()
+        failed_completion.assert_not_called()
+        self.assertNotIn("Planning validation passed", output.getvalue())
+
+    def test_phase1_child_processes_use_wrapper(self) -> None:
+        result = subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
+        with patch.object(validate_planning.subprocess, "run", return_value=result) as run:
+            self.assertEqual(validate_planning.phase1_command_errors("validate-report", "report.md"), [])
+            self.assertEqual(validate_planning.phase1_completion_errors(), [])
+        child_commands = [call.args[0] for call in run.call_args_list]
+        self.assertGreater(len(child_commands), 1)
+        self.assertTrue(
+            all(command[0] == str(ROOT / "tools/phase1-python") for command in child_commands),
+            child_commands,
+        )
+        self.assertFalse(any(command[0] == sys.executable for command in child_commands), child_commands)
 
 
 if __name__ == "__main__":
