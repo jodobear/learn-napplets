@@ -122,7 +122,7 @@ rawOutputDigests:
     sha256: 923d3085c176dbdb83603d283f4f4ddaf0128eab90244ccbd8e20fefd42dd594
 replayResult:
   status: blocked
-  outputDigest: f9d777acf32478dfe5e4ca69b96280e89b0cc045d6c97b9db603f42635033aaa
+  outputDigest: 8b0f2c8f997427e9677c989c80a78586cf45f0b4d4c8a06b7f740bb6cb1a2b70
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml

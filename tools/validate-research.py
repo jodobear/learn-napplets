@@ -9,8 +9,8 @@ import hashlib
 import json
 import os
 import re
-import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -265,6 +265,7 @@ def validate_spike(directory: Path, mode: str) -> list[str]:
     for field in required_complete:
         if not metadata.get(field):
             errors.append(f"ERROR SPK003: completed spike requires {field}")
+    errors.extend(validate_complete_spike_evidence(metadata, directory))
     manifest_name = metadata.get("environmentManifest")
     environment: dict[str, Any] = {}
     if isinstance(manifest_name, str):
@@ -568,6 +569,91 @@ CONSOLIDATION_AT = "2026-07-24T00:00:00Z"
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def resolve_retained_evidence(spike_directory: Path, relative_path: Any, expected_digest: Any) -> tuple[bytes, str]:
+    """Resolve one declared retained output without allowing path authority."""
+    if not isinstance(relative_path, str) or not relative_path or "\x00" in relative_path:
+        raise ValueError("retained evidence path must be a nonempty string without NUL")
+    if not isinstance(expected_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_digest):
+        raise ValueError("retained evidence digest must be an exact lowercase SHA-256")
+    if relative_path.startswith("/") or "\\" in relative_path:
+        raise ValueError("retained evidence path must use a relative POSIX path")
+    parts = relative_path.split("/")
+    if any(part in {"", ".", ".."} for part in parts):
+        raise ValueError("retained evidence path must be normalized and remain below the spike directory")
+    base = spike_directory.resolve(strict=True)
+    candidate = spike_directory.joinpath(*parts)
+    current = spike_directory
+    for part in parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("retained evidence must not traverse a symlink")
+    try:
+        resolved = candidate.resolve(strict=True)
+        mode = candidate.stat(follow_symlinks=False).st_mode
+    except OSError as exc:
+        raise ValueError(f"retained evidence path cannot be resolved: {exc}") from exc
+    if not resolved.is_relative_to(base) or not stat.S_ISREG(mode):
+        raise ValueError("retained evidence must be a confined regular file")
+    content = candidate.read_bytes()
+    observed_digest = hashlib.sha256(content).hexdigest()
+    if observed_digest != expected_digest:
+        raise ValueError("retained evidence SHA-256 does not match declared digest")
+    return content, observed_digest
+
+
+def validate_complete_spike_evidence(metadata: dict[str, Any], spike_directory: Path) -> list[str]:
+    """Bind completed-spike evidence and replay output to retained local bytes."""
+    errors: list[str] = []
+    outputs = metadata.get("rawOutputDigests")
+    if not isinstance(outputs, list) or not outputs:
+        return ["ERROR SPK016: completed spike requires retained raw output declarations"]
+    resolved_outputs: dict[str, str] = {}
+    for output in outputs:
+        if not isinstance(output, dict):
+            errors.append("ERROR SPK017: retained output declaration must be an object")
+            continue
+        path = output.get("path")
+        digest = output.get("sha256")
+        if path in resolved_outputs:
+            errors.append("ERROR SPK018: duplicate normalized retained output path")
+            continue
+        try:
+            _, observed_digest = resolve_retained_evidence(spike_directory, path, digest)
+        except ValueError as exc:
+            errors.append(f"ERROR SPK019: {exc}")
+            continue
+        resolved_outputs[path] = observed_digest
+
+    links = metadata.get("evidenceLinks")
+    if not isinstance(links, list) or not links:
+        errors.append("ERROR SPK020: completed spike requires typed evidence links")
+    else:
+        for link in links:
+            if not isinstance(link, dict):
+                errors.append("ERROR SPK021: typed evidence link must be an object")
+                continue
+            path = link.get("path")
+            digest = link.get("sha256")
+            kind = link.get("kind")
+            if kind == "source" and path == "../../research/source-registry.yaml":
+                # This is a canonical source-binding reference, not a retained spike output.
+                source_registry = ROOT / ".planning/research/source-registry.yaml"
+                if not source_registry.is_file() or source_registry.is_symlink() or sha256(source_registry) != digest:
+                    errors.append("ERROR SPK022: canonical source evidence does not match its declared digest")
+                continue
+            try:
+                _, observed_digest = resolve_retained_evidence(spike_directory, path, digest)
+            except ValueError as exc:
+                errors.append(f"ERROR SPK023: typed evidence link is invalid: {exc}")
+                continue
+
+    replay = metadata.get("replayResult")
+    output_digest = replay.get("outputDigest") if isinstance(replay, dict) else None
+    if output_digest not in set(resolved_outputs.values()):
+        errors.append("ERROR SPK025: replay result digest must bind one validated retained output")
+    return errors
 
 
 def normalized_fragment(fragment: dict[str, Any]) -> str:
@@ -902,6 +988,16 @@ def consolidation_audit(reports: list[tuple[str, Path, str]], fragments: list[tu
     return "\n".join(lines)
 
 
+def expected_replay_argv(spike_id: str, planning_root: Path) -> list[str]:
+    """Return the only approved replay argv for a stable spike ID."""
+    try:
+        directory = SPIKE_REPORTS[spike_id]
+    except KeyError as exc:
+        raise ValueError(f"unknown replay spike ID {spike_id}") from exc
+    # The wrapper runs from repository root; YAML supplies no executable or arguments.
+    return ["tools/phase1-python", "tools/validate-research.py", "validate-spike", f".planning/spikes/{directory}", "--complete"]
+
+
 def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
     try:
         manifest = load_yaml(path)
@@ -913,24 +1009,46 @@ def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
     for entry in entries:
-        if not isinstance(entry, dict) or entry.get("spikeId") in seen:
+        if not isinstance(entry, dict) or not isinstance(entry.get("spikeId"), str) or entry["spikeId"] in seen:
             errors.append("ERROR RPL003: entries require unique stable spike IDs")
             continue
-        seen.add(entry["spikeId"])
-        for evidence in entry.get("fixtureEvidence", []):
-            if not isinstance(evidence, dict):
-                errors.append("ERROR RPL004: invalid fixture evidence")
+        spike_id = entry["spikeId"]
+        seen.add(spike_id)
+        directory = SPIKE_REPORTS.get(spike_id)
+        if directory is None:
+            errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
+            continue
+        expected_paths = {
+            "report": f"spikes/{directory}/report.md",
+            "metadata": f"spikes/{directory}/metadata.yaml",
+            "measurement": f"spikes/{directory}/measurements.yaml",
+        }
+        expected_evidence: list[tuple[str, str]] = []
+        for label, expected_path in expected_paths.items():
+            evidence = entry.get(label)
+            if not isinstance(evidence, dict) or evidence.get("path") != expected_path:
+                errors.append(f"ERROR RPL004: {spike_id} {label} must use its mapped retained path")
                 continue
-            target = planning_root / str(evidence.get("path", ""))
-            if not target.is_file() or evidence.get("sha256") != sha256(target):
-                errors.append("ERROR RPL005: replay manifest digest does not match local input")
+            try:
+                _, digest = resolve_retained_evidence(planning_root, evidence.get("path"), evidence.get("sha256"))
+            except ValueError as exc:
+                errors.append(f"ERROR RPL005: {spike_id} {label} is invalid: {exc}")
+                continue
+            expected_evidence.append((expected_path, digest))
+        fixture_evidence = entry.get("fixtureEvidence")
+        actual_evidence = [(item.get("path"), item.get("sha256")) for item in fixture_evidence] if isinstance(fixture_evidence, list) and all(isinstance(item, dict) for item in fixture_evidence) else []
+        if actual_evidence != expected_evidence:
+            errors.append(f"ERROR RPL007: {spike_id} fixture evidence must exactly bind mapped retained files")
+        legacy_command = entry.get("replayCommand")
+        if legacy_command is not None and legacy_command != " ".join(expected_replay_argv(spike_id, planning_root)):
+            errors.append(f"ERROR RPL008: {spike_id} manifest command text is not the fixed rendered argv")
     if seen != set(SPIKE_REPORTS):
         errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
     return errors
 
 
 def replay_spikes(manifest_path: Path, planning_root: Path) -> list[str]:
-    """Validate immutable replay inputs and execute every declared local replay."""
+    """Validate retained replay inputs and execute only stable-ID-derived argv."""
     errors = validate_replay_manifest(manifest_path, planning_root)
     if errors:
         return errors
@@ -941,27 +1059,18 @@ def replay_spikes(manifest_path: Path, planning_root: Path) -> list[str]:
     entries = manifest.get("entries", [])
     for entry in sorted(entries, key=lambda item: str(item.get("spikeId", "")) if isinstance(item, dict) else ""):
         if not isinstance(entry, dict):
-            errors.append("ERROR RPL007: replay manifest entry must be an object")
+            errors.append("ERROR RPL009: replay manifest entry must be an object")
             continue
-        spike_id = entry.get("spikeId", "<unknown>")
-        command = entry.get("replayCommand")
-        if not isinstance(command, str) or not command.strip():
-            errors.append(f"ERROR RPL008: {spike_id} lacks a replay command")
-            continue
+        spike_id = entry.get("spikeId")
         try:
-            result = subprocess.run(
-                shlex.split(command),
-                cwd=ROOT,
-                text=True,
-                capture_output=True,
-                check=False,
-            )
+            argv = expected_replay_argv(spike_id, planning_root)
+            result = subprocess.run(argv, cwd=ROOT, text=True, capture_output=True, check=False)
         except (OSError, ValueError) as exc:
-            errors.append(f"ERROR RPL009: {spike_id} replay could not start: {exc}")
+            errors.append(f"ERROR RPL010: {spike_id} replay could not start: {exc}")
             continue
         if result.returncode:
             detail = (result.stdout or result.stderr).strip().replace("\n", " | ")
-            errors.append(f"ERROR RPL010: {spike_id} replay failed: {detail or 'non-zero exit'}")
+            errors.append(f"ERROR RPL011: {spike_id} replay failed: {detail or 'non-zero exit'}")
     return errors
 
 

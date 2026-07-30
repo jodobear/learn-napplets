@@ -45,14 +45,14 @@ measurements:
     median: 0
 rawOutputDigests:
   - path: measurements.yaml
-    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+    sha256: ce7b85a04c9833b197a1e2d6c0c2b2b0f55e4e4e8ebeecb11c57187c82d7588d
 replayResult:
   status: passed
-  outputDigest: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+  outputDigest: ce7b85a04c9833b197a1e2d6c0c2b2b0f55e4e4e8ebeecb11c57187c82d7588d
 evidenceLinks:
   - kind: measurement
     path: measurements.yaml
-    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+    sha256: ce7b85a04c9833b197a1e2d6c0c2b2b0f55e4e4e8ebeecb11c57187c82d7588d
   - kind: report
     path: report.md
-    sha256: 910b8392fb2208b3f17f6fb9ace84e70aae9adabc69a3e540b91866bdb523989
+    sha256: 452c5f824c15df942deb8630b5eea4cadde27f32598d9bf8a53dfee92f47bd2d

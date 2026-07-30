@@ -147,13 +147,9 @@ rawOutputDigests:
     sha256: fdbb3e8d986dbc35b83093f7d31524388c9f5ddd8a8f3a70411eddec664898b3
   - path: measurements.yaml
     sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
-  - path: /tmp/spk-i-diagram-motion/browser-results.json
-    sha256: 8c01d8f814d2a8f2e6ad77292b7dd43dd54fced02818cea716bb608325ed7db5
-  - path: /tmp/spk-i-diagram-motion/manifest.json
-    sha256: cfa271c9b61c304160d0ee7afcb0658e7864b127dac4c54640d044be30b0e1b7
 replayResult:
   status: blocked
-  outputDigest: cfa271c9b61c304160d0ee7afcb0658e7864b127dac4c54640d044be30b0e1b7
+  outputDigest: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml

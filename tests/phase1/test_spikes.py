@@ -145,6 +145,8 @@ class SpikeValidationTests(unittest.TestCase):
             self.assertIn("rawValues", result.stdout)
 
     def test_complete_accepts_blocked_spike_with_retained_inputs_and_local_replay_result(self) -> None:
+        raw_bytes = b"blocked fixture output\n"
+        raw_digest = hashlib.sha256(raw_bytes).hexdigest()
         metadata = copy.deepcopy(BASE_SPIKE)
         metadata.update(
             {
@@ -156,13 +158,14 @@ class SpikeValidationTests(unittest.TestCase):
                 },
                 "environmentFacts": {"browser": "Chrome 150", "runtime": "CPython 3.14"},
                 "measurements": [{"name": "fixture-result", "nondeterministic": True, "rawValues": [1, 1, 1, 1, 1], "range": {"min": 1, "max": 1}, "median": 1}],
-                "rawOutputDigests": [{"path": "raw.txt", "sha256": "a" * 64}],
-                "replayResult": {"status": "blocked", "outputDigest": "b" * 64},
-                "evidenceLinks": [{"kind": "measurement", "path": "raw.txt", "sha256": "a" * 64}],
+                "rawOutputDigests": [{"path": "raw.txt", "sha256": raw_digest}],
+                "replayResult": {"status": "blocked", "outputDigest": raw_digest},
+                "evidenceLinks": [{"kind": "measurement", "path": "raw.txt", "sha256": raw_digest}],
             }
         )
         directory, temp = self.write_spike(metadata, VALID_ENVIRONMENT)
         with temp:
+            (directory / "raw.txt").write_bytes(raw_bytes)
             result = self.run_spike(directory, "--complete")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
