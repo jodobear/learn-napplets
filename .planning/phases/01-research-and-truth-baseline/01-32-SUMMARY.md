@@ -61,12 +61,14 @@ Passed:
 - `tools/phase1-python tools/validate-planning.py --phase-1-execution-preflight --executor-identity "$GSD_EXECUTOR_ID"`
   - Passed with the pinned non-reviewer executor identity.
 
-The direct Phase 1 closeout command correctly failed closed before completion validation because the worktree lacks `.planning/validation/required-artifacts.json`:
+After bounded canonical support inputs were supplied to this pinned worktree, the orchestrator re-ran the direct Phase 1 closeout command successfully:
 
-- `tools/phase1-python tools/validate-planning.py --phase-1-complete --executor-identity "$GSD_EXECUTOR_ID"`
-  - `PLAN001: missing .planning/validation/required-artifacts.json`
+- `GSD_EXECUTOR_ID='claude-code/gpt-5.6-sol:phase1-orchestrated-executor' tools/phase1-python tools/validate-planning.py --phase-1-complete --executor-identity 'claude-code/gpt-5.6-sol:phase1-orchestrated-executor'`
+  - Bootstrap verification passed.
+  - Toolchain verification passed.
+  - Planning validation passed with 0 errors and 0 warnings.
 
-That contract file is not owned by Plan 01-32 and was absent from its pinned base; no shared planning artifact was created or changed by this plan.
+The bounded support inputs were supplied only as execution inputs and remain untracked and uncommitted. Plan 01-32 implementation scope was unchanged.
 
 ## Decisions Made
 
@@ -75,7 +77,7 @@ That contract file is not owned by Plan 01-32 and was absent from its pinned bas
 
 ## Deviations from Plan
 
-None - plan implementation followed the reviewed scope. The final closeout command remains intentionally fail-closed on the pre-existing, non-Plan-01-32 required-artifacts contract absence.
+None - plan implementation followed the reviewed scope. After bounded canonical support inputs were supplied, the orchestrator re-ran the exact full completion command successfully; implementation scope remained unchanged.
 
 ## Known Stubs
 
