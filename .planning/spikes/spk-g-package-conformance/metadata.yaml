@@ -22,17 +22,19 @@ variables:
     - disposable SPK-G-local ignored experiment path
     - public package entry points only; no deep or monorepo paths
     - immutable SRC/CLM bindings and recorded source-baseline comparison
+    - registered Plan 01-42 in-memory snapshot before evidence parsing or argv construction
+    - verified no-network, readonly-repository, isolated-workspace sandbox contract before any package operation
     - tools/phase1-python contract validation and no package installation before review
 commands:
   - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance --contract
+  - tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --check
+  - tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --run-five
   - >-
-    Blocked: no exact package installation command exists because no cataloged
-    public package release/version/export is tied through CLM-CMP-PACKAGE-001
-    to a complete immutable public-release and implemented-source SRC baseline.
-  - >-
-    Blocked: no exact import, compile, or conformance command exists until a
-    reviewer approves a qualifying exact public package/version in the isolated
-    SPK-G experiment directory.
+    The runner first reads the registered Plan 01-42 spk-g-package-evidence
+    snapshot, evaluates every recovered eligibility and dated-approval field,
+    then requires an auditable OS sandbox contract before package argv exists.
+    Current evidence returns a no-operation blocked receipt; it never installs,
+    imports, compiles, contacts a registry, or runs a browser.
 environmentManifest: environment.json
 sourceBindings:
   - sourceId: SRC-POLICY-001
@@ -131,11 +133,11 @@ packageApproval:
         guessed, alternative, deep, private, workspace, or monorepo import.
 environmentFacts:
   environmentManifest: environment.json
-  capturedAt: '2026-07-24T08:42:56Z'
+  capturedAt: '2026-07-30T17:31:51Z'
   runner: tools/phase1-python Python 3.14.3; Node v22.22.0; npm 10.9.4
-  browserExecution: not-used; installed browser inventory retained without browser execution
-  packageExecution: no install, import, compile, or conformance command was eligible or run
-  network: not-used; no registry, project, or package network target was contacted
+  browserExecution: not-used; Firefox pre-attachment blocker remains unchanged and no browser is invoked
+  packageExecution: no install, import, compile, or conformance command is eligible or run until one recovered snapshot proves every field, a dated decision is approved, and the OS sandbox contract verifies
+  network: not-used; no registry, project, or package network target is contacted
 measurements:
   - name: eligible-public-package-count
     nondeterministic: false

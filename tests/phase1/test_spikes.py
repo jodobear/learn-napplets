@@ -375,17 +375,36 @@ class SpikeValidationTests(unittest.TestCase):
         self.assertEqual(refused["status"], "SPK-G-BLOCKED-CANONICAL-SNAPSHOT-REFUSED")
         self.assertEqual(attempted, [])
 
-        def observed_parser():
-            nonlocal parsed
-            parsed += 1
+        recovery_spec = importlib.util.spec_from_file_location("canonical_recovery_for_spk_g", ROOT / "tools" / "canonical-recovery.py")
+        self.assertIsNotNone(recovery_spec)
+        recovery = importlib.util.module_from_spec(recovery_spec)
+        self.assertIsNotNone(recovery_spec.loader)
+        recovery_spec.loader.exec_module(recovery)
+        old = self.spk_g_snapshot(module)
+        new = dict(old)
+        new["research/package-evidence.yaml"] = new["research/package-evidence.yaml"].replace(b"not-approved", b"approved")
+        with tempfile.TemporaryDirectory() as temporary:
+            planning = Path(temporary)
+            for target, content in old.items():
+                path = planning / target
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(content)
+            recovery.register_canonical_reader("spk-g-mixed-journal-fixture", module.SPK_G_SNAPSHOT_TARGETS)
+            with self.assertRaises(recovery.PublishInterrupted):
+                recovery.publish_generation(planning, new, interrupt_after=0)
 
-        complete = module.run_spk_g(
-            snapshot_reader=lambda: self.spk_g_snapshot(module),
-            parser_observer=observed_parser,
-            sandbox_probe=lambda: module.SandboxContract.unavailable("NO_SANDBOX"),
-        )
+            def observed_parser():
+                nonlocal parsed
+                parsed += 1
+
+            complete = module.run_spk_g(
+                snapshot_reader=lambda: recovery.read_canonical_snapshot("spk-g-mixed-journal-fixture", module.SPK_G_SNAPSHOT_TARGETS, root=planning),
+                parser_observer=observed_parser,
+                sandbox_probe=lambda: module.SandboxContract.unavailable("NO_SANDBOX"),
+            )
         self.assertEqual(parsed, 1)
         self.assertEqual(complete["status"], "SPK-G-BLOCKED-ELIGIBILITY")
+        self.assertEqual(attempted, [])
 
     def test_spk_g_retains_evidence_only_after_complete_result_validation(self) -> None:
         module = self.load_spk_g_runner()
