@@ -11,6 +11,7 @@ import re
 import stat
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 from types import MappingProxyType
 
@@ -200,7 +201,7 @@ def load_yaml(path: Path) -> dict:
 
 
 def phase1_command_errors(*args: str) -> list[str]:
-    command = [sys.executable, str(ROOT / "tools/validate-research.py"), *args]
+    command = [str(ROOT / "tools/phase1-python"), str(ROOT / "tools/validate-research.py"), *args]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     if result.returncode == 0:
         return []
@@ -208,10 +209,29 @@ def phase1_command_errors(*args: str) -> list[str]:
     return [f"GATE{args[0].upper()}: {detail or 'validator failed'}"]
 
 
-def phase1_citation_and_inventory_errors() -> list[str]:
-    """Validate Phase 1 citation provenance and candidate disposition coverage."""
+_CLAIM_CITATION = re.compile(r"(?<![A-Za-z0-9-])(CLM-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b")
+
+
+def _citation_claim_ids(text: str) -> set[str]:
+    """Extract exact ASCII CLM tokens without Unicode normalization."""
+    citations: set[str] = set()
+    for match in _CLAIM_CITATION.finditer(text):
+        before = text[match.start() - 1] if match.start() else ""
+        after = text[match.end()] if match.end() < len(text) else ""
+        if (
+            any(character and unicodedata.category(character).startswith("M") for character in (before, after))
+            or after in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-"
+        ):
+            continue
+        citations.add(match.group(1))
+    return citations
+
+
+def phase1_citation_and_inventory_errors(*, root: Path = ROOT) -> list[str]:
+    """Validate citation provenance and inventory coverage without mutating evidence."""
     errors: list[str] = []
-    research = PLANNING / "research"
+    research = root / ".planning/research"
+    planning = root / ".planning"
     try:
         sources = {
             record.get("id"): record
@@ -236,21 +256,21 @@ def phase1_citation_and_inventory_errors() -> list[str]:
         "officialUrl", "repository", "commitSha", "path", "locator", "contentSha256",
         "retrievedAt", "authorityTier", "evidenceClass", "maturity", "immutableUrl",
     }
-    citation_paths = [
-        *sorted(research.glob("*catalog*.yaml")),
-        *sorted((research / "lesson-packets").glob("*.md")),
-        *sorted((PLANNING / "adr").glob("*.md")),
-    ]
+    citation_paths = sorted([
+        *research.glob("*catalog*.yaml"),
+        *(research / "lesson-packets").glob("*.md"),
+        *(planning / "adr").glob("*.md"),
+    ])
     for path in citation_paths:
         try:
-            text = path.read_text(encoding="utf-8")
-        except OSError as exc:
-            errors.append(f"GATE015: cannot read citation-bearing artifact {path.relative_to(ROOT)}: {exc}")
+            text = path.read_text(encoding="utf-8", errors="strict")
+        except (OSError, UnicodeDecodeError) as exc:
+            errors.append(f"GATE015: cannot read citation-bearing artifact {path.relative_to(root)}: {exc}")
             continue
-        for claim_id in sorted(set(re.findall(r"(?<![A-Z0-9-])(CLM-[A-Z0-9][A-Z0-9-]*)\\b", text))):
+        for claim_id in sorted(_citation_claim_ids(text)):
             claim = claims.get(claim_id)
             if not isinstance(claim, dict):
-                errors.append(f"GATE016: {path.relative_to(ROOT)} cites unknown claim {claim_id}")
+                errors.append(f"GATE016: {path.relative_to(root)} cites unknown claim {claim_id}")
                 continue
             relations = claim.get("sourceRelations")
             if not isinstance(relations, list) or not relations:
@@ -316,7 +336,7 @@ def phase1_completion_errors() -> list[str]:
     index = PLANNING / "research/lesson-packets/index.yaml"
     errors.extend(phase1_command_errors("validate-lessons", "--index", str(index), "--required-present", "13"))
     lesson_result = subprocess.run(
-        [sys.executable, "-m", "unittest", "discover", "-s", "tests/phase1", "-p", "test_lesson_evidence.py"],
+        [str(ROOT / "tools/phase1-python"), "-m", "unittest", "discover", "-s", "tests/phase1", "-p", "test_lesson_evidence.py"],
         cwd=ROOT,
         text=True,
         capture_output=True,

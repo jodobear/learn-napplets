@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import importlib.util
+import io
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -219,6 +222,170 @@ class Phase1ExecutionPreflightTests(unittest.TestCase):
                 validate_planning.load_reviewed_phase1_source_snapshot(
                     review, root=root, executor_identity="executor"
                 )
+
+    def _temporary_citation_root(self) -> tuple[tempfile.TemporaryDirectory[str], Path, Path]:
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        research = root / ".planning/research"
+        citations = research / "citation-catalog.yaml"
+        citations.parent.mkdir(parents=True)
+        (research / "lesson-packets").mkdir()
+        (root / ".planning/adr").mkdir()
+        (research / "candidate-source-manifest.yaml").write_text("candidates: []\n", encoding="utf-8")
+        (research / "ecosystem-inventory.yaml").write_text("items: []\n", encoding="utf-8")
+        (research / "source-registry.yaml").write_text(
+            """sources:
+  - id: SRC-COMPLETE
+    officialUrl: https://example.invalid/source
+    repository: example/source
+    commitSha: abcdef
+    path: source.md
+    locator: line 1
+    contentSha256: digest
+    retrievedAt: 2026-07-30T00:00:00Z
+    authorityTier: project-policy
+    evidenceClass: project-policy
+    maturity: provisional
+    immutableUrl: https://example.invalid/source/abcdef
+  - id: SRC-INCOMPLETE
+    officialUrl: https://example.invalid/incomplete
+    repository: example/incomplete
+    commitSha: abcdef
+    path: source.md
+    locator: line 1
+    contentSha256: digest
+    retrievedAt: 2026-07-30T00:00:00Z
+    authorityTier: project-policy
+    evidenceClass: project-policy
+    maturity: provisional
+""",
+            encoding="utf-8",
+        )
+        (research / "claims.yaml").write_text(
+            """claims:
+  - id: CLM-POLICY-001
+    sourceRelations:
+      - sourceId: SRC-COMPLETE
+  - id: CLM-NO-RELATION-001
+    sourceRelations: []
+  - id: CLM-INCOMPLETE-001
+    sourceRelations:
+      - sourceId: SRC-INCOMPLETE
+""",
+            encoding="utf-8",
+        )
+        return temporary, root, citations
+
+    def test_citation_ascii_adjacency_extracts_exact_token(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            citations.write_text("Markdown **CLM-POLICY-001** — “CLM-POLICY-001”.\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text(
+                "XCLM-POLICY-001 xCLM-POLICY-001 7CLM-POLICY-001 -CLM-POLICY-001\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("CLM-POLICY-001Z CLM-POLICY-001-tail\n", encoding="utf-8")
+            self.assertEqual(
+                validate_planning.phase1_citation_and_inventory_errors(root=root),
+                ["GATE016: .planning/research/citation-catalog.yaml cites unknown claim CLM-POLICY-001Z"],
+            )
+
+    def test_citation_empty_inventory_has_no_diagnostic(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            cases = {
+                "unknown": ("CLM-UNKNOWN-001", "GATE016"),
+                "missing-relation": ("CLM-NO-RELATION-001", "GATE017"),
+                "incomplete-source": ("CLM-INCOMPLETE-001", "GATE018"),
+            }
+            for name, (citation, gate) in cases.items():
+                with self.subTest(name=name):
+                    citations.write_text(citation + "\n", encoding="utf-8")
+                    errors = validate_planning.phase1_citation_and_inventory_errors(root=root)
+                    self.assertEqual(1, len(errors), errors)
+                    self.assertTrue(errors[0].startswith(gate + ":"), errors)
+
+    def test_citation_tokens_are_ascii_decoded_codepoints_without_unicode_normalization(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            citations.write_text("café — “CLM-POLICY-001”; café — CLM-POLICY-001.\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("CLM-UNKNOWN-001́ СLM-UNKNOWN-001\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+
+    def test_citation_diagnostics_stable_path_then_id(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            first = root / ".planning/research/a-catalog.yaml"
+            first.write_text("CLM-B-UNKNOWN CLM-A-UNKNOWN\n", encoding="utf-8")
+            (root / ".planning/research/z-catalog.yaml").write_text("CLM-Z-UNKNOWN CLM-A-UNKNOWN\n", encoding="utf-8")
+            self.assertEqual(
+                validate_planning.phase1_citation_and_inventory_errors(root=root),
+                [
+                    "GATE016: .planning/research/a-catalog.yaml cites unknown claim CLM-A-UNKNOWN",
+                    "GATE016: .planning/research/a-catalog.yaml cites unknown claim CLM-B-UNKNOWN",
+                    "GATE016: .planning/research/z-catalog.yaml cites unknown claim CLM-A-UNKNOWN",
+                    "GATE016: .planning/research/z-catalog.yaml cites unknown claim CLM-Z-UNKNOWN",
+                ],
+            )
+
+    def test_phase1_complete_requires_bound_preflight_and_executor_identity(self) -> None:
+        completed = patch.object(validate_planning, "phase1_completion_errors", return_value=[])
+        with completed as completion, patch.object(
+            validate_planning, "phase1_execution_preflight_errors", return_value=[]
+        ) as preflight, patch.object(
+            sys, "argv", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"]
+        ), patch.dict(os.environ, {"GSD_EXECUTOR_ID": "executor"}, clear=False), contextlib.redirect_stdout(io.StringIO()):
+            validate_planning.main()
+        preflight.assert_called_once()
+        self.assertEqual(preflight.call_args.kwargs["executor_identity"], "executor")
+        completion.assert_called_once()
+
+        for name, argv, environment in (
+            ("absent", ["validate-planning.py", "--phase-1-complete"], {}),
+            ("mismatched", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"], {"GSD_EXECUTOR_ID": "other"}),
+        ):
+            with self.subTest(name=name), patch.object(
+                validate_planning, "phase1_execution_preflight_errors", return_value=[]
+            ) as rejected_preflight, patch.object(
+                validate_planning, "phase1_completion_errors", return_value=[]
+            ) as rejected_completion, patch.object(sys, "argv", argv), patch.dict(
+                os.environ, environment, clear=True
+            ), contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(validate_planning.main(), 1)
+            self.assertNotIn("Planning validation passed", output.getvalue())
+            rejected_preflight.assert_not_called()
+            rejected_completion.assert_not_called()
+
+        with patch.object(
+            validate_planning, "phase1_execution_preflight_errors", return_value=["PRE118: bound review failed"]
+        ) as failed_preflight, patch.object(
+            validate_planning, "phase1_completion_errors", return_value=[]
+        ) as failed_completion, patch.object(
+            sys, "argv", ["validate-planning.py", "--phase-1-complete", "--executor-identity", "executor"]
+        ), patch.dict(os.environ, {"GSD_EXECUTOR_ID": "executor"}, clear=False), contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(validate_planning.main(), 1)
+        failed_preflight.assert_called_once()
+        failed_completion.assert_not_called()
+        self.assertNotIn("Planning validation passed", output.getvalue())
+
+    def test_phase1_child_processes_use_wrapper(self) -> None:
+        result = subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
+        with patch.object(validate_planning.subprocess, "run", return_value=result) as run:
+            self.assertEqual(validate_planning.phase1_command_errors("validate-report", "report.md"), [])
+            self.assertEqual(validate_planning.phase1_completion_errors(), [])
+        child_commands = [call.args[0] for call in run.call_args_list]
+        self.assertGreater(len(child_commands), 1)
+        self.assertTrue(
+            all(command[0] == str(ROOT / "tools/phase1-python") for command in child_commands),
+            child_commands,
+        )
+        self.assertFalse(any(command[0] == sys.executable for command in child_commands), child_commands)
 
 
 if __name__ == "__main__":
