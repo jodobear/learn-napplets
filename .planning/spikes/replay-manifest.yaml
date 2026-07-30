@@ -112,13 +112,13 @@ entries:
 - spikeId: SPK-G
   report: &id019
     path: spikes/spk-g-package-conformance/report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
   metadata: &id020
     path: spikes/spk-g-package-conformance/metadata.yaml
-    sha256: 523710858c5f69ba458f8ab45b5dbcff0b4eb0d16504537eea91a7134831ebee
+    sha256: 8f29f304d276f27994c8bf514b6132123fa796243d99c3503e41cb2f233111e7
   measurement: &id021
     path: spikes/spk-g-package-conformance/measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   fixtureEvidence:
   - *id019
   - *id020
