@@ -79,6 +79,13 @@ The bounded support inputs were supplied only as execution inputs and remain unt
 
 None - plan implementation followed the reviewed scope. After bounded canonical support inputs were supplied, the orchestrator re-ran the exact full completion command successfully; implementation scope remained unchanged.
 
+## Post-Merge Integration Follow-up
+
+- **Commit:** `4847d29` — `test(01-32): bind closeout test executor identity`.
+- **Issue:** The closeout integration fixture still invoked `--phase-1-complete` without the Plan 01-32 required matching executor identity, so PRE116 stopped the test before its intended governance/evidence assertion.
+- **Fix:** The fixture now passes the exact pinned executor identity in both `GSD_EXECUTOR_ID` and `--executor-identity`.
+- **Verification:** The named governance closeout test passes, and the complete Phase 1 discovery suite passes 67/67.
+
 ## Known Stubs
 
 None.

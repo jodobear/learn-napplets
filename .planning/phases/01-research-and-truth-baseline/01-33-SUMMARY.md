@@ -139,6 +139,13 @@ Passed:
 - `PYTHONPATH=tests/phase1 tools/phase1-python -m unittest test_spikes test_drift test_evidence`
 - `tools/phase1-python tools/validate-research.py replay-spikes --manifest .planning/spikes/replay-manifest.yaml --check`
 
+## Post-Merge Integration Follow-up
+
+- **Commit:** `c8e2a77` — `fix(01-33): propagate retained metadata digest`.
+- **Issue:** The user-authorized SPK-H metadata repair changed retained bytes, while the SPK-H impact fragment retained stale `metadataSha256` and metadata evidence-link SHA-256 bindings. Consolidation tests therefore stopped at IMP006 and IMP016 before their intended assertions.
+- **Fix:** Recalculated the exact metadata SHA-256 and updated only those two derived binding fields; classifications, observations, findings, authority, status, claims, ADRs, and evidence prose are unchanged.
+- **Verification:** SPK-H impact validation, all seven spike-consolidation tests, replay manifest check, complete Phase 1 discovery (67/67), reviewed acquisition binding, Phase 1 execution preflight, and research validation pass.
+
 ## Known Stubs
 
 None.

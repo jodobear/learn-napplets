@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -15,6 +16,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = ROOT / "tools" / "validate-research.py"
+EXECUTOR_ID = "claude-code/gpt-5.6-sol:phase1-orchestrated-executor"
 HEADINGS = [
     "Research question", "Sources and immutable revisions", "Observations", "Conflicts", "Inference",
     "Prototype or measurement", "Recommendation", "Uncertainty", "Affected phases and requirements",
@@ -56,9 +58,17 @@ class GovernanceValidationTests(unittest.TestCase):
         return subprocess.run([sys.executable, str(VALIDATOR), *args], cwd=ROOT, text=True, capture_output=True, check=False)
 
     def run_planning_gate(self) -> subprocess.CompletedProcess[str]:
+        env = {**os.environ, "GSD_EXECUTOR_ID": EXECUTOR_ID}
         return subprocess.run(
-            [sys.executable, str(ROOT / "tools" / "validate-planning.py"), "--phase-1-complete"],
+            [
+                sys.executable,
+                str(ROOT / "tools" / "validate-planning.py"),
+                "--phase-1-complete",
+                "--executor-identity",
+                EXECUTOR_ID,
+            ],
             cwd=ROOT,
+            env=env,
             text=True,
             capture_output=True,
             check=False,
