@@ -155,13 +155,11 @@ measurements:
 rawOutputDigests:
   - path: fixture.md
     sha256: f7f490d6dcc198b2358682e906979b9c366eed24174e846eb42531c750fcb690
-  - path: .experiment/evidence/measurements.json
-    sha256: 52fb05708d01d9464f3aa8c7d0a067b8c128e743dce5fd77c0634128bb72aa19
-  - path: .experiment/evidence/browser-observations.json
-    sha256: e3ec32253036c320679421f040cd47ec7198a6eb6b592c16f355194efcb3e7cd
+  - path: measurements.yaml
+    sha256: d235ca07db2a8cde1444277c5e1689e63086421d1cbc95e6a9cd15e2435f1ce6
 replayResult:
   status: blocked
-  outputDigest: 52fb05708d01d9464f3aa8c7d0a067b8c128e743dce5fd77c0634128bb72aa19
+  outputDigest: d235ca07db2a8cde1444277c5e1689e63086421d1cbc95e6a9cd15e2435f1ce6
 evidenceLinks:
   - kind: source
     path: environment.json

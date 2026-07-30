@@ -163,13 +163,9 @@ rawOutputDigests:
     sha256: 6e090da8b019135ff3991b472b352b2558c3176b3f29f0c315057e651de96633
   - path: measurements.yaml
     sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
-  - path: /tmp/spk-h-browser-egress/browser-results.json
-    sha256: b5a25132b43de628d1c20c28eb09cfd8e47ecb497b51ffbbdc23e5baf18d827c
-  - path: /tmp/spk-h-browser-egress/manifest.json
-    sha256: bda16c727b9239313b05811d5e80845a9b53d5e878f127bf3d2937e79de64a53
 replayResult:
   status: blocked
-  outputDigest: bda16c727b9239313b05811d5e80845a9b53d5e878f127bf3d2937e79de64a53
+  outputDigest: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml

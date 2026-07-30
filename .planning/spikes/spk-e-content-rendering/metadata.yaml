@@ -101,11 +101,9 @@ rawOutputDigests:
     sha256: 06183ff7c618d6b58a89c16b30f023dd0b442be98a543ec2f3feabecec00f17d
   - path: measurements.yaml
     sha256: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8
-  - path: /tmp/spk-e-content-rendering/manifest.json
-    sha256: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
 replayResult:
   status: passed
-  outputDigest: c54ce3b7997783f2407fb45af0fe5f7c46685888f0a57faab8abd3f4e2c1796b
+  outputDigest: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml
