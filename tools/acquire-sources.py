@@ -12,13 +12,15 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE_ROOT = ROOT / ".research" / "upstreams"
@@ -97,6 +99,13 @@ _COMMIT_RE = re.compile(r"^[0-9a-f]{40,64}$")
 _CANDIDATE_ROW_RE = re.compile(r"^\|\s*`?(CAND-[A-Z0-9][A-Z0-9-]*)`?\s*\|", re.MULTILINE)
 
 
+class _NoRedirect(HTTPRedirectHandler):
+    """Refuse redirect expansion outside the reviewed public-read boundary."""
+
+    def redirect_request(self, req: Request, fp: Any, code: int, msg: str, headers: Any, newurl: str) -> Request:
+        raise ValueError(f"redirect refused for bounded collection: {newurl}")
+
+
 class HttpsTransport:
     """Read-only HTTPS transport for an already-approved bounded collection run.
 
@@ -109,12 +118,15 @@ class HttpsTransport:
             raise ValueError("repository must be an owner/name GitHub identity")
         self.repository = repository
         self.timeout_seconds = timeout_seconds
+        self._opener = build_opener(_NoRedirect())
 
     def _read(self, url: str) -> bytes:
         if reject_unallowlisted(url):
             raise ValueError(f"source URL is not allowlisted: {url}")
         request = Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "learn-napplets-phase1"})
-        with urlopen(request, timeout=self.timeout_seconds) as response:  # nosec B310 - exact HTTPS allowlist above
+        with self._opener.open(request, timeout=self.timeout_seconds) as response:  # nosec B310 - exact HTTPS allowlist above
+            if response.geturl() != url:
+                raise ValueError("redirect refused for bounded collection")
             return response.read()
 
     def _json(self, url: str) -> Mapping[str, Any]:
@@ -131,6 +143,9 @@ class HttpsTransport:
 
     def commit(self, sha: str) -> Mapping[str, Any]:
         return self._json(f"https://api.github.com/repos/{self.repository}/git/commits/{sha}")
+
+    def tree(self, tree_sha: str) -> Mapping[str, Any]:
+        return self._json(f"https://api.github.com/repos/{self.repository}/git/trees/{tree_sha}?recursive=1")
 
     def blob(self, commit_sha: str, path: str) -> bytes:
         safe_path = _safe_repo_path(path).as_posix()
@@ -356,8 +371,249 @@ def load_reviewed_refresh_candidates(root: Path, review_path: Path, executor_ide
     return binding
 
 
+REVIEWED_COLLECTION_TARGETS: tuple[dict[str, Any], ...] = (
+    {
+        "id": "CAND-SRC-NAPPLET-WEB-PR184-20260728", "repository": "napplet/web", "repositoryId": 1197078677,
+        "defaultBranch": "main", "commitSha": "4916777862ababd09fa13cf155f4b4079c8e8cb1",
+        "treeSha": "11d4c67a47fd399f801bf0339885dc3dda9780aa", "path": "packages/cli/src/manifest.ts",
+        "blobSha": "c9c0ceff963da1e2c5c71f97ddc69afff08d3c57", "evidenceClass": "observed-implementation",
+        "affectedClaims": ["DRF-IDENTITY-001"], "affectedDrift": ["DRF-IDENTITY-001"],
+        "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"], "refreshTrigger": "NIP-5A/NIP-5D, web release, or default-branch change.",
+    },
+    {
+        "id": "CAND-SRC-NAPPLET-WEB-PR186-20260728", "repository": "napplet/web", "repositoryId": 1197078677,
+        "defaultBranch": "main", "commitSha": "dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b",
+        "treeSha": "33edc8387973f31687dfb20181a40fe936286824", "path": "packages/nap/src/convention-uri.ts",
+        "blobSha": "1a8db0c46d517edf2374b5e5022b429d8b18191b", "evidenceClass": "observed-implementation",
+        "affectedClaims": ["DRF-INTENT-001", "DRF-MANIFEST-001", "DRF-METADATA-001", "DRF-IDENTITY-001"],
+        "affectedDrift": ["DRF-INTENT-001", "DRF-MANIFEST-001", "DRF-METADATA-001", "DRF-IDENTITY-001"],
+        "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001", "OQ-VERIFIED-LOADER-IDENTITY-001", "OQ-VERIFIED-LOADER-MANIFEST-001"],
+        "refreshTrigger": "Linked NAP status/revision, web release/default-branch change, or Phase 2 contract review.",
+    },
+    {
+        "id": "CAND-SRC-NAPPLET-WEB-PR188-20260728", "repository": "napplet/web", "repositoryId": 1197078677,
+        "defaultBranch": "main", "commitSha": "60889f1c2476e063500c7ab6624af6abe0dbcbe5",
+        "treeSha": "d1bd6d78bb357506e6f4244537fecd54262f9a55", "path": "packages/nap/package.json",
+        "blobSha": "d125a4a5ae6d1a8b7409b94be0cb51a6899c2a62", "evidenceClass": "release-metadata",
+        "affectedClaims": ["CLM-CMP-PACKAGE-001"], "affectedDrift": ["DRF-ARTIFACT-001"],
+        "affectedQuestions": ["OQ-PUBLIC-PACKAGE-BASELINE-001"], "refreshTrigger": "Registry/release/integrity/export change or package admission review.",
+    },
+    {
+        "id": "CAND-SRC-KEHTO-WEB-PR204-20260728", "repository": "kehto/web", "repositoryId": 1204025151,
+        "defaultBranch": "main", "commitSha": "b85db51db838866de753b275b9d34ec908785bd2",
+        "treeSha": "6ba4a4f6cdd52c2231d80f1ff913f7727720c8a3", "path": "RUNTIME-SPEC.md",
+        "blobSha": "d90cab7dcad177c6eacb6f0780b434b5ecffccab", "evidenceClass": "observed-implementation",
+        "affectedClaims": ["DRF-HANDSHAKE-001", "DRF-EGRESS-001", "DRF-CONFORMANCE-001"],
+        "affectedDrift": ["DRF-HANDSHAKE-001", "DRF-EGRESS-001", "DRF-CONFORMANCE-001"],
+        "affectedQuestions": ["OQ-VERIFIED-LOADER-IDENTITY-001", "OQ-VERIFIED-LOADER-MANIFEST-001", "OQ-VERIFIED-LOADER-VERIFIER-001"],
+        "refreshTrigger": "Listed runtime source-path or default-branch change.",
+    },
+    {
+        "id": "CAND-SRC-KEHTO-WEB-PR209-20260728", "repository": "kehto/web", "repositoryId": 1204025151,
+        "defaultBranch": "main", "commitSha": "4eafa058d18cf245b23d49b23bc29dda0b7d7651",
+        "treeSha": "24563d1aa55989c09f6134a15b4492c4c66fc8c6", "path": "packages/runtime/package.json",
+        "blobSha": "fc6447a2cd05edccd4bd324b29340abcfee2e935", "evidenceClass": "release-metadata",
+        "affectedClaims": ["CLM-CMP-PACKAGE-001"], "affectedDrift": ["DRF-ARTIFACT-001"],
+        "affectedQuestions": ["OQ-PUBLIC-PACKAGE-BASELINE-001"], "refreshTrigger": "Registry integrity/current runtime manifest change.",
+    },
+    {
+        "id": "CAND-SRC-KEHTO-WEB-PR211-20260728", "repository": "kehto/web", "repositoryId": 1204025151,
+        "defaultBranch": "main", "commitSha": "54ef2ead03ee0c37727468b8658b6dc224137",
+        "treeSha": "4e88d775afb6e27ffeef1e143a2477bbe7dd28b6", "path": "scripts/audit-gateway-artifacts.mjs",
+        "blobSha": "afc424858b74b8917a0529e8065bc6afaaa2e3cc", "evidenceClass": "observed-implementation",
+        "affectedClaims": ["DRF-ARTIFACT-001"], "affectedDrift": ["DRF-ARTIFACT-001"],
+        "affectedQuestions": ["OQ-VERIFIED-LOADER-VERIFIER-001"], "refreshTrigger": "Loader/audit path or default-branch change.",
+    },
+    {
+        "id": "CAND-SRC-NAPS-WINDOW-20260728", "repository": "napplet/naps", "repositoryId": 1202279733,
+        "defaultBranch": "master", "checkpointCommit": "5ac0490461ca6fec2f0d2e45b4835cf9bc08de24",
+        "evidenceClass": "repository-history-observation", "affectedClaims": ["CLM-UPSTREAM-BASELINE-001"],
+        "affectedDrift": ["DRF-DISCOVERY-001"], "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
+        "refreshTrigger": "Next bounded rolling-window review; this is not an authority or content source.",
+    },
+)
+REVIEWED_COLLECTION_PARSER_VERSION = "reviewed-refresh-v1"
+
+
+def _checked_output_path(path: Path) -> Path:
+    resolved = path.expanduser().resolve()
+    try:
+        resolved.relative_to(ROOT)
+    except ValueError as exc:
+        raise ValueError("collection output path must remain inside the repository") from exc
+    return resolved
+
+
+def _write_json(path: Path, document: Mapping[str, Any]) -> None:
+    checked = _checked_output_path(path)
+    checked.parent.mkdir(parents=True, exist_ok=True)
+    checked.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _require_exact_target_set(binding: Mapping[str, Any]) -> None:
+    parsed_ids = {candidate["id"] for candidate in binding["candidates"]}
+    expected_ids = {target["id"] for target in REVIEWED_COLLECTION_TARGETS}
+    if parsed_ids != expected_ids:
+        raise ValueError("reviewed refresh parser did not emit the complete bounded observation set")
+
+
+def _validate_expected_identity(identity: Mapping[str, Any], target: Mapping[str, Any]) -> None:
+    if identity.get("id") != target["repositoryId"] or identity.get("default_branch") != target["defaultBranch"]:
+        raise ValueError("official repository identity/default branch differs from the reviewed bounded target")
+
+
+def _validate_tree_target(transport: HttpsTransport, target: Mapping[str, Any]) -> None:
+    commit = transport.commit(str(target["commitSha"]))
+    tree = commit.get("tree")
+    if not isinstance(tree, Mapping) or tree.get("sha") != target["treeSha"]:
+        raise ValueError("immutable commit tree differs from the reviewed bounded target")
+    tree_document = transport.tree(str(target["treeSha"]))
+    if tree_document.get("truncated") is True or not isinstance(tree_document.get("tree"), list):
+        raise ValueError("immutable tree response is truncated or malformed")
+    for entry in tree_document["tree"]:
+        if isinstance(entry, Mapping) and entry.get("path") == target["path"]:
+            if entry.get("type") != "blob" or entry.get("sha") != target["blobSha"]:
+                raise ValueError("immutable tree blob differs from the reviewed bounded target")
+            return
+    raise ValueError("reviewed immutable commit:path is missing from the immutable tree")
+
+
+def _append_history(path: Path, outcomes: list[Mapping[str, Any]], retrieved_at: str) -> None:
+    checked = _checked_output_path(path)
+    existing = checked.read_text(encoding="utf-8") if checked.exists() else "schemaVersion: 1\nretrievals:\nfailures:\n"
+    if "ACQ-FAIL-001" not in existing:
+        raise ValueError("acquisition history is missing required ACQ-FAIL-001")
+    lines = [existing.rstrip(), "", "# Additive Plan 01-45 bounded collection history.", "outcomes:"]
+    for outcome in outcomes:
+        result = str(outcome["result"])
+        lines.extend((
+            f"  - id: ACQ-01-45-{outcome['candidateId']}",
+            f"    date: {retrieved_at[:10]}",
+            "    action: bounded-public-https-read",
+            f"    sourceIds: [{outcome['candidateId']}]",
+            f"    result: {result}",
+            f"    scope: {outcome['repository']} reviewed immutable observation only; non-normative pending human authority review.",
+            f"    retry: {outcome['refreshTrigger']}",
+        ))
+        if result == "failed":
+            lines.append(f"    reason: {json.dumps(outcome['reason'])}")
+    checked.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _append_observed_candidates(path: Path, outcomes: list[Mapping[str, Any]]) -> None:
+    checked = _checked_output_path(path)
+    existing = checked.read_text(encoding="utf-8")
+    if "blockedDisposition:" not in existing or "observedCandidates:" in existing:
+        raise ValueError("candidate manifest cannot safely receive additive observed candidates")
+    lines = ["observedCandidates:"]
+    for outcome in outcomes:
+        lines.extend((
+            f"  - id: {outcome['candidateId']}",
+            f"    repository: {outcome['repository']}",
+            f"    collectionResult: {outcome['result']}",
+            f"    evidenceClass: {outcome['evidenceClass']}",
+            "    authority: observed-only-not-normative",
+            f"    immutableLocator: {json.dumps(outcome.get('immutableLocator', 'repository identity/default-branch checkpoint only'))}",
+            f"    refreshTrigger: {json.dumps(outcome['refreshTrigger'])}",
+        ))
+    checked.write_text(existing.replace("blockedDisposition:", "\n".join(lines) + "\nblockedDisposition:", 1), encoding="utf-8")
+
+
+def validate_reviewed_acquisition_documents(queue: Mapping[str, Any], receipt: Mapping[str, Any]) -> None:
+    queue_binding = queue.get("reviewedSourceInputBinding")
+    receipt_binding = receipt.get("reviewedSourceInputBinding")
+    if not isinstance(queue_binding, Mapping) or not isinstance(receipt_binding, Mapping):
+        raise ValueError("queue and receipt require reviewed-source input bindings")
+    if queue_binding.get("parserVersion") != REVIEWED_COLLECTION_PARSER_VERSION or receipt_binding.get("parserVersion") != REVIEWED_COLLECTION_PARSER_VERSION:
+        raise ValueError("queue and receipt reviewed-source binding has an unexpected parser version")
+    validate_reviewed_refresh_binding(queue_binding)
+    validate_reviewed_refresh_binding(receipt_binding)
+    if queue_binding != receipt_binding:
+        raise ValueError("queue and receipt reviewed-source bindings differ")
+
+
+def _revalidate_reviewed_binding(queue: Mapping[str, Any], receipt: Mapping[str, Any], review_path: Path) -> None:
+    executor_identity = os.environ.get("GSD_EXECUTOR_ID")
+    if not executor_identity:
+        raise ValueError("GSD_EXECUTOR_ID is required to revalidate reviewed acquisition")
+    expected = load_reviewed_refresh_candidates(ROOT, review_path, executor_identity)
+    expected["parserVersion"] = REVIEWED_COLLECTION_PARSER_VERSION
+    validate_reviewed_acquisition_documents(queue, receipt)
+    if queue["reviewedSourceInputBinding"] != expected:
+        raise ValueError("reviewed acquisition binding differs from the current Plan 01-29 Git-blob snapshot")
+
+
+def collect_reviewed_public_window(queue_path: Path, receipt_path: Path, cache_root: Path, review_path: Path) -> int:
+    executor_identity = os.environ.get("GSD_EXECUTOR_ID")
+    if not executor_identity:
+        raise ValueError("GSD_EXECUTOR_ID is required for bounded collection")
+    preflight = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "validate-planning.py"), "--verify-phase1-source-inputs", "--review", str(review_path)],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    if preflight.returncode:
+        raise ValueError(preflight.stderr.strip() or preflight.stdout.strip() or "reviewed source-input verification failed")
+    binding = load_reviewed_refresh_candidates(ROOT, review_path, executor_identity)
+    binding["parserVersion"] = REVIEWED_COLLECTION_PARSER_VERSION
+    _require_exact_target_set(binding)
+    retrieved_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    outcomes: list[dict[str, Any]] = []
+    for target in REVIEWED_COLLECTION_TARGETS:
+        if "commitSha" in target and not _COMMIT_RE.fullmatch(str(target["commitSha"])):
+            outcomes.append({**target, "candidateId": target["id"], "result": "failed", "retrievedAt": retrieved_at,
+                "reason": "Approved immutable locator does not match a valid reviewed commit SHA; no substitute or public request was attempted.",
+                "authority": "observed-only-not-normative",
+                "uncertainty": "Bounded candidate failed before collection; no scope expansion was attempted."})
+            continue
+        transport = HttpsTransport(str(target["repository"]))
+        identity_url = f"https://api.github.com/repos/{target['repository']}"
+        try:
+            identity = transport.identity(identity_url)
+            _validate_identity(identity, identity_url, str(target["repository"]))
+            _validate_expected_identity(identity, target)
+            if target["id"] == "CAND-SRC-NAPS-WINDOW-20260728":
+                outcomes.append({**target, "candidateId": target["id"], "result": "observed-zero-result", "retrievedAt": retrieved_at,
+                    "repositoryIdentity": {"id": identity["id"], "defaultBranch": identity["default_branch"]},
+                    "uncertainty": "Bounded zero-result/default-branch observation only; no content was read.", "authority": "observed-only-not-normative"})
+                continue
+            _validate_tree_target(transport, target)
+            record = collect_immutable_candidate(transport, identity_url, str(target["repository"]), str(target["commitSha"]),
+                str(target["path"]), cache_root, retrieved_at, f"SRC-{target['id'][9:]}", ["EVID-03"])
+            outcomes.append({**target, "candidateId": target["id"], "result": "collected", "retrievedAt": retrieved_at,
+                "repositoryIdentity": {"id": identity["id"], "defaultBranch": identity["default_branch"]},
+                "immutableLocator": record["immutableUrl"], "contentSha256": record["contentSha256"], "sourceRecord": record,
+                "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows.",
+                "authority": "observed-only-not-normative"})
+        except Exception as exc:
+            outcomes.append({**target, "candidateId": target["id"], "result": "failed", "retrievedAt": retrieved_at,
+                "reason": str(exc), "authority": "observed-only-not-normative",
+                "uncertainty": "Bounded candidate failed; no replacement or scope expansion was attempted."})
+    queue = {"schemaVersion": 1, "kind": "bounded-reviewed-public-acquisition-queue", "reviewedSourceInputBinding": binding,
+        "entries": [{key: value for key, value in target.items() if key != "checkpointCommit"} for target in REVIEWED_COLLECTION_TARGETS],
+        "nonNormative": True, "humanAuthorityRequiredBy": ["01-30", "01-31"]}
+    receipt = {"schemaVersion": 1, "kind": "bounded-reviewed-public-acquisition-receipt", "retrievedAt": retrieved_at,
+        "reviewedSourceInputBinding": binding, "outcomes": outcomes,
+        "conclusion": "All collected implementation and release bytes are observed, non-normative evidence pending human authority review; no canonical source record was created."}
+    _write_json(queue_path, queue)
+    _write_json(receipt_path, receipt)
+    _append_history(ROOT / ".planning/research/acquisition-log.yaml", outcomes, retrieved_at)
+    _append_observed_candidates(ROOT / ".planning/research/candidate-source-manifest.yaml", outcomes)
+    # A retained, impact-scoped failed outcome is an expected bounded result. The
+    # receipt remains consumable only through the validator and never substitutes a candidate.
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate and pin bounded Tier 1 source inputs without network writes.")
+    subparsers = parser.add_subparsers(dest="command")
+    collect_parser = subparsers.add_parser("collect", help="collect only the reviewed, bounded public GitHub observation window")
+    collect_parser.add_argument("--queue", type=Path, required=True)
+    collect_parser.add_argument("--receipt", type=Path, required=True)
+    collect_parser.add_argument("--cache-root", type=Path, required=True)
+    validate_parser = subparsers.add_parser("validate-reviewed-acquisition", help="revalidate queue/receipt Git-blob input bindings")
+    validate_parser.add_argument("--queue", type=Path, required=True)
+    validate_parser.add_argument("--receipt", type=Path, required=True)
+    validate_parser.add_argument("--review", type=Path, required=True)
     parser.add_argument("--validate-url", help="validate one candidate URL against the Tier 1 HTTPS allowlist")
     parser.add_argument("--cache-root", default=str(CACHE_ROOT), help="ignored cache path; must remain under .research/upstreams/")
     parser.add_argument("--repository-dir", type=Path, help="existing local clone to inspect; this command does not clone")
@@ -365,24 +621,34 @@ def main() -> int:
     parser.add_argument("--path", help="repository-relative source path to resolve")
     args = parser.parse_args()
 
-    if args.validate_url:
-        error = reject_unallowlisted(args.validate_url)
-        if error:
-            print(error, file=sys.stderr)
-            return 2
-        print("allowlisted")
-        return 0
-
     try:
+        if args.command == "collect":
+            return collect_reviewed_public_window(
+                args.queue, args.receipt, _confined_cache_root(args.cache_root),
+                ROOT / ".planning/phases/01-research-and-truth-baseline/01-REVIEWS.md",
+            )
+        if args.command == "validate-reviewed-acquisition":
+            queue = json.loads(_checked_output_path(args.queue).read_text(encoding="utf-8"))
+            receipt = json.loads(_checked_output_path(args.receipt).read_text(encoding="utf-8"))
+            _revalidate_reviewed_binding(queue, receipt, _checked_output_path(args.review))
+            print("reviewed acquisition binding passed")
+            return 0
+        if args.validate_url:
+            error = reject_unallowlisted(args.validate_url)
+            if error:
+                print(error, file=sys.stderr)
+                return 2
+            print("allowlisted")
+            return 0
         cache_path(args.cache_root)
         if not (args.repository_dir and args.ref and args.path):
-            parser.error("supply --validate-url or --repository-dir, --ref, and --path")
+            parser.error("supply collect, validate-reviewed-acquisition, --validate-url, or --repository-dir, --ref, and --path")
         repository = args.repository_dir.resolve()
         if not (repository / ".git").exists():
             raise ValueError("repository-dir must be an existing local Git clone")
         print(json.dumps(resolve_blob(repository, args.ref, args.path), sort_keys=True))
         return 0
-    except ValueError as exc:
+    except (ValueError, OSError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
 

@@ -1,0 +1,216 @@
+{
+  "entries": [
+    {
+      "affectedClaims": [
+        "DRF-IDENTITY-001"
+      ],
+      "affectedDrift": [
+        "DRF-IDENTITY-001"
+      ],
+      "affectedQuestions": [
+        "OQ-UPSTREAM-BASELINE-001"
+      ],
+      "blobSha": "c9c0ceff963da1e2c5c71f97ddc69afff08d3c57",
+      "commitSha": "4916777862ababd09fa13cf155f4b4079c8e8cb1",
+      "defaultBranch": "main",
+      "evidenceClass": "observed-implementation",
+      "id": "CAND-SRC-NAPPLET-WEB-PR184-20260728",
+      "path": "packages/cli/src/manifest.ts",
+      "refreshTrigger": "NIP-5A/NIP-5D, web release, or default-branch change.",
+      "repository": "napplet/web",
+      "repositoryId": 1197078677,
+      "treeSha": "11d4c67a47fd399f801bf0339885dc3dda9780aa"
+    },
+    {
+      "affectedClaims": [
+        "DRF-INTENT-001",
+        "DRF-MANIFEST-001",
+        "DRF-METADATA-001",
+        "DRF-IDENTITY-001"
+      ],
+      "affectedDrift": [
+        "DRF-INTENT-001",
+        "DRF-MANIFEST-001",
+        "DRF-METADATA-001",
+        "DRF-IDENTITY-001"
+      ],
+      "affectedQuestions": [
+        "OQ-UPSTREAM-BASELINE-001",
+        "OQ-VERIFIED-LOADER-IDENTITY-001",
+        "OQ-VERIFIED-LOADER-MANIFEST-001"
+      ],
+      "blobSha": "1a8db0c46d517edf2374b5e5022b429d8b18191b",
+      "commitSha": "dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b",
+      "defaultBranch": "main",
+      "evidenceClass": "observed-implementation",
+      "id": "CAND-SRC-NAPPLET-WEB-PR186-20260728",
+      "path": "packages/nap/src/convention-uri.ts",
+      "refreshTrigger": "Linked NAP status/revision, web release/default-branch change, or Phase 2 contract review.",
+      "repository": "napplet/web",
+      "repositoryId": 1197078677,
+      "treeSha": "33edc8387973f31687dfb20181a40fe936286824"
+    },
+    {
+      "affectedClaims": [
+        "CLM-CMP-PACKAGE-001"
+      ],
+      "affectedDrift": [
+        "DRF-ARTIFACT-001"
+      ],
+      "affectedQuestions": [
+        "OQ-PUBLIC-PACKAGE-BASELINE-001"
+      ],
+      "blobSha": "d125a4a5ae6d1a8b7409b94be0cb51a6899c2a62",
+      "commitSha": "60889f1c2476e063500c7ab6624af6abe0dbcbe5",
+      "defaultBranch": "main",
+      "evidenceClass": "release-metadata",
+      "id": "CAND-SRC-NAPPLET-WEB-PR188-20260728",
+      "path": "packages/nap/package.json",
+      "refreshTrigger": "Registry/release/integrity/export change or package admission review.",
+      "repository": "napplet/web",
+      "repositoryId": 1197078677,
+      "treeSha": "d1bd6d78bb357506e6f4244537fecd54262f9a55"
+    },
+    {
+      "affectedClaims": [
+        "DRF-HANDSHAKE-001",
+        "DRF-EGRESS-001",
+        "DRF-CONFORMANCE-001"
+      ],
+      "affectedDrift": [
+        "DRF-HANDSHAKE-001",
+        "DRF-EGRESS-001",
+        "DRF-CONFORMANCE-001"
+      ],
+      "affectedQuestions": [
+        "OQ-VERIFIED-LOADER-IDENTITY-001",
+        "OQ-VERIFIED-LOADER-MANIFEST-001",
+        "OQ-VERIFIED-LOADER-VERIFIER-001"
+      ],
+      "blobSha": "d90cab7dcad177c6eacb6f0780b434b5ecffccab",
+      "commitSha": "b85db51db838866de753b275b9d34ec908785bd2",
+      "defaultBranch": "main",
+      "evidenceClass": "observed-implementation",
+      "id": "CAND-SRC-KEHTO-WEB-PR204-20260728",
+      "path": "RUNTIME-SPEC.md",
+      "refreshTrigger": "Listed runtime source-path or default-branch change.",
+      "repository": "kehto/web",
+      "repositoryId": 1204025151,
+      "treeSha": "6ba4a4f6cdd52c2231d80f1ff913f7727720c8a3"
+    },
+    {
+      "affectedClaims": [
+        "CLM-CMP-PACKAGE-001"
+      ],
+      "affectedDrift": [
+        "DRF-ARTIFACT-001"
+      ],
+      "affectedQuestions": [
+        "OQ-PUBLIC-PACKAGE-BASELINE-001"
+      ],
+      "blobSha": "fc6447a2cd05edccd4bd324b29340abcfee2e935",
+      "commitSha": "4eafa058d18cf245b23d49b23bc29dda0b7d7651",
+      "defaultBranch": "main",
+      "evidenceClass": "release-metadata",
+      "id": "CAND-SRC-KEHTO-WEB-PR209-20260728",
+      "path": "packages/runtime/package.json",
+      "refreshTrigger": "Registry integrity/current runtime manifest change.",
+      "repository": "kehto/web",
+      "repositoryId": 1204025151,
+      "treeSha": "24563d1aa55989c09f6134a15b4492c4c66fc8c6"
+    },
+    {
+      "affectedClaims": [
+        "DRF-ARTIFACT-001"
+      ],
+      "affectedDrift": [
+        "DRF-ARTIFACT-001"
+      ],
+      "affectedQuestions": [
+        "OQ-VERIFIED-LOADER-VERIFIER-001"
+      ],
+      "blobSha": "afc424858b74b8917a0529e8065bc6afaaa2e3cc",
+      "commitSha": "54ef2ead03ee0c37727468b8658b6dc224137",
+      "defaultBranch": "main",
+      "evidenceClass": "observed-implementation",
+      "id": "CAND-SRC-KEHTO-WEB-PR211-20260728",
+      "path": "scripts/audit-gateway-artifacts.mjs",
+      "refreshTrigger": "Loader/audit path or default-branch change.",
+      "repository": "kehto/web",
+      "repositoryId": 1204025151,
+      "treeSha": "4e88d775afb6e27ffeef1e143a2477bbe7dd28b6"
+    },
+    {
+      "affectedClaims": [
+        "CLM-UPSTREAM-BASELINE-001"
+      ],
+      "affectedDrift": [
+        "DRF-DISCOVERY-001"
+      ],
+      "affectedQuestions": [
+        "OQ-UPSTREAM-BASELINE-001"
+      ],
+      "defaultBranch": "master",
+      "evidenceClass": "repository-history-observation",
+      "id": "CAND-SRC-NAPS-WINDOW-20260728",
+      "refreshTrigger": "Next bounded rolling-window review; this is not an authority or content source.",
+      "repository": "napplet/naps",
+      "repositoryId": 1202279733
+    }
+  ],
+  "humanAuthorityRequiredBy": [
+    "01-30",
+    "01-31"
+  ],
+  "kind": "bounded-reviewed-public-acquisition-queue",
+  "nonNormative": true,
+  "reviewedSourceInputBinding": {
+    "candidates": [
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR184-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR186-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR188-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR204-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR209-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR211-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPS-WINDOW-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      }
+    ],
+    "parsedRecordSha256": "ad9285d264383e3466ceeaea7142f42ed6d55143b5deb0376ead7974d2bb3369",
+    "parserVersion": "reviewed-refresh-v1",
+    "reportDigests": {
+      ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+      ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+      ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+      ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+    },
+    "reviewedCommit": "1a9449be4d74aa1ceed235d949802266846cf63b",
+    "sourceReportDigests": {
+      ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+      ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+      ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+      ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+    },
+    "sourceSnapshotCommit": "1a9449be4d74aa1ceed235d949802266846cf63b"
+  },
+  "schemaVersion": 1
+}
