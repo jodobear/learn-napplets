@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Wave 3 complete; context guard checkpoint before Wave 4
-last_updated: "2026-07-30T01:27:26Z"
+stopped_at: Wave 4 complete and verified; fresh context required before Wave 5
+last_updated: "2026-07-30T13:05:31.807Z"
 last_activity: 2026-07-30
-last_activity_desc: Plan 01-45 complete; bounded non-normative public acquisition merged and verified
+last_activity_desc: Wave 4 Plans 01-30, 01-32, and 01-33 merged; 67 tests and trust gates passed
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 45
-  completed_plans: 31
+  completed_plans: 34
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 31 of 45 executed; Wave 4 plans 01-30, 01-32, and 01-33 are next
-Status: Wave 3 complete; fresh context required before Wave 4
-Last activity: 2026-07-30 — Plan 01-45 bounded acquisition merged and post-merge verification passed
+Plan: 34 of 45 executed; Wave 5 plans 01-31 and 01-34 are next
+Status: Wave 4 complete; context guard checkpoint before Wave 5
+Last activity: 2026-07-30 — Wave 4 merged and passed 67 tests plus preflight, acquisition, replay, research, schema-drift, and UI-safety gates
 
-Progress: [███████░░░] 69%
+Progress: [████████░░] 76%
 
 ## Performance Metrics
 
@@ -223,6 +223,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-30T01:27:26Z
-Stopped at: Wave 3 complete; context guard checkpoint before Wave 4
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — resume `/gsd-execute-phase 1` at Wave 4
+Last session: 2026-07-30T13:05:31.796Z
+Stopped at: Wave 4 complete and verified; context guard requires a fresh session before Wave 5
+Resume file: none — `.planning/STATE.md` is canonical; resume `/gsd-execute-phase 1` at Wave 5

@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 31/45 plans executed
+**Plans**: 34/45 plans executed
 
 Gap Closure Plans:
 
@@ -77,9 +77,9 @@ Gap Closure Plans:
 
 **Wave 4** *(blocked on Plan 01-45)*
 
-- [ ] 01-30-PLAN.md — Obtain human authority classifications before source ingestion.
-- [ ] 01-32-PLAN.md — Repair citation provenance, strict review parsing, and wrapper invocation.
-- [ ] 01-33-PLAN.md — Bind retained spike evidence and remove manifest command authority.
+- [x] 01-30-PLAN.md — Obtain human authority classifications before source ingestion.
+- [x] 01-32-PLAN.md — Repair citation provenance, strict review parsing, and wrapper invocation.
+- [x] 01-33-PLAN.md — Bind retained spike evidence and remove manifest command authority.
 
 **Wave 5**
 
@@ -470,7 +470,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 31/45 | In Progress|  |
+| 1. Research and Truth Baseline | 34/45 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
