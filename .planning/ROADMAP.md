@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 43/45 plans executed
+**Plans**: 44/45 plans executed
 
 Gap Closure Plans:
 
@@ -113,7 +113,7 @@ Gap Closure Plans:
 
 **Wave 12**
 
-- [ ] 01-39-PLAN.md — Record ASVS L1 security remediation review.
+- [x] 01-39-PLAN.md — Record ASVS L1 security remediation review.
 
 **Wave 13**
 
@@ -470,7 +470,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 43/45 | In Progress|  |
+| 1. Research and Truth Baseline | 44/45 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
