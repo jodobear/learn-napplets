@@ -1,5 +1,6 @@
 import copy
 import hashlib
+import importlib.util
 import json
 import subprocess
 import tempfile
@@ -37,6 +38,43 @@ class CompatibilitySchema(unittest.TestCase):
             self.assertEqual(record['releaseState']['commitSha'], record['currentWork']['commitSha'])
             self.assertIn('public exports only', record['scope'])
             self.assertIn('status', record)
+
+    def test_compatibility_v1_to_v2_migration(self):
+        migration_path = ROOT / 'tools/migrate-phase1-records.py'
+        spec = importlib.util.spec_from_file_location('phase1_migrate_records', migration_path)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        legacy = ROOT / '.planning/research/schemas/fixtures/compatibility-v1-legacy.yaml'
+        expected = ROOT / '.planning/research/schemas/fixtures/compatibility-v2-current.yaml'
+        migrated = module.migrate_compatibility_v1_to_v2(yaml.safe_load(legacy.read_text()))
+        self.assertEqual(module.compatibility_yaml_bytes(migrated), expected.read_bytes())
+        record = migrated['compatibility'][0]
+        self.assertEqual(migrated['schemaVersion'], 2)
+        self.assertEqual(
+            [dimension['name'] for dimension in record['dimensions']],
+            ['normativeProtocol', 'observedImplementation', 'publishedPackage', 'runtime', 'exampleFixture', 'currentWork', 'conformance'],
+        )
+        self.assertTrue(all(dimension['status'] == 'blocked' for dimension in record['dimensions']))
+        self.assertNotIn('baselineEligibility', record)
+        self.assertEqual(record['sourceBaseline'][0]['sourceId'], 'SRC-POLICY-001')
+        self.assertEqual(record['packages'], ['CLM-CMP-PACKAGE-001'])
+        self.assertEqual(record['knownDrift'], ['DRF-ARTIFACT-001', 'DRF-CONFORMANCE-001', 'DRF-DISCOVERY-001', 'DRF-EGRESS-001', 'DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001', 'DRF-HANDSHAKE-001', 'DRF-IDENTITY-001', 'DRF-INTENT-001', 'DRF-MANIFEST-001', 'DRF-METADATA-001', 'DRF-UNKNOWN-MESSAGES-001'])
+        self.assertEqual(module.migrate_compatibility_v1_to_v2(migrated), migrated)
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            temporary_path = Path(temporary)
+            output = temporary_path / 'compatibility.yaml'
+            module.migrate_compatibility_file(legacy, output)
+            self.assertEqual(output.read_bytes(), expected.read_bytes())
+            malformed = temporary_path / 'malformed.yaml'
+            malformed.write_text('schemaVersion: 1\ncompatibility: bad\n')
+            rejected = subprocess.run(
+                [str(ROOT / 'tools/phase1-python'), str(migration_path), 'migrate-compatibility', '--input', str(malformed), '--output', str(temporary_path / 'must-not-exist.yaml')],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertFalse((temporary_path / 'must-not-exist.yaml').exists())
 
     def _registry_command(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
