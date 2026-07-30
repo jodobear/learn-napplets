@@ -4,7 +4,7 @@ kind: spike-impact-fragment
 fragmentId: SPK-H-IMPACT-001
 spikeId: SPK-H-BROWSER-EGRESS
 metadataPath: spikes/spk-h-browser-egress/metadata.yaml
-metadataSha256: 1f6e42f81ce9f1ae765d9166eb9b09676f67c366e410feb744626127ba84fbfb
+metadataSha256: f0f5da74309fab1c7fc75c9d680b257cad849a718e203ad856204d0feb096a18
 reportPath: spikes/spk-h-browser-egress/report.md
 reportSha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
 measurementPath: spikes/spk-h-browser-egress/measurements.yaml
@@ -28,7 +28,7 @@ evidenceLinks:
     sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
   - kind: metadata
     path: spikes/spk-h-browser-egress/metadata.yaml
-    sha256: 1f6e42f81ce9f1ae765d9166eb9b09676f67c366e410feb744626127ba84fbfb
+    sha256: f0f5da74309fab1c7fc75c9d680b257cad849a718e203ad856204d0feb096a18
   - kind: measurement
     path: spikes/spk-h-browser-egress/measurements.yaml
     sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
