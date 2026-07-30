@@ -103,6 +103,76 @@ class DriftSchemas(unittest.TestCase):
             self.assertEqual(question['status'], 'blocked')
             self.assertTrue(question['blockedDecisions'])
 
+    def test_drift_v1_to_v2_migration(self):
+        script = ROOT / 'tools' / 'migrate-phase1-records.py'
+        legacy = ROOT / '.planning/research/schemas/fixtures/drift-v1-legacy.yaml'
+        expected = ROOT / '.planning/research/schemas/fixtures/drift-v2-current.yaml'
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            malformed = root / 'malformed-v1.yaml'
+            malformed.write_text('schemaVersion: 1\ndrift: not-a-list\n')
+            malformed_output = root / 'malformed-v2.yaml'
+            malformed_result = __import__('subprocess').run(
+                [__import__('sys').executable, str(script), 'migrate-drift', '--input', str(malformed), '--output', str(malformed_output)],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertNotEqual(malformed_result.returncode, 0)
+            self.assertFalse(malformed_output.exists())
+            output = root / 'drift-v2.yaml'
+            first = __import__('subprocess').run(
+                [__import__('sys').executable, str(script), 'migrate-drift', '--input', str(legacy), '--output', str(output)],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(first.returncode, 0, first.stderr + first.stdout)
+            self.assertEqual(output.read_bytes(), expected.read_bytes())
+            first_bytes = output.read_bytes()
+            second = __import__('subprocess').run(
+                [__import__('sys').executable, str(script), 'migrate-drift', '--input', str(output), '--output', str(output)],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(second.returncode, 0, second.stderr + second.stdout)
+            self.assertEqual(output.read_bytes(), first_bytes)
+            old = yaml.safe_load(legacy.read_text())
+            current = yaml.safe_load(output.read_text())
+            self.assertEqual(
+                sorted(item['id'] for item in old['drift']),
+                sorted(item['id'] for item in current['drift']),
+            )
+            for before, after in zip(sorted(old['drift'], key=lambda item: item['id']), current['drift']):
+                self.assertEqual(before['history'], after['history'])
+                self.assertEqual(before['normative']['claimId'], after['normative']['claimId'])
+                self.assertEqual(before['observed']['claimId'], after['observed']['claimId'])
+
+    def test_drift_records_sort_ids_observations_impacts_and_history(self):
+        script = ROOT / 'tools' / 'migrate-phase1-records.py'
+        legacy = {
+            'schemaVersion': 1,
+            'drift': [
+                copy.deepcopy(DRIFT_RECORD) | {'id': 'DRF-Z-001', 'impacts': {'content': ['Z', 'A'], 'code': ['z', 'A'], 'knowledge': ['z', 'A'], 'requirements': ['EVID-04', 'EVID-01'], 'phases': ['10', '01']}, 'history': [{'at': '2026-07-25T00:00:00Z', 'state': 'blocked', 'reason': 'z'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'b'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}]},
+                copy.deepcopy(DRIFT_RECORD) | {'id': 'DRF-A-001'},
+            ],
+            'observedLocal': [
+                {'id': 'OBS-Z-001', 'class': 'observed-local'},
+                {'id': 'OBS-A-001', 'class': 'observed-local'},
+            ],
+        }
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / 'legacy.yaml'
+            output = root / 'current.yaml'
+            source.write_text(yaml.safe_dump(legacy, sort_keys=False))
+            result = __import__('subprocess').run(
+                [__import__('sys').executable, str(script), 'migrate-drift', '--input', str(source), '--output', str(output)],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            current = yaml.safe_load(output.read_text())
+            self.assertEqual([item['id'] for item in current['drift']], ['DRF-A-001', 'DRF-Z-001'])
+            self.assertEqual([item['id'] for item in current['observedLocal']], ['OBS-A-001', 'OBS-Z-001'])
+            record = current['drift'][1]
+            self.assertEqual(record['impacts'], {'content': ['A', 'Z'], 'code': ['A', 'z'], 'knowledge': ['A', 'z'], 'requirements': ['EVID-01', 'EVID-04'], 'phases': ['01', '10']})
+            self.assertEqual(record['history'], [{'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'b'}, {'at': '2026-07-25T00:00:00Z', 'state': 'blocked', 'reason': 'z'}])
+
 
 class RefreshComparisonTests(unittest.TestCase):
     script = ROOT / 'tools' / 'refresh-sources.py'
