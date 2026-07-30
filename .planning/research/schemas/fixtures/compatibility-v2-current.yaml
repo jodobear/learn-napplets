@@ -3,7 +3,8 @@ compatibility:
 - id: CMP-BASELINE-001
   kind: compatibility
   status: blocked
-  scope: Immutable release/current-work comparison baseline; public exports only; private monorepo paths are not evidence.
+  scope: Immutable release/current-work comparison baseline; public exports only;
+    private monorepo paths are not evidence.
   sourceBaseline:
   - sourceId: SRC-POLICY-001
     commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
@@ -13,12 +14,28 @@ compatibility:
     commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
     path: .planning/governance/evidence-policy.md
     contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-  packages: [CLM-CMP-PACKAGE-001]
-  runtimes: [CLM-CMP-RUNTIME-001]
-  examples: [CLM-CMP-EXAMPLE-001]
-  fixtures: [CLM-CMP-FIXTURE-001]
-  knownDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001, DRF-DISCOVERY-001, DRF-EGRESS-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001, DRF-HANDSHAKE-001, DRF-IDENTITY-001, DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001, DRF-UNKNOWN-MESSAGES-001]
-  testEvidence: [CLM-CMP-TEST-001]
+  packages:
+  - CLM-CMP-PACKAGE-001
+  runtimes:
+  - CLM-CMP-RUNTIME-001
+  examples:
+  - CLM-CMP-EXAMPLE-001
+  fixtures:
+  - CLM-CMP-FIXTURE-001
+  knownDrift:
+  - DRF-ARTIFACT-001
+  - DRF-CONFORMANCE-001
+  - DRF-DISCOVERY-001
+  - DRF-EGRESS-001
+  - DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  - DRF-HANDSHAKE-001
+  - DRF-IDENTITY-001
+  - DRF-INTENT-001
+  - DRF-MANIFEST-001
+  - DRF-METADATA-001
+  - DRF-UNKNOWN-MESSAGES-001
+  testEvidence:
+  - CLM-CMP-TEST-001
   observedAt: '2026-07-24T00:00:00Z'
   releaseState:
     sourceId: SRC-POLICY-001
@@ -101,15 +118,3 @@ compatibility:
       locator: commit:c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0 path:docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
       contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
     missingReason: No independent conformance evidence is retained.
-  baselineEligibility:
-    status: blocked
-    approval: not-approved
-    reasons:
-    - DIMENSION_NORMATIVE_PROTOCOL_BLOCKED
-    - DIMENSION_OBSERVED_IMPLEMENTATION_BLOCKED
-    - DIMENSION_PUBLISHED_PACKAGE_BLOCKED
-    - DIMENSION_RUNTIME_BLOCKED
-    - DIMENSION_EXAMPLE_FIXTURE_BLOCKED
-    - DIMENSION_CURRENT_WORK_BLOCKED
-    - DIMENSION_CONFORMANCE_BLOCKED
-    - APPROVAL_NOT_GRANTED

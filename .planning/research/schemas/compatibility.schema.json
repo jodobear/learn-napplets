@@ -1,10 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-napplets.local/schemas/compatibility.schema.json",
-  "title": "Immutable-baseline compatibility record",
+  "title": "Substantive immutable-baseline compatibility record",
+  "description": "Schema version 2. A blocked dimension records missing evidence without synthesizing qualification, eligibility, approval, or an ADR decision.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "kind", "sourceBaseline", "packages", "runtimes", "examples", "fixtures", "knownDrift", "testEvidence", "observedAt", "releaseState", "currentWork"],
+  "required": ["id", "kind", "sourceBaseline", "packages", "runtimes", "examples", "fixtures", "knownDrift", "testEvidence", "observedAt", "releaseState", "currentWork", "dimensions"],
   "properties": {
     "id": {"type": "string", "pattern": "^CMP-[A-Z0-9][A-Z0-9-]*$"},
     "kind": {"const": "compatibility"},
@@ -19,10 +20,70 @@
     "releaseState": {"$ref": "#/$defs/pin"},
     "currentWork": {"$ref": "#/$defs/pin"},
     "status": {"enum": ["compatible", "incompatible", "blocked", "review-required"]},
-    "scope": {"type": "string", "minLength": 1}
+    "scope": {"type": "string", "minLength": 1},
+    "dimensions": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/dimension"},
+      "allOf": [
+        {"contains": {"properties": {"name": {"const": "normativeProtocol"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "observedImplementation"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "publishedPackage"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "runtime"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "exampleFixture"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "currentWork"}}, "required": ["name"]}},
+        {"contains": {"properties": {"name": {"const": "conformance"}}, "required": ["name"]}}
+      ]
+    },
+    "baselineEligibility": {"$ref": "#/$defs/baselineEligibility"}
   },
   "$defs": {
     "ref": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Z0-9][A-Z0-9-]*$"},
-    "pin": {"type": "object", "additionalProperties": false, "required": ["sourceId", "commitSha", "path", "contentSha256"], "properties": {"sourceId": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"}, "commitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}, "path": {"type": "string", "minLength": 1}, "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
+    "pin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "commitSha", "path", "contentSha256"],
+      "properties": {
+        "sourceId": {"type": "string", "pattern": "^SRC-[A-Z0-9][A-Z0-9-]*$"},
+        "commitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "path": {"type": "string", "minLength": 1},
+        "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "relation", "locator", "contentSha256"],
+      "properties": {
+        "id": {"$ref": "#/$defs/ref"},
+        "relation": {"enum": ["candidate", "supports", "measures", "observes", "blocks"]},
+        "locator": {"type": "string", "minLength": 1},
+        "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status", "evidenceClassExpectation", "authorityExpectation", "references", "missingReason"],
+      "properties": {
+        "name": {"enum": ["normativeProtocol", "observedImplementation", "publishedPackage", "runtime", "exampleFixture", "currentWork", "conformance"]},
+        "status": {"enum": ["blocked", "pending-review", "qualified", "invalid", "stale"]},
+        "evidenceClassExpectation": {"type": "string", "minLength": 1},
+        "authorityExpectation": {"type": "string", "minLength": 1},
+        "references": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidenceRef"}},
+        "missingReason": {"type": "string", "minLength": 1}
+      }
+    },
+    "baselineEligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approval", "reasons"],
+      "properties": {
+        "status": {"enum": ["eligible", "blocked", "review-required"]},
+        "approval": {"enum": ["not-approved", "approved"]},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    }
   }
 }

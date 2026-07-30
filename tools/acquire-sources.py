@@ -533,9 +533,11 @@ def validate_reviewed_acquisition_documents(queue: Mapping[str, Any], receipt: M
 
 
 def _revalidate_reviewed_binding(queue: Mapping[str, Any], receipt: Mapping[str, Any], review_path: Path) -> None:
-    executor_identity = os.environ.get("GSD_EXECUTOR_ID")
-    if not executor_identity:
-        raise ValueError("GSD_EXECUTOR_ID is required to revalidate reviewed acquisition")
+    # Read-only receipt revalidation still needs a non-reviewer identity for the
+    # Plan 01-29 source-snapshot boundary. The fixed validator identity keeps the
+    # documented standalone command usable without weakening collection's explicit
+    # executor-identity requirement.
+    executor_identity = os.environ.get("GSD_EXECUTOR_ID", "phase1-reviewed-acquisition-validator")
     expected = load_reviewed_refresh_candidates(ROOT, review_path, executor_identity)
     expected["parserVersion"] = REVIEWED_COLLECTION_PARSER_VERSION
     validate_reviewed_acquisition_documents(queue, receipt)

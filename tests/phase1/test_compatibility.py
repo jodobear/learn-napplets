@@ -1,6 +1,9 @@
+import builtins
 import copy
 import hashlib
+import importlib.util
 import json
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -15,7 +18,11 @@ MATRIX=ROOT/'.planning/research/compatibility-matrix.yaml'
 SNAPSHOT=ROOT/'.planning/research/open-work-snapshot.json'
 SHA='a'*64; COMMIT='0'*40
 PIN={'sourceId':'SRC-POLICY-001','commitSha':COMMIT,'path':'policy.md','contentSha256':SHA}
-RECORD={'id':'CMP-POLICY-001','kind':'compatibility','sourceBaseline':[PIN],'packages':['PKG-POLICY-001'],'runtimes':['RUN-POLICY-001'],'examples':['EXM-POLICY-001'],'fixtures':['FIX-POLICY-001'],'knownDrift':['DRF-POLICY-001'],'testEvidence':['TST-POLICY-001'],'observedAt':'2026-07-24T00:00:00Z','releaseState':PIN,'currentWork':copy.deepcopy(PIN)}
+DIMENSIONS=[
+    {'name': name, 'status': 'blocked', 'evidenceClassExpectation': 'test evidence', 'authorityExpectation': 'test authority', 'references': [{'id': 'SRC-POLICY-001', 'relation': 'candidate', 'locator': 'commit:test path:policy.md', 'contentSha256': SHA}], 'missingReason': 'test-only blocked dimension'}
+    for name in ('normativeProtocol', 'observedImplementation', 'publishedPackage', 'runtime', 'exampleFixture', 'currentWork', 'conformance')
+]
+RECORD={'id':'CMP-POLICY-001','kind':'compatibility','sourceBaseline':[PIN],'packages':['PKG-POLICY-001'],'runtimes':['RUN-POLICY-001'],'examples':['EXM-POLICY-001'],'fixtures':['FIX-POLICY-001'],'knownDrift':['DRF-POLICY-001'],'testEvidence':['TST-POLICY-001'],'observedAt':'2026-07-24T00:00:00Z','releaseState':PIN,'currentWork':copy.deepcopy(PIN),'dimensions':DIMENSIONS}
 
 
 class CompatibilitySchema(unittest.TestCase):
@@ -37,6 +44,143 @@ class CompatibilitySchema(unittest.TestCase):
             self.assertEqual(record['releaseState']['commitSha'], record['currentWork']['commitSha'])
             self.assertIn('public exports only', record['scope'])
             self.assertIn('status', record)
+
+    def test_compatibility_v1_to_v2_migration(self):
+        migration_path = ROOT / 'tools/migrate-phase1-records.py'
+        spec = importlib.util.spec_from_file_location('phase1_migrate_records', migration_path)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        legacy = ROOT / '.planning/research/schemas/fixtures/compatibility-v1-legacy.yaml'
+        expected = ROOT / '.planning/research/schemas/fixtures/compatibility-v2-current.yaml'
+        migrated = module.migrate_compatibility_v1_to_v2(yaml.safe_load(legacy.read_text()))
+        self.assertEqual(module.compatibility_yaml_bytes(migrated), expected.read_bytes())
+        record = migrated['compatibility'][0]
+        self.assertEqual(migrated['schemaVersion'], 2)
+        self.assertEqual(
+            [dimension['name'] for dimension in record['dimensions']],
+            ['normativeProtocol', 'observedImplementation', 'publishedPackage', 'runtime', 'exampleFixture', 'currentWork', 'conformance'],
+        )
+        self.assertTrue(all(dimension['status'] == 'blocked' for dimension in record['dimensions']))
+        self.assertNotIn('baselineEligibility', record)
+        self.assertEqual(record['sourceBaseline'][0]['sourceId'], 'SRC-POLICY-001')
+        self.assertEqual(record['packages'], ['CLM-CMP-PACKAGE-001'])
+        self.assertEqual(record['knownDrift'], ['DRF-ARTIFACT-001', 'DRF-CONFORMANCE-001', 'DRF-DISCOVERY-001', 'DRF-EGRESS-001', 'DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001', 'DRF-HANDSHAKE-001', 'DRF-IDENTITY-001', 'DRF-INTENT-001', 'DRF-MANIFEST-001', 'DRF-METADATA-001', 'DRF-UNKNOWN-MESSAGES-001'])
+        self.assertEqual(module.migrate_compatibility_v1_to_v2(migrated), migrated)
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            temporary_path = Path(temporary)
+            output = temporary_path / 'compatibility.yaml'
+            module.migrate_compatibility_file(legacy, output)
+            self.assertEqual(output.read_bytes(), expected.read_bytes())
+            malformed = temporary_path / 'malformed.yaml'
+            malformed.write_text('schemaVersion: 1\ncompatibility: bad\n')
+            rejected = subprocess.run(
+                [str(ROOT / 'tools/phase1-python'), str(migration_path), 'migrate-compatibility', '--input', str(malformed), '--output', str(temporary_path / 'must-not-exist.yaml')],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertFalse((temporary_path / 'must-not-exist.yaml').exists())
+
+    def _research_validator(self):
+        spec = importlib.util.spec_from_file_location('phase1_research_validator', ROOT / 'tools/validate-research.py')
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def _compatibility_snapshot(self, module, planning: Path = ROOT / '.planning'):
+        return {
+            relative: (planning / relative).read_bytes()
+            for relative in module.COMPATIBILITY_SNAPSHOT_TARGETS
+        }
+
+    def test_baseline_eligibility_requires_all_substantive_dimensions_without_approval(self):
+        module = self._research_validator()
+        snapshot = self._compatibility_snapshot(module)
+        index = module.build_compatibility_snapshot_index(snapshot)
+        baseline = module.evaluate_compatibility_baseline(index)
+        self.assertEqual(baseline['status'], 'blocked')
+        self.assertEqual(baseline['approval'], 'not-approved')
+        self.assertEqual(
+            baseline['reasons'],
+            ['DIMENSION_NORMATIVE_PROTOCOL_BLOCKED', 'DIMENSION_OBSERVED_IMPLEMENTATION_BLOCKED', 'DIMENSION_PUBLISHED_PACKAGE_BLOCKED', 'DIMENSION_RUNTIME_BLOCKED', 'DIMENSION_EXAMPLE_FIXTURE_BLOCKED', 'DIMENSION_CURRENT_WORK_BLOCKED', 'DIMENSION_CONFORMANCE_BLOCKED', 'APPROVAL_NOT_GRANTED'],
+        )
+        for dimension in ('normativeProtocol', 'observedImplementation', 'publishedPackage', 'runtime', 'exampleFixture', 'currentWork', 'conformance'):
+            with self.subTest(dimension=dimension):
+                mutated = dict(snapshot)
+                matrix = yaml.safe_load(mutated['research/compatibility-matrix.yaml'])
+                record = matrix['compatibility'][0]
+                for item in record['dimensions']:
+                    item['status'] = 'qualified'
+                next(item for item in record['dimensions'] if item['name'] == dimension)['status'] = 'blocked'
+                record['baselineEligibility'] = {'status': 'review-required', 'approval': 'not-approved', 'reasons': []}
+                mutated['research/compatibility-matrix.yaml'] = yaml.safe_dump(matrix, sort_keys=False).encode()
+                result = module.evaluate_compatibility_baseline(module.build_compatibility_snapshot_index(mutated))
+                self.assertEqual(result['status'], 'blocked')
+                self.assertIn(f"DIMENSION_{module.dimension_reason_token(dimension)}_BLOCKED", result['reasons'])
+        complete = dict(snapshot)
+        matrix = yaml.safe_load(complete['research/compatibility-matrix.yaml'])
+        record = matrix['compatibility'][0]
+        for item in record['dimensions']:
+            item['status'] = 'qualified'
+        record['baselineEligibility'] = {'status': 'eligible', 'approval': 'not-approved', 'reasons': []}
+        complete['research/compatibility-matrix.yaml'] = yaml.safe_dump(matrix, sort_keys=False).encode()
+        result = module.evaluate_compatibility_baseline(module.build_compatibility_snapshot_index(complete))
+        self.assertEqual(result['status'], 'blocked')
+        self.assertEqual(result['approval'], 'not-approved')
+        self.assertIn('APPROVAL_NOT_GRANTED', result['reasons'])
+        self.assertFalse(result['architectureApproved'])
+
+    def test_compatibility_evaluation_rejects_unbound_reviewed_acquisition_provenance(self):
+        module = self._research_validator()
+        snapshot = self._compatibility_snapshot(module)
+        queue = json.loads(snapshot['research/upstream-acquisition-queue.yaml'])
+        queue['reviewedSourceInputBinding']['reviewedCommit'] = '0' * 40
+        snapshot['research/upstream-acquisition-queue.yaml'] = json.dumps(queue).encode()
+        result = module.evaluate_compatibility_baseline(module.build_compatibility_snapshot_index(snapshot))
+        self.assertEqual(result['status'], 'blocked')
+        self.assertEqual(result['reasons'], ['PROVENANCE_REVIEWED_ACQUISITION_INVALID'])
+
+    def test_compatibility_evaluation_uses_one_registered_snapshot_during_successful_publish(self):
+        module = self._research_validator()
+        recovery = module.canonical_recovery_module()
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            planning = Path(temporary) / '.planning'
+            shutil.copytree(ROOT / '.planning/research', planning / 'research')
+            shutil.copytree(ROOT / '.planning/spikes/spk-g-package-conformance', planning / 'spikes/spk-g-package-conformance')
+            old_snapshot = recovery.read_canonical_snapshot('compatibility-baseline', module.COMPATIBILITY_SNAPSHOT_TARGETS, root=planning)
+            old_index = module.build_compatibility_snapshot_index(old_snapshot)
+            old_result = module.evaluate_compatibility_baseline(old_index)
+            staged = {relative: old_snapshot[relative] for relative in module.COMPATIBILITY_SNAPSHOT_TARGETS}
+            staged['research/claims.yaml'] += b'\n# successful-publisher-generation\n'
+            published = []
+            def publish_after_first_index_access():
+                recovery.publish_generation(planning, staged)
+                published.append(True)
+            self.assertEqual(
+                module.evaluate_registered_compatibility(planning, after_snapshot=publish_after_first_index_access),
+                old_result,
+            )
+            self.assertEqual(published, [True])
+            self.assertEqual(module.evaluate_compatibility_baseline(old_index), old_result)
+            self.assertEqual(old_result['familyDigests'], module.compatibility_family_digests(old_index))
+            guarded = module.build_compatibility_snapshot_index(old_snapshot)
+            original_open = builtins.open
+            original_read_bytes = Path.read_bytes
+            original_read_text = Path.read_text
+            def refuse_canonical_open(*args, **kwargs):
+                raise AssertionError('compatibility evaluator reopened a canonical path after snapshot acquisition')
+            builtins.open = refuse_canonical_open
+            Path.read_bytes = refuse_canonical_open
+            Path.read_text = refuse_canonical_open
+            try:
+                self.assertEqual(module.evaluate_compatibility_baseline(guarded), old_result)
+            finally:
+                builtins.open = original_open
+                Path.read_bytes = original_read_bytes
+                Path.read_text = original_read_text
 
     def _registry_command(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
