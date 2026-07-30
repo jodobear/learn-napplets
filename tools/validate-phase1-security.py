@@ -21,6 +21,9 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FINDINGS = tuple([f"CR-{number:02d}" for number in range(1, 10)] + [f"WR-{number:02d}" for number in range(1, 4)])
+BOUND_FINDING_FIELDS = (
+    "id", "threat", "severity", "primary_coverage", "disposition", "command", "result", "source_path", "applicable_asvs_ids",
+)
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ASVS_ID = re.compile(r"^v5\.0\.0-[A-Za-z0-9.-]+$")
 SEC_ID = re.compile(r"^SEC-[1-9][0-9]{2,}$")
@@ -264,8 +267,16 @@ def validate_real_bindings(
 
 def validate(security_path: Path, evidence_path: Path, matrix_path: Path, reviewed_commit: str, fixture_mode: bool) -> list[str]:
     errors: list[str] = []
+    if reviewed_commit == "HEAD":
+        try:
+            reviewed_commit = subprocess.check_output(
+                ["git", "rev-parse", "--verify", "HEAD^{commit}"], cwd=ROOT, text=True
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            error(errors, "--reviewed-commit HEAD could not resolve to a Git commit")
+            return errors
     if re.fullmatch(r"[0-9a-f]{40}", reviewed_commit) is None:
-        error(errors, "--reviewed-commit must be a 40-character Git commit")
+        error(errors, "--reviewed-commit must be HEAD or a 40-character Git commit")
         return errors
     executor = os.environ.get("GSD_EXECUTOR_ID", "")
     if not executor:
@@ -288,8 +299,11 @@ def validate(security_path: Path, evidence_path: Path, matrix_path: Path, review
     if evidence.get("reviewed_commit") != reviewed_commit:
         error(errors, "evidence reviewed_commit is not the requested reviewed commit")
     for finding_id in REQUIRED_FINDINGS:
-        if finding_id in evidence_findings and finding_id in review_findings and evidence_findings[finding_id] != review_findings[finding_id]:
-            error(errors, f"{finding_id} review evidence does not exactly match the remediation dossier")
+        if finding_id in evidence_findings and finding_id in review_findings:
+            evidence_binding = {key: evidence_findings[finding_id].get(key) for key in BOUND_FINDING_FIELDS}
+            review_binding = {key: review_findings[finding_id].get(key) for key in BOUND_FINDING_FIELDS}
+            if evidence_binding != review_binding:
+                error(errors, f"{finding_id} review evidence does not exactly match the remediation dossier")
     if review.get("asvs_level") != "L1":
         error(errors, "security review must declare asvs_level L1")
     if review.get("blocking_threshold") != "high":

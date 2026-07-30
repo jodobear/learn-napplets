@@ -176,8 +176,12 @@ class SecurityReviewTests(unittest.TestCase):
 
     def test_asvs_l1_register_requires_required_cr_wr_and_allows_sec_findings(self) -> None:
         evidence = base_evidence()
+        for finding in evidence["findings"]:
+            finding["evidence_locator"] = f"evidence/{finding['id']}"
         matrix = base_matrix()
         review = passing_review(evidence)
+        for finding in review["findings"]:
+            finding.pop("evidence_locator")
         self.assertEqual(self.run_validator(review, evidence, matrix).returncode, 0)
         cases = {
             "missing-required": lambda target: target["findings"].pop(),
