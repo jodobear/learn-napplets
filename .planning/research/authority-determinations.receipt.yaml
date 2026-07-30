@@ -1,0 +1,16 @@
+schemaVersion: 1
+kind: authority-determinations-receipt
+authorityArtifactPath: .planning/research/authority-determinations.yaml
+authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+scopeIds:
+  - CAND-SRC-KEHTO-WEB-PR204-20260728
+  - CAND-SRC-KEHTO-WEB-PR209-20260728
+  - CAND-SRC-KEHTO-WEB-PR211-20260728
+  - CAND-SRC-NAPPLET-WEB-PR184-20260728
+  - CAND-SRC-NAPPLET-WEB-PR186-20260728
+  - CAND-SRC-NAPPLET-WEB-PR188-20260728
+  - CAND-SRC-NAPS-WINDOW-20260728
+reviewerIdentity: project-owner
+generatedAt: '2026-07-30T12:37:22.760501Z'
