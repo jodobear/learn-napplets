@@ -1,16 +1,17 @@
 schemaVersion: 1
 spikeId: SPK-G-PACKAGE-CONFORMANCE
-classification: dependency-free blocked supply-chain and source-baseline observation
-measuredAt: '2026-07-24T08:42:56Z'
+classification: recovery-guarded dependency-free blocked supply-chain observation
+measuredAt: '2026-07-30T17:31:51Z'
 nonProduction: true
 fixture:
   path: fixture.md
-  sha256: 2481ad99caed14b4e72af36ec87cf19f0ca62aa7e2e7498016582917d192172b
+  sha256: 10a67ca7a4c0b70b6f552cc485493a6a6c595ae2441e90ddd090536675fa627b
   outcome: >-
-    The fixture declares no package import because no exact released public
-    package/version/export is cataloged and approved.
+    The recovered canonical snapshot has no qualified, dated-approved public
+    package candidate, so all five samples retained a no-operation blocker.
 replay:
-  command: tools/phase1-python -c spk-g-blocked-package-gate
+  command: tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --run-five
+  commandSha256: f37012abbb1eb806b6d2a6094476231e63d43acae5343b35fa9274e253876c80
   toolchain: CPython 3.14.3 via tools/phase1-python
   deterministicInput: true
   repetitionsRequired: 5
@@ -18,15 +19,19 @@ replay:
   networkDuringMeasurement: false
   packageInstallation: false
   packageImport: false
-  browserExecution: not-used
+  browserExecution: not-used; Firefox pre-attachment blocker unchanged
   exitCodes: [0, 0, 0, 0, 0]
-  expectedBlockedCode: SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+  expectedBlockedCode: SPK-G-BLOCKED-ELIGIBILITY
   observedBlockedCodePerSample:
-    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
-    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
-    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
-    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
-    - SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE
+    - SPK-G-BLOCKED-ELIGIBILITY
+    - SPK-G-BLOCKED-ELIGIBILITY
+    - SPK-G-BLOCKED-ELIGIBILITY
+    - SPK-G-BLOCKED-ELIGIBILITY
+    - SPK-G-BLOCKED-ELIGIBILITY
+  snapshotDigest: f0a1635a20b147a722fb992d24c7c87de681d830f176fd6f890c9c3d77dcb7f0
+  operationCountPerSample: [0, 0, 0, 0, 0]
+  operationCountRange: {min: 0, max: 0}
+  operationCountMedian: 0
 measurements:
   - name: eligible-public-package-count
     nondeterministic: false
@@ -55,22 +60,34 @@ measurements:
     median: 0
 candidateDisposition:
   catalogEntry: CAND-NAPPLET-WEB-PACKAGE
-  approval: blocked
+  approval: not-approved
   disposition: blocked
-  reason: >-
-    No exact released public package version, documented public export locator,
-    official registry/project provenance, license, release integrity, distinct
-    immutable release/implementation source baselines, or public conformance
-    target is cataloged through CLM-CMP-PACKAGE-001.
+  reasons:
+    - DIMENSION_NORMATIVE_PROTOCOL_BLOCKED
+    - DIMENSION_OBSERVED_IMPLEMENTATION_BLOCKED
+    - DIMENSION_PUBLISHED_PACKAGE_BLOCKED
+    - DIMENSION_RUNTIME_BLOCKED
+    - DIMENSION_EXAMPLE_FIXTURE_BLOCKED
+    - DIMENSION_CURRENT_WORK_BLOCKED
+    - DIMENSION_CONFORMANCE_BLOCKED
+    - APPROVAL_NOT_GRANTED
+    - PACKAGE_ARTIFACT_NOT_QUALIFIED
+    - PACKAGE_APPROVAL_NOT_DATED_OR_APPROVED
+  safeFallback: Keep the deterministic static learning path dependency-free.
+  refreshTrigger: >-
+    Collect and review an exact official package artifact, complete each blocked
+    compatibility dimension, and record a separately dated approval before retrying.
 relevantErrors:
+  - primitive: canonical-package-evidence-snapshot
+    error: >-
+      Recovered mapping was complete, but its substantive eligibility result was
+      blocked before sandbox argv construction or package operation.
   - primitive: package-installation
-    error: not-run because the human decision blocked CAND-NAPPLET-WEB-PACKAGE and no exact package/version exists
+    error: not-run because no exact qualified, dated-approved package candidate exists
   - primitive: public-export-import
-    error: not-run because no documented package-root public export locator exists
-  - primitive: compile-check
-    error: not-run because no exact package/version or reviewed public export is eligible
+    error: not-run because no documented package-root export exists
   - primitive: conformance-check
-    error: not-run because no public conformance target or immutable source baseline exists
+    error: not-run because no public conformance target or independent runtime result exists
 repositoryBoundary:
   productionMarkersCreatedOutsideSpike: []
   networkTargets: []

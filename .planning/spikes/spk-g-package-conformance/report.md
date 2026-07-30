@@ -6,7 +6,7 @@ Metadata path: metadata.yaml
 
 ## Research question
 
-Can a cataloged released public package export be consumed in an isolated fixture against recorded public release and implemented-source baselines without importing private upstream internals?
+Can a cataloged released public package export be measured in an isolated fixture without treating package behavior as protocol authority or bypassing the package, snapshot, sandbox, or Firefox boundaries?
 
 ## Sources and immutable revisions
 
@@ -17,9 +17,9 @@ Can a cataloged released public package export be consumed in an isolated fixtur
 
 ## Observations
 
-**Observed implementation behavior:** five dependency-free local gate replays exited `0`. All found `CAND-NAPPLET-WEB-PACKAGE` blocked by the dated human decision, an unavailable exact version, no authorized install command, and no `.experiment/` directory.
+Five recovery-guarded `--run-five` samples exited `0` with `SPK-G-BLOCKED-ELIGIBILITY` and operation count `0`. The Plan 01-42 registered `spk-g-package-evidence` snapshot was acquired before parsing; every required compatibility dimension, artifact field, source baseline, and dated approval remained blocked.
 
-Every replay observed zero qualifying releases, install attempts, public-export imports, conformance targets, and forbidden private/deep imports. No registry, package manager, browser, package code, secret, external state, or network target was used.
+Every replay observed zero qualifying releases, install attempts, public-export imports, conformance targets, and forbidden private/deep imports. No package-manager argv, sandbox argv, registry, browser, package code, secret, external state, or network target was used. Firefox remains blocked before Playwright attachment.
 
 ## Conflicts
 
@@ -31,14 +31,14 @@ The preserved materials name `napplet/web` only as a discovery pointer, while th
 
 ## Prototype or measurement
 
-No external package, consumer implementation, production scaffold, or conformance target was created. Five replays inspected the blocked metadata through `tools/phase1-python`; the structural contract validator also passed.
+No external package, consumer implementation, production scaffold, or conformance target was created. Five replays exercised the recovery-guarded runner through `tools/phase1-python`; the structural contract validator also passed.
 
 ```text
-tools/phase1-python -c spk-g-blocked-package-gate
+tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --run-five
 tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance --contract
 ```
 
-The declared not-run error is `SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE`, not an error emitted by an installed library.
+The retained blocked result is `SPK-G-BLOCKED-ELIGIBILITY`. It is a no-operation receipt, not an error emitted by an installed library or a conformance pass.
 
 ## Recommendation
 

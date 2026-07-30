@@ -166,26 +166,26 @@ measurements:
     median: 0
 rawOutputDigests:
   - path: fixture.md
-    sha256: 2481ad99caed14b4e72af36ec87cf19f0ca62aa7e2e7498016582917d192172b
+    sha256: 10a67ca7a4c0b70b6f552cc485493a6a6c595ae2441e90ddd090536675fa627b
   - path: environment.json
     sha256: 381e7c5c192eeac3cf23eefc3b669c6d2c3710b0ec3d0cb1bdecd68727726f1f
   - path: measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   - path: report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
 replayResult:
   status: blocked
-  outputDigest: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+  outputDigest: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml
     sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
   - kind: measurement
     path: measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   - kind: report
     path: report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
 blocked:
   reason: >-
     The dated human decision blocks CAND-NAPPLET-WEB-PACKAGE because there is
