@@ -1,0 +1,27 @@
+schemaVersion: 1
+kind: registry-collection-receipt
+attemptId: REG-FIXTURE-20260728-001
+transport: fixture
+outcome: fixture-mechanism-only
+retrievedAt: '2026-07-28T00:00:00Z'
+request:
+  method: GET
+  canonicalUrl: https://registry.npmjs.org/%40napplet%2Fweb
+  allowedHost: registry.npmjs.org
+  redirectPolicy: refuse
+limits:
+  connectTimeoutSeconds: 5
+  readTimeoutSeconds: 5
+  timeoutSeconds: 10
+  maxResponseBytes: 65536
+response:
+  status: 200
+  headers:
+    content-type: application/json
+  byteCount: 279
+  sha256: 64574c32cc452c2257ab17b77476bb31e60ec1ad41ab1ba299c73b2c807f5c2d
+  capturedBytes: 7b226e616d65223a22406e6170706c65742f776562222c22646973742d74616773223a7b226c6174657374223a22302e302e302d66697874757265227d2c2276657273696f6e73223a7b22302e302e302d66697874757265223a7b226e616d65223a22406e6170706c65742f776562222c2276657273696f6e223a22302e302e302d66697874757265222c226c6963656e7365223a22554e4c4943454e534544222c2264697374223a7b2274617262616c6c223a2268747470733a2f2f72656769737472792e6e706d6a732e6f72672f406e6170706c65742f7765622f2d2f7765622d302e302e302d666978747572652e74677a222c22696e74656772697479223a227368613531322d66697874757265227d7d7d7d0a
+authority:
+  classification: fixture-mechanism-only
+  statement: This retained fixture proves collector and exact-byte receipt mechanics
+    only; it is not a published-package fact or admission approval.
