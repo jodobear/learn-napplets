@@ -141,6 +141,71 @@ class CompatibilitySchema(unittest.TestCase):
         self.assertEqual(len(evidence['receiptHistory']), 2)
         self.assertEqual({item['transport'] for item in evidence['receiptHistory']}, {'fixture', 'live-or-blocker'})
 
+    def test_package_metadata_preserves_history_and_blocker_routing(self):
+        evidence = yaml.safe_load((ROOT / '.planning/research/package-evidence.yaml').read_text())
+        expected_receipts = [
+            ('reports/package-registry-fixture-receipt-20260728.yaml', 'REG-FIXTURE-20260728-001',
+             '4f35050e9ee18864aeec90f88053b27dc209b32301ee82d460755af16241fc80',
+             'fixture', 'fixture-mechanism-only', 'mechanism-only-not-published-package-fact'),
+            ('reports/package-registry-live-or-blocker-receipt-20260728.yaml', 'REG-BLOCKER-20260728-001',
+             '40ebd1c8f1e8b0bcde03f01e936affb815fe2ed375113cce2547020c9c286a26',
+             'live-or-blocker', 'impact-scoped-blocker', 'blocked-no-live-registry-observation'),
+        ]
+        self.assertEqual(
+            [tuple(item[field] for field in ('path', 'attemptId', 'receiptSha256', 'transport', 'outcome', 'classification'))
+             for item in evidence['receiptHistory']],
+            expected_receipts,
+        )
+        blocker = evidence['blockedAdmission']
+        self.assertEqual(blocker['disposition'], 'blocked')
+        self.assertEqual(blocker['candidateId'], 'CAND-NAPPLET-WEB-PACKAGE')
+        self.assertEqual(blocker['affectedRequirements'], ['EVID-03', 'EVID-04', 'OPER-01'])
+        self.assertIn('ADR-0010', blocker['affectedAdrs'])
+        self.assertIn('OQ-PUBLIC-PACKAGE-BASELINE-001', blocker['affectedQuestions'])
+        self.assertIn('DRF-CONFORMANCE-001', blocker['affectedDrift'])
+        self.assertTrue(blocker['safeFallback'])
+        self.assertTrue(blocker['refreshTrigger'])
+
+        inventory = yaml.safe_load((ROOT / '.planning/research/ecosystem-inventory.yaml').read_text())['items']
+        package = next(item for item in inventory if item['id'] == 'ECO-NAPPLET-WEB-PACKAGE')
+        history = package['packageEvidenceHistory']
+        self.assertEqual([entry['attemptId'] for entry in history['receiptHistory']], [
+            'REG-FIXTURE-20260728-001', 'REG-BLOCKER-20260728-001',
+        ])
+        self.assertEqual(history['repositoryIdentity']['candidateId'], 'CAND-NAPPLET-WEB-REPOSITORY')
+        self.assertEqual(history['observedReleaseCommit']['status'], 'unavailable')
+        self.assertEqual(history['independentlyRetrievedArtifact']['status'], 'blocked')
+        routing = package['spkGBlockerRouting']
+        self.assertEqual(routing['disposition'], 'blocked')
+        self.assertEqual(routing['affectedRequirements'], blocker['affectedRequirements'])
+        self.assertEqual(routing['affectedAdrs'], blocker['affectedAdrs'])
+        self.assertEqual(routing['affectedQuestions'], blocker['affectedQuestions'])
+        self.assertEqual(routing['affectedDrift'], blocker['affectedDrift'])
+        self.assertTrue(routing['safeFallback'])
+        self.assertTrue(routing['refreshTrigger'])
+        self.assertEqual(routing['separateApproval'], 'required')
+        self.assertTrue(all(item['status'] != 'complete' for item in routing['eligibility']))
+
+        package_map = (ROOT / '.planning/research/package-map.md').read_text()
+        for heading in ('## Package evidence history', '### Repository identity', '### Observed release commit',
+                        '### Independently retrieved registry artifact', '### Immutable collection receipts'):
+            self.assertIn(heading, package_map)
+
+        snapshot = json.loads(SNAPSHOT.read_text())
+        self.assertEqual(snapshot['id'], 'OWS-001')
+        self.assertEqual(snapshot['retrievedAt'], '2026-07-24T00:00:00Z')
+        self.assertEqual(
+            [(item['id'], item['retrievalOutcome']) for item in snapshot['items']],
+            [('OW-NIP5D-001', 'unavailable'), ('OW-NAP-001', 'unavailable'),
+             ('OW-NAPPLET-WEB-001', 'unavailable'), ('OW-RUNTIME-001', 'unavailable')],
+        )
+        self.assertEqual([entry['id'] for entry in snapshot['snapshotHistory']], ['OWS-002'])
+        current = snapshot['snapshotHistory'][0]
+        self.assertEqual(current['parentSnapshotId'], 'OWS-001')
+        self.assertEqual(current['retrievedAt'], '2026-07-28T00:00:00Z')
+        self.assertEqual(current['items'][0]['receiptHistory'], expected_receipts)
+        self.assertEqual(current['items'][0]['spkGBlockerRouting'], routing)
+
 
 if __name__=='__main__':
     unittest.main()
