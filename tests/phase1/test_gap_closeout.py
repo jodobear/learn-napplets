@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -416,6 +417,15 @@ def validation_contract_errors(validation_text: str, post_closure_text: str) -> 
     if not isinstance(post_closure, dict) or not isinstance(post_closure.get("batches"), list) or not post_closure["batches"]:
         errors.append("POST001: post-closure verification requires retained batches")
     else:
+        # Phase 1 has two closed fourteen-probe ledgers. A retained batch binds to
+        # its own immutable ledger; it must not be forced onto the older P1-38 digest.
+        terminal_candidate = PLANNING / "phases/01-research-and-truth-baseline/01-VERIFICATION-CANDIDATE.md"
+        terminal_match = re.match(r"\A---\n(.*?)\n---\n", terminal_candidate.read_text(encoding="utf-8"), re.DOTALL)
+        terminal_meta = yaml.safe_load(terminal_match.group(1)) if terminal_match else {}
+        bindings = {
+            ledger.get("ledgerId"): closure.get("preClosureLedgerSha256"),
+            "P1-40-TERMINAL-DIRECT-14": terminal_meta.get("canonical_ledger_sha256") if isinstance(terminal_meta, dict) else None,
+        }
         batch_ids: set[str] = set()
         for batch in post_closure["batches"]:
             if not isinstance(batch, dict):
@@ -425,8 +435,8 @@ def validation_contract_errors(validation_text: str, post_closure_text: str) -> 
             if not isinstance(batch_id, str) or not batch_id or batch_id in batch_ids:
                 errors.append("POST003: retained post-closure batches require unique IDs")
             batch_ids.add(batch_id)
-            if batch.get("ledgerId") != ledger.get("ledgerId") or batch.get("preClosureLedgerSha256") != closure.get("preClosureLedgerSha256"):
-                errors.append("POST004: post-closure batch is not bound to the closed ledger digest")
+            if batch.get("preClosureLedgerSha256") != bindings.get(batch.get("ledgerId")):
+                errors.append("POST004: post-closure batch is not bound to a known closed ledger digest")
             if batch.get("batchPayloadSha256") != post_closure_digest(batch):
                 errors.append("POST005: retained post-closure batch payload digest differs")
             runs = batch.get("runs")

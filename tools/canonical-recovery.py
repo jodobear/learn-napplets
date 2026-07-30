@@ -250,11 +250,20 @@ def _recover_locked(root: Path) -> None:
     for item in targets:
         if not isinstance(item, dict) or set(item) != {"target", "old", "new", "backup"}:
             raise RecoveryError("transaction target entry is invalid")
-        if not all(isinstance(item[field], str) for field in item):
+        if not isinstance(item["target"], str) or not isinstance(item["new"], str) or not isinstance(item["backup"], str) or item["old"] is not None and not isinstance(item["old"], str):
             raise RecoveryError("transaction target entry has invalid values")
         entries.append(item)
     if journal["state"] in {"prepared", "publishing"}:
         for entry in entries:
+            if entry["old"] is None:
+                target = root / _normal_relative(entry["target"])
+                if target.is_symlink() or not target.exists():
+                    continue
+                if not target.is_file() or _sha(target.read_bytes()) != entry["new"]:
+                    raise RecoveryError("created canonical target is not the attested new generation")
+                target.unlink()
+                _fsync_directory(target.parent)
+                continue
             target = _regular(root, entry["target"])
             backup = transaction / entry["backup"]
             if not backup.is_file() or backup.is_symlink() or _sha(backup.read_bytes()) != entry["old"]:
@@ -265,8 +274,13 @@ def _recover_locked(root: Path) -> None:
             os.replace(replacement, target)
             _fsync_file(target)
             _fsync_directory(target.parent)
-        if any(_sha(_regular(root, entry["target"]).read_bytes()) != entry["old"] for entry in entries):
-            raise RecoveryError("recovery could not verify the complete old generation")
+        for entry in entries:
+            if entry["old"] is None:
+                target = root / _normal_relative(entry["target"])
+                if target.exists() or target.is_symlink():
+                    raise RecoveryError("recovery could not remove a newly created canonical target")
+            elif _sha(_regular(root, entry["target"]).read_bytes()) != entry["old"]:
+                raise RecoveryError("recovery could not verify the complete old generation")
     else:
         if any(_sha(_regular(root, entry["target"]).read_bytes()) != entry["new"] for entry in entries):
             raise RecoveryError("committed transaction does not verify as a complete new generation")
@@ -335,13 +349,19 @@ def publish_generation(
         entries: list[dict[str, str]] = []
         try:
             for index, (target_name, content) in enumerate(ordered.items()):
-                target = _regular(root, target_name)
-                old = target.read_bytes()
-                backup_relative = f"backup/{index:04d}"
+                target = root / _normal_relative(target_name)
+                if target.exists() or target.is_symlink():
+                    old = _regular(root, target_name).read_bytes()
+                    backup_relative = f"backup/{index:04d}"
+                    _write_durable(transaction / backup_relative, old)
+                    old_digest: str | None = _sha(old)
+                else:
+                    _regular(root, target_name, must_exist=False)
+                    backup_relative = ""
+                    old_digest = None
                 staged_relative = f"staged/{index:04d}"
-                _write_durable(transaction / backup_relative, old)
                 _write_durable(transaction / staged_relative, content)
-                entries.append({"target": target_name, "old": _sha(old), "new": _sha(content), "backup": backup_relative})
+                entries.append({"target": target_name, "old": old_digest, "new": _sha(content), "backup": backup_relative})
             _fsync_directory(backups); _fsync_directory(staged); _fsync_directory(transaction)
             journal: dict[str, object] = {"id": transaction.name, "state": "prepared", "targets": entries}
             _store_journal(transaction, journal)
@@ -349,7 +369,7 @@ def publish_generation(
             _store_journal(transaction, journal)
             for index, entry in enumerate(entries):
                 source = transaction / f"staged/{index:04d}"
-                target = _regular(root, entry["target"])
+                target = _regular(root, entry["target"], must_exist=entry["old"] is not None)
                 os.replace(source, target)
                 _fsync_file(target); _fsync_directory(target.parent)
                 if interrupt_after == index:
