@@ -58,3 +58,32 @@ sources:
       owner: research-owner
       status: pending
       requiredRoles: [protocol-technical]
+  - id: SRC-NAPPLET-WEB-PR184-20260728
+    kind: source
+    collectionStatus: collected
+    rawOrigin: observed-implementation
+    repository: napplet/web
+    officialUrl: https://github.com/napplet/web
+    immutableUrl: https://github.com/napplet/web/blob/4916777862ababd09fa13cf155f4b4079c8e8cb1/packages/cli/src/manifest.ts
+    ref: 4916777862ababd09fa13cf155f4b4079c8e8cb1
+    commitSha: 4916777862ababd09fa13cf155f4b4079c8e8cb1
+    path: packages/cli/src/manifest.ts
+    locator: commit:4916777862ababd09fa13cf155f4b4079c8e8cb1 path:packages/cli/src/manifest.ts
+    contentSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
+    retrievedAt: 2026-07-30T01:21:33Z
+    authorityTier: official-repository-observation
+    evidenceClass: implementation
+    maturity: implementation-specific
+    uncertainty:
+      state: material
+      reason: Receipt-bound observed implementation bytes are not normative NIP/NAP authority and remain pending technical review.
+    impacts:
+      requirements: [EVID-03, EVID-04]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: NIP-5A/NIP-5D, web release, or default-branch change.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, content-learning]

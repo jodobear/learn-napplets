@@ -153,7 +153,7 @@ replayResult:
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+    sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
   - kind: measurement
     path: measurements.yaml
     sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61

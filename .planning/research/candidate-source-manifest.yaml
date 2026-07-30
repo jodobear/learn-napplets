@@ -95,6 +95,8 @@ observedCandidates:
     evidenceClass: observed-implementation
     authority: observed-only-not-normative
     immutableLocator: "https://github.com/napplet/web/blob/4916777862ababd09fa13cf155f4b4079c8e8cb1/packages/cli/src/manifest.ts"
+    canonicalSourceId: SRC-NAPPLET-WEB-PR184-20260728
+    authorityIntakeScope: CAND-SRC-NAPPLET-WEB-PR184-20260728
     refreshTrigger: "NIP-5A/NIP-5D, web release, or default-branch change."
   - id: CAND-SRC-NAPPLET-WEB-PR186-20260728
     repository: napplet/web

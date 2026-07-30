@@ -354,7 +354,7 @@ class BoundedCollectorTests(unittest.TestCase):
                 collector.validate_reviewed_acquisition_documents(queue, receipt)
 
 
-class SourceEvidenceTests(unittest.TestCase):
+class BaseSourceEvidenceTests(unittest.TestCase):
     """Exercise the stdlib-only archive-to-target certification boundary."""
 
     VERIFIER = ROOT / "tools" / "verify-phase1-toolchain.py"
@@ -433,7 +433,7 @@ class SourceEvidenceTests(unittest.TestCase):
             attestation.write_text(json.dumps(document), encoding="utf-8")
 
 
-class SourceAuthorityIntakeTests(unittest.TestCase):
+class SourceEvidenceTests(BaseSourceEvidenceTests):
     """Exercise receipt-bound, authority-limited source intake without live network access."""
 
     COLLECTOR = ROOT / "tools" / "acquire-sources.py"
@@ -504,19 +504,25 @@ class SourceAuthorityIntakeTests(unittest.TestCase):
             "affectedQuestions": ["OQ-UPSTREAM-BASELINE-001"],
             "refreshTrigger": "Fixture refresh trigger.",
         }
-        ready = collector.prepare_authority_gated_intake(observed, approved, "a" * 64)
+        binding = json.loads(
+            (ROOT / ".planning/research/reports/upstream-acquisition-20260728.md").read_text(encoding="utf-8")
+        )["reviewedSourceInputBinding"]
+        ready = collector.prepare_authority_gated_intake(
+            observed, approved, "a" * 64, reviewed_source_input_binding=binding
+        )
         self.assertEqual(ready["status"], "ready")
         self.assertEqual(ready["record"]["rawOrigin"], "observed-implementation")
         self.assertEqual(ready["record"]["authorityTier"], "official-repository-observation")
         self.assertEqual(ready["record"]["review"]["status"], "pending")
-        self.assertEqual(ready["record"]["intakeScopeId"], observed["candidateId"])
-        self.assertEqual(ready["record"]["impacts"]["claims"], observed["affectedClaims"])
+        self.assertEqual(ready["record"]["contentSha256"], observed["contentSha256"])
+        self.assertEqual(ready["record"]["locator"], f"commit:{observed['commitSha']} path:{observed['path']}")
 
         unavailable = dict(observed, id="CAND-FIXTURE-NORMATIVE-001", candidateId="CAND-FIXTURE-NORMATIVE-001", result="failed")
         blocked = collector.prepare_authority_gated_intake(
             unavailable,
             self.scope("CAND-FIXTURE-NORMATIVE-001", decision="blocked"),
             "a" * 64,
+            reviewed_source_input_binding=binding,
         )
         self.assertEqual(blocked["status"], "blocked")
         self.assertEqual(blocked["blockedAttempt"]["candidateId"], unavailable["candidateId"])

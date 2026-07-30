@@ -87,6 +87,85 @@ signoffs:
     signedAt: '2026-07-24T00:00:00Z'
     evidence:
       - Approved 2026-07-24 — Phase 1 evidence package and local replay/no-scaffold gates are complete; no deployment, publication, production release, or external action approved.
+authorityDeterminations:
+  - scopeId: CAND-SRC-KEHTO-WEB-PR204-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR204-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-PRODUCT, AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-PROTOCOL, AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-SECURITY, AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-ACCESSIBILITY, AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-CONTENT, AUTH-CAND-SRC-KEHTO-WEB-PR204-20260728-RELEASE]
+    reviewedSourceInputBinding: &reviewed_source_input_binding
+      parserVersion: reviewed-refresh-v1
+      reviewedCommit: 1a9449be4d74aa1ceed235d949802266846cf63b
+      sourceSnapshotCommit: 1a9449be4d74aa1ceed235d949802266846cf63b
+      parsedRecordSha256: ad9285d264383e3466ceeaea7142f42ed6d55143b5deb0376ead7974d2bb3369
+      reportDigests:
+        .planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md: 959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36
+        .planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md: 94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4
+        .planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md: 3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28
+        .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md: eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478
+      sourceReportDigests:
+        .planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md: 959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36
+        .planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md: 94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4
+        .planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md: 3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28
+        .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md: eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478
+      candidates:
+        - {id: CAND-SRC-NAPPLET-WEB-PR184-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-NAPPLET-WEB-PR186-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-NAPPLET-WEB-PR188-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-KEHTO-WEB-PR204-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-KEHTO-WEB-PR209-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-KEHTO-WEB-PR211-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+        - {id: CAND-SRC-NAPS-WINDOW-20260728, reportPath: .planning/research/reports/upstream-refresh-synthesis-2026-07-28.md}
+  - scopeId: CAND-SRC-KEHTO-WEB-PR209-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR209-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-PRODUCT, AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-PROTOCOL, AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-SECURITY, AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-ACCESSIBILITY, AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-CONTENT, AUTH-CAND-SRC-KEHTO-WEB-PR209-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
+  - scopeId: CAND-SRC-KEHTO-WEB-PR211-20260728
+    candidateId: CAND-SRC-KEHTO-WEB-PR211-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-PRODUCT, AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-PROTOCOL, AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-SECURITY, AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-ACCESSIBILITY, AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-CONTENT, AUTH-CAND-SRC-KEHTO-WEB-PR211-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-PRODUCT, AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-PROTOCOL, AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-SECURITY, AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-ACCESSIBILITY, AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-CONTENT, AUTH-CAND-SRC-NAPPLET-WEB-PR184-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR186-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR186-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-PRODUCT, AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-PROTOCOL, AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-SECURITY, AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-ACCESSIBILITY, AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-CONTENT, AUTH-CAND-SRC-NAPPLET-WEB-PR186-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
+  - scopeId: CAND-SRC-NAPPLET-WEB-PR188-20260728
+    candidateId: CAND-SRC-NAPPLET-WEB-PR188-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-PRODUCT, AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-PROTOCOL, AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-SECURITY, AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-ACCESSIBILITY, AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-CONTENT, AUTH-CAND-SRC-NAPPLET-WEB-PR188-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
+  - scopeId: CAND-SRC-NAPS-WINDOW-20260728
+    candidateId: CAND-SRC-NAPS-WINDOW-20260728
+    authorityArtifactPath: .planning/research/authority-determinations.yaml
+    authorityArtifactSha256: 1a8abbfad32151a6f51d7f11d96a2bdfa9278c78309f102050dae596c922033c
+    acquisitionReceiptPath: .planning/research/reports/upstream-acquisition-20260728.md
+    acquisitionReceiptSha256: 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+    determinationIds: [AUTH-CAND-SRC-NAPS-WINDOW-20260728-PRODUCT, AUTH-CAND-SRC-NAPS-WINDOW-20260728-PROTOCOL, AUTH-CAND-SRC-NAPS-WINDOW-20260728-SECURITY, AUTH-CAND-SRC-NAPS-WINDOW-20260728-ACCESSIBILITY, AUTH-CAND-SRC-NAPS-WINDOW-20260728-CONTENT, AUTH-CAND-SRC-NAPS-WINDOW-20260728-RELEASE]
+    reviewedSourceInputBinding: *reviewed_source_input_binding
 blockers:
   - id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
     state: blocked
