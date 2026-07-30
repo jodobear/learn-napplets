@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-30T22:44:38.961Z",
+  "phase": "01",
+  "phase_name": "research-and-truth-baseline",
+  "phase_dir": ".planning/phases/01-research-and-truth-baseline",
+  "plan": 40,
+  "task": 3,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": 1,
+      "name": "Execute remaining dependency waves 5-13",
+      "status": "done",
+      "commit": "95a0d27"
+    },
+    {
+      "id": 2,
+      "name": "Complete human ASVS L1 security review",
+      "status": "done",
+      "commit": "e53453a"
+    },
+    {
+      "id": 3,
+      "name": "Publish validated terminal attestation and synchronize live state",
+      "status": "done",
+      "commit": "efec17d"
+    },
+    {
+      "id": 4,
+      "name": "Run final primary integration suite",
+      "status": "done",
+      "progress": "140/140 tests passed; schema-drift and UI-safety gates passed"
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": 5,
+      "name": "Run execute:post code-review capability gate",
+      "status": "not_started"
+    },
+    {
+      "id": 6,
+      "name": "Run prior-phase regression gate if applicable",
+      "status": "not_started"
+    },
+    {
+      "id": 7,
+      "name": "Run independent gsd-verifier and route on verification status",
+      "status": "not_started"
+    },
+    {
+      "id": 8,
+      "name": "Finalize phase.complete tracking and next-step routing",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [
+    {
+      "description": "Session context reached 90% immediately after all execution waves completed",
+      "type": "technical",
+      "workaround": "Start a fresh context and rerun /gsd-execute-phase 1; all 45 summaries cause executor waves to skip and phase-level gates resume"
+    }
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {
+      "decision": "Use manually created local-HEAD worktrees for remaining executors",
+      "rationale": "Harness isolation forked stale origin/master despite worktree.baseRef=head; verify-only branch guards correctly halted both Wave 5 agents",
+      "phase": "01"
+    },
+    {
+      "decision": "Record jo as separate human auditor/rechecker and terminal verifier/project-owner rechecker roles",
+      "rationale": "User supplied explicit determinations after independently running bounded security and terminal audit samples",
+      "phase": "01"
+    },
+    {
+      "decision": "Authorize bounded read-only OWASP/ASVS acquisition",
+      "rationale": "Plan 01-39 required immutable official ASVS 5.0.0 source bytes and license evidence; fetch was pinned to tag and commit with no credentials or remote writes",
+      "phase": "01"
+    },
+    {
+      "decision": "Preserve explicit no-Phase-2-transition boundary",
+      "rationale": "Terminal publication completes Phase 1 evidence only; transition remains a separate approval gate",
+      "phase": "01"
+    }
+  ],
+  "uncommitted_files": [
+    ".gitignore",
+    ".planning/phases/01-research-and-truth-baseline/01-RESEARCH.md",
+    ".claude/",
+    ".planning/config.json",
+    ".planning/governance/",
+    ".planning/graphs/",
+    ".planning/phases/01-research-and-truth-baseline/01-DISCUSSION-LOG.md",
+    ".planning/research/.cache/",
+    ".planning/traceability/pack-v3-file-manifest.json",
+    ".planning/traceability/pack-v3-import.md",
+    ".planning/traceability/phase-crosswalk.md",
+    ".planning/validation/required-artifacts.json",
+    "CLAUDE.md",
+    "demo-out/",
+    "graphify-out/"
+  ],
+  "next_action": "Run /gsd-execute-phase 1 in a fresh context. Confirm all 45 plans are skipped, then run code review, regression, independent phase verification, and final routing without re-executing plan work.",
+  "context_notes": "All 45 plans and summaries exist. STATE.md currently says Phase 1 completed because Plan 01-40 published a validated terminal attestation, but the execute-phase orchestrator has not yet run its final code-review capability gate, regression gate, independent gsd-verifier, or phase.complete routing. Do not treat the live state alone as a substitute for those remaining workflow gates. Main HEAD at pause: 95a0d278564d5a86a41d1868e0f42fb34498da4c. No async jobs or background processes remain."
+}
