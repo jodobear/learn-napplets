@@ -1,5 +1,6 @@
 import copy
 import hashlib
+import importlib.util
 import json
 import re
 import unittest
@@ -172,6 +173,62 @@ class DriftSchemas(unittest.TestCase):
             record = current['drift'][1]
             self.assertEqual(record['impacts'], {'content': ['A', 'Z'], 'code': ['A', 'z'], 'knowledge': ['A', 'z'], 'requirements': ['EVID-01', 'EVID-04'], 'phases': ['01', '10']})
             self.assertEqual(record['history'], [{'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'a'}, {'at': '2026-07-24T00:00:00Z', 'state': 'verified', 'reason': 'b'}, {'at': '2026-07-25T00:00:00Z', 'state': 'blocked', 'reason': 'z'}])
+
+    def test_drift_rejects_empty_null_and_single_sides(self):
+        local = {
+            'id': 'OBS-LOCAL-001',
+            'classification': 'observed-local',
+            'reportPath': 'spikes/spk-c-boundary-harness/report.md',
+            'reportSha256': SHA,
+            'measurementPath': 'spikes/spk-c-boundary-harness/measurements.yaml',
+            'measurementSha256': SHA,
+            'statement': 'A bounded local fixture did not produce an attached Firefox context.',
+            'fallback': 'Keep the deterministic static fallback.',
+        }
+        record = copy.deepcopy(DRIFT_RECORD)
+        record['normative'] = None
+        record['observed'] = local
+        self.assertFalse(self.validate(DRIFT, record))
+        for mutation in (
+            lambda value: value.pop('normative'),
+            lambda value: value.update({'normative': None, 'observed': copy.deepcopy(SIDE)}),
+            lambda value: value['observed'].update({'id': 'CLM-NOT-OBS-001'}),
+            lambda value: value['observed'].pop('measurementSha256'),
+            lambda value: value['observed'].update({'claimId': 'CLM-SYNTHETIC-001'}),
+        ):
+            bad = copy.deepcopy(record)
+            mutation(bad)
+            self.assertTrue(self.validate(DRIFT, bad))
+        register = yaml.safe_load(REGISTER.read_text())
+        local_records = [item for item in register['drift'] if item.get('normative') is None]
+        self.assertTrue(local_records)
+        for item in local_records:
+            self.assertEqual(item['status'], 'blocked')
+            self.assertTrue(item['observed']['id'].startswith('OBS-'))
+            self.assertEqual(item['observed']['classification'], 'observed-local')
+            self.assertTrue(item['review']['owner'])
+            self.assertTrue(item['dependentDecisionDisposition']['safeFallback'])
+
+    def test_parallel_sides_are_distinct_and_adjacent(self):
+        spec = importlib.util.spec_from_file_location('phase1_validate_research', ROOT / 'tools/validate-research.py')
+        self.assertIsNotNone(spec)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        parallel = copy.deepcopy(DRIFT_RECORD)
+        parallel['observed']['claimId'] = 'CLM-UPSTREAM-BASELINE-001'
+        parallel['observed']['sourceId'] = 'SRC-POLICY-001'
+        parallel['observed']['commitSha'] = 'c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0'
+        parallel['observed']['path'] = 'docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md'
+        parallel['observed']['contentSha256'] = 'df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb'
+        self.assertFalse(module.validate_drift([parallel], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))
+        collapsed = copy.deepcopy(parallel)
+        collapsed['observed'] = copy.deepcopy(collapsed['normative'])
+        self.assertTrue(module.validate_drift([collapsed], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))
+        local = copy.deepcopy(parallel)
+        local['normative'] = None
+        local['observed'] = {'id': 'OBS-LOCAL-001', 'classification': 'observed-local', 'reportPath': 'report.md', 'reportSha256': SHA, 'measurementPath': 'measurements.yaml', 'measurementSha256': SHA, 'statement': 'Local observation.', 'fallback': 'Use the static fallback.'}
+        self.assertFalse(module.validate_drift([local], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))
 
 
 class RefreshComparisonTests(unittest.TestCase):

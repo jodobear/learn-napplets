@@ -118,6 +118,32 @@ class SpikeConsolidationTests(unittest.TestCase):
             result = self.run_fragment(fragment_path, planning)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_fragment_rejects_noncanonical_path_or_source_substitution(self) -> None:
+        cases = {
+            "absolute": lambda value, planning: value["measurementLinks"][0].update({"path": str((planning / "spikes/spk-test-001/raw.txt").resolve())}),
+            "traversal": lambda value, planning: value["measurementLinks"][0].update({"path": "spikes/spk-test-001/../spk-test-001/raw.txt"}),
+            "empty": lambda value, planning: value["measurementLinks"][0].update({"path": ""}),
+            "nul": lambda value, planning: value["measurementLinks"][0].update({"path": "spikes/spk-test-001/raw.txt\\x00suffix"}),
+            "symlink": lambda value, planning: (planning / "spikes/spk-test-001/raw.txt").unlink() or (planning / "spikes/spk-test-001/raw.txt").symlink_to(planning / "outside.txt"),
+            "wrong-spike-directory": lambda value, planning: value.update({"metadataPath": "spikes/spk-other-001/metadata.yaml"}),
+            "missing-file": lambda value, planning: value["measurementLinks"][0].update({"path": "spikes/spk-test-001/missing.txt"}),
+            "digest-substitution": lambda value, planning: value["measurementLinks"][0].update({"sha256": "0" * 64}),
+            "noncanonical-registry": lambda value, planning: value["sourceLinks"][0].update({"path": "research/./source-registry.yaml"}),
+            "unknown-source": lambda value, planning: value["sourceLinks"][0].update({"sourceId": "SRC-UNKNOWN-001"}),
+            "incomplete-source": lambda value, planning: (planning / "research/source-registry.yaml").write_text("sources:\\n  - id: SRC-POLICY-001\\n", encoding="utf-8"),
+        }
+        for name, mutate in cases.items():
+            with self.subTest(case=name):
+                fragment = copy.deepcopy(FRAGMENT)
+                fragment_path, planning, temporary = self.write_fixture_root(fragment)
+                (planning / "outside.txt").write_text("outside\n", encoding="utf-8")
+                mutate(fragment, planning)
+                fragment_path.write_text(yaml.safe_dump(fragment, sort_keys=False), encoding="utf-8")
+                with temporary:
+                    result = self.run_fragment(fragment_path, planning)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("ERROR IMP", result.stdout)
+
     def test_fragment_rejects_missing_altered_semantic_mismatched_and_dangling_links(self) -> None:
         cases = {
             "missing": lambda value: value.pop("measurementLinks"),
