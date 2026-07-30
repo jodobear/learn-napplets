@@ -220,6 +220,117 @@ class Phase1ExecutionPreflightTests(unittest.TestCase):
                     review, root=root, executor_identity="executor"
                 )
 
+    def _temporary_citation_root(self) -> tuple[tempfile.TemporaryDirectory[str], Path, Path]:
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        research = root / ".planning/research"
+        citations = research / "citation-catalog.yaml"
+        citations.parent.mkdir(parents=True)
+        (research / "lesson-packets").mkdir()
+        (root / ".planning/adr").mkdir()
+        (research / "candidate-source-manifest.yaml").write_text("candidates: []\n", encoding="utf-8")
+        (research / "ecosystem-inventory.yaml").write_text("items: []\n", encoding="utf-8")
+        (research / "source-registry.yaml").write_text(
+            """sources:
+  - id: SRC-COMPLETE
+    officialUrl: https://example.invalid/source
+    repository: example/source
+    commitSha: abcdef
+    path: source.md
+    locator: line 1
+    contentSha256: digest
+    retrievedAt: 2026-07-30T00:00:00Z
+    authorityTier: project-policy
+    evidenceClass: project-policy
+    maturity: provisional
+    immutableUrl: https://example.invalid/source/abcdef
+  - id: SRC-INCOMPLETE
+    officialUrl: https://example.invalid/incomplete
+    repository: example/incomplete
+    commitSha: abcdef
+    path: source.md
+    locator: line 1
+    contentSha256: digest
+    retrievedAt: 2026-07-30T00:00:00Z
+    authorityTier: project-policy
+    evidenceClass: project-policy
+    maturity: provisional
+""",
+            encoding="utf-8",
+        )
+        (research / "claims.yaml").write_text(
+            """claims:
+  - id: CLM-POLICY-001
+    sourceRelations:
+      - sourceId: SRC-COMPLETE
+  - id: CLM-NO-RELATION-001
+    sourceRelations: []
+  - id: CLM-INCOMPLETE-001
+    sourceRelations:
+      - sourceId: SRC-INCOMPLETE
+""",
+            encoding="utf-8",
+        )
+        return temporary, root, citations
+
+    def test_citation_ascii_adjacency_extracts_exact_token(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            citations.write_text("Markdown **CLM-POLICY-001** — “CLM-POLICY-001”.\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text(
+                "XCLM-POLICY-001 xCLM-POLICY-001 7CLM-POLICY-001 -CLM-POLICY-001\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("CLM-POLICY-001Z CLM-POLICY-001-tail\n", encoding="utf-8")
+            self.assertEqual(
+                validate_planning.phase1_citation_and_inventory_errors(root=root),
+                ["GATE016: .planning/research/citation-catalog.yaml cites unknown claim CLM-POLICY-001Z"],
+            )
+
+    def test_citation_empty_inventory_has_no_diagnostic(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            cases = {
+                "unknown": ("CLM-UNKNOWN-001", "GATE016"),
+                "missing-relation": ("CLM-NO-RELATION-001", "GATE017"),
+                "incomplete-source": ("CLM-INCOMPLETE-001", "GATE018"),
+            }
+            for name, (citation, gate) in cases.items():
+                with self.subTest(name=name):
+                    citations.write_text(citation + "\n", encoding="utf-8")
+                    errors = validate_planning.phase1_citation_and_inventory_errors(root=root)
+                    self.assertEqual(1, len(errors), errors)
+                    self.assertTrue(errors[0].startswith(gate + ":"), errors)
+
+    def test_citation_tokens_are_ascii_decoded_codepoints_without_unicode_normalization(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            citations.write_text("café — “CLM-POLICY-001”; café — CLM-POLICY-001.\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+            citations.write_text("CLM-UNKNOWN-001́ СLM-UNKNOWN-001\n", encoding="utf-8")
+            self.assertEqual(validate_planning.phase1_citation_and_inventory_errors(root=root), [])
+
+    def test_citation_diagnostics_stable_path_then_id(self) -> None:
+        temporary, root, citations = self._temporary_citation_root()
+        with temporary:
+            first = root / ".planning/research/a-catalog.yaml"
+            first.write_text("CLM-B-UNKNOWN CLM-A-UNKNOWN\n", encoding="utf-8")
+            (root / ".planning/research/z-catalog.yaml").write_text("CLM-Z-UNKNOWN CLM-A-UNKNOWN\n", encoding="utf-8")
+            self.assertEqual(
+                validate_planning.phase1_citation_and_inventory_errors(root=root),
+                [
+                    "GATE016: .planning/research/a-catalog.yaml cites unknown claim CLM-A-UNKNOWN",
+                    "GATE016: .planning/research/a-catalog.yaml cites unknown claim CLM-B-UNKNOWN",
+                    "GATE016: .planning/research/z-catalog.yaml cites unknown claim CLM-A-UNKNOWN",
+                    "GATE016: .planning/research/z-catalog.yaml cites unknown claim CLM-Z-UNKNOWN",
+                ],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
