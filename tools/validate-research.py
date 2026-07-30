@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -17,7 +18,7 @@ import tempfile
 import time
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
@@ -25,6 +26,24 @@ from jsonschema.exceptions import SchemaError, ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 RELATIONS = {"supports", "contradicts", "measures", "affects", "recommends", "supersedes"}
+
+
+def canonical_recovery_module() -> Any:
+    """Load the Plan 01-42 ownership boundary without reopening canonical paths."""
+    spec = importlib.util.spec_from_file_location("canonical_recovery", ROOT / "tools" / "canonical-recovery.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("canonical recovery module is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def read_registered_snapshot(reader_id: str, targets: tuple[str, ...], planning_root: Path) -> Mapping[str, bytes]:
+    """Acquire a complete in-memory generation before a multi-file route parses it."""
+    try:
+        return canonical_recovery_module().read_canonical_snapshot(reader_id, targets, root=planning_root)
+    except Exception as exc:
+        raise ValueError(f"canonical snapshot refused for {reader_id}: {exc}") from exc
 
 
 def normalize_yaml(value: Any) -> Any:
@@ -1262,6 +1281,8 @@ def main() -> int:
     replay = command.add_parser("replay-spikes")
     replay.add_argument("--manifest", type=Path, required=True)
     replay.add_argument("--check", action="store_true")
+    recovery = command.add_parser("recover-consolidation")
+    recovery.add_argument("--research", type=Path, required=True)
     args = parser.parse_args()
 
     if args.command == "validate-spike":
@@ -1284,6 +1305,12 @@ def main() -> int:
         errors = consolidate_spike_impacts(args.spikes, args.research, args.audit, args.dry_run, args.lock_timeout, args.input_order)[:100]
     elif args.command == "replay-spikes":
         errors = replay_spikes(args.manifest, args.manifest.parents[1])[:100] if args.check else []
+    elif args.command == "recover-consolidation":
+        try:
+            canonical_recovery_module().recover_canonical_generation(args.research.resolve().parents[1])
+            errors = []
+        except Exception as exc:
+            errors = [f"ERROR REC001: canonical recovery refused: {exc}"]
     else:
         errors = []
     if args.command != "validate":

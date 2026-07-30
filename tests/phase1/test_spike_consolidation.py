@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import os
 import shutil
 import subprocess
@@ -272,6 +273,129 @@ class SpikeConsolidationTests(unittest.TestCase):
             self.assertIn("CONSOLIDATION_INJECTED_FAILURE", failed.stdout)
             self.assertEqual(after_success, self.canonical_bytes(planning))
             self.assertNotEqual(before, after_success)
+
+
+class CanonicalRecoveryTests(unittest.TestCase):
+    """Regression contract for Plan 01-42 durable canonical publication."""
+
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        self.targets = ("a.yaml", "b.yaml", "c.yaml")
+        for name in self.targets:
+            (self.root / name).write_bytes(f"old-{name}".encode())
+        recovery_path = ROOT / "tools" / "canonical-recovery.py"
+        spec = importlib.util.spec_from_file_location("canonical_recovery", recovery_path)
+        self.recovery = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(self.recovery)
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
+    def _staged(self, prefix: str = "new") -> dict[str, bytes]:
+        return {name: f"{prefix}-{name}".encode() for name in self.targets}
+
+    def _live(self) -> dict[str, bytes]:
+        return {name: (self.root / name).read_bytes() for name in self.targets}
+
+    def test_recovery_after_each_publish_interruption_is_coherent(self) -> None:
+        old = self._live()
+        new = self._staged()
+        for position in range(len(self.targets)):
+            with self.subTest(position=position):
+                for name, content in old.items():
+                    (self.root / name).write_bytes(content)
+                with self.assertRaises(self.recovery.PublishInterrupted):
+                    self.recovery.publish_generation(self.root, new, interrupt_after=position)
+                self.recovery.recover_canonical_generation(self.root)
+                self.assertIn(self._live(), (old, new))
+
+    def test_recovery_rejects_tampered_or_incomplete_journal_before_reader_entry(self) -> None:
+        with self.assertRaises(self.recovery.PublishInterrupted):
+            self.recovery.publish_generation(self.root, self._staged(), interrupt_after=0)
+        journal = next((self.root / ".canonical-transactions").glob("*/journal.json"))
+        journal.write_text("{\\\"state\\\": \\\"unknown\\\"}", encoding="utf-8")
+        self.assertRaises(self.recovery.RecoveryError, self.recovery.read_canonical_snapshot, "fixture-reader", self.targets, root=self.root)
+
+    def test_transactional_multi_file_reader_never_observes_mixed_generation_during_successful_publish(self) -> None:
+        self.recovery.register_canonical_reader("fixture-reader", self.targets)
+        old = self._live()
+        paused = []
+        snapshot = self.recovery.read_canonical_snapshot("fixture-reader", self.targets, root=self.root, after_first_read=lambda: paused.append(True))
+        self.assertEqual(dict(snapshot), old)
+        self.recovery.publish_generation(self.root, self._staged())
+        self.assertEqual(dict(snapshot), old)
+
+    def test_all_canonical_reader_entrypoints_use_registered_transactional_snapshot(self) -> None:
+        self.recovery.register_canonical_reader("fixture-reader", self.targets)
+        with self.assertRaises(self.recovery.RecoveryError):
+            self.recovery.read_canonical_snapshot("undeclared-reader", self.targets, root=self.root)
+        with self.assertRaises(self.recovery.RecoveryError):
+            self.recovery.read_canonical_snapshot("fixture-reader", ("a.yaml",), root=self.root)
+
+    def test_validated_canonical_set_api_rejects_wrong_profile_or_attestation(self) -> None:
+        old = self._live()
+        staged = self.root / "staged"
+        staged.mkdir()
+        for name, value in self._staged().items():
+            (staged / name).write_bytes(value)
+        attestation = {"profile": "fixture", "targetMap": {name: hashlib.sha256(value).hexdigest() for name, value in self._staged().items()}, "generationSha256": self.recovery.generation_sha256(self._staged())}
+        self.recovery.register_canonical_profile("fixture", {name: name for name in self.targets})
+        self.recovery.publish_validated_canonical_set("fixture", staged, attestation, root=self.root, allow_unsafe_staging=True)
+        self.assertEqual(self._live(), self._staged())
+        with self.assertRaises(self.recovery.RecoveryError):
+            self.recovery.publish_validated_canonical_set("missing", staged, attestation, root=self.root, allow_unsafe_staging=True)
+        self.assertEqual(self._live(), self._staged())
+
+    def test_terminal_set_publishes_only_validated_staged_generation(self) -> None:
+        self.recovery.register_canonical_profile("fixture", {name: name for name in self.targets})
+        staged = self.root / "staged"
+        staged.mkdir()
+        generated = self._staged()
+        for name, value in generated.items():
+            (staged / name).write_bytes(value)
+        attestation = {"profile": "fixture", "targetMap": {name: hashlib.sha256(value).hexdigest() for name, value in generated.items()}, "generationSha256": self.recovery.generation_sha256(generated)}
+        (staged / "a.yaml").write_bytes(b"altered")
+        with self.assertRaises(self.recovery.RecoveryError):
+            self.recovery.publish_validated_canonical_set("fixture", staged, attestation, root=self.root, allow_unsafe_staging=True)
+
+    def test_validate_planning_reads_one_transactional_snapshot_or_refuses(self) -> None:
+        result = subprocess.run([sys.executable, str(ROOT / "tools/validate-planning.py")], cwd=ROOT, text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Planning validation passed", result.stdout)
+
+    def test_publish_validated_canonical_set_cli_contract(self) -> None:
+        result = subprocess.run([sys.executable, str(ROOT / "tools/canonical-recovery.py"), "publish-validated-canonical-set", "--help"], cwd=ROOT, text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for option in ("--profile", "--staged-root", "--attestation"):
+            self.assertIn(option, result.stdout)
+
+
+# Plan 01-42 keeps the established public test class path while isolating the
+# copied-root transaction fixtures from the legacy consolidation setup.
+def _delegate_recovery_case(name: str):
+    def delegated(_: unittest.TestCase) -> None:
+        case = CanonicalRecoveryTests(name)
+        case.setUp()
+        try:
+            getattr(case, name)()
+        finally:
+            case.tearDown()
+    return delegated
+
+
+for _recovery_test in (
+    "test_recovery_after_each_publish_interruption_is_coherent",
+    "test_recovery_rejects_tampered_or_incomplete_journal_before_reader_entry",
+    "test_validate_planning_reads_one_transactional_snapshot_or_refuses",
+    "test_transactional_multi_file_reader_never_observes_mixed_generation_during_successful_publish",
+    "test_all_canonical_reader_entrypoints_use_registered_transactional_snapshot",
+    "test_validated_canonical_set_api_rejects_wrong_profile_or_attestation",
+    "test_terminal_set_publishes_only_validated_staged_generation",
+    "test_publish_validated_canonical_set_cli_contract",
+):
+    setattr(SpikeConsolidationTests, _recovery_test, _delegate_recovery_case(_recovery_test))
 
 
 if __name__ == "__main__":
