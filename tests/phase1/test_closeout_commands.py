@@ -275,7 +275,7 @@ def load_terminal_validator():
 
 def reviewed_source_table(text: str) -> str:
     match = re.search(
-        r"^## Reviewed Source-Grounding Authorization\n\n(\| Path \|.*?)(?=\n\n## |\Z)",
+        r"^## Reviewed Source-Grounding Authorization\n.*?(\| Path \|.*?)(?=\n\n## |\Z)",
         text,
         re.MULTILINE | re.DOTALL,
     )
