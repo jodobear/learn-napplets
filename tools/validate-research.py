@@ -58,6 +58,41 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def resolve_canonical_file(
+    planning_root: Path,
+    supplied_path: Any,
+    expected_relative_path: str | None = None,
+) -> Path:
+    """Resolve one confined, canonical regular file below a planning root."""
+    if not isinstance(supplied_path, str) or not supplied_path or "\x00" in supplied_path:
+        raise ValueError("path must be a nonempty string without NUL")
+    if Path(supplied_path).is_absolute() or "\\" in supplied_path:
+        raise ValueError("path must be a relative POSIX path")
+    parts = supplied_path.split("/")
+    if any(part in {"", ".", ".."} for part in parts) or "/".join(parts) != supplied_path:
+        raise ValueError("path must not contain normalization components")
+    if expected_relative_path is not None and supplied_path != expected_relative_path:
+        raise ValueError(f"path must equal canonical path {expected_relative_path}")
+    try:
+        root = planning_root.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"planning root cannot be resolved: {exc}") from exc
+    candidate = planning_root.joinpath(*parts)
+    current = planning_root
+    try:
+        for part in parts:
+            current = current / part
+            if current.is_symlink():
+                raise ValueError("path must not traverse a symlink")
+        resolved = candidate.resolve(strict=True)
+        mode = candidate.stat(follow_symlinks=False).st_mode
+    except OSError as exc:
+        raise ValueError(f"path cannot be resolved: {exc}") from exc
+    if not resolved.is_relative_to(root) or not stat.S_ISREG(mode):
+        raise ValueError("path must resolve to a confined regular file")
+    return candidate
+
+
 def schema_errors(schema_path: Path, records: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     try:
@@ -162,28 +197,52 @@ def validate_claims(claims: list[dict[str, Any]], source_ids: set[str], sources:
     return errors
 
 
-def load_optional_records(root: Path, filename: str, key: str, schema: str) -> tuple[list[dict[str, Any]], list[str]]:
+def load_optional_records(
+    root: Path,
+    filename: str,
+    key: str,
+    schema: str,
+    expected_schema_version: int | None = None,
+) -> tuple[list[dict[str, Any]], list[str]]:
     path = root / filename
     if not path.exists():
         return [], []
     document = load_yaml(path)
+    errors: list[str] = []
+    if expected_schema_version is not None and document.get("schemaVersion") != expected_schema_version:
+        errors.append(f"ERROR MIG004: {filename} must use schemaVersion {expected_schema_version}; migrate legacy records first")
     records = document.get(key, [])
     if not isinstance(records, list) or not all(isinstance(item, dict) for item in records):
-        return [], [f"ERROR IO002: {filename} {key} must be a list of records"]
-    return records, schema_errors(root / "schemas" / schema, records)
+        return [], [*errors, f"ERROR IO002: {filename} {key} must be a list of records"]
+    return records, [*errors, *schema_errors(root / "schemas" / schema, records)]
 
 
 def validate_drift(records: list[dict[str, Any]], source_ids: set[str], claim_ids: set[str]) -> list[str]:
+    """Keep upstream comparison sides separate from observed-local records."""
     errors: list[str] = []
     for record in records:
         record_id = record.get("id", "<unknown>")
-        for side in (record.get("normative", {}), record.get("observed", {})):
-            if not isinstance(side, dict):
+        normative = record.get("normative")
+        observed = record.get("observed")
+        if normative is None:
+            if record.get("status") != "blocked" or not isinstance(observed, dict) or observed.get("classification") != "observed-local":
+                errors.append(f"ERROR SEM008: {record_id} local evidence requires blocked observed-local form")
                 continue
+            prohibited_authority = {"claimId", "sourceId", "commitSha", "path", "locator", "contentSha256", "authorityTier", "maturity", "evidenceClass"}
+            if prohibited_authority & observed.keys():
+                errors.append(f"ERROR SEM009: {record_id} observed-local evidence must not carry normative authority fields")
+            continue
+        if not isinstance(normative, dict) or not isinstance(observed, dict):
+            errors.append(f"ERROR SEM008: {record_id} requires two complete upstream sides or observed-local form")
+            continue
+        for side in (normative, observed):
             if side.get("sourceId") not in source_ids:
                 errors.append(f"ERROR SEM008: {record_id} references unknown source {side.get('sourceId')}")
             if side.get("claimId") not in claim_ids:
                 errors.append(f"ERROR SEM009: {record_id} references unknown claim {side.get('claimId')}")
+        identity_fields = ("claimId", "sourceId", "commitSha", "path", "contentSha256")
+        if all(normative.get(field) == observed.get(field) for field in identity_fields):
+            errors.append(f"ERROR SEM010: {record_id} upstream normative and observed sides must be distinct")
     return errors
 
 
@@ -462,6 +521,7 @@ def validate_adr(path: Path) -> list[str]:
 
 
 def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
+    """Validate immutable spike links through canonical planning-root paths only."""
     try:
         fragment = load_yaml(path)
     except ValueError as exc:
@@ -469,51 +529,67 @@ def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
     errors = [error.replace("ERROR SCH", "ERROR IMP") for error in schema_errors(ROOT / ".planning/research/schemas/spike-impact-fragment.schema.json", [fragment])]
     spike_id = fragment.get("spikeId")
     expected_directory = str(spike_id).lower()
-    metadata_path = fragment.get("metadataPath")
-    report_path = fragment.get("reportPath")
-    if not isinstance(metadata_path, str) or not isinstance(report_path, str):
-        return errors + ["ERROR IMP002: fragment requires metadata and report paths"]
-    metadata_file = planning_root / metadata_path
-    report_file = planning_root / report_path
-    if metadata_file.parent.name != expected_directory or report_file.parent.name != expected_directory:
-        errors.append("ERROR IMP003: fragment identity must match the SPK metadata and report directory")
-    try:
-        metadata = load_yaml(metadata_file)
-        if metadata.get("id") != spike_id:
-            errors.append("ERROR IMP004: fragment spikeId does not match metadata ID")
-    except ValueError as exc:
-        errors.append(f"ERROR IMP005: metadata link does not resolve: {exc}")
-    if metadata_file.is_file() and fragment.get("metadataSha256") != hashlib.sha256(metadata_file.read_bytes()).hexdigest():
-        errors.append("ERROR IMP006: metadata path has an altered SHA-256")
-    if not report_file.is_file():
-        errors.append("ERROR IMP007: report link does not resolve")
-    elif fragment.get("reportSha256") != hashlib.sha256(report_file.read_bytes()).hexdigest():
+    spike_prefix = f"spikes/{expected_directory}/"
+
+    def resolve_link(value: Any, label: str, expected: str | None = None, spike_local: bool = False) -> Path | None:
+        try:
+            candidate = resolve_canonical_file(planning_root, value, expected)
+        except ValueError as exc:
+            errors.append(f"ERROR IMP002: {label} is not canonical: {exc}")
+            return None
+        if spike_local and not isinstance(value, str):
+            errors.append(f"ERROR IMP003: {label} must be spike-local")
+            return None
+        if spike_local and not value.startswith(spike_prefix):
+            errors.append("ERROR IMP003: fragment identity must match the SPK metadata and report directory")
+            return None
+        return candidate
+
+    metadata_file = resolve_link(fragment.get("metadataPath"), "metadata path", f"{spike_prefix}metadata.yaml")
+    report_file = resolve_link(fragment.get("reportPath"), "report path", f"{spike_prefix}report.md")
+    if metadata_file is not None:
+        try:
+            metadata = load_yaml(metadata_file)
+            if metadata.get("id") != spike_id:
+                errors.append("ERROR IMP004: fragment spikeId does not match metadata ID")
+        except ValueError as exc:
+            errors.append(f"ERROR IMP005: metadata link does not resolve: {exc}")
+        if fragment.get("metadataSha256") != hashlib.sha256(metadata_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP006: metadata path has an altered SHA-256")
+    if report_file is not None and fragment.get("reportSha256") != hashlib.sha256(report_file.read_bytes()).hexdigest():
         errors.append("ERROR IMP008: report path has an altered SHA-256")
-    source_registry = planning_root / "research/source-registry.yaml"
-    try:
-        source_document = load_yaml(source_registry)
-        source_ids = {item.get("id") for item in source_document.get("sources", []) if isinstance(item, dict)}
-    except ValueError as exc:
-        source_ids = set()
-        errors.append(f"ERROR IMP009: source registry does not resolve: {exc}")
+
+    registry_relative = "research/source-registry.yaml"
+    source_registry = resolve_link(registry_relative, "source registry", registry_relative)
+    source_index: dict[str, dict[str, Any]] = {}
+    registry_digest = ""
+    if source_registry is not None:
+        registry_digest = hashlib.sha256(source_registry.read_bytes()).hexdigest()
+        try:
+            source_document = load_yaml(source_registry)
+            source_index = {item.get("id"): item for item in source_document.get("sources", []) if isinstance(item, dict) and isinstance(item.get("id"), str)}
+        except ValueError as exc:
+            errors.append(f"ERROR IMP009: source registry does not resolve: {exc}")
+    immutable_source_fields = ("id", "kind", "collectionStatus", "rawOrigin", "repository", "officialUrl", "immutableUrl", "ref", "commitSha", "path", "locator", "contentSha256", "retrievedAt", "authorityTier", "evidenceClass", "maturity", "uncertainty", "impacts", "freshness", "review")
     for link in fragment.get("sourceLinks", []):
         if not isinstance(link, dict):
             continue
-        source_file = planning_root / str(link.get("path", ""))
-        if link.get("sourceId") not in source_ids:
-            errors.append(f"ERROR IMP010: dangling source link {link.get('sourceId')}")
-        if not source_file.is_file():
-            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
-        elif link.get("sha256") != hashlib.sha256(source_file.read_bytes()).hexdigest():
-            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
+        source_file = resolve_link(link.get("path"), "source link", registry_relative)
+        source_id = link.get("sourceId")
+        source = source_index.get(source_id)
+        if source is None:
+            errors.append(f"ERROR IMP010: dangling source link {source_id}")
+        elif any(not source.get(field) for field in immutable_source_fields):
+            errors.append(f"ERROR IMP010: incomplete immutable source record {source_id}")
+        if source_file is not None and link.get("sha256") != registry_digest:
+            errors.append("ERROR IMP011: source registry digest does not match declared link digest")
+
     for link in fragment.get("measurementLinks", []):
         if not isinstance(link, dict):
             continue
-        measurement_file = planning_root / str(link.get("path", ""))
-        if not measurement_file.is_file():
-            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
-        elif link.get("sha256") != hashlib.sha256(measurement_file.read_bytes()).hexdigest():
-            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
+        measurement_file = resolve_link(link.get("path"), "measurement link", spike_local=True)
+        if measurement_file is not None and link.get("sha256") != hashlib.sha256(measurement_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP012: measurement path has an altered SHA-256")
     expected_patterns = {"requirement": r"^[A-Z][A-Z0-9]{3,4}-\d{2}$", "adr": r"^ADR-\d{4}$", "phase": r"^\d{2}$", "lesson": r"^LES-\d{3}$"}
     for impact in fragment.get("proposedImpacts", []):
         if isinstance(impact, dict) and not re.fullmatch(expected_patterns.get(impact.get("type"), r"$^"), str(impact.get("id", ""))):
@@ -527,15 +603,17 @@ def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
         evidence_kinds = {link.get("kind") for link in fragment.get("evidenceLinks", []) if isinstance(link, dict)}
         if any(kind not in evidence_kinds for kind in ("source", "metadata", "measurement", "report")):
             errors.append("ERROR IMP015: evidenceLinks must include source, metadata, measurement, and report provenance")
+        expected_evidence = {"source": registry_relative, "metadata": f"{spike_prefix}metadata.yaml", "measurement": fragment.get("measurementPath"), "report": f"{spike_prefix}report.md"}
         for link in fragment.get("evidenceLinks", []):
             if not isinstance(link, dict):
                 continue
-            evidence_file = planning_root / str(link.get("path", ""))
-            if not evidence_file.is_file() or link.get("sha256") != hashlib.sha256(evidence_file.read_bytes()).hexdigest():
-                errors.append("ERROR IMP016: evidence link path is missing or has an altered SHA-256")
-
+            kind = link.get("kind")
+            expected = expected_evidence.get(kind)
+            evidence_file = resolve_link(link.get("path"), "evidence link", expected, spike_local=kind in {"metadata", "measurement", "report"})
+            if evidence_file is not None and link.get("sha256") != hashlib.sha256(evidence_file.read_bytes()).hexdigest():
+                errors.append("ERROR IMP016: evidence link path has an altered SHA-256")
         try:
-            claims_document = load_yaml(planning_root / "research/claims.yaml")
+            claims_document = load_yaml(resolve_canonical_file(planning_root, "research/claims.yaml", "research/claims.yaml"))
             claims = {item.get("id"): item for item in claims_document.get("claims", []) if isinstance(item, dict)}
         except ValueError as exc:
             claims = {}
@@ -1234,7 +1312,7 @@ def main() -> int:
                 raise ValueError("claims.yaml claims must be a list of records")
             errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
             errors.extend(validate_claims(claims, source_ids, source_index))
-        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json")
+        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
         questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
         compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json")
         errors.extend(drift_errors + question_errors + compatibility_errors)

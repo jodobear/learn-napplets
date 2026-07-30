@@ -9,65 +9,84 @@ reportPath: spikes/spk-c-boundary-harness/report.md
 reportSha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
 measurementPath: spikes/spk-c-boundary-harness/measurements.yaml
 measurementSha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
-sourceIds: [SRC-POLICY-001]
+sourceIds:
+- SRC-POLICY-001
 sourceLinks:
-  - sourceId: SRC-POLICY-001
-    relation: affects
-    path: research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+- sourceId: SRC-POLICY-001
+  relation: affects
+  path: research/source-registry.yaml
+  sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
 measurementLinks:
-  - path: spikes/spk-c-boundary-harness/measurements.yaml
-    sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+- path: spikes/spk-c-boundary-harness/measurements.yaml
+  sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
 evidenceLinks:
-  - kind: source
-    path: research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
-  - kind: metadata
-    path: spikes/spk-c-boundary-harness/metadata.yaml
-    sha256: 39c876306da5d086ffdaa28114e648b092b5e242f858a02ceb8d7c9e2ed09c11
-  - kind: measurement
-    path: spikes/spk-c-boundary-harness/measurements.yaml
-    sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
-  - kind: report
-    path: spikes/spk-c-boundary-harness/report.md
-    sha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
+- kind: source
+  path: research/source-registry.yaml
+  sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
+- kind: metadata
+  path: spikes/spk-c-boundary-harness/metadata.yaml
+  sha256: 39c876306da5d086ffdaa28114e648b092b5e242f858a02ceb8d7c9e2ed09c11
+- kind: measurement
+  path: spikes/spk-c-boundary-harness/measurements.yaml
+  sha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+- kind: report
+  path: spikes/spk-c-boundary-harness/report.md
+  sha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
 proposedOpenQuestions:
-  - id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
-    rationale: Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser fixture behavior exists to assess the required boundary primitives.
+- id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  rationale: Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser
+    fixture behavior exists to assess the required boundary primitives.
 proposedDriftRecords:
-  - id: DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
-    rationale: The approved direct-installed Firefox execution surface did not produce the clean-context automation behavior expected by the Phase 1 browser matrix; retain the observed launcher mismatch without inferring browser protocol behavior.
+- id: DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  rationale: The approved direct-installed Firefox execution surface did not produce
+    the clean-context automation behavior expected by the Phase 1 browser matrix;
+    retain the observed launcher mismatch without inferring browser protocol behavior.
 compatibilityObservations:
-  - browser: Chromium / Google Chrome 150.0.7871.124
-    status: passed
-    classification: observed-browser-behavior
-    rationale: Five fresh contexts completed the isolated injection, postMessage, source-mapping, declared-domain removal, envelope, and deterministic-response contract.
-  - browser: Firefox 152.0.4
-    status: blocked
-    classification: observed-browser-behavior
-    rationale: All five required samples were blocked at Playwright launch; no fixture execution or browser primitive result was observed.
-affectedRequirements: [EVID-04]
-affectedPhases: ['01', '02', '05']
+- browser: Chromium / Google Chrome 150.0.7871.124
+  status: passed
+  classification: observed-browser-behavior
+  rationale: Five fresh contexts completed the isolated injection, postMessage, source-mapping,
+    declared-domain removal, envelope, and deterministic-response contract.
+- browser: Firefox 152.0.4
+  status: blocked
+  classification: observed-browser-behavior
+  rationale: All five required samples were blocked at Playwright launch; no fixture
+    execution or browser primitive result was observed.
+affectedRequirements:
+- EVID-04
+affectedPhases:
+- '01'
+- '02'
+- '05'
 uncertainty:
   state: material
-  reason: The only source bindings are blocked project-policy records, and the Firefox execution surface supplied no fixture observation; SPK-C cannot select or prove a cross-browser teaching-host profile.
+  reason: The only source bindings are blocked project-policy records, and the Firefox
+    execution surface supplied no fixture observation; SPK-C cannot select or prove
+    a cross-browser teaching-host profile.
 proposedImpacts:
-  - type: requirement
-    id: EVID-04
-    rationale: Mandatory browser spike evidence remains blocked until both declared browser surfaces produce replayable fixture observations or the impact is formally deferred with approval.
-  - type: adr
-    id: ADR-0005
-    rationale: The evidence is proposed only and contains a Firefox execution blocker; it cannot support an accepted host-profile decision.
-  - type: phase
-    id: '01'
-    rationale: Phase 1 retains the browser evidence blocker and its immutable local hand-off.
-  - type: phase
-    id: '02'
-    rationale: Phase 2 must not turn the fixture into selected architecture while SPK-C remains blocked.
-  - type: phase
-    id: '05'
-    rationale: The first production-like vertical slice must retain the static/deferred fallback until a reviewed cross-browser boundary baseline exists.
+- type: requirement
+  id: EVID-04
+  rationale: Mandatory browser spike evidence remains blocked until both declared
+    browser surfaces produce replayable fixture observations or the impact is formally
+    deferred with approval.
+- type: adr
+  id: ADR-0005
+  rationale: The evidence is proposed only and contains a Firefox execution blocker;
+    it cannot support an accepted host-profile decision.
+- type: phase
+  id: '01'
+  rationale: Phase 1 retains the browser evidence blocker and its immutable local
+    hand-off.
+- type: phase
+  id: '02'
+  rationale: Phase 2 must not turn the fixture into selected architecture while SPK-C
+    remains blocked.
+- type: phase
+  id: '05'
+  rationale: The first production-like vertical slice must retain the static/deferred
+    fallback until a reviewed cross-browser boundary baseline exists.
 securityEgress:
-  sandboxMode: sandbox=allow-scripts; opaque-origin srcdoc guest; top-level observer only
+  sandboxMode: sandbox=allow-scripts; opaque-origin srcdoc guest; top-level observer
+    only
   networkTargets: []
   usedSecrets: false
