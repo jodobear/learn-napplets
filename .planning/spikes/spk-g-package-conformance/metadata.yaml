@@ -22,17 +22,19 @@ variables:
     - disposable SPK-G-local ignored experiment path
     - public package entry points only; no deep or monorepo paths
     - immutable SRC/CLM bindings and recorded source-baseline comparison
+    - registered Plan 01-42 in-memory snapshot before evidence parsing or argv construction
+    - verified no-network, readonly-repository, isolated-workspace sandbox contract before any package operation
     - tools/phase1-python contract validation and no package installation before review
 commands:
   - tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance --contract
+  - tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --check
+  - tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --run-five
   - >-
-    Blocked: no exact package installation command exists because no cataloged
-    public package release/version/export is tied through CLM-CMP-PACKAGE-001
-    to a complete immutable public-release and implemented-source SRC baseline.
-  - >-
-    Blocked: no exact import, compile, or conformance command exists until a
-    reviewer approves a qualifying exact public package/version in the isolated
-    SPK-G experiment directory.
+    The runner first reads the registered Plan 01-42 spk-g-package-evidence
+    snapshot, evaluates every recovered eligibility and dated-approval field,
+    then requires an auditable OS sandbox contract before package argv exists.
+    Current evidence returns a no-operation blocked receipt; it never installs,
+    imports, compiles, contacts a registry, or runs a browser.
 environmentManifest: environment.json
 sourceBindings:
   - sourceId: SRC-POLICY-001
@@ -131,11 +133,11 @@ packageApproval:
         guessed, alternative, deep, private, workspace, or monorepo import.
 environmentFacts:
   environmentManifest: environment.json
-  capturedAt: '2026-07-24T08:42:56Z'
+  capturedAt: '2026-07-30T17:31:51Z'
   runner: tools/phase1-python Python 3.14.3; Node v22.22.0; npm 10.9.4
-  browserExecution: not-used; installed browser inventory retained without browser execution
-  packageExecution: no install, import, compile, or conformance command was eligible or run
-  network: not-used; no registry, project, or package network target was contacted
+  browserExecution: not-used; Firefox pre-attachment blocker remains unchanged and no browser is invoked
+  packageExecution: no install, import, compile, or conformance command is eligible or run until one recovered snapshot proves every field, a dated decision is approved, and the OS sandbox contract verifies
+  network: not-used; no registry, project, or package network target is contacted
 measurements:
   - name: eligible-public-package-count
     nondeterministic: false
@@ -164,26 +166,26 @@ measurements:
     median: 0
 rawOutputDigests:
   - path: fixture.md
-    sha256: 2481ad99caed14b4e72af36ec87cf19f0ca62aa7e2e7498016582917d192172b
+    sha256: 10a67ca7a4c0b70b6f552cc485493a6a6c595ae2441e90ddd090536675fa627b
   - path: environment.json
     sha256: 381e7c5c192eeac3cf23eefc3b669c6d2c3710b0ec3d0cb1bdecd68727726f1f
   - path: measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   - path: report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
 replayResult:
   status: blocked
-  outputDigest: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+  outputDigest: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml
     sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
   - kind: measurement
     path: measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   - kind: report
     path: report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
 blocked:
   reason: >-
     The dated human decision blocks CAND-NAPPLET-WEB-PACKAGE because there is
