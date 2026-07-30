@@ -201,7 +201,7 @@ def load_yaml(path: Path) -> dict:
 
 
 def phase1_command_errors(*args: str) -> list[str]:
-    command = [sys.executable, str(ROOT / "tools/validate-research.py"), *args]
+    command = [str(ROOT / "tools/phase1-python"), str(ROOT / "tools/validate-research.py"), *args]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     if result.returncode == 0:
         return []
@@ -336,7 +336,7 @@ def phase1_completion_errors() -> list[str]:
     index = PLANNING / "research/lesson-packets/index.yaml"
     errors.extend(phase1_command_errors("validate-lessons", "--index", str(index), "--required-present", "13"))
     lesson_result = subprocess.run(
-        [sys.executable, "-m", "unittest", "discover", "-s", "tests/phase1", "-p", "test_lesson_evidence.py"],
+        [str(ROOT / "tools/phase1-python"), "-m", "unittest", "discover", "-s", "tests/phase1", "-p", "test_lesson_evidence.py"],
         cwd=ROOT,
         text=True,
         capture_output=True,
