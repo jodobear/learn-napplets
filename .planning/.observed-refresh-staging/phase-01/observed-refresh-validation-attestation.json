@@ -1,0 +1,66 @@
+{
+  "generationSha256": "b61bffdc3c7efe6f56e63f0ddd796f558cf8edb49298333acf62f2b71bdbf503",
+  "profile": "observed-refresh",
+  "reviewedSourceInputBinding": {
+    "candidates": [
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR184-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR186-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPPLET-WEB-PR188-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR204-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR209-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-KEHTO-WEB-PR211-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      },
+      {
+        "id": "CAND-SRC-NAPS-WINDOW-20260728",
+        "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+      }
+    ],
+    "parsedRecordSha256": "ad9285d264383e3466ceeaea7142f42ed6d55143b5deb0376ead7974d2bb3369",
+    "parserVersion": "reviewed-refresh-v1",
+    "reportDigests": {
+      ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+      ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+      ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+      ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+    },
+    "reviewedCommit": "1a9449be4d74aa1ceed235d949802266846cf63b",
+    "sourceReportDigests": {
+      ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+      ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+      ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+      ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+    },
+    "sourceSnapshotCommit": "1a9449be4d74aa1ceed235d949802266846cf63b"
+  },
+  "spkG": {
+    "impactFragmentSha256": "12b9ca9fc95b2b4162927943a3998e7f3df64fa82b501b32671e157dc92db9fb",
+    "measurementsSha256": "8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891",
+    "metadataSha256": "8f29f304d276f27994c8bf514b6132123fa796243d99c3503e41cb2f233111e7",
+    "reportSha256": "5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f",
+    "status": "blocked"
+  },
+  "targetMap": {
+    "claims.yaml": "0907e0f4ea59d0f527a4c5b1e88bcd6ec2c676f21cbc39234140a5e62cf79026",
+    "drift-register.yaml": "fd0d18f2d31a180502a9f7a499c01000ca415bda996e0dcdfc289e6f249962d8",
+    "open-questions.yaml": "ea09889dab5d492a74092af55fbe7df2b5bf7dc0da152680af9ff6e28a8c7777",
+    "open-work-snapshot.json": "8107febb9f934dcf841cd7bd8cd9dd2e5ebf5af6b9ca2844acbbfb9cb096d4d1",
+    "package-map.md": "1c713f17618782aab7d6b73e4906818190be1aaf8e5f65a9d5d6594497b668e7"
+  }
+}

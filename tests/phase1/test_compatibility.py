@@ -343,7 +343,7 @@ class CompatibilitySchema(unittest.TestCase):
             [('OW-NIP5D-001', 'unavailable'), ('OW-NAP-001', 'unavailable'),
              ('OW-NAPPLET-WEB-001', 'unavailable'), ('OW-RUNTIME-001', 'unavailable')],
         )
-        self.assertEqual([entry['id'] for entry in snapshot['snapshotHistory']], ['OWS-002'])
+        self.assertEqual([entry['id'] for entry in snapshot['snapshotHistory']], ['OWS-002', 'OWS-003'])
         current = snapshot['snapshotHistory'][0]
         self.assertEqual(current['parentSnapshotId'], 'OWS-001')
         self.assertEqual(current['retrievedAt'], '2026-07-28T00:00:00Z')
@@ -353,6 +353,12 @@ class CompatibilitySchema(unittest.TestCase):
             expected_receipts,
         )
         self.assertEqual(current['items'][0]['spkGBlockerRouting'], routing)
+        refresh = snapshot['snapshotHistory'][1]
+        self.assertEqual(refresh['parentSnapshotId'], 'OWS-002')
+        self.assertEqual(refresh['status'], 'blocked')
+        self.assertEqual(refresh['reviewedSourceInputBinding']['reviewedCommit'], '1a9449be4d74aa1ceed235d949802266846cf63b')
+        self.assertEqual(len(refresh['items']), 7)
+        self.assertTrue(all(item['retrievalOutcome'] in {'collected', 'failed', 'observed-zero-result'} for item in refresh['items']))
 
 
 if __name__=='__main__':

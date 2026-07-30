@@ -1544,6 +1544,159 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         release_consolidation_lock(lock)
 
 
+OBSERVED_REFRESH_TARGETS = (
+    "claims.yaml",
+    "drift-register.yaml",
+    "open-questions.yaml",
+    "package-map.md",
+    "open-work-snapshot.json",
+)
+OBSERVED_REFRESH_READER_TARGETS = tuple(f"research/{name}" for name in OBSERVED_REFRESH_TARGETS)
+OBSERVED_REFRESH_ATTESTATION = "observed-refresh-validation-attestation.json"
+
+
+def _observed_refresh_planning_root(staged_root: Path, attestation: Path) -> tuple[Path, Path]:
+    """Constrain an observed-refresh candidate to its five-record staging envelope."""
+    staged = staged_root.resolve(strict=True)
+    if staged.is_symlink() or not staged.is_dir() or staged.name != "phase-01" or staged.parent.name != ".observed-refresh-staging":
+        raise ValueError("observed-refresh staged root must be a regular phase-01 profile directory")
+    planning = staged.parent.parent
+    if planning.name != ".planning" or any(parent.is_symlink() for parent in (planning, staged.parent, staged)):
+        raise ValueError("observed-refresh staged root must remain below a regular .planning directory")
+    candidate = attestation.absolute()
+    expected = staged / OBSERVED_REFRESH_ATTESTATION
+    if candidate != expected or candidate.is_symlink() or (candidate.exists() and not candidate.is_file()):
+        raise ValueError("observed-refresh attestation must be the exact regular staging-root attestation path")
+    return planning, expected
+
+
+def _observed_refresh_staged_bytes(staged: Path, attestation: Path) -> dict[str, bytes]:
+    names = sorted(item.name for item in staged.iterdir())
+    expected = [*sorted(OBSERVED_REFRESH_TARGETS), attestation.name]
+    # The attestation is emitted last; an existing one is permitted only while being
+    # revalidated, and is discarded before any validation result is reported.
+    if names not in (sorted(OBSERVED_REFRESH_TARGETS), expected):
+        raise ValueError("observed-refresh staging root must contain exactly five targets and its optional attestation")
+    content: dict[str, bytes] = {}
+    for target in OBSERVED_REFRESH_TARGETS:
+        path = staged / target
+        mode = path.stat(follow_symlinks=False).st_mode if path.exists() else 0
+        if path.is_symlink() or not stat.S_ISREG(mode):
+            raise ValueError("observed-refresh staged target must be a regular non-symlink file")
+        content[target] = path.read_bytes()
+    return content
+
+
+def _validate_observed_refresh_overlay(
+    content: Mapping[str, bytes],
+    source_document: Mapping[str, Any],
+    planning: Path,
+) -> list[str]:
+    """Run the ordinary record validators on the five-file in-memory overlay."""
+    errors: list[str] = []
+    try:
+        claims_document = normalize_yaml(yaml.safe_load(content["claims.yaml"].decode("utf-8")))
+        drift_document = normalize_yaml(yaml.safe_load(content["drift-register.yaml"].decode("utf-8")))
+        questions_document = normalize_yaml(yaml.safe_load(content["open-questions.yaml"].decode("utf-8")))
+        json.loads(content["open-work-snapshot.json"].decode("utf-8"))
+        content["package-map.md"].decode("utf-8")
+    except (UnicodeDecodeError, json.JSONDecodeError, yaml.YAMLError) as exc:
+        return [f"ERROR OBS001: staged observed-refresh record is malformed: {exc}"]
+    if not all(isinstance(document, dict) for document in (claims_document, drift_document, questions_document)):
+        return ["ERROR OBS002: staged observed-refresh YAML roots must be mappings"]
+    claims = claims_document.get("claims")
+    drift = drift_document.get("drift")
+    questions = questions_document.get("questions")
+    sources = source_document.get("sources")
+    if not all(isinstance(records, list) and all(isinstance(record, dict) for record in records) for records in (claims, drift, questions, sources)):
+        return ["ERROR OBS003: staged observed-refresh families must contain record lists"]
+    source_ids, source_id_errors = record_ids(sources, "SRC-")
+    source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
+    claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+    errors.extend(source_id_errors + claim_id_errors)
+    errors.extend(schema_errors(planning / "research/schemas/claim.schema.json", claims))
+    errors.extend(schema_errors(planning / "research/schemas/drift.schema.json", drift))
+    errors.extend(schema_errors(planning / "research/schemas/open-question.schema.json", questions))
+    errors.extend(validate_claims(claims, source_ids, source_index))
+    errors.extend(validate_drift(drift, source_ids, claim_ids))
+    return errors
+
+
+def validate_observed_refresh_staged(staged_root: Path, attestation: Path) -> None:
+    """Validate and attest one exact five-file observed-refresh candidate generation.
+
+    Receipt provenance is revalidated before acquiring the Plan 01-42 shared-lock
+    snapshot. The validator then overlays only staged bytes and never writes a live
+    canonical target; a failed check removes any provisional attestation.
+    """
+    planning, attestation_path = _observed_refresh_planning_root(staged_root, attestation)
+    attestation_path.unlink(missing_ok=True)
+    try:
+        # The Plan 01-29 source-input map is bound to this repository's reviewed Git
+        # blobs. Revalidate that trusted receipt first, then require any copied-root
+        # fixture or actual staging context to have byte-equivalent queue/receipt
+        # bindings. This keeps tests isolated without treating their mutable report
+        # copies as authority.
+        trusted_planning = ROOT / ".planning"
+        trusted_queue_path = trusted_planning / "research/upstream-acquisition-queue.yaml"
+        trusted_receipt_path = trusted_planning / "research/reports/upstream-acquisition-20260728.md"
+        trusted_review_path = trusted_planning / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
+        acquisition_command = [
+            sys.executable, str(ROOT / "tools/acquire-sources.py"), "validate-reviewed-acquisition",
+            "--queue", str(trusted_queue_path), "--receipt", str(trusted_receipt_path), "--review", str(trusted_review_path),
+        ]
+        provenance = subprocess.run(acquisition_command, cwd=ROOT, text=True, capture_output=True, check=False)
+        if provenance.returncode:
+            detail = (provenance.stderr or provenance.stdout).strip().replace("\n", " | ")
+            raise ValueError(f"reviewed acquisition provenance refused before observed-refresh snapshot: {detail or 'non-zero exit'}")
+        acquisition = canonical_acquisition_module()
+        trusted_queue = load_json(trusted_queue_path)
+        trusted_receipt = load_json(trusted_receipt_path)
+        queue = load_json(planning / "research/upstream-acquisition-queue.yaml")
+        receipt = load_json(planning / "research/reports/upstream-acquisition-20260728.md")
+        acquisition.validate_reviewed_acquisition_documents(queue, receipt)
+        if queue.get("reviewedSourceInputBinding") != trusted_queue.get("reviewedSourceInputBinding") or receipt.get("reviewedSourceInputBinding") != trusted_receipt.get("reviewedSourceInputBinding"):
+            raise ValueError("staged validation queue/receipt binding differs from the Plan 01-29-reviewed source-input map")
+        binding = trusted_queue.get("reviewedSourceInputBinding")
+        if not isinstance(binding, Mapping):
+            raise ValueError("reviewed acquisition binding is unavailable after revalidation")
+        source_document = load_yaml(planning / "research/source-registry.yaml")
+        snapshot = read_registered_snapshot("observed-refresh-validation", OBSERVED_REFRESH_READER_TARGETS, planning)
+        staged = staged_root.resolve(strict=True)
+        content = _observed_refresh_staged_bytes(staged, attestation_path)
+        overlay_errors = _validate_observed_refresh_overlay(content, source_document, planning)
+        if overlay_errors:
+            raise ValueError("; ".join(overlay_errors[:10]))
+        spk_directory = planning / "spikes/spk-g-package-conformance"
+        spk_errors = validate_spike(spk_directory, "complete") + validate_impact_fragment(spk_directory / "impact-fragment.yaml", planning)
+        if spk_errors:
+            raise ValueError("validated SPK-G hand-off is unavailable: " + "; ".join(spk_errors[:10]))
+        # Explicitly retain that this overlay was evaluated against a complete locked
+        # generation, not an independently opened collection of live targets.
+        if tuple(snapshot) != OBSERVED_REFRESH_READER_TARGETS:
+            raise ValueError("observed-refresh canonical snapshot is incomplete or unordered")
+        recovery = canonical_recovery_module()
+        target_map = {name: hashlib.sha256(content[name]).hexdigest() for name in sorted(content)}
+        spk_bindings = {
+            "status": load_yaml(spk_directory / "metadata.yaml").get("status"),
+            "metadataSha256": hashlib.sha256((spk_directory / "metadata.yaml").read_bytes()).hexdigest(),
+            "measurementsSha256": hashlib.sha256((spk_directory / "measurements.yaml").read_bytes()).hexdigest(),
+            "reportSha256": hashlib.sha256((spk_directory / "report.md").read_bytes()).hexdigest(),
+            "impactFragmentSha256": hashlib.sha256((spk_directory / "impact-fragment.yaml").read_bytes()).hexdigest(),
+        }
+        document = {
+            "profile": "observed-refresh",
+            "targetMap": target_map,
+            "generationSha256": recovery.generation_sha256({name: content[name] for name in sorted(content)}),
+            "reviewedSourceInputBinding": dict(binding),
+            "spkG": spk_bindings,
+        }
+        attestation_path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    except Exception:
+        attestation_path.unlink(missing_ok=True)
+        raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     command = parser.add_subparsers(dest="command", required=True)
@@ -1583,6 +1736,9 @@ def main() -> int:
     replay.add_argument("--check", action="store_true")
     recovery = command.add_parser("recover-consolidation")
     recovery.add_argument("--research", type=Path, required=True)
+    observed_refresh = command.add_parser("validate-observed-refresh-staged")
+    observed_refresh.add_argument("--staged-root", type=Path, required=True, help="Path to the exact five-file observed-refresh staging root")
+    observed_refresh.add_argument("--attestation", type=Path, required=True, help="Path for the digest-bound observed-refresh attestation")
     args = parser.parse_args()
 
     if args.command == "validate-spike":
@@ -1611,6 +1767,12 @@ def main() -> int:
             errors = []
         except Exception as exc:
             errors = [f"ERROR REC001: canonical recovery refused: {exc}"]
+    elif args.command == "validate-observed-refresh-staged":
+        try:
+            validate_observed_refresh_staged(args.staged_root, args.attestation)
+            errors = []
+        except Exception as exc:
+            errors = [f"ERROR OBS004: observed-refresh staged validation refused: {exc}"]
     else:
         errors = []
     if args.command != "validate":
