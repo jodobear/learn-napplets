@@ -261,5 +261,150 @@ class SpikeValidationTests(unittest.TestCase):
             )
 
 
+    def load_spk_g_runner(self):
+        runner = ROOT / "tools" / "measure-package-conformance.py"
+        spec = importlib.util.spec_from_file_location("measure_package_conformance", runner)
+        self.assertIsNotNone(spec, "SPK-G runner must be importable")
+        module = importlib.util.module_from_spec(spec)
+        self.assertIsNotNone(spec.loader, "SPK-G runner must have a loader")
+        spec.loader.exec_module(module)
+        return module
+
+    def spk_g_snapshot(self, module, *, qualified: bool = False) -> dict[str, bytes]:
+        dimensions = [
+            {"name": name, "status": "qualified" if qualified else "blocked"}
+            for name in module.COMPATIBILITY_DIMENSIONS
+        ]
+        compatibility = {
+            "compatibility": [{
+                "id": "CMP-BASELINE-001",
+                "dimensions": dimensions,
+                "baselineEligibility": {
+                    "status": "eligible" if qualified else "blocked",
+                    "approval": "approved" if qualified else "not-approved",
+                    "reviewRecordId": "APR-PACKAGE-001" if qualified else None,
+                },
+            }],
+        }
+        artifact = {
+            "status": "qualified" if qualified else "blocked",
+            "packageName": "example-package" if qualified else None,
+            "version": "1.2.3" if qualified else None,
+            "tarballIntegrity": "sha512-example" if qualified else None,
+            "provenance": "https://registry.example.invalid/example-package" if qualified else None,
+            "license": "MIT" if qualified else None,
+            "rootExport": "example-package" if qualified else None,
+            "releasedSourceId": "SRC-RELEASE-001" if qualified else None,
+            "implementationSourceId": "SRC-IMPLEMENTATION-001" if qualified else None,
+            "runtimeInput": "runtime-fixture" if qualified else None,
+            "exampleInput": "example-fixture" if qualified else None,
+            "fixtureInput": "root-export-fixture" if qualified else None,
+            "conformanceInput": "root-export-conformance" if qualified else None,
+        }
+        sources = {
+            "sources": [
+                {"id": source_id, "collectionStatus": "collected", "review": {"status": "approved"}, "freshness": {"state": "current"}}
+                for source_id in ("SRC-RELEASE-001", "SRC-IMPLEMENTATION-001")
+            ],
+        }
+        package = {
+            "artifactEvidence": artifact,
+            "approval": "approved" if qualified else "not-approved",
+            "packageDecision": {
+                "status": "approved" if qualified else "blocked",
+                "reviewedAt": "2026-07-30" if qualified else None,
+            },
+        }
+        documents = {
+            "research/compatibility-matrix.yaml": compatibility,
+            "research/package-evidence.yaml": package,
+            "research/source-registry.yaml": sources,
+            "research/claims.yaml": {"claims": []},
+            "research/drift-register.yaml": {"drift": []},
+            "research/open-questions.yaml": {"questions": []},
+        }
+        return {name: yaml.safe_dump(documents[name], sort_keys=False).encode("utf-8") for name in module.SPK_G_SNAPSHOT_TARGETS}
+
+    def test_spk_g_measurement_requires_qualified_eligibility_and_approval(self) -> None:
+        module = self.load_spk_g_runner()
+        attempted: list[list[str]] = []
+        blocked = module.run_spk_g(
+            self.spk_g_snapshot(module),
+            sandbox_probe=lambda: module.SandboxContract.unavailable("NO_SANDBOX"),
+            operation_runner=lambda argv, workspace: attempted.append(argv),
+        )
+        self.assertEqual(blocked["status"], "SPK-G-BLOCKED-ELIGIBILITY")
+        self.assertIn("DIMENSION_NORMATIVE_PROTOCOL_BLOCKED", blocked["reasons"])
+        self.assertEqual(attempted, [])
+
+        missing_artifact = self.spk_g_snapshot(module, qualified=True)
+        package = yaml.safe_load(missing_artifact["research/package-evidence.yaml"])
+        package["artifactEvidence"].pop("license")
+        missing_artifact["research/package-evidence.yaml"] = yaml.safe_dump(package, sort_keys=False).encode("utf-8")
+        result = module.run_spk_g(missing_artifact, sandbox_probe=lambda: module.SandboxContract.unavailable("NO_SANDBOX"))
+        self.assertEqual(result["status"], "SPK-G-BLOCKED-ELIGIBILITY")
+        self.assertIn("PACKAGE_LICENSE_MISSING", result["reasons"])
+
+    def test_spk_g_sandbox_blocks_unavailable_or_escape_prone_execution(self) -> None:
+        module = self.load_spk_g_runner()
+        attempted: list[list[str]] = []
+        for reason in ("NO_USER_NAMESPACE", "NETWORK_REACHABLE", "REPOSITORY_WRITABLE", "SECRET_ENVIRONMENT", "RESOURCE_LIMITS_MISSING"):
+            with self.subTest(reason=reason):
+                result = module.run_spk_g(
+                    self.spk_g_snapshot(module, qualified=True),
+                    sandbox_probe=lambda reason=reason: module.SandboxContract.unavailable(reason),
+                    operation_runner=lambda argv, workspace: attempted.append(argv),
+                )
+                self.assertEqual(result["status"], "SPK-G-BLOCKED-SANDBOX-UNAVAILABLE")
+                self.assertEqual(result["reasons"], [reason])
+        self.assertEqual(attempted, [])
+
+    def test_spk_g_reader_reads_one_transactional_snapshot_or_refuses(self) -> None:
+        module = self.load_spk_g_runner()
+        parsed = 0
+        attempted: list[list[str]] = []
+
+        def refusing_reader():
+            raise module.SnapshotRefused("CANONICAL_LOCK_CONFLICT")
+
+        refused = module.run_spk_g(
+            snapshot_reader=refusing_reader,
+            parser_observer=lambda: self.fail("canonical parsing occurred after snapshot refusal"),
+            operation_runner=lambda argv, workspace: attempted.append(argv),
+        )
+        self.assertEqual(refused["status"], "SPK-G-BLOCKED-CANONICAL-SNAPSHOT-REFUSED")
+        self.assertEqual(attempted, [])
+
+        def observed_parser():
+            nonlocal parsed
+            parsed += 1
+
+        complete = module.run_spk_g(
+            snapshot_reader=lambda: self.spk_g_snapshot(module),
+            parser_observer=observed_parser,
+            sandbox_probe=lambda: module.SandboxContract.unavailable("NO_SANDBOX"),
+        )
+        self.assertEqual(parsed, 1)
+        self.assertEqual(complete["status"], "SPK-G-BLOCKED-ELIGIBILITY")
+
+    def test_spk_g_retains_evidence_only_after_complete_result_validation(self) -> None:
+        module = self.load_spk_g_runner()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            targets = {name: root / name for name in ("measurements.yaml", "report.md", "impact-fragment.yaml")}
+            original = {name: f"old-{name}\n".encode("utf-8") for name in targets}
+            for name, path in targets.items():
+                path.write_bytes(original[name])
+            candidate = {name: f"new-{name}\n".encode("utf-8") for name in targets}
+            workspace = root / "candidate"
+            workspace.mkdir()
+            for name, value in candidate.items():
+                (workspace / name).write_bytes(value)
+            with self.assertRaises(module.ReceiptValidationError):
+                module.retain_validated_bundle(workspace, targets, validator=lambda _: ["receipt invalid"])
+            self.assertFalse(workspace.exists())
+            self.assertEqual({name: path.read_bytes() for name, path in targets.items()}, original)
+
+
 if __name__ == "__main__":
     unittest.main()
