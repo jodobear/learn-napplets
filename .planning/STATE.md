@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Plan 01-45 Task 1 complete; waiting for approval before bounded public HTTPS reads
-last_updated: "2026-07-29T20:52:42Z"
+stopped_at: Wave 3 complete; context guard checkpoint before Wave 4
+last_updated: "2026-07-30T01:27:26Z"
 last_activity: 2026-07-30
-last_activity_desc: Plan 01-45 Task 1 complete; external-action checkpoint reached before Task 2
+last_activity_desc: Plan 01-45 complete; bounded non-normative public acquisition merged and verified
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 45
-  completed_plans: 30
+  completed_plans: 31
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 30 of 45 executed; Plan 01-45 Task 1 complete, Task 2 pending
-Status: CHECKPOINT — explicit approval required before bounded public HTTPS reads
-Last activity: 2026-07-30 — Plan 01-45 fixture-only tracer complete; no network request made
+Plan: 31 of 45 executed; Wave 4 plans 01-30, 01-32, and 01-33 are next
+Status: Wave 3 complete; fresh context required before Wave 4
+Last activity: 2026-07-30 — Plan 01-45 bounded acquisition merged and post-merge verification passed
 
-Progress: [███████░░░] 67%
+Progress: [███████░░░] 69%
 
 ## Performance Metrics
 
@@ -223,6 +223,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-29T20:52:42Z
-Stopped at: Plan 01-45 Task 1 complete; waiting for human decision on bounded public HTTPS reads
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — durable worktree and exact external-action checkpoint
+Last session: 2026-07-30T01:27:26Z
+Stopped at: Wave 3 complete; context guard checkpoint before Wave 4
+Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md` — resume `/gsd-execute-phase 1` at Wave 4

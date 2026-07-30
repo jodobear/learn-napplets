@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 30/45 plans executed
+**Plans**: 31/45 plans executed
 
 Gap Closure Plans:
 
@@ -73,7 +73,7 @@ Gap Closure Plans:
 
 **Wave 3** *(blocked on Plan 01-44)*
 
-- [ ] 01-45-PLAN.md — Trace bounded immutable public-source acquisition and retain complete acquisition history.
+- [x] 01-45-PLAN.md — Trace bounded immutable public-source acquisition and retain complete acquisition history.
 
 **Wave 4** *(blocked on Plan 01-45)*
 
@@ -470,7 +470,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 30/45 | In Progress|  |
+| 1. Research and Truth Baseline | 31/45 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
