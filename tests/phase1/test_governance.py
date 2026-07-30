@@ -42,6 +42,19 @@ GOVERNANCE = {
         "contentLearning": {"status": "pending"},
         "release": {"status": "pending"},
     },
+    "authorityDeterminations": [{
+        "scopeId": "CAND-TEST-001",
+        "candidateId": "CAND-TEST-001",
+        "authorityArtifactPath": ".planning/research/authority-determinations.yaml",
+        "authorityArtifactSha256": "0" * 64,
+        "acquisitionReceiptPath": ".planning/research/reports/upstream-acquisition-20260728.md",
+        "acquisitionReceiptSha256": "1" * 64,
+        "determinationIds": [
+            "AUTH-TEST-PRODUCT", "AUTH-TEST-PROTOCOL", "AUTH-TEST-SECURITY",
+            "AUTH-TEST-ACCESSIBILITY", "AUTH-TEST-CONTENT", "AUTH-TEST-RELEASE",
+        ],
+        "reviewedSourceInputBinding": {"parserVersion": "test"},
+    }],
     "blockers": [],
     "phaseResult": "blocked",
 }
@@ -109,7 +122,7 @@ class GovernanceValidationTests(unittest.TestCase):
             path = Path(temp) / "governance.yaml"
             path.write_text(yaml.safe_dump(GOVERNANCE), encoding="utf-8")
             self.assertEqual(self.run_cli("validate-governance", str(path)).returncode, 0)
-            for key in ("owner", "requiredApprover", "requirements", "exitEvidence", "verification"):
+            for key in ("owner", "requiredApprover", "requirements", "exitEvidence", "verification", "authorityDeterminations"):
                 with self.subTest(key=key):
                     record = copy.deepcopy(GOVERNANCE)
                     del record[key]

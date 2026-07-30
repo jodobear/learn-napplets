@@ -61,7 +61,7 @@ entries:
     sha256: 1eb9c8634698a9487078d0a01131f597473a5966e93f679dca30bf8bf5a60b50
   metadata: &id011
     path: spikes/spk-d-verified-loader/metadata.yaml
-    sha256: d4b83bb4d3eb6d49b5ed2ae804170bd1acba19332ec02a05e9f1c1f3a80a5781
+    sha256: 0cbf77e7b1a75f39a2531303e3a2b77f3af419695f23d0b72bfbf0952b8594c5
   measurement: &id012
     path: spikes/spk-d-verified-loader/measurements.yaml
     sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
@@ -79,7 +79,7 @@ entries:
     sha256: 26503edcec77a0a65b44dfbd5c2a75a987390be3530a2bc18d7fc54e8a425588
   metadata: &id014
     path: spikes/spk-e-content-rendering/metadata.yaml
-    sha256: a22fabd3fe3bf71a68610fa44eee154114e6b734245ac668f248e0571524787f
+    sha256: 778a336aa40e188846061ff810603591b605391edffcbbfcc8303443ed29d85c
   measurement: &id015
     path: spikes/spk-e-content-rendering/measurements.yaml
     sha256: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8
@@ -115,7 +115,7 @@ entries:
     sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
   metadata: &id020
     path: spikes/spk-g-package-conformance/metadata.yaml
-    sha256: 8a0a91e7a70a77466aa3942cdc2e6c59a5350df98a59606ecd68a3d315f8195c
+    sha256: 523710858c5f69ba458f8ab45b5dbcff0b4eb0d16504537eea91a7134831ebee
   measurement: &id021
     path: spikes/spk-g-package-conformance/measurements.yaml
     sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
@@ -133,7 +133,7 @@ entries:
     sha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
   metadata: &id023
     path: spikes/spk-h-browser-egress/metadata.yaml
-    sha256: f0f5da74309fab1c7fc75c9d680b257cad849a718e203ad856204d0feb096a18
+    sha256: 3f5c3a1a8106d8f26c11efd7ae18cbca1ba96a73e79912573cf2b8a03782e89b
   measurement: &id024
     path: spikes/spk-h-browser-egress/measurements.yaml
     sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
@@ -151,7 +151,7 @@ entries:
     sha256: eb08fd60641fdbd8e588e212f60b0267f33357c49db04080656ff19336b0dec3
   metadata: &id026
     path: spikes/spk-i-diagram-motion/metadata.yaml
-    sha256: 269e99a1ab72641e1cea91a08cf5814d61fdb8378492aacfbbfc5d4d5cd7ef24
+    sha256: fb68f41fbb7de16b96783aa4305ff718c568950fffc15d80a0aec75be4d258fa
   measurement: &id027
     path: spikes/spk-i-diagram-motion/measurements.yaml
     sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
@@ -169,7 +169,7 @@ entries:
     sha256: 48ceace6a76927b2cb4fd7881235bff926a7524621885e1aa98a1c4cf03e3321
   metadata: &id029
     path: spikes/spk-j-code-editing/metadata.yaml
-    sha256: 81037c44ec19d0687caf68994ec465cf6f33c476f2b84262f12c538524d6bd9c
+    sha256: 424bf3e29e7509c3e18835ca44e17e3c20962375f10b407fafe6d3d8ed9665a8
   measurement: &id030
     path: spikes/spk-j-code-editing/measurements.yaml
     sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
@@ -187,7 +187,7 @@ entries:
     sha256: 923d3085c176dbdb83603d283f4f4ddaf0128eab90244ccbd8e20fefd42dd594
   metadata: &id032
     path: spikes/spk-k-deployment/metadata.yaml
-    sha256: 5e0b8c56b4711432873695a42b0c7c3b448af107f32ca23e976c46f40dbf0879
+    sha256: 7d32ea4b9c1a388e9cffc47184b10c2ec1b4159a618c91d91aefc0dc17d5b1a1
   measurement: &id033
     path: spikes/spk-k-deployment/measurements.yaml
     sha256: 8b0f2c8f997427e9677c989c80a78586cf45f0b4d4c8a06b7f740bb6cb1a2b70
