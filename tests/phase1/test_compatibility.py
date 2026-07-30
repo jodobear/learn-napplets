@@ -155,7 +155,15 @@ class CompatibilitySchema(unittest.TestCase):
             old_result = module.evaluate_compatibility_baseline(old_index)
             staged = {relative: old_snapshot[relative] for relative in module.COMPATIBILITY_SNAPSHOT_TARGETS}
             staged['research/claims.yaml'] += b'\n# successful-publisher-generation\n'
-            recovery.publish_generation(planning, staged)
+            published = []
+            def publish_after_first_index_access():
+                recovery.publish_generation(planning, staged)
+                published.append(True)
+            self.assertEqual(
+                module.evaluate_registered_compatibility(planning, after_snapshot=publish_after_first_index_access),
+                old_result,
+            )
+            self.assertEqual(published, [True])
             self.assertEqual(module.evaluate_compatibility_baseline(old_index), old_result)
             self.assertEqual(old_result['familyDigests'], module.compatibility_family_digests(old_index))
             guarded = module.build_compatibility_snapshot_index(old_snapshot)

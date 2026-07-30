@@ -18,7 +18,8 @@ import tempfile
 import time
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any, Mapping
+from types import MappingProxyType
+from typing import Any, Mapping, NamedTuple
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
@@ -44,6 +45,300 @@ def read_registered_snapshot(reader_id: str, targets: tuple[str, ...], planning_
         return canonical_recovery_module().read_canonical_snapshot(reader_id, targets, root=planning_root)
     except Exception as exc:
         raise ValueError(f"canonical snapshot refused for {reader_id}: {exc}") from exc
+
+
+COMPATIBILITY_SNAPSHOT_TARGETS = (
+    "research/source-registry.yaml",
+    "research/claims.yaml",
+    "research/compatibility-matrix.yaml",
+    "research/drift-register.yaml",
+    "research/open-questions.yaml",
+    "research/package-evidence.yaml",
+    "research/package-map.md",
+    "research/upstream-acquisition-queue.yaml",
+    "research/reports/upstream-acquisition-20260728.md",
+    "spikes/spk-g-package-conformance/metadata.yaml",
+    "spikes/spk-g-package-conformance/report.md",
+)
+COMPATIBILITY_DIMENSION_ORDER = (
+    "normativeProtocol",
+    "observedImplementation",
+    "publishedPackage",
+    "runtime",
+    "exampleFixture",
+    "currentWork",
+    "conformance",
+)
+
+
+def dimension_reason_token(name: str) -> str:
+    """Return the stable ordered diagnostic token for a closed dimension name."""
+    return re.sub(r"(?<!^)([A-Z])", r"_\1", name).upper()
+
+
+def _freeze(value: Any) -> Any:
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {key: _thaw(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(item) for item in value]
+    return value
+
+
+def _snapshot_yaml(snapshot: Mapping[str, bytes], target: str) -> Mapping[str, Any]:
+    try:
+        value = normalize_yaml(yaml.safe_load(snapshot[target].decode("utf-8")))
+    except (KeyError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise ValueError(f"compatibility snapshot target is unavailable or malformed: {target}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"compatibility snapshot target must be an object: {target}")
+    return value
+
+
+def _snapshot_json(snapshot: Mapping[str, bytes], target: str) -> Mapping[str, Any]:
+    try:
+        value = json.loads(snapshot[target].decode("utf-8"))
+    except (KeyError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"compatibility snapshot target is unavailable or malformed: {target}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"compatibility snapshot target must be an object: {target}")
+    return value
+
+
+def _family_digest(snapshot: Mapping[str, bytes], prefix: str) -> str:
+    digest = hashlib.sha256()
+    for target in sorted(item for item in snapshot if item.startswith(prefix)):
+        digest.update(target.encode("utf-8")); digest.update(b"\0")
+        digest.update(snapshot[target]); digest.update(b"\0")
+    return digest.hexdigest()
+
+
+class CompatibilitySnapshotIndex(NamedTuple):
+    """The sole dependency of compatibility eligibility evaluation.
+
+    Every family is parsed from bytes returned by the registered Plan 01-42 reader.
+    This type intentionally carries no root or path attribute, preventing helpers
+    from reopening mutable canonical records after the snapshot is acquired.
+    """
+
+    sources: Mapping[str, Mapping[str, Any]]
+    claims: Mapping[str, Mapping[str, Any]]
+    compatibility: tuple[Mapping[str, Any], ...]
+    drift: Mapping[str, Mapping[str, Any]]
+    questions: Mapping[str, Mapping[str, Any]]
+    package_evidence: Mapping[str, Any]
+    package_map: str
+    acquisition_queue: Mapping[str, Any]
+    acquisition_receipt: Mapping[str, Any]
+    spk_g_metadata: Mapping[str, Any]
+    spk_g_report: str
+    family_digests: Mapping[str, str]
+    provenance_reasons: tuple[str, ...]
+
+
+def build_compatibility_snapshot_index(snapshot: Mapping[str, bytes]) -> CompatibilitySnapshotIndex:
+    """Parse the exact registered snapshot into immutable source-family indexes."""
+    if tuple(snapshot) != COMPATIBILITY_SNAPSHOT_TARGETS:
+        raise ValueError("compatibility snapshot target set is incomplete or unordered")
+    source_document = _snapshot_yaml(snapshot, "research/source-registry.yaml")
+    claim_document = _snapshot_yaml(snapshot, "research/claims.yaml")
+    matrix_document = _snapshot_yaml(snapshot, "research/compatibility-matrix.yaml")
+    drift_document = _snapshot_yaml(snapshot, "research/drift-register.yaml")
+    question_document = _snapshot_yaml(snapshot, "research/open-questions.yaml")
+    package_evidence = _snapshot_yaml(snapshot, "research/package-evidence.yaml")
+    if matrix_document.get("schemaVersion") != 2:
+        raise ValueError("compatibility-matrix.yaml must use schemaVersion 2; migrate legacy records first")
+    queue = _snapshot_json(snapshot, "research/upstream-acquisition-queue.yaml")
+    receipt = _snapshot_json(snapshot, "research/reports/upstream-acquisition-20260728.md")
+    metadata = _snapshot_yaml(snapshot, "spikes/spk-g-package-conformance/metadata.yaml")
+    try:
+        sources = source_document["sources"]
+        claims = claim_document["claims"]
+        compatibility = matrix_document["compatibility"]
+        drift = drift_document["drift"]
+        questions = question_document["questions"]
+    except KeyError as exc:
+        raise ValueError("compatibility snapshot family lacks its required record list") from exc
+    families = (sources, claims, compatibility, drift, questions)
+    if any(not isinstance(family, list) or not all(isinstance(item, dict) for item in family) for family in families):
+        raise ValueError("compatibility snapshot family contains malformed records")
+    provenance_reasons: list[str] = []
+    try:
+        acquisition = canonical_acquisition_module()
+        acquisition.validate_reviewed_acquisition_documents(queue, receipt)
+    except Exception:
+        provenance_reasons.append("PROVENANCE_REVIEWED_ACQUISITION_INVALID")
+    return CompatibilitySnapshotIndex(
+        sources=_freeze({item["id"]: item for item in sources if isinstance(item.get("id"), str)}),
+        claims=_freeze({item["id"]: item for item in claims if isinstance(item.get("id"), str)}),
+        compatibility=tuple(_freeze(item) for item in compatibility),
+        drift=_freeze({item["id"]: item for item in drift if isinstance(item.get("id"), str)}),
+        questions=_freeze({item["id"]: item for item in questions if isinstance(item.get("id"), str)}),
+        package_evidence=_freeze(package_evidence),
+        package_map=snapshot["research/package-map.md"].decode("utf-8"),
+        acquisition_queue=_freeze(queue),
+        acquisition_receipt=_freeze(receipt),
+        spk_g_metadata=_freeze(metadata),
+        spk_g_report=snapshot["spikes/spk-g-package-conformance/report.md"].decode("utf-8"),
+        family_digests=_freeze({
+            "SRC": _family_digest(snapshot, "research/source-registry.yaml"),
+            "CLM": _family_digest(snapshot, "research/claims.yaml"),
+            "CMP": _family_digest(snapshot, "research/compatibility-matrix.yaml"),
+            "DRF": _family_digest(snapshot, "research/drift-register.yaml"),
+            "OQ": _family_digest(snapshot, "research/open-questions.yaml"),
+            "package": _family_digest(snapshot, "research/package-evidence.yaml") + _family_digest(snapshot, "research/package-map.md"),
+            "SPK": _family_digest(snapshot, "spikes/spk-g-package-conformance/"),
+        }),
+        provenance_reasons=tuple(provenance_reasons),
+    )
+
+
+def canonical_acquisition_module() -> Any:
+    spec = importlib.util.spec_from_file_location("phase1_acquire_sources", ROOT / "tools" / "acquire-sources.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("reviewed acquisition validator is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def compatibility_family_digests(index: CompatibilitySnapshotIndex) -> dict[str, str]:
+    return dict(index.family_digests)
+
+
+def _record_by_id(records: Mapping[str, Mapping[str, Any]], reference_id: Any) -> Mapping[str, Any] | None:
+    return records.get(reference_id) if isinstance(reference_id, str) else None
+
+
+def _qualified_source(source: Mapping[str, Any] | None, *, raw_origin: set[str], authority: set[str]) -> bool:
+    if source is None:
+        return False
+    review = source.get("review")
+    freshness = source.get("freshness")
+    return (
+        source.get("collectionStatus") == "collected"
+        and source.get("rawOrigin") in raw_origin
+        and source.get("authorityTier") in authority
+        and isinstance(review, Mapping) and review.get("status") == "approved"
+        and isinstance(freshness, Mapping) and freshness.get("state") != "stale"
+    )
+
+
+def _dimension_semantic_reason(name: str, dimension: Mapping[str, Any], index: CompatibilitySnapshotIndex) -> str | None:
+    references = dimension.get("references")
+    if not isinstance(references, tuple) or not references:
+        return "MISSING_REFERENCE"
+    ids = [reference.get("id") for reference in references if isinstance(reference, Mapping)]
+    if len(ids) != len(references) or len(set(ids)) != len(ids):
+        return "DUPLICATE_REFERENCE"
+    known = set(index.sources) | set(index.claims) | set(index.drift) | set(index.questions)
+    if any(reference_id not in known for reference_id in ids):
+        return "UNKNOWN_REFERENCE"
+    sources = [_record_by_id(index.sources, reference_id) for reference_id in ids]
+    if any(source is not None and source.get("freshness", {}).get("state") == "stale" for source in sources):
+        return "STALE_EVIDENCE"
+    if name == "normativeProtocol":
+        if not any(_qualified_source(source, raw_origin={"normative-protocol"}, authority={"official-normative", "official-protocol"}) for source in sources):
+            return "WRONG_AUTHORITY"
+    elif name in {"observedImplementation", "currentWork"}:
+        if not any(_qualified_source(source, raw_origin={"observed-implementation"}, authority={"official-repository-observation"}) for source in sources):
+            return "WRONG_AUTHORITY"
+    elif name == "publishedPackage":
+        artifact = index.package_evidence.get("artifactEvidence")
+        if not isinstance(artifact, Mapping) or artifact.get("status") != "qualified" or index.package_evidence.get("approval") != "approved":
+            return "SOURCE_RELEASE_ONLY"
+    elif name == "runtime":
+        if not any(_qualified_source(source, raw_origin={"runtime-measurement"}, authority={"independent-runtime-measurement"}) for source in sources):
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    elif name == "exampleFixture":
+        if not any(_qualified_source(source, raw_origin={"example-fixture"}, authority={"reproducible-fixture"}) for source in sources):
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    elif name == "conformance":
+        if index.spk_g_metadata.get("status") != "complete" or "conformance" not in index.spk_g_report.lower():
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    return None
+
+
+def evaluate_compatibility_baseline(snapshot_index: CompatibilitySnapshotIndex) -> dict[str, Any]:
+    """Return deterministic substantive eligibility from an immutable snapshot only."""
+    if not isinstance(snapshot_index, CompatibilitySnapshotIndex):
+        raise TypeError("evaluate_compatibility_baseline requires CompatibilitySnapshotIndex")
+    if snapshot_index.provenance_reasons:
+        return {
+            "status": "blocked", "approval": "not-approved", "architectureApproved": False,
+            "reasons": list(snapshot_index.provenance_reasons), "familyDigests": compatibility_family_digests(snapshot_index),
+        }
+    baseline = next((record for record in snapshot_index.compatibility if record.get("id") == "CMP-BASELINE-001"), None)
+    if baseline is None:
+        return {"status": "blocked", "approval": "not-approved", "architectureApproved": False, "reasons": ["BASELINE_MISSING"], "familyDigests": compatibility_family_digests(snapshot_index)}
+    dimensions = baseline.get("dimensions")
+    by_name = {item.get("name"): item for item in dimensions if isinstance(item, Mapping)} if isinstance(dimensions, tuple) else {}
+    reasons: list[str] = []
+    for name in COMPATIBILITY_DIMENSION_ORDER:
+        token = dimension_reason_token(name)
+        dimension = by_name.get(name)
+        if dimension is None:
+            reasons.append(f"DIMENSION_{token}_MISSING")
+            continue
+        status = dimension.get("status")
+        if status != "qualified":
+            reasons.append(f"DIMENSION_{token}_{str(status or 'missing').upper().replace('-', '_')}")
+            continue
+        semantic = _dimension_semantic_reason(name, dimension, snapshot_index)
+        if semantic is not None:
+            reasons.append(f"DIMENSION_{token}_{semantic}")
+    eligibility = baseline.get("baselineEligibility")
+    approval = eligibility.get("approval") if isinstance(eligibility, Mapping) else "not-approved"
+    reviewed = (
+        isinstance(eligibility, Mapping)
+        and approval == "approved"
+        and eligibility.get("status") == "eligible"
+        and isinstance(eligibility.get("reviewRecordId"), str)
+        and bool(eligibility.get("reviewRecordId"))
+    )
+    if not reviewed:
+        reasons.append("APPROVAL_NOT_GRANTED")
+    return {
+        "status": "eligible" if not reasons else "blocked",
+        "approval": approval if reviewed else "not-approved",
+        "architectureApproved": False,
+        "reasons": reasons,
+        "familyDigests": compatibility_family_digests(snapshot_index),
+    }
+
+
+def evaluate_registered_compatibility(planning_root: Path, *, after_snapshot: Any = None) -> dict[str, Any]:
+    """Acquire the registered reader once, then evaluate only its frozen index."""
+    snapshot = read_registered_snapshot("compatibility-baseline", COMPATIBILITY_SNAPSHOT_TARGETS, planning_root)
+    index = build_compatibility_snapshot_index(snapshot)
+    if after_snapshot is not None:
+        after_snapshot()
+    return evaluate_compatibility_baseline(index)
+
+
+def validated_compatibility_snapshot_index(research_root: Path) -> CompatibilitySnapshotIndex:
+    """Verify Plan 01-45's receipt against Plan 01-29 before snapshot acquisition."""
+    planning_root = research_root.resolve(strict=True).parent
+    review = planning_root / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
+    command = [
+        sys.executable, str(ROOT / "tools/acquire-sources.py"), "validate-reviewed-acquisition",
+        "--queue", str(planning_root / "research/upstream-acquisition-queue.yaml"),
+        "--receipt", str(planning_root / "research/reports/upstream-acquisition-20260728.md"),
+        "--review", str(review),
+    ]
+    result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    if result.returncode:
+        detail = (result.stderr or result.stdout).strip().replace("\n", " | ")
+        raise ValueError(f"reviewed acquisition provenance refused before compatibility snapshot: {detail or 'non-zero exit'}")
+    snapshot = read_registered_snapshot("compatibility-baseline", COMPATIBILITY_SNAPSHOT_TARGETS, planning_root)
+    return build_compatibility_snapshot_index(snapshot)
 
 
 def normalize_yaml(value: Any) -> Any:
@@ -1323,26 +1618,24 @@ def main() -> int:
     sources: list[dict[str, Any]] = []
     claims: list[dict[str, Any]] = []
     try:
-        source_document = load_yaml(root / "source-registry.yaml")
-        sources = source_document.get("sources", [])
-        if not isinstance(sources, list) or not all(isinstance(item, dict) for item in sources):
-            raise ValueError("source-registry.yaml sources must be a list of records")
+        # The reviewed-acquisition check happens before the Plan 01-42 reader. From
+        # this point onward compatibility families are consumed exclusively from one
+        # registered immutable mapping; eligibility receives only its typed index.
+        compatibility_index = validated_compatibility_snapshot_index(root)
+        sources = [_thaw(record) for record in compatibility_index.sources.values()]
+        claims = [_thaw(record) for record in compatibility_index.claims.values()]
+        drift = [_thaw(record) for record in compatibility_index.drift.values()]
+        questions = [_thaw(record) for record in compatibility_index.questions.values()]
+        compatibility = [_thaw(record) for record in compatibility_index.compatibility]
         errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
         source_ids, source_id_errors = record_ids(sources, "SRC-")
         errors.extend(source_id_errors)
         source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
-        claims_path = root / "claims.yaml"
-        if claims_path.exists():
-            claims_document = load_yaml(claims_path)
-            claims = claims_document.get("claims", [])
-            if not isinstance(claims, list) or not all(isinstance(item, dict) for item in claims):
-                raise ValueError("claims.yaml claims must be a list of records")
-            errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
-            errors.extend(validate_claims(claims, source_ids, source_index))
-        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
-        questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
-        compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json", expected_schema_version=2)
-        errors.extend(drift_errors + question_errors + compatibility_errors)
+        errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
+        errors.extend(validate_claims(claims, source_ids, source_index))
+        errors.extend(schema_errors(root / "schemas/drift.schema.json", drift))
+        errors.extend(schema_errors(root / "schemas/open-question.schema.json", questions))
+        errors.extend(schema_errors(root / "schemas/compatibility.schema.json", compatibility))
         claim_ids, claim_id_errors = record_ids(claims, "CLM-")
         drift_ids, drift_id_errors = record_ids(drift, "DRF-")
         question_ids, question_id_errors = record_ids(questions, "OQ-")
@@ -1351,6 +1644,9 @@ def main() -> int:
         errors.extend(validate_drift(drift, source_ids, claim_ids))
         known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
         errors.extend(validate_compatibility(compatibility, source_index, known_ids))
+        # A blocked substantive result is valid evidence; no approval or ADR state is
+        # synthesized by validation. The returned ordered reasons remain in matrix data.
+        evaluate_compatibility_baseline(compatibility_index)
         errors.extend(validate_reports(root.parent))
         migration_notes = root / "schemas/migration-notes.md"
         if migration_notes.exists():

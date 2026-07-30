@@ -101,3 +101,15 @@ compatibility:
       locator: commit:c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0 path:docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
       contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
     missingReason: No independent conformance evidence is retained.
+  baselineEligibility:
+    status: blocked
+    approval: not-approved
+    reasons:
+    - DIMENSION_NORMATIVE_PROTOCOL_BLOCKED
+    - DIMENSION_OBSERVED_IMPLEMENTATION_BLOCKED
+    - DIMENSION_PUBLISHED_PACKAGE_BLOCKED
+    - DIMENSION_RUNTIME_BLOCKED
+    - DIMENSION_EXAMPLE_FIXTURE_BLOCKED
+    - DIMENSION_CURRENT_WORK_BLOCKED
+    - DIMENSION_CONFORMANCE_BLOCKED
+    - APPROVAL_NOT_GRANTED
