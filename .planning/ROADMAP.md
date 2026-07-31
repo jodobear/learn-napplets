@@ -59,7 +59,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
 
-**Plans**: 45/45 original plans executed; focused verification gap plans pending
+**Plans**: 45/45 original plans executed; 12 focused gap-closeout plans (01-46 through 01-57) pending
 
 **Verification status**: `gaps_found` — 0/6 owning requirements independently verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
@@ -120,6 +120,50 @@ Gap Closure Plans:
 **Wave 13**
 
 - [x] 01-40-PLAN.md — Freshly verify Phase 1 and synchronize factual status/accounting after human terminal verification and project-owner recheck.
+
+Focused Gap Closeout Plans:
+
+**Wave 1**
+
+- [ ] 01-51-PLAN.md — Obtain deep external exact-plan review convergence before focused implementation.
+
+**Wave 2** *(blocked on Plan 01-51)*
+
+- [ ] 01-46-PLAN.md — Repair source-ingress confinement and restore its discovered regression.
+- [ ] 01-47-PLAN.md — Repair journaled consolidation and bounded malformed-transaction recovery.
+
+**Wave 3** *(blocked on Plan 01-47)*
+
+- [ ] 01-48-PLAN.md — Repair SPK-G constructed sandbox, scoped package admission, and retained bundle publication.
+- [ ] 01-49-PLAN.md — Repair observed-local drift synthesis, migration ownership, and refresh locking.
+
+**Wave 4** *(blocked on Plans 01-46 through 01-49)*
+
+- [ ] 01-50-PLAN.md — Assemble cross-defect regressions and the current repair matrix.
+
+**Wave 5** *(blocked on Plan 01-50)*
+
+- [ ] 01-52-PLAN.md — Prepare exact current finding-register validation and non-decisional repair review evidence.
+
+**Wave 6** *(blocked on Plan 01-52)*
+
+- [ ] 01-53-PLAN.md — Obtain independent current repair code/security review.
+
+**Wave 7** *(blocked on Plan 01-53)*
+
+- [ ] 01-54-PLAN.md — Implement terminal/runner contracts and assemble a candidate awaiting final external review.
+
+**Wave 8** *(blocked on Plan 01-54)*
+
+- [ ] 01-55-PLAN.md — Obtain immutable external exact review of final plans, source/tests, and candidate commit.
+
+**Wave 9** *(blocked on Plan 01-55)*
+
+- [ ] 01-56-PLAN.md — Run clean-worktree independent verification at the exact final-review commit.
+
+**Wave 10** *(blocked on Plan 01-56)*
+
+- [ ] 01-57-PLAN.md — Perform human terminal/project-owner recheck and conditionally publish factual status.
 
 Plans:
 **Wave 1**
@@ -472,7 +516,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 45/45 original; gap plans pending | Gaps found |  |
+| 1. Research and Truth Baseline | 45/45 original; 12 focused gap-closeout plans pending | Gaps found |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
