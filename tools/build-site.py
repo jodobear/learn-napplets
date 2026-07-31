@@ -17,6 +17,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONTENT = ROOT / "site" / "content" / "site.json"
 DEFAULT_TEMPLATE = ROOT / "site" / "templates" / "page.html"
+DEFAULT_STYLES = ROOT / "site" / "assets" / "styles.css"
+DEFAULT_SCRIPT = ROOT / "site" / "assets" / "site.js"
 DEFAULT_OUTPUT = ROOT / "site" / "dist"
 PAGE_ORDER = ("home", "learn", "architecture", "sources")
 REQUIRED_STATUS_FIELDS = (
@@ -358,6 +360,8 @@ def render_page(content: dict[str, Any], page_key: str, template: str) -> tuple[
         "{{page_title}}": escaped(page["title"]),
         "{{site_title}}": escaped(content["site"]["title"]),
         "{{page_key}}": escaped(page_key),
+        "{{styles_link}}": escaped(route_link(route, "assets/styles.css")),
+        "{{script_link}}": escaped(route_link(route, "assets/site.js")),
         "{{home_link}}": escaped(route_link(route, "index.html")),
         "{{site_edition}}": escaped(content["site"]["edition"]),
         "{{navigation}}": "".join(nav_items),
@@ -373,8 +377,10 @@ def render_page(content: dict[str, Any], page_key: str, template: str) -> tuple[
     return route, document + "\n"
 
 
-def render_all(content: dict[str, Any], template: str) -> dict[str, str]:
+def render_all(content: dict[str, Any], template: str, styles: str, script: str) -> dict[str, str]:
     outputs = dict(render_page(content, page_key, template) for page_key in PAGE_ORDER)
+    outputs["assets/styles.css"] = styles
+    outputs["assets/site.js"] = script
     knowledge = {
         "schemaVersion": content["schemaVersion"],
         "site": content["site"],
@@ -412,7 +418,9 @@ def build(content_path: Path, template_path: Path, output_dir: Path, check: bool
     try:
         validate_content(mapping(content, "root"))
         template = template_path.read_text(encoding="utf-8")
-        outputs = render_all(content, template)
+        styles = DEFAULT_STYLES.read_text(encoding="utf-8")
+        script = DEFAULT_SCRIPT.read_text(encoding="utf-8")
+        outputs = render_all(content, template, styles, script)
     except (OSError, ContentError) as error:
         print(f"build-site: {error}", file=sys.stderr)
         return 1
