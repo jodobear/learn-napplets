@@ -45,6 +45,8 @@ class StaticSiteBuildTests(unittest.TestCase):
                 "architecture/index.html",
                 "sources/index.html",
                 "knowledge.json",
+                "assets/styles.css",
+                "assets/site.js",
             }
             self.assertEqual(
                 {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()},
@@ -101,6 +103,32 @@ class StaticSiteBuildTests(unittest.TestCase):
             drift = self.build(CONTENT, output, check=True)
             self.assertNotEqual(drift.returncode, 0)
             self.assertIn("out of date", drift.stderr)
+
+    def test_rendered_pages_link_local_accessible_assets_and_keep_static_equivalents(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "dist"
+            result = self.build(CONTENT, output)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            home = (output / "index.html").read_text(encoding="utf-8")
+            architecture = (output / "architecture" / "index.html").read_text(encoding="utf-8")
+            styles = (output / "assets" / "styles.css").read_text(encoding="utf-8")
+            script = (output / "assets" / "site.js").read_text(encoding="utf-8")
+
+            self.assertIn('rel="stylesheet" href="assets/styles.css"', home)
+            self.assertIn('src="assets/site.js" defer', home)
+            self.assertIn('class="skip-link" href="#main-content"', home)
+            self.assertIn('<main id="main-content" tabindex="-1">', home)
+            self.assertIn('<details class="transcript" open>', architecture)
+            self.assertIn('id="architecture-transcript"', architecture)
+            self.assertIn('aria-hidden="true"', architecture)
+            self.assertIn('prefers-reduced-motion: reduce', styles)
+            self.assertIn('@media print', styles)
+            self.assertIn(':focus-visible', styles)
+            self.assertIn('forced-colors: active', styles)
+            self.assertIn('data-reading-trace', script)
+            self.assertNotIn('http://', styles + script)
+            self.assertNotIn('https://', styles + script)
 
     def test_builder_rejects_unsafe_content_and_unknown_references(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
