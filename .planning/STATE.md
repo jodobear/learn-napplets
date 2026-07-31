@@ -4,11 +4,11 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: executing
-stopped_at: Three-plan recovery set validated; Plan 01-46 ready to execute
-last_updated: "2026-07-31T02:23:41.363Z"
+status: paused
+stopped_at: Wave 7 preflight; resume Plan 01-46 sequentially on main because approved ignored toolchain is unavailable in isolated worktrees
+last_updated: "2026-07-31T02:27:27.714Z"
 last_activity: 2026-07-31
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Plan 01-46 worktree halted with zero changes; main toolchain verification passed
 progress:
   total_phases: 1
   completed_phases: 0
@@ -27,10 +27,10 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 1 of 48
-Status: Executing Phase 01
-Last activity: 2026-07-31 — Phase 01 execution started
+Phase: 01 (research-and-truth-baseline) — PAUSED DURING WAVE 7 PREFLIGHT
+Plan: 45 of 48 complete; Plan 01-46 remains unstarted
+Status: Isolated executor could not access the gitignored approved Phase 1 interpreter. It made no changes. Resume Plan 01-46 sequentially on the main checkout, where `tools/phase1-python --verify-toolchain` passes.
+Last activity: 2026-07-31 — Plan 01-46 worktree preflight halted safely with zero changes
 
 Progress: [█████████░] 94% plan execution; phase goal not re-verified; website not yet built
 
@@ -232,6 +232,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T02:19:12Z
-Stopped at: Resume completed; Plan 01-46 is the next executable work.
+Last session: 2026-07-31T02:27:27.682Z
+Stopped at: context exhaustion at 75% (2026-07-31)
 Resume file: `.planning/phases/01-research-and-truth-baseline/01-46-PLAN.md`
