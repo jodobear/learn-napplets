@@ -236,27 +236,74 @@ def _recover_locked(root: Path) -> None:
         return
     if transactions.is_symlink() or not transactions.is_dir():
         raise RecoveryError("transaction directory is unsafe")
-    journals = sorted(path for path in transactions.iterdir() if path.is_dir() and not path.is_symlink())
-    if len(journals) > 1:
+    transaction_entries = sorted(transactions.iterdir(), key=lambda path: path.name)
+    if any(entry.is_symlink() or not entry.is_dir() for entry in transaction_entries):
+        raise RecoveryError("transaction directory contains an unexpected entry")
+    if len(transaction_entries) > 1:
         raise RecoveryError("multiple unfinished canonical transactions")
-    if not journals:
+    if not transaction_entries:
         return
-    transaction = journals[0]
+    transaction = transaction_entries[0]
+    transaction_items = {entry.name: entry for entry in transaction.iterdir()}
+    if set(transaction_items) != {"backup", "staged", "journal.json", "journal.sha256"}:
+        raise RecoveryError("transaction contains an unrecognized entry")
+    for directory in (transaction_items["backup"], transaction_items["staged"]):
+        if directory.is_symlink() or not directory.is_dir():
+            raise RecoveryError("transaction storage directory is unsafe")
     journal = _load_journal(transaction)
+    if journal["id"] != transaction.name:
+        raise RecoveryError("transaction journal identity does not match its directory")
     targets = journal["targets"]
     if not isinstance(targets, list):
         raise RecoveryError("transaction targets invalid")
-    entries: list[dict[str, str]] = []
-    for item in targets:
+    entries: list[dict[str, str | None]] = []
+    for index, item in enumerate(targets):
         if not isinstance(item, dict) or set(item) != {"target", "old", "new", "backup"}:
             raise RecoveryError("transaction target entry is invalid")
-        if not isinstance(item["target"], str) or not isinstance(item["new"], str) or not isinstance(item["backup"], str) or item["old"] is not None and not isinstance(item["old"], str):
+        target, old, new, backup = item["target"], item["old"], item["new"], item["backup"]
+        if not isinstance(target, str) or not isinstance(new, str) or not isinstance(backup, str) or old is not None and not isinstance(old, str):
             raise RecoveryError("transaction target entry has invalid values")
-        entries.append(item)
+        target = _normal_relative(target)
+        if len(new) != 64 or any(character not in "0123456789abcdef" for character in new):
+            raise RecoveryError("transaction new digest is invalid")
+        if old is not None and (len(old) != 64 or any(character not in "0123456789abcdef" for character in old)):
+            raise RecoveryError("transaction old digest is invalid")
+        expected_backup = f"backup/{index:04d}" if old is not None else ""
+        if backup != expected_backup:
+            raise RecoveryError("transaction backup entry is ambiguous")
+        entries.append({"target": target, "old": old, "new": new, "backup": backup})
+    if [entry["target"] for entry in entries] != sorted(entry["target"] for entry in entries) or len({entry["target"] for entry in entries}) != len(entries):
+        raise RecoveryError("transaction targets must be uniquely and deterministically ordered")
+
+    backups = transaction_items["backup"]
+    expected_backups = {entry["backup"].removeprefix("backup/"): entry for entry in entries if entry["old"] is not None}
+    backup_items = {entry.name: entry for entry in backups.iterdir()}
+    if set(backup_items) != set(expected_backups):
+        raise RecoveryError("transaction backups are incomplete or ambiguous")
+    for name, backup in backup_items.items():
+        entry = expected_backups[name]
+        if backup.is_symlink() or not backup.is_file() or _sha(backup.read_bytes()) != entry["old"]:
+            raise RecoveryError("transaction backup is missing or digest-mismatched")
+
+    staged = transaction_items["staged"]
+    expected_staged = {f"{index:04d}": entry for index, entry in enumerate(entries)}
+    staged_items = {entry.name: entry for entry in staged.iterdir()}
+    if not set(staged_items) <= set(expected_staged):
+        raise RecoveryError("transaction staged entries are unrecognized")
+    for name, candidate in staged_items.items():
+        entry = expected_staged[name]
+        if candidate.is_symlink() or not candidate.is_file() or _sha(candidate.read_bytes()) != entry["new"]:
+            raise RecoveryError("transaction staged target is unsafe or digest-mismatched")
+    if journal["state"] == "prepared" and set(staged_items) != set(expected_staged):
+        raise RecoveryError("prepared transaction is missing staged targets")
+    for name, entry in expected_staged.items():
+        if name not in staged_items and _sha(_regular(root, entry["target"]).read_bytes()) != entry["new"]:
+            raise RecoveryError("published transaction target is not the attested new generation")
+
     if journal["state"] in {"prepared", "publishing"}:
         for entry in entries:
             if entry["old"] is None:
-                target = root / _normal_relative(entry["target"])
+                target = root / entry["target"]
                 if target.is_symlink() or not target.exists():
                     continue
                 if not target.is_file() or _sha(target.read_bytes()) != entry["new"]:
@@ -266,8 +313,6 @@ def _recover_locked(root: Path) -> None:
                 continue
             target = _regular(root, entry["target"])
             backup = transaction / entry["backup"]
-            if not backup.is_file() or backup.is_symlink() or _sha(backup.read_bytes()) != entry["old"]:
-                raise RecoveryError("transaction backup is missing or digest-mismatched")
             replacement = transaction / (entry["backup"] + ".restore")
             shutil.copyfile(backup, replacement)
             _fsync_file(replacement)
@@ -276,13 +321,13 @@ def _recover_locked(root: Path) -> None:
             _fsync_directory(target.parent)
         for entry in entries:
             if entry["old"] is None:
-                target = root / _normal_relative(entry["target"])
+                target = root / entry["target"]
                 if target.exists() or target.is_symlink():
                     raise RecoveryError("recovery could not remove a newly created canonical target")
             elif _sha(_regular(root, entry["target"]).read_bytes()) != entry["old"]:
                 raise RecoveryError("recovery could not verify the complete old generation")
     else:
-        if any(_sha(_regular(root, entry["target"]).read_bytes()) != entry["new"] for entry in entries):
+        if staged_items or any(_sha(_regular(root, entry["target"]).read_bytes()) != entry["new"] for entry in entries):
             raise RecoveryError("committed transaction does not verify as a complete new generation")
     shutil.rmtree(transaction)
     _fsync_directory(transactions)

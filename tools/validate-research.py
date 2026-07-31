@@ -1137,20 +1137,18 @@ def merge_fragment_history(document: dict[str, Any], key: str, fragment: dict[st
 
 
 def new_drift_record(fragment: dict[str, Any], drift_id: str, claims: dict[str, dict[str, Any]], sources: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    source_id = fragment["sourceIds"][0]
-    source = sources[source_id]
-    claim_id = next((item.get("id") for item in claims.values() if isinstance(item, dict) and any(isinstance(link, dict) and link.get("sourceId") == source_id for link in item.get("sourceRelations", []))), "CLM-UPSTREAM-BASELINE-001")
-    side = {
-        "claimId": claim_id,
-        "sourceId": source_id,
-        "commitSha": source["commitSha"],
-        "path": source["path"],
-        "locator": source["locator"],
-        "contentSha256": source["contentSha256"],
+    """Retain a spike result as observed-local evidence without minting upstream authority."""
+    del claims, sources
+    measurement = fragment["measurementLinks"][0]
+    observed = {
+        "id": "OBS-" + drift_id.removeprefix("DRF-"),
+        "classification": "observed-local",
+        "reportPath": fragment["reportPath"],
+        "reportSha256": fragment["reportSha256"],
+        "measurementPath": measurement["path"],
+        "measurementSha256": measurement["sha256"],
         "statement": "Consolidated local spike observation is retained as a blocked project-evidence hand-off, not an upstream fact.",
-        "authorityTier": source["authorityTier"],
-        "maturity": source["maturity"],
-        "evidenceClass": source["evidenceClass"],
+        "fallback": "Keep the deterministic static fallback and do not infer upstream behavior.",
     }
     return {
         "id": drift_id,
@@ -1158,8 +1156,8 @@ def new_drift_record(fragment: dict[str, Any], drift_id: str, claims: dict[str, 
         "topic": drift_id.removeprefix("DRF-").lower().replace("-", " "),
         "status": "blocked",
         "statusReason": f"Consolidated {fragment['fragmentId']} retains a local blocked or uncertain observation without asserting upstream behavior.",
-        "normative": side,
-        "observed": side.copy(),
+        "normative": None,
+        "observed": observed,
         "impacts": {"content": ["LES-001"], "code": [fragment["spikeId"]], "knowledge": ["spike-consolidation"], "requirements": sorted(fragment["affectedRequirements"]), "phases": sorted(fragment["affectedPhases"])},
         "uncertainty": fragment["uncertainty"],
         "history": [{"at": CONSOLIDATION_AT, "state": "blocked", "reason": f"Consolidated {fragment['fragmentId']} fragment SHA-256 {fragment['_digest']}."}],
@@ -1514,6 +1512,15 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         validation_errors = schema_errors(research / "schemas/compatibility.schema.json", staged_documents["compatibility-matrix.yaml"].get("compatibility", []))
         validation_errors += schema_errors(research / "schemas/drift.schema.json", staged_documents["drift-register.yaml"].get("drift", []))
         validation_errors += schema_errors(research / "schemas/open-question.schema.json", staged_documents["open-questions.yaml"].get("questions", []))
+        source_ids = {
+            source.get("id") for source in load_yaml(research / "source-registry.yaml").get("sources", [])
+            if isinstance(source, dict) and isinstance(source.get("id"), str)
+        }
+        claim_ids = {
+            claim.get("id") for claim in load_yaml(research / "claims.yaml").get("claims", [])
+            if isinstance(claim, dict) and isinstance(claim.get("id"), str)
+        }
+        validation_errors += validate_drift(staged_documents["drift-register.yaml"].get("drift", []), source_ids, claim_ids)
         validation_errors += validate_replay_manifest(staged[spikes / "replay-manifest.yaml"], planning_root)
         if validation_errors:
             shutil.rmtree(stage, ignore_errors=True)
@@ -1526,18 +1533,27 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         if os.environ.get("CONSOLIDATION_INJECT_PRECOMMIT_FAILURE") == "1":
             shutil.rmtree(stage, ignore_errors=True)
             return ["CONSOLIDATION_INJECTED_FAILURE: staged transaction rolled back before publication"]
-        originals = {target: target.read_bytes() if target.exists() else None for target in staged}
+        injected_interruption = os.environ.get("CONSOLIDATION_INJECT_PUBLISH_INTERRUPTION")
         try:
-            for target, staged_path in staged.items():
-                target.parent.mkdir(parents=True, exist_ok=True)
-                os.replace(staged_path, target)
-        except OSError as exc:
-            for target, original in originals.items():
-                if original is None:
-                    target.unlink(missing_ok=True)
-                else:
-                    target.write_bytes(original)
-            return [f"ERROR CONS005: publication failed and prior canonical state was restored: {exc}"]
+            interrupt_after = None if injected_interruption is None else int(injected_interruption)
+            if interrupt_after is not None and interrupt_after < 0:
+                raise ValueError("must be non-negative")
+        except ValueError:
+            shutil.rmtree(stage, ignore_errors=True)
+            return ["ERROR CONS005: injected publication interruption must be a non-negative integer"]
+        try:
+            target_map = {
+                target.relative_to(planning_root).as_posix(): staged_path.read_bytes()
+                for target, staged_path in sorted(staged.items(), key=lambda item: item[0].relative_to(planning_root).as_posix())
+            }
+            canonical_recovery_module().publish_generation(
+                planning_root, target_map, timeout=timeout, interrupt_after=interrupt_after
+            )
+        except Exception as exc:
+            name = type(exc).__name__
+            if name == "PublishInterrupted":
+                return [f"CONSOLIDATION_PUBLISH_INTERRUPTED: {exc}"]
+            return [f"ERROR CONS005: journaled canonical publication refused: {exc}"]
         finally:
             shutil.rmtree(stage, ignore_errors=True)
         return conflict_errors
