@@ -501,19 +501,21 @@ claims:
   blocking: false
 - id: CLM-UPSTREAM-BASELINE-001
   kind: claim
-  statement: No current upstream NAP/NIP protocol conclusion or first-lab recommendation
-    is established until an official immutable source record is collected and reviewed.
+  statement: A repository-local NAP draft and three implementation/reference observations
+    are pinned, but no reviewed comprehensive NAP/NIP protocol conclusion or first-lab
+    recommendation is established.
   rawOrigin: project-policy
   assertionKind: project-policy
   evidenceClass: project-policy
   maturity: accepted
   state: blocked
-  stateReason: The reviewed receipt records bounded immutable repository observations
-    and one zero-result history window, but qualified normative NIP/NAP authority
-    and technical review remain absent.
+  stateReason: Four immutable sources now distinguish a draft NAP record from observed
+    web, Paja, and native-reference behavior, but direct NIP-5D authority, qualified
+    package/runtime evidence, and required technical review remain absent.
   uncertainty:
     state: material
-    reason: The absence of a pinned source does not establish protocol behavior.
+    reason: A pinned draft or implementation observation does not establish reviewed
+      protocol behavior or compatibility.
   impacts:
     requirements:
     - EVID-01
@@ -543,6 +545,26 @@ claims:
       reviewedCommit:1a9449be4d74aa1ceed235d949802266846cf63b; commit:4916777862ababd09fa13cf155f4b4079c8e8cb1
       path:packages/cli/src/manifest.ts
     excerptSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
+  - sourceId: SRC-NAPS-NAP-INTENT-20260731
+    relation: supports
+    role: context
+    locator: NAP-INTENT header and declared NIP-5D web binding
+    excerptSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+  - sourceId: SRC-NAPPLET-WEB-20260731
+    relation: supports
+    role: context
+    locator: README alpha status and source-of-truth links
+    excerptSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+  - sourceId: SRC-KEHTO-WEB-PAJA-20260731
+    relation: supports
+    role: context
+    locator: Paja local-authoring and relay-mode description
+    excerptSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+  - sourceId: SRC-NAMPLETS-NATIVE-20260731
+    relation: supports
+    role: context
+    locator: NMP native-reference and unratified compatibility-lock description
+    excerptSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
   review:
     owner: research-owner
     status: pending
@@ -560,3 +582,150 @@ claims:
     revisitCriterion: Collect direct authoritative NIP/NAP records with immutable
       locators and required review; receipt-bound observations remain non-normative
       context only.
+- id: CLM-NAP-INTENT-20260731
+  kind: claim
+  statement: The repository-local NAP-INTENT draft describes an archetype intent dispatcher
+    and labels its web binding as NIP-5D; it is draft specification evidence, not a
+    reviewed NIP-5D conclusion.
+  rawOrigin: upstream-fact
+  assertionKind: upstream-fact
+  evidenceClass: specification
+  maturity: draft
+  state: provisional
+  stateReason: Immutable draft bytes are available, but NIP-5D authority and required
+    protocol-technical/content review remain unresolved.
+  uncertainty:
+    state: material
+    reason: The repository-local NAP draft cannot settle its referenced NIP-5D binding,
+      runtime behavior, or cross-implementation compatibility.
+  impacts:
+    requirements:
+    - EVID-01
+    - EVID-02
+    - OPER-01
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-NAPS-NAP-INTENT-20260731
+    relation: supports
+    role: primary
+    locator: NAP-INTENT header, archetype dispatcher description, and NIP-5D web binding
+    excerptSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  blocking: false
+- id: CLM-NAPPLET-WEB-20260731
+  kind: claim
+  statement: The napplet/web README self-identifies as alpha and describes its own
+    NIP-5D-oriented SDK and shell model; this is observed implementation, not NAP/NIP
+    authority, package qualification, or compatibility proof.
+  rawOrigin: observed-implementation
+  assertionKind: observed-implementation
+  evidenceClass: implementation
+  maturity: implementation-specific
+  state: provisional
+  stateReason: Immutable implementation bytes are available, but their alpha status,
+    open protocol dependency, and required review prevent a verified protocol or package claim.
+  uncertainty:
+    state: material
+    reason: Repository implementation prose and separately retained mutable PR direction
+      cannot establish normative behavior, published-artifact integrity, or browser support.
+  impacts:
+    requirements:
+    - EVID-02
+    - EVID-03
+    - OPER-01
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-NAPPLET-WEB-20260731
+    relation: supports
+    role: primary
+    locator: README alpha notice, SDK overview, and NIP-5D/NAP source links
+    excerptSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+    - content-learning
+  blocking: false
+- id: CLM-KEHTO-WEB-PAJA-20260731
+  kind: claim
+  statement: The Paja README documents a local authoring/testing runtime with live-relay
+    defaults and an explicit memory fixture mode; it is observed implementation evidence,
+    not a selected teaching host or runtime qualification.
+  rawOrigin: observed-implementation
+  assertionKind: observed-implementation
+  evidenceClass: implementation
+  maturity: implementation-specific
+  state: provisional
+  stateReason: Immutable Paja documentation is available, but it describes one implementation
+    environment and has not received runtime, browser, security, or content review.
+  uncertainty:
+    state: material
+    reason: Live-service defaults and a deterministic fixture option do not demonstrate
+      compatibility, a safe teaching-host profile, or NAP/NIP requirements.
+  impacts:
+    requirements:
+    - EVID-02
+    - EVID-03
+    - OPER-01
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-KEHTO-WEB-PAJA-20260731
+    relation: supports
+    role: primary
+    locator: Paja local-authoring overview, relay defaults, memory fixture mode, and shell domain
+    excerptSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+    - content-learning
+  blocking: false
+- id: CLM-NAMPLETS-NATIVE-20260731
+  kind: claim
+  statement: The NMP Native Runtime README describes an in-progress native Rust and macOS
+    reference whose compatibility lock remains unratified; it is reference behavior, not
+    NAP/NIP authority or a web, portable, or package qualification.
+  rawOrigin: observed-implementation
+  assertionKind: observed-implementation
+  evidenceClass: implementation
+  maturity: implementation-specific
+  state: provisional
+  stateReason: Immutable native-reference documentation is available, but its unratified
+    compatibility state and native scope prevent a verified interoperability conclusion.
+  uncertainty:
+    state: material
+    reason: A native reference host cannot establish web-runtime behavior, package admission,
+      portable-target eligibility, or a selected teaching host.
+  impacts:
+    requirements:
+    - EVID-02
+    - EVID-03
+    - OPER-01
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-NAMPLETS-NATIVE-20260731
+    relation: supports
+    role: primary
+    locator: NMP native-runtime overview, reference-host boundary, and unratified compatibility lock
+    excerptSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+    - content-learning
+  blocking: false

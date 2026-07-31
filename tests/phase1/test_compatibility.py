@@ -343,7 +343,7 @@ class CompatibilitySchema(unittest.TestCase):
             [('OW-NIP5D-001', 'unavailable'), ('OW-NAP-001', 'unavailable'),
              ('OW-NAPPLET-WEB-001', 'unavailable'), ('OW-RUNTIME-001', 'unavailable')],
         )
-        self.assertEqual([entry['id'] for entry in snapshot['snapshotHistory']], ['OWS-002', 'OWS-003'])
+        self.assertEqual([entry['id'] for entry in snapshot['snapshotHistory']], ['OWS-002', 'OWS-003', 'OWS-004'])
         current = snapshot['snapshotHistory'][0]
         self.assertEqual(current['parentSnapshotId'], 'OWS-001')
         self.assertEqual(current['retrievedAt'], '2026-07-28T00:00:00Z')
@@ -353,12 +353,28 @@ class CompatibilitySchema(unittest.TestCase):
             expected_receipts,
         )
         self.assertEqual(current['items'][0]['spkGBlockerRouting'], routing)
-        refresh = snapshot['snapshotHistory'][1]
-        self.assertEqual(refresh['parentSnapshotId'], 'OWS-002')
-        self.assertEqual(refresh['status'], 'blocked')
-        self.assertEqual(refresh['reviewedSourceInputBinding']['reviewedCommit'], '1a9449be4d74aa1ceed235d949802266846cf63b')
-        self.assertEqual(len(refresh['items']), 7)
-        self.assertTrue(all(item['retrievalOutcome'] in {'collected', 'failed', 'observed-zero-result'} for item in refresh['items']))
+        observed_refresh = snapshot['snapshotHistory'][1]
+        self.assertEqual(observed_refresh['parentSnapshotId'], 'OWS-002')
+        self.assertEqual(observed_refresh['status'], 'blocked')
+        self.assertEqual(observed_refresh['reviewedSourceInputBinding']['reviewedCommit'], '1a9449be4d74aa1ceed235d949802266846cf63b')
+        self.assertEqual(len(observed_refresh['items']), 7)
+        self.assertTrue(all(item['retrievalOutcome'] in {'collected', 'failed', 'observed-zero-result'} for item in observed_refresh['items']))
+        truth_refresh = snapshot['snapshotHistory'][2]
+        self.assertEqual(truth_refresh['parentSnapshotId'], 'OWS-003')
+        self.assertEqual(truth_refresh['retrievedAt'], '2026-07-31T03:08:39Z')
+        self.assertEqual(truth_refresh['status'], 'blocked')
+        self.assertEqual(
+            truth_refresh['sourceRefs'],
+            ['SRC-NAPS-NAP-INTENT-20260731', 'SRC-NAPPLET-WEB-20260731',
+             'SRC-KEHTO-WEB-PAJA-20260731', 'SRC-NAMPLETS-NATIVE-20260731'],
+        )
+        self.assertEqual(
+            [(item['id'], item['retrievalOutcome']) for item in truth_refresh['items']],
+            [('OW-NAPS-NAP-INTENT-20260731', 'collected-draft-specification'),
+             ('OW-NAPPLET-WEB-DIRECTION-20260731', 'collected-source-plus-mutable-pr-direction'),
+             ('OW-KEHTO-WEB-PAJA-20260731', 'collected-source-plus-mutable-pr-direction'),
+             ('OW-NAMPLETS-NATIVE-20260731', 'collected-optional-native-reference')],
+        )
 
 
 if __name__=='__main__':
