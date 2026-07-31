@@ -8,10 +8,12 @@ review report whose stable work IDs let a reviewer compare repeated refreshes sa
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import importlib.util
 import json
 import os
+import stat
 import time
 from pathlib import Path
 from typing import Any, Mapping
@@ -159,18 +161,28 @@ def work_id(result: dict[str, Any]) -> str:
     return "RFW-" + hashlib.sha256(payload).hexdigest()[:16].upper()
 
 
-def acquire_lock(report: Path, timeout_seconds: float = 0.5) -> Path:
+def acquire_lock(report: Path, timeout_seconds: float = 0.5) -> int:
+    """Acquire an advisory lock that the operating system releases on process death."""
     lock = report.with_name(f".{report.name}.lock")
-    deadline = time.monotonic() + timeout_seconds
-    while True:
-        try:
-            descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-            os.close(descriptor)
-            return lock
-        except FileExistsError:
-            if time.monotonic() >= deadline:
-                raise RuntimeError(f"refresh report lock is busy: {lock}")
-            time.sleep(0.05)
+    try:
+        descriptor = os.open(lock, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    except OSError as exc:
+        raise RuntimeError(f"cannot open refresh report lock: {lock}: {exc}") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise RuntimeError(f"refresh report lock must be a regular file: {lock}")
+        deadline = time.monotonic() + timeout_seconds
+        while True:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                return descriptor
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError(f"refresh report lock is busy: {lock}")
+                time.sleep(0.05)
+    except Exception:
+        os.close(descriptor)
+        raise
 
 
 def render(results: list[dict[str, Any]], impact_map: dict[str, list[str]]) -> str:
@@ -247,13 +259,14 @@ def main() -> int:
         impact_map = {item["sourceId"]: related_ids(item["sourceId"], claims, drift, questions) for item in results}
         report = render(results, impact_map)
         args.report.parent.mkdir(parents=True, exist_ok=True)
-        lock = acquire_lock(args.report)
+        lock_descriptor = acquire_lock(args.report)
         try:
             temporary = args.report.with_name(f".{args.report.name}.tmp-{os.getpid()}")
             temporary.write_text(report, encoding="utf-8")
             os.replace(temporary, args.report)
         finally:
-            lock.unlink(missing_ok=True)
+            fcntl.flock(lock_descriptor, fcntl.LOCK_UN)
+            os.close(lock_descriptor)
     except (OSError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
         print(f"ERROR: {exc}")
         return 1
