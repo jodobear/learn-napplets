@@ -60,7 +60,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Phase governance and traceability convention for the remaining roadmap.
 - Owner-authorized dependency-free static website presenting only structured, evidence-labeled content after safety repair and truth refresh pass.
 
-**Plans**: 47/48 plans executed
+**Plans**: 48/48 plans executed
 
 **Verification status**: `gaps_found` — 0/6 owning requirements independently verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
@@ -134,7 +134,7 @@ Owner-Authorized Recovery Plans:
 
 **Wave 3** *(blocked on Plans 01-46 and 01-47)*
 
-- [ ] 01-48-PLAN.md — Build and behaviorally verify the dependency-free static Learn Napplets website from common structured records.
+- [x] 01-48-PLAN.md — Build and behaviorally verify the dependency-free static Learn Napplets website from common structured records.
 
 Deferred from this recovery set: CR-05 through CR-07/SPK-G, WR-02 migration copy semantics, package admission, native-runtime qualification, portable targets, cross-browser runtime labs, external review byte-binding, terminal-publication choreography, deployment, and release.
 
@@ -489,7 +489,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 47/48 | In Progress|  |
+| 1. Research and Truth Baseline | 48/48 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

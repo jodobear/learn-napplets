@@ -9,7 +9,7 @@
 
 - [x] **EVID-01**: Maintainers can trace every blocking protocol-sensitive claim to an immutable upstream revision, path/locator, digest, retrieval date, authority tier, evidence class, and maturity label.
 - [x] **EVID-02**: Maintainers can see conflicts, uncertainty, known drift, affected requirements/phases, and refresh triggers for each volatile claim.
-- [ ] **EVID-03**: Maintainers can review compatibility across selected protocol sources, packages, runtimes, examples, and current work before architecture is accepted.
+- [x] **EVID-03**: Maintainers can review compatibility across selected protocol sources, packages, runtimes, examples, and current work before architecture is accepted.
 - [x] **EVID-04**: Decision makers can review measurable mandatory-spike evidence before accepting repository, framework, deployment, content, teaching-host, fixture, or portable-target recommendations.
 
 ### Learning and Content Contract
