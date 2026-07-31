@@ -600,3 +600,54 @@ These are resolved planning dispositions, not accepted ADRs or settled upstream 
 
 **Research date:** 2026-07-23  
 **Valid until:** Internal planning constraints: until changed. External tool/documentation findings: refresh at execution and within 7 days for package/browser decisions. [ASSUMED]
+
+## Upstream Merge Refresh — 2026-07-28 (Historical Candidate Context)
+
+**Scope:** Full inclusive rolling-window synthesis: `kehto/web` 5 merged PRs, `napplet/web` 3, and `napplet/naps` 0; **8 total**. [VERIFIED: .planning/research/reports/upstream-refresh-{kehto-web,napplet-web,napplet-naps}-2026-07-28.md]
+
+**Status after the 2026-07-31 truth refresh:** This retained section is historical candidate and directional context. Its PR-derived anchors, candidate identities, and review implications remain preserved, but do not override or merge with the dated canonical source records admitted below. The later refresh uses separate immutable blobs and keeps mutable PR direction in `OWS-004`; it does not silently settle an upstream conflict or promote implementation observations to protocol authority.
+
+### Concise findings
+
+- The narrow repository-identity gap is improved, not closed for protocol purposes: public `napplet/web` (`main` head `60889f1c2476e063500c7ab6624af6abe0dbcbe5`) and `kehto/web` (`main` head `54ef2ead03ee0c37783727468b8658b6dc224137`) now supply candidate immutable implementation/release anchors. `napplet/naps` had zero merged PRs in the window and remains a separately identified repository checkpoint (`master` `5ac0490461ca6fec2f0d2e45b4835cf9bc08de24`). [VERIFIED: upstream refresh reports]
+- `napplet/web` #184 (`4916777862…`), #186 (`dd7b3a728…`), and #188 (`60889f1c…`) respectively expose observed CLI identity validation, queryless URI/intent/manifest/sender-delivery behavior, and committed package-release versions. `kehto/web` #204 (`b85db51db…`), #209 (`4eafa058…`), and #211 (`54ef2ead…`) expose observed runtime/loader/security-boundary, release-metadata, and loader-audit behavior. These are merged implementation observations; PR narratives are proposal/rationale; neither is normative NAP/NIP authority. [VERIFIED: upstream refresh reports]
+- Exact candidate locators include `napplet/web@dd7b3a728…:packages/nap/src/convention-uri.ts` blob `1a8db0c46d517edf2374b5e5022b429d8b18191b`, `…:packages/nap/src/intent/shim.ts` blob `8fd94fa71a16865f90fb8438a09867ff81954c54`, `kehto/web@b85db51db…:RUNTIME-SPEC.md` blob `d90cab7dcad177c6eacb6f0780b434b5ecffccab`, and `…:apps/playground/src/playground-frame-loader.ts` blob `49976f4c8868f6f31e16a9ffeb33080646cdb3b4`. PR-level diff SHA-256 values and complete inventories are retained in the three refresh reports. [VERIFIED: upstream refresh reports]
+
+### EVID-03 / EVID-04 disposition
+
+**EVID-03 remains blocked.** Repository identities and commit/path/blob candidates now exist, but there is still no reviewed authoritative NIP/NAP source baseline, registry/tarball integrity/provenance/license/root-export evidence, executed runtime evidence, or cross-runtime conformance result. `CMP-BASELINE-001` must remain blocked; any later matrix addition is a separate observed-source/release-commit row, not a completed compatibility baseline. [VERIFIED: 01-VERIFICATION.md; upstream refresh synthesis]
+
+**EVID-04 remains blocked.** Merged source/tests do not substitute for reproducible spike evidence. Existing fail-open citation, replay-command, retained-evidence, publication-atomicity, and toolchain-integrity gaps independently prevent Phase 1 closure. [VERIFIED: 01-VERIFICATION.md; 01-REVIEW.md]
+
+### Planning implications
+
+1. Propose—not automatically ingest—separate candidate source records for the six material PR anchors: `CAND-SRC-NAPPLET-WEB-PR184/186/188-20260728` and `CAND-SRC-KEHTO-WEB-PR204/209/211-20260728`; retain identity, revision/path/blob/digest, retrieval, authority/evidence/maturity, uncertainty, impact, and refresh fields.
+2. Preserve `CLM-UPSTREAM-BASELINE-001`, `CLM-CMP-PACKAGE-001`, all named `DRF-*`, `CMP-BASELINE-001`, `OQ-*`, `ADR-0010`, `LES-010`, and SPK-G as blocked/proposed/materially uncertain until canonical ingestion and human review. Do not install/import a package or teach package/runtime/protocol semantics from the merged PRs. [VERIFIED: claims.yaml; compatibility-matrix.yaml; package-map.md; ADR-0010; SPK-G report]
+3. First acquire and review authoritative immutable NIP-5A/NIP-5D plus NAP registry/projection/governance content; then independently acquire registry artifacts and a public conformance target; then run only permitted reproducible measurements. Review protocol-technical, security, release/supply-chain, and content-learning impacts before any record-state transition. [VERIFIED: 01-CONTEXT.md D-04, D-06, D-14–D-20; CLAUDE.md]
+
+See `.planning/research/reports/upstream-refresh-synthesis-2026-07-28.md` for the full recommended ID map, exact revisions/paths/digests, per-artifact effects, uncertainty, human review points, and refresh triggers. [VERIFIED: local synthesis report]
+
+## Upstream Truth Refresh — 2026-07-31
+
+**Scope:** Four exact cache-byte-verified blobs were admitted into the canonical source registry without repeating broad discovery. They are the current static-explanation baseline, not a new protocol or runtime authority tier. [VERIFIED: `.planning/research/source-registry.yaml`; `.planning/phases/01-research-and-truth-baseline/01-TRUTH-REFRESH.md`]
+
+### Canonical evidence classes
+
+- `SRC-NAPS-NAP-INTENT-20260731` pins `napplet/naps@5ac0490461ca6fec2f0d2e45b4835cf9bc08de24:naps/NAP-INTENT.md` (`d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0`) as a repository-local NAP **draft**. Its NIP-5D web binding does not resolve direct NIP-5D authority, runtime behavior, or browser compatibility.
+- `SRC-NAPPLET-WEB-20260731` pins `napplet/web@03ad65b66413e5798536ef48695ffc4c2508f2c3:README.md` (`f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae`) as an alpha **observed implementation**. It cannot qualify packages, artifacts, compatibility, or a teaching host.
+- `SRC-KEHTO-WEB-PAJA-20260731` pins `kehto/web@d42b3c3da7e0ad3cea233b34458997b09b11960d:packages/paja/README.md` (`dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33`) as an **observed implementation**. Paja local-authoring, live-relay, and memory-fixture behavior remains implementation-specific.
+- `SRC-NAMPLETS-NATIVE-20260731` pins `pablof7z/nampplets@1094f1db23292f966fd65757132678406f7ca28c:README.md` (`3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b`) as an optional **native reference**. It cannot qualify a web runtime, portable target, package, or NAP/NIP behavior.
+
+### Clarified baseline and retained conflict
+
+The older 2026-07-28 PR-derived records remain evidence-history and directional context. The 2026-07-31 source records are separate exact commit/path/blob observations; no claim treats a changed repository head, a PR narrative, or a README as an automatic replacement for the historical data. `OWS-004` retains #186/#192 migration/INTENT direction, #194 filesystem-named release metadata, and Kehto #217 direction as mutable metadata only.
+
+`CLM-NAP-INTENT-20260731`, `CLM-NAPPLET-WEB-20260731`, `CLM-KEHTO-WEB-PAJA-20260731`, and `CLM-NAMPLETS-NATIVE-20260731` are provisional and materially uncertain. `DRF-INTENT-001`, `DRF-HANDSHAKE-001`, `DRF-ARTIFACT-001`, `DRF-CONFORMANCE-001`, `CMP-BASELINE-001`, and `OQ-UPSTREAM-BASELINE-001` retain NIP-5D, migration/INTENT, package, runtime/browser, conformance, and architecture blockers. [VERIFIED: canonical research records]
+
+### Static-site implication
+
+The owner-authorized Plan 01-48 exception may render deterministic source/status explanations from the stable `SRC-*`, `CLM-*`, terminology, and blocker IDs. It does not authorize a framework, package manager, trusted host, guest execution, live relay, wallet, signer, package admission, portable artifact, deployment/publication, ADR acceptance, or Phase 2 transition. Every protocol-sensitive page must preserve authority, evidence class, maturity, state, uncertainty, and refresh-trigger labels. [VERIFIED: CLAUDE.md; 01-TRUTH-REFRESH.md]
+
+### Refresh trigger
+
+Do not repeat broad research. Re-fetch only if a cited head changes after 2026-07-31, a pinned blob becomes unavailable, or a reviewer requires a different source scope. A change creates targeted review work and retains prior identity/history; it never automatically promotes a claim, resolves a conflict, changes an ADR, or selects an architecture.

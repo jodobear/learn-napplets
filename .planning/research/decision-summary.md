@@ -2,82 +2,73 @@
 
 ## Research question
 
-Which decision-maker actions are supported by common Phase 1 evidence, what remains blocked, and what is the smallest path that preserves a deterministic public learning product without converting a proposal into acceptance?
+Which actions are now supportable from the dated immutable evidence baseline, what remains blocked, and what may the owner-authorized dependency-free static site explain without converting a draft, implementation observation, or proposal into an accepted decision?
 
-**Decision state:** every ADR remains **proposed**. The evidence supports a reviewable fast-track direction, not an approved implementation: after Phase 2 product/content-contract approval, build a static public learning site from common structured sources and defer optional/complex capabilities that need source, browser, supply-chain, security, accessibility, or product evidence.
+**Decision state:** every ADR remains **proposed**. The completed 2026-07-31 truth refresh gives Plan 01-48 a current, source-labeled factual baseline for a static informational/learning site. It does not accept an ADR, a residual risk, a package, a teaching host, a runtime architecture, a portable target, a deployment, or a Phase 2 transition.
 
 ## Sources and immutable revisions
 
-The decision summary uses only canonical structured records and previously proposed ADRs:
+The decision summary derives its protocol-sensitive statements from canonical structured records, not from untracked prose or mutable pull-request pages:
 
-- `SRC-POLICY-001` (`c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0`, archive path and digest `df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb`) is planning-archive/project-policy context, not upstream proof.
-- `SRC-POLICY-002` (`b534103068be8c07e6869bfb7290fb60fdd87c8c`, evidence-policy path and digest `9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2`) is project policy, not upstream proof.
-- Claims, compatibility, drift, open questions, `TSCOPE-001`, delivery-mode recommendation, and Plan 01-28 audit/replay data are the shared record layer. Cited `CLM-*` records resolve to complete immutable `SRC-*` records; blocked claims are rendered as blockers, never as inferred facts.
-- Consolidation-issued records are `SPK-C-IMPACT-001`, `SPK-D-IMPACT-001`, `SPK-G-IMPACT-001`, and `SPK-H-IMPACT-001`. Their audit rerun-input digest is `17fb823be4794eebcd5a52cf6b8753063b28a68cf5b6b8e9d85871dbc7e97d85`.
+- `SRC-NAPS-NAP-INTENT-20260731` — `napplet/naps@5ac0490461ca6fec2f0d2e45b4835cf9bc08de24:naps/NAP-INTENT.md`, SHA-256 `d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0`; repository-local NAP **draft** specification.
+- `SRC-NAPPLET-WEB-20260731` — `napplet/web@03ad65b66413e5798536ef48695ffc4c2508f2c3:README.md`, SHA-256 `f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae`; alpha **observed implementation**.
+- `SRC-KEHTO-WEB-PAJA-20260731` — `kehto/web@d42b3c3da7e0ad3cea233b34458997b09b11960d:packages/paja/README.md`, SHA-256 `dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33`; **observed implementation**.
+- `SRC-NAMPLETS-NATIVE-20260731` — `pablof7z/nampplets@1094f1db23292f966fd65757132678406f7ca28c:README.md`, SHA-256 `3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b`; optional native-reference observation.
+- `SRC-POLICY-001` and `SRC-POLICY-002` remain project-policy/archive controls, not upstream protocol proof. `OWS-004` retains mutable PR direction separately from the source records.
+
+The current website-safe claim IDs are `CLM-NAP-INTENT-20260731`, `CLM-NAPPLET-WEB-20260731`, `CLM-KEHTO-WEB-PAJA-20260731`, and `CLM-NAMPLETS-NATIVE-20260731`. Each is provisional, source-linked, and visibly materially uncertain. `CLM-UPSTREAM-BASELINE-001` remains blocked.
 
 ## Observations
 
-| Decision area | Evidence category/state | Canonical record(s) | Decision-maker reading |
-| --- | --- | --- | --- |
-| Mental model and terms | Project policy; upstream behavior blocked | `CLM-POLICY-001`, `CLM-UPSTREAM-BASELINE-001` | Teach explicit authority-boundary and evidence labels as project/simulation concepts; do not state protocol behavior. |
-| Disputes and source status | Blocked conflict/review work | `CMP-BASELINE-001`, `DRF-*`, `OQ-UPSTREAM-BASELINE-001` | Preserve parallel records and uncertainty; do not collapse differences into a technical winner. |
-| First real operation / host | Not selected | `TSCOPE-001`, ADR-0005 proposed | Use static conceptual simulations; no real domain operation or host profile is selected. |
-| Public surfaces / package | Supply-chain blocker | `SPK-G-IMPACT-001`, `OQ-PUBLIC-PACKAGE-BASELINE-001` | No package version/export is consumable; no private/deep/substitute path. |
-| Browser / security | Local observation plus blocker | `SPK-C-IMPACT-001`, `SPK-H-IMPACT-001`, `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001` | Chromium fixture observations are local only; Firefox remains blocked; no production CSP or host conclusion. |
-| Portability | Product outcome unselected | ADR-0007 proposed | Keep `GO-V1`, `GO-LATER`, `WORKBENCH-ONLY`, and `NO-GO` open; do not block the public site. |
-| Editing | Explanatory local context; canonical browser blocker | Plan 01-28 SPK-J no-impact entry; `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001` | Fixed variants/controlled textarea are proposed least-authority direction; CodeMirror is not selected and CodeJar remains blocked. |
-| Freshness | Project-policy proposal; live semantics unknown | ADR-0011 proposed, `CLM-POLICY-001`, `OQ-UPSTREAM-BASELINE-001` | Use targeted review work, retain old identity, and require human meaning review; do not auto-change records. |
+| Decision area | Canonical evidence and state | Decision-maker reading |
+| --- | --- | --- |
+| NAP-INTENT vocabulary | `CLM-NAP-INTENT-20260731`; draft specification; provisional | Explain that a repository-local draft names an archetype intent dispatcher and a NIP-5D web binding. Do not state that this resolves NIP-5D authority or behavior. |
+| napplet/web | `CLM-NAPPLET-WEB-20260731`; alpha implementation; provisional | Explain the source as an alpha implementation observation only. Its package links, README, and separately retained PR directions do not qualify a package or prove protocol compatibility. |
+| Paja | `CLM-KEHTO-WEB-PAJA-20260731`; implementation observation; provisional | Explain local authoring/testing, live-relay defaults, and memory fixture mode only as Kehto behavior. Do not select it as the teaching host. |
+| Nampplets | `CLM-NAMPLETS-NATIVE-20260731`; optional native reference; provisional | Explain its native Rust/macOS reference scope and unratified compatibility state. Do not treat it as web, portable, package, or NAP/NIP qualification. |
+| NIP-5D, registry, and projection | `CLM-UPSTREAM-BASELINE-001`, `OQ-UPSTREAM-BASELINE-001`; blocked | Direct authoritative NIP-5D and NAP registry/projection evidence remains missing or unreviewed. |
+| Package and conformance | `CLM-CMP-PACKAGE-001`, `DRF-ARTIFACT-001`, `DRF-CONFORMANCE-001`; blocked | No public artifact, integrity/root-export proof, package admission, conformance target, or measurement is available. |
+| Runtime and browser | `CMP-BASELINE-001`, `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`; blocked | No common qualified runtime or cross-browser result exists. Paja and native-reference observations do not close the gap. |
 
 ## Conflicts
 
-- The desired public learning experience includes authority-boundary concepts, but source evidence does not select a runtime, host profile, composition model, manifest/identity mapping, or verifier.
-- Chrome-only fixture observations conflict with the requirement for cross-browser confidence because Firefox never attached; no workaround is evidence.
-- A public static site can be proposed independently of package/portable/deployment evidence; treating the static direction as a substitute for those proofs would be incorrect.
-- Raw report observations can explain recommendations but Plan 01-28 allows only the four consolidation-issued fragments to provide canonical spike impact evidence.
+- `DRF-INTENT-001` retains the NAP-INTENT draft side and the alpha napplet/web side. They remain distinct draft/implementation evidence classes; mutable PR #192 direction cannot select a winner.
+- `OWS-004` preserves #186/#192 migration and INTENT direction, #194 filesystem-named release metadata, and Paja #217 direction as mutable review context only.
+- `DRF-HANDSHAKE-001` retains Paja's mandatory shell handshake as observed implementation behavior, not as a NIP/NAP requirement.
+- `DRF-CONFORMANCE-001` retains the unratified Nampplets compatibility lock as a native-reference observation, not public conformance evidence.
+- `CMP-BASELINE-001` keeps every substantive eligibility dimension blocked. The existence of source records does not convert missing package, runtime, browser, fixture, conformance, or approval evidence into support.
 
 ## Inference
 
-**Smallest evidence-supported path to a Phase 3 working static learning site:**
+The smallest safe public outcome is an owner-authorized, dependency-free static site that renders common structured facts, terms, sources, maturity, uncertainty, and blocker labels. It can teach how to read the evidence boundary and the project-policy host/guest mental model as a labeled conceptual model.
 
-1. Obtain the separate Phase 2 product/content-contract approval.
-2. Use a public-site-first repository direction and a static-first site candidate only as proposed ADR inputs; do not scaffold before authorization.
-3. Render essential facts from one structured record with source/claim/status/maturity/uncertainty parity for human and LLM outputs.
-4. Deliver deterministic static lessons, source-status-rich conceptual simulations, transcript/table/static equivalents, and accessible reasoning interactions.
-5. Keep all required learning paths independent of live sources, relays, wallets, signers, packages, verifiers, guests, and external deployment.
-
-This inference exposes a fast path while preserving residual risk. It does not accept ADR-0001 through ADR-0011, select Astro, select a host, accept an editor, authorize a package, or approve a Phase 2 transition.
+This inference does **not** establish an upstream runtime rule. It does not authorize a framework, package manager, trusted host, guest execution, live relay, wallet, signer, package, verifier, browser lab, portable artifact, deployment, or Phase 2. It leaves ADR-0001 through ADR-0011 proposed.
 
 ## Prototype or measurement
 
-- The consolidation transaction verified evidence accounting and byte-stable reruns; it did not validate an application.
-- `SPK-G-IMPACT-001` observed a zero-operation dependency-free blocker, not package conformance.
-- `SPK-D-IMPACT-001` observed fixture byte integrity, not verifier/loader correctness.
-- `SPK-C-IMPACT-001` and `SPK-H-IMPACT-001` preserve local fixture conditions and Firefox absence, not browser compatibility.
-- Report-only spikes remain explanatory context. In particular, SPK-J preserves fixed-variant/CodeMirror/CodeJar context, and SPK-L preserves local refresh-routing context, without canonical positive targets.
+The truth refresh verified four cached immutable blobs against their recorded commit/path/digest and retained `OWS-004` directional metadata. It did not install or execute a package, run a runtime or browser lab, contact a relay, select a host, or measure compatibility/conformance.
 
 ## Recommendation
 
-| Proposed direction | Evidence/state | Owner / required approval | Explicit deferral and revisit trigger |
+| Proposed direction | Evidence/state | Allowed now | Explicit deferral and refresh trigger |
 | --- | --- | --- | --- |
-| Minimal static public site | ADR-0001/0002/0004/0006 proposed; `TSCOPE-001` safe fallback | Product owner approves Phase 2 contract; technical/content/accessibility review | Defer scaffold/framework selection until approval; reopen for contract, source, accessibility, or static-equivalence changes. |
-| Structured human/LLM parity | ADR-0004 proposed; `CLM-POLICY-001` | Content/technical owner; Product owner | Defer renderer/schema implementation; reopen for missing parity field, second source, or source-record change. |
-| Bounded editing only | ADR-0009 proposed; SPK-J audit context; Firefox blocker | UI/technical owner; Accessibility reviewer | Defer CodeMirror, CodeJar, arbitrary execution; reopen for approved learning need and reviewed cross-browser/accessibility/package evidence. |
-| Public package/version policy | ADR-0010 proposed; `SPK-G-IMPACT-001` blocked | Technical owner; Release owner | Defer all package consumption; reopen only with official release/export/provenance/integrity/conformance evidence or a security/update event. |
-| Targeted source freshness review | ADR-0011 proposed; `CLM-POLICY-001` | Research owner; Protocol/technical owner | Defer cadence and automatic mutation; reopen for source identity/state change or review-work result. |
-| Optional host/guest, portable, external delivery | ADR-0003/0005/0007/0008 proposed; canonical blockers | Respective technical/product/release/security roles | Defer implementation; reopen only with approved source/browser/security/accessibility/product evidence. |
+| Evidence-labeled static learning site | Owner-authorized Plan 01-48 exception; four `SRC-*` records and four provisional `CLM-*` records | Render deterministic explanatory pages and source/status displays from common structured content only. | Revisit on a cited head/digest/path change, unavailable blob, source-scope review, or changed static-content contract. |
+| Conceptual authority-boundary teaching | `CLM-POLICY-001`, `CLM-UPSTREAM-BASELINE-001`; policy plus blocker | Teach the trusted-host/untrusted-guest boundary as project policy/simulation language with visible labels. | Do not choose a host or claim upstream envelope/capability behavior; reopen with reviewed direct authority and security evidence. |
+| Source and terminology display | `SRC-*`, `CLM-*`, terminology map, `OQ-*` | Display source ID, authority/evidence class, maturity, state, uncertainty, and blockers. | Reopen when any cited source changes or required review changes claim state. |
+| Package, runtime, browser, and conformance work | `CMP-BASELINE-001`, `DRF-*`, package/open-question records; blocked | Keep dependency-free and describe the blocker. | Reopen only after independently collected evidence, reproducible measurements where required, and role-specific approval. |
+| ADR and product/architecture decisions | ADR-0001–0011; proposed | Link or describe their proposed state if needed. | Human acceptance/rejection/deferral and Phase 2 contract approval remain separate gates. |
 
 ## Uncertainty
 
-**Material and decision-relevant.** No official immutable upstream baseline establishes protocol/runtime/package/host behavior. The following remain visible blockers: Firefox attachment, public package/export/conformance, manifest, identity, verifier provenance, browser egress semantics, VitePress reduced-motion/static-equivalent evidence, CodeJar identity conflict, external deployment limit, actual assistive-technology observation, and portable outcome. A static site direction is a scope-control proposal, not evidence that later capabilities are unnecessary or impossible.
+**Material and decision-relevant.** The NAP-INTENT source is a draft with unresolved NIP-5D authority; napplet/web and Paja are implementation observations; Nampplets is a native reference; PR metadata is mutable direction. No record establishes a selected teaching host, protocol subset, browser support, package integrity, package admission, conformance, portable outcome, or release path.
 
 ## Affected phases and requirements
 
-- **Requirements:** `EVID-02`, `EVID-03`, `EVID-04`, `OPER-01`, `OPER-03`.
-- **Phase 01:** preserves canonical evidence, proposed ADRs, and review work.
-- **Phase 02:** must define and receive approval for the product/content contract before the fast path begins.
-- **Phase 03:** may be the earliest future static-site foundation only after the applicable gates; no current scaffold is authorized.
-- **Phase 05 / optional 08 / Phase 11:** retain host, package, portability, freshness, and release work as conditional/deferred.
+- **Requirements:** `EVID-01`, `EVID-02`, `EVID-03`, `OPER-01`.
+- **Phase 01 / Plan 01-47:** maintains the dated canonical evidence baseline and status labels.
+- **Phase 01 / Plan 01-48:** may consume only the stated stable IDs and visible status labels to create a dependency-free static informational/learning site.
+- **Phase 02 and later:** retain product-contract, ADR, runtime, host, package, portability, and release decision authority. No requirement ownership or Phase 2 status changes here.
 
 ## Owner and required approval
 
-Research owner owns canonical evidence maintenance. Product owner owns product-contract and portable outcome approval; protocol/technical owner owns protocol-sensitive source review; accessibility reviewer owns learner-facing accessibility review; security reviewer owns authority/CSP/exception review; release owner owns package/update and external-delivery review. All ADRs remain proposed until the named human approver accepts a concrete decision; automation must not make that transition.
+Research owner maintains the canonical records. Protocol-technical and content-learning review are required before protocol-sensitive claims can become reviewed/approved; security review applies to authority-boundary implications; product owner controls product/contract approval; release owner controls package/external delivery review. Automation cannot accept an ADR, residual risk, or phase transition.

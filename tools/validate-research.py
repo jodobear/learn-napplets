@@ -964,6 +964,48 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def canonical_source_registry_digest_is_retained(expected_digest: Any) -> bool:
+    """Accept a current or Git-reachable historical source-registry snapshot only."""
+    if not isinstance(expected_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_digest):
+        return False
+    source_registry = ROOT / ".planning/research/source-registry.yaml"
+    try:
+        if source_registry.is_symlink() or not stat.S_ISREG(source_registry.stat(follow_symlinks=False).st_mode):
+            return False
+        if sha256(source_registry) == expected_digest:
+            return True
+    except OSError:
+        return False
+
+    relative_path = ".planning/research/source-registry.yaml"
+    try:
+        revisions = subprocess.run(
+            ["git", "-C", str(ROOT), "rev-list", "--all", "--", relative_path],
+            capture_output=True,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if revisions.returncode:
+        return False
+    for revision in revisions.stdout.decode("ascii", errors="ignore").splitlines():
+        if not re.fullmatch(r"[0-9a-f]{40,64}", revision):
+            return False
+        try:
+            historical = subprocess.run(
+                ["git", "-C", str(ROOT), "show", f"{revision}:{relative_path}"],
+                capture_output=True,
+                check=False,
+                timeout=5,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return False
+        if historical.returncode == 0 and hashlib.sha256(historical.stdout).hexdigest() == expected_digest:
+            return True
+    return False
+
+
 def resolve_retained_evidence(spike_directory: Path, relative_path: Any, expected_digest: Any) -> tuple[bytes, str]:
     """Resolve one declared retained output without allowing path authority."""
     if not isinstance(relative_path, str) or not relative_path or "\x00" in relative_path:
@@ -1031,9 +1073,10 @@ def validate_complete_spike_evidence(metadata: dict[str, Any], spike_directory: 
             digest = link.get("sha256")
             kind = link.get("kind")
             if kind == "source" and path == "../../research/source-registry.yaml":
-                # This is a canonical source-binding reference, not a retained spike output.
-                source_registry = ROOT / ".planning/research/source-registry.yaml"
-                if not source_registry.is_file() or source_registry.is_symlink() or sha256(source_registry) != digest:
+                # Completed spikes bind a registry generation. Later truth refreshes may
+                # legitimately advance the current file, but only a Git-reachable exact
+                # historical generation may satisfy the retained source digest.
+                if not canonical_source_registry_digest_is_retained(digest):
                     errors.append("ERROR SPK022: canonical source evidence does not match its declared digest")
                 continue
             try:

@@ -231,6 +231,28 @@ class SpikeValidationTests(unittest.TestCase):
                     result = self.run_spike(directory, "--complete")
                     self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_completed_spike_accepts_reachable_historical_registry_digest_only(self) -> None:
+        spec = importlib.util.spec_from_file_location("validate_research_for_test", VALIDATOR)
+        self.assertIsNotNone(spec)
+        module = importlib.util.module_from_spec(spec)
+        self.assertIsNotNone(spec.loader)
+        spec.loader.exec_module(module)
+
+        directory = ROOT / ".planning" / "spikes" / "spk-d-verified-loader"
+        metadata = yaml.safe_load((directory / "metadata.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(module.validate_complete_spike_evidence(metadata, directory), [])
+
+        tampered = copy.deepcopy(metadata)
+        source_link = next(
+            link for link in tampered["evidenceLinks"]
+            if link["kind"] == "source" and link["path"] == "../../research/source-registry.yaml"
+        )
+        source_link["sha256"] = "0" * 64
+        self.assertIn(
+            "ERROR SPK022: canonical source evidence does not match its declared digest",
+            module.validate_complete_spike_evidence(tampered, directory),
+        )
+
     def test_replay_mapping_rejects_manifest_command_substitution(self) -> None:
         spec = importlib.util.spec_from_file_location("validate_research_for_test", VALIDATOR)
         self.assertIsNotNone(spec)

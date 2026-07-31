@@ -22,3 +22,49 @@ Pull-request API metadata is mutable directional evidence, not immutable source 
 ## Refresh rule
 
 Do not repeat broad discovery. Re-fetch only if a cited upstream head changes after 2026-07-31, a pinned blob becomes unavailable, or a reviewer requires a different source scope. All records remain pending the required human technical/content/security review.
+
+## Site-content handoff
+
+Plan 01-48 may consume only the stable IDs and bounded statements below from common structured records. Each public rendering must retain source, authority/evidence class, maturity, claim state, uncertainty, and blocker labels beside protocol-sensitive material.
+
+### Stable source and claim IDs
+
+| Public ID | Type and state | Source linkage | Site-safe explanatory statement |
+| --- | --- | --- | --- |
+| `SRC-NAPS-NAP-INTENT-20260731` / `CLM-NAP-INTENT-20260731` | Repository-local NAP draft / provisional claim | `napplet/naps@5ac0490461ca6fec2f0d2e45b4835cf9bc08de24:naps/NAP-INTENT.md` | A draft names NAP-INTENT, an archetype intent dispatcher, and a NIP-5D web binding. It does not resolve direct NIP-5D authority or compatibility. |
+| `SRC-NAPPLET-WEB-20260731` / `CLM-NAPPLET-WEB-20260731` | Alpha observed implementation / provisional claim | `napplet/web@03ad65b66413e5798536ef48695ffc4c2508f2c3:README.md` | napplet/web describes its own alpha SDK/shell model. It is not NAP/NIP authority, a package qualification, or runtime/browser proof. |
+| `SRC-KEHTO-WEB-PAJA-20260731` / `CLM-KEHTO-WEB-PAJA-20260731` | Observed implementation / provisional claim | `kehto/web@d42b3c3da7e0ad3cea233b34458997b09b11960d:packages/paja/README.md` | Paja documents local authoring/testing, live-relay defaults, and a memory fixture mode. This does not select a teaching host or qualify a runtime. |
+| `SRC-NAMPLETS-NATIVE-20260731` / `CLM-NAMPLETS-NATIVE-20260731` | Optional native reference / provisional claim | `pablof7z/nampplets@1094f1db23292f966fd65757132678406f7ca28c:README.md` | Nampplets is an in-progress native reference with an unratified compatibility lock. It does not qualify web, portable, package, or NAP/NIP behavior. |
+| `CLM-UPSTREAM-BASELINE-001` / `OQ-UPSTREAM-BASELINE-001` | Project-policy blocker / blocked | Four source IDs above plus policy records and `DRF-*` records | The four sources improve traceability but do not establish a reviewed comprehensive NAP/NIP protocol conclusion or first-lab recommendation. |
+
+### Stable term IDs and labels
+
+- `NAP-INTENT` is a **draft NAP specification term** sourced from `SRC-NAPS-NAP-INTENT-20260731` and must display `provisional` plus `material uncertainty`.
+- `napplet/web` and `Paja` are **observed implementation terms** sourced from their respective `SRC-*` IDs and must display `implementation-specific`, `provisional`, and `material uncertainty`.
+- `Nampplets native reference` is an **optional native-reference term** sourced from `SRC-NAMPLETS-NATIVE-20260731` and must display `implementation-specific`, `provisional`, and `material uncertainty`.
+- `NIP-5D`, `NIP-5A`, `NAP registry`, and `NAP projection` remain **blocked unresolved-upstream terms**. Do not supply a definition beyond that status boundary.
+
+### Topics that remain blocked
+
+| Topic | Record(s) | Required public treatment |
+| --- | --- | --- |
+| Direct NIP-5D authority, NAP registry, and projection | `CLM-UPSTREAM-BASELINE-001`, `OQ-UPSTREAM-BASELINE-001` | Mark blocked; do not state a protocol rule or selected architecture. |
+| INTENT disagreement and migration direction | `DRF-INTENT-001`, `OWS-004` | Show draft versus observed implementation labels; keep PR #192 as mutable direction only. |
+| Package/public-artifact qualification | `CLM-CMP-PACKAGE-001`, `DRF-ARTIFACT-001`, `OQ-PUBLIC-PACKAGE-BASELINE-001` | Mark blocked; do not install, link as supported, or claim an export/integrity result. |
+| Runtime, browser, and teaching host | `CMP-BASELINE-001`, `DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`, `CLM-CMP-RUNTIME-001` | Mark blocked; do not imply Paja or another implementation is selected or supported. |
+| Conformance and native qualification | `DRF-CONFORMANCE-001`, `OQ-PUBLIC-CONFORMANCE-001` | Mark blocked; do not infer conformance from native-reference text or README tooling descriptions. |
+| Portability, live services, wallets, signers, and deployment | ADR-0003/0005/0007/0008/0010 proposed plus existing blockers | Exclude from required site behavior and label any mention as deferred/proposed. |
+
+### Required status-label contract
+
+Every static page that renders an essential fact must expose the matching stable ID and these separate fields: **authority tier**, **evidence class**, **maturity**, **claim/record state**, **uncertainty**, **source identity**, and **refresh trigger**. Use `draft`, `observed implementation`, `optional native reference`, `project policy`, `provisional`, and `blocked` literally where applicable. Never flatten these into a single "supported" label.
+
+### Refresh triggers
+
+- Re-fetch a source only when its cited upstream head changes after 2026-07-31, its pinned blob becomes unavailable, or a reviewer requires a different source scope.
+- Treat a changed revision, path, digest, authority/evidence/maturity label, package artifact, runtime observation, or review outcome as targeted review work, not an automatic text rewrite.
+- Preserve `OWS-004` PR metadata as mutable directional context and retain prior source identity/history when a later refresh is admitted.
+
+### Plan 01-48 consumption boundary
+
+The static site may explain the evidence model and project-policy authority boundary with deterministic HTML, transcript/table equivalents, source/status displays, and no external dependency. It may not turn these records into a runtime, package, host, guest, relay, wallet, signer, browser-compatibility, portable-target, deployment, ADR-acceptance, or Phase 2 claim.

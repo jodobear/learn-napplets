@@ -2,80 +2,66 @@
 
 ## Research question
 
-What can Phase 1 responsibly recommend about the learner mental model, terminology, disputes, demonstrable domains/composition, public implementation surfaces, first teaching-host profile, portable outcome, repository architecture, and the source changes that would invalidate each direction?
+What can a learner and maintainer responsibly understand today about napplets, sources, authority boundaries, and unresolved implementation work from a single dated evidence baseline?
 
-**Answer:** no current immutable upstream NAP/NIP/package/runtime source resolves those protocol-sensitive questions. The evidence supports only a **proposed public-site-first, static learning direction**: after Phase 2 product/content-contract approval, build the smallest deterministic site from common structured evidence, with static explanations, transcripts, tables, source/status labels, and bounded conceptual simulations. This is a project recommendation, not an accepted ADR or Phase 2/3 authorization.
-
-The eight decision answers are:
-
-1. **Mental model:** teach the project-policy boundary—future trusted host owns sensitive/repetitive authority; future guests receive only declared mediated capabilities—as a labeled design/simulation concept, not an asserted upstream runtime fact (`CLM-POLICY-001`, `CLM-UPSTREAM-BASELINE-001`, ADR-0005 proposed).
-2. **Terms:** source, claim, observation, project policy, proposal, inference, blocker, simulation, and uncertainty are defined by the common evidence model. Protocol terms such as manifest, dTag identity, loader, egress, and composition remain blocked rather than becoming teaching rules (`DRF-MANIFEST-001`, `DRF-IDENTITY-001`, `DRF-EGRESS-001`).
-3. **Disputes:** retain parallel normative/project-policy and observed/local-fixture records; do not force a winner. The Firefox pre-attachment outcome, public-package absence, verifier/identity/manifest gaps, and egress question remain blocked (`DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`, `SPK-D-IMPACT-001`, `SPK-G-IMPACT-001`, `OQ-EGRESS-NIP-001`).
-4. **Demonstrable domains and composition:** no first real operation, composition behavior, or host profile is selected. Use deterministic labeled conceptual simulations, inspectable transcripts, and reasoning assessment (`TSCOPE-001`, `OQ-UPSTREAM-BASELINE-001`).
-5. **Public implementation surfaces:** the smallest future surface is static public learning content. No napplet package, public export, verifier, manifest/identity resolver, live external service, deployment, or public conformance surface is supported (`CMP-BASELINE-001`, `SPK-G-IMPACT-001`, ADR-0003/0008/0010 proposed).
-6. **First teaching-host profile:** not selected. A future profile may be reviewed only after immutable source, cross-browser, security, accessibility, package, manifest, identity, and verifier evidence exists; preserve the static fallback (`TSCOPE-001`, ADR-0005 proposed).
-7. **Portable outcome:** no `GO-V1`, `GO-LATER`, `WORKBENCH-ONLY`, or `NO-GO` outcome is selected. The optional portable target cannot block the public-site sequence (ADR-0007 proposed).
-8. **Repository architecture:** carry the narrow public-site-first workspace direction, a static-site candidate, and common structured-source parity as proposed review inputs only (ADR-0001, ADR-0002, ADR-0004 proposed). Do not create a scaffold, select a framework, or install packages.
+**Answer:** Learn Napplets now has four immutable 2026-07-31 source records suitable for a status-labeled static explanation. They establish a limited evidence map: one repository-local NAP **draft**, two **observed implementations**, and one optional **native reference**. They do not establish a reviewed NIP-5D protocol baseline, package/runtime/browser compatibility, a teaching host, a portable outcome, or an accepted ADR.
 
 ## Sources and immutable revisions
 
-The common canonical source registry contains two complete immutable project records, not current upstream protocol proof:
+| Source ID | Exact identity | Class / maturity | Safe use |
+| --- | --- | --- | --- |
+| `SRC-NAPS-NAP-INTENT-20260731` | `napplet/naps@5ac0490461ca6fec2f0d2e45b4835cf9bc08de24:naps/NAP-INTENT.md`; SHA-256 `d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0` | Repository-local NAP specification / draft | Explain that a draft names NAP-INTENT and a NIP-5D web binding; do not treat it as direct NIP-5D authority. |
+| `SRC-NAPPLET-WEB-20260731` | `napplet/web@03ad65b66413e5798536ef48695ffc4c2508f2c3:README.md`; SHA-256 `f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae` | Official repository observation / implementation-specific | Explain alpha implementation context only. |
+| `SRC-KEHTO-WEB-PAJA-20260731` | `kehto/web@d42b3c3da7e0ad3cea233b34458997b09b11960d:packages/paja/README.md`; SHA-256 `dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33` | Official repository observation / implementation-specific | Explain Paja local authoring/testing and its explicit fixture mode only. |
+| `SRC-NAMPLETS-NATIVE-20260731` | `pablof7z/nampplets@1094f1db23292f966fd65757132678406f7ca28c:README.md`; SHA-256 `3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b` | Optional native-reference observation / implementation-specific | Explain native-reference scope and unratified compatibility state only. |
 
-- `SRC-POLICY-001`: planning archive, commit `c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0`, path `docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md`, SHA-256 `df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb`, retrieved `2026-07-24T00:00:00Z`; material uncertainty.
-- `SRC-POLICY-002`: project evidence policy, commit `b534103068be8c07e6869bfb7290fb60fdd87c8c`, path `.planning/governance/evidence-policy.md`, SHA-256 `9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2`, retrieved `2026-07-24T00:00:00Z`; limited uncertainty.
-
-Every fact-bearing `CLM-*` cited here resolves through the canonical claims registry to those complete `SRC-*` records. Where the claim state is `blocked`—including `CLM-UPSTREAM-BASELINE-001`, `CLM-CMP-PACKAGE-001`, `CLM-CMP-RUNTIME-001`, `CLM-CMP-EXAMPLE-001`, and `CLM-CMP-FIXTURE-001`—this summary renders the dependent conclusion blocked rather than treating the claim as upstream fact.
-
-Plan 01-28's canonical audit is the downstream evidence boundary. Its rerun-input digest is `17fb823be4794eebcd5a52cf6b8753063b28a68cf5b6b8e9d85871dbc7e97d85`; its replay-manifest digest is `679be644f14a77b6c40528a74aea29e530837ef2db731a24ac13f8d4d4177d93`. `SPK-C-IMPACT-001`, `SPK-D-IMPACT-001`, `SPK-G-IMPACT-001`, and `SPK-H-IMPACT-001` are consolidation-issued canonical records. Report-only SPK-A/B/E/F/I/J/K/L entries remain `no-impact-fragment` explanatory context.
+`SRC-POLICY-001` and `SRC-POLICY-002` remain project-policy/archive records. `OWS-004` keeps mutable PR direction separate from immutable source content.
 
 ## Observations
 
-- **Project policy:** immutable identity, classification, uncertainty, impacts, refresh triggers, and human review are required before a protocol-sensitive claim can be verified (`CLM-POLICY-001`).
-- **Observed implementation behavior:** canonical SPK-C/H retain bounded local Chromium fixture observations and retain Firefox `152.0.4` exiting before Playwright `1.61.0` attached. No attached Firefox fixture result exists; this is not browser support/rejection evidence (`DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`).
-- **Observed supply-chain gate:** `SPK-G-IMPACT-001` retains zero public releases, installs, imports, conformance targets, or package executions. It is blocker evidence only.
-- **Observed integrity limit:** `SPK-D-IMPACT-001` retains local supplied-byte and mutation digest observations, not manifest, identity, verifier, loader, or protocol proof.
-- **Scope observation:** `TSCOPE-001` records that no real-lab operation or teaching-host profile is selected and provides the static-public-content fallback.
-- **Explanatory context, not canonical fact:** SPK-J preserves the CodeMirror non-selection/default-fixed-variants direction, CodeJar identity blocker, and Firefox block; SPK-L preserves deterministic targeted review-work routing. Plan 01-28 accounts for both without issuing decision-impact records.
+1. **Evidence is the first lesson.** `CLM-NAP-INTENT-20260731`, `CLM-NAPPLET-WEB-20260731`, `CLM-KEHTO-WEB-PAJA-20260731`, and `CLM-NAMPLETS-NATIVE-20260731` are provisional claims with source IDs, maturity, uncertainty, and pending review.
+2. **Draft is not final authority.** The NAP-INTENT draft can be described precisely, but its NIP-5D binding does not settle NIP-5D protocol meaning, projection, runtime, or browser behavior.
+3. **Implementation is not protocol.** napplet/web and Paja describe implementation contexts. The static site can show those labels and limitations, not turn their README text or mutable PR direction into NAP/NIP law.
+4. **Native reference is not a qualification.** Nampplets remains an optional native reference; its unratified compatibility lock cannot prove web/portable/package/conformance support.
+5. **The project policy mental model remains safe explanatory content.** A future trusted host owns sensitive/repetitive authority and a future untrusted napplet receives only declared mediated capabilities. This is visible project-policy/conceptual teaching, not a claim that a current runtime is selected or verified.
 
 ## Conflicts
 
-- The project needs a clear host/guest learning model, but no immutable upstream host/runtime/package source supports a selected implementation (`CLM-UPSTREAM-BASELINE-001`, `OQ-UPSTREAM-BASELINE-001`).
-- Bounded Chromium observations coexist with no attached Firefox observations; neither may be generalized into cross-browser success (`DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001`).
-- A static site can be proposed as a project delivery path, while external deployment/publication remains untested and blocked beyond local artifact evidence (ADR-0003 proposed).
-- The project can preserve deterministic fixture policy while manifest, identity, verifier, public-package, and public-conformance evidence remains blocked (`OQ-VERIFIED-LOADER-*`, `OQ-PUBLIC-PACKAGE-BASELINE-001`, `OQ-PUBLIC-CONFORMANCE-001`).
+- `DRF-INTENT-001` keeps the NAP-INTENT draft and alpha napplet/web implementation sides distinct. The NIP-5D dependency and mutable migration/INTENT PR direction are unresolved.
+- `DRF-HANDSHAKE-001` keeps Paja's mandatory shell handshake as an implementation observation; it does not establish a protocol requirement.
+- `DRF-ARTIFACT-001` keeps #194 filesystem-named release metadata from becoming package/artifact evidence.
+- `DRF-CONFORMANCE-001` keeps the native unratified compatibility state from becoming public conformance proof.
+- `CMP-BASELINE-001` keeps protocol, implementation, package, runtime, fixture, current-work, and conformance eligibility visibly blocked.
 
 ## Inference
 
-**Project recommendation:** the lowest-risk, smallest evidence-supported route to a Phase 3 working static learning site is: obtain Phase 2 contract approval; render public static lessons from one structured source; visibly preserve source/status/uncertainty; use static diagrams, transcript/table equivalents, and deterministic conceptual simulations; and keep optional host/guest, editor, package, portable, deployment, and live-system capabilities deferred.
+The owner-authorized exception may now deliver a dependency-free static public learning surface in Plan 01-48. It should make the source/status boundary legible, use deterministic static explanations, and derive essential human and machine-readable facts from one structured content source.
 
-This inference follows the proposed ADR series and scope records. It does not accept ADR-0001 through ADR-0011, choose a framework, authorize production work, or establish upstream protocol behavior.
+The exception is narrow. It does not authorize a framework, package manager, runtime, host/guest execution, package consumption, live service, signer, wallet, deployment, portable artifact, ADR acceptance, or Phase 2 transition.
 
 ## Prototype or measurement
 
-- Plan 01-28 consolidated all twelve spike inputs under a lock-protected, byte-stable transaction; it preserved four canonical impact fragments and eight report-only/no-impact entries.
-- `SPK-C-IMPACT-001` and `SPK-H-IMPACT-001` preserve local Chromium fixture observations plus the Firefox attachment blocker.
-- `SPK-D-IMPACT-001` and `SPK-G-IMPACT-001` preserve blocked verifier and public-package evidence.
-- SPK-A/B/E/F/I/J/K/L may explain bounded local fixtures only through their audit-pinned report/metadata/measurement digests; none supplies a canonical positive architecture or product decision.
+No runtime or product prototype is claimed here. The refresh verified four stored immutable blobs and records bounded PR-direction metadata. It ran no package, guest, browser, relay, wallet, signer, or compatibility/conformance operation.
 
 ## Recommendation
 
-1. **Fast-track direction (proposed):** target a minimal static public learning site after Phase 2 approval, based on ADR-0001/0002/0004 and ADR-0005/0006/0008/0009/0010/0011 constraints. Use no live external systems in required paths.
-2. **Explicit deferrals:** selected teaching host; real domain operation; portable target; Workbench; package consumption; verifier/loader/manifest/identity integration; external deployment/publication; full editor or arbitrary learner-code execution; dynamic visual controller; browser-support conclusion.
-3. **Evidence discipline:** consume consolidation-issued IDs and common structured records; preserve raw reports as explanatory context; do not auto-refresh, accept ADRs, or change claim state.
-4. **Source refresh review requirement:** use targeted D-20/D-36 review work for changed, moved, unavailable, or ambiguous source identity. A reviewer, not a comparison tool, determines semantic impact.
+1. **Build static, labeled learning pages now.** Plan 01-48 may render source IDs, claims, terms, status labels, uncertainty, and blockers from common structured content.
+2. **Teach a cautious mental model.** Make the host/guest authority boundary explicitly project-policy/conceptual and pair it with source/status disclosure rather than asserting selected runtime behavior.
+3. **Show unresolved work rather than hiding it.** NIP-5D, registry/projection, packages, public artifacts/exports, runtime/browser support, conformance, host selection, portability, and ADRs remain blocked or proposed.
+4. **Keep the site deterministic.** Required paths must not depend on a package, framework, external source request, relay, wallet, signer, browser lab, or runtime.
+5. **Refresh narrowly.** Re-fetch only when a cited head changes after 2026-07-31, a pinned blob becomes unavailable, or a reviewer asks for a different source scope.
 
 ## Uncertainty
 
-**Material.** There is no current immutable upstream protocol/package/runtime baseline; Firefox has no attached fixture observation; manifest, identity, verifier, public export, conformance, egress, accessibility, deployment, and portable evidence remain unresolved. The static recommendation controls scope; it does not prove that optional capabilities are infeasible or that the future site is approved.
-
-Invalidating/revisit triggers include: any cited source revision/path/locator/digest or authority/maturity change; an official public package/export or conformance baseline; reviewed Firefox attached-context measurement; a resolved manifest/identity/verifier source; a Phase 2 contract change; a security/accessibility decision; an approved external-delivery proposal; or a targeted source-refresh review result.
+**Material.** A draft NAP record, alpha web implementation, Paja implementation, native reference, and mutable PR direction cannot establish a comprehensive protocol/compatibility conclusion. All output must show source/evidence class, maturity, state, uncertainty, and blocker status adjacent to essential protocol-sensitive statements.
 
 ## Affected phases and requirements
 
-- **Requirements:** `EVID-02`, `EVID-03`, `EVID-04`, `OPER-01`, `OPER-03`.
-- **Phases:** 01 research baseline; 02 product/content contract; 03 public static-site foundation; 05 teaching-host expansion; optional 08 portable target; 11 quality/maintenance.
-- **Decision state:** ADR-0001 through ADR-0011 are proposed only. Phase 2 approval, ADR acceptance, security exceptions, external actions, and production scaffolding remain separate human gates.
+- **Requirements:** `EVID-01`, `EVID-02`, `EVID-03`, `OPER-01`.
+- **Phase 01:** provides the dated source/claim/drift/compatibility baseline and a static-site-safe handoff.
+- **Plan 01-48:** may consume the stable source, claim, term, and blocker IDs for a deterministic local static site.
+- **Later phases:** retain ownership of product contract, accessibility release criteria, runtime/host behavior, package admission, portability, knowledge hardening, deployment, and release.
 
 ## Owner and required approval
 
-Owner: research owner coordinates the summary; technical, content/learning, accessibility, security, release, protocol/technical, and product roles own their respective decisions. Required approval: protocol/technical and product/content review for evidence/contract use; accessibility/security review for learner-facing or authority-bearing work; release approval for any external delivery. No automated process may accept an ADR or authorize Phase 2/3 work.
+Research owner coordinates evidence maintenance. Protocol-technical and content-learning reviewers decide protocol-sensitive meaning; security review is required for authority-boundary claims; product owner owns Phase 2 contract approval; release owner owns package and external delivery decisions. ADRs remain proposed and no automated process may authorize the next phase.
