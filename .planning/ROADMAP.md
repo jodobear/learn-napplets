@@ -60,7 +60,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Phase governance and traceability convention for the remaining roadmap.
 - Owner-authorized dependency-free static website presenting only structured, evidence-labeled content after safety repair and truth refresh pass.
 
-**Plans**: 46/48 plans executed
+**Plans**: 47/48 plans executed
 
 **Verification status**: `gaps_found` — 0/6 owning requirements independently verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
@@ -130,7 +130,7 @@ Owner-Authorized Recovery Plans:
 
 **Wave 2** *(blocked on Plan 01-46)*
 
-- [ ] 01-47-PLAN.md — Admit the refreshed immutable upstream anchors while preserving authority, uncertainty, conflict, and blocker labels.
+- [x] 01-47-PLAN.md — Admit the refreshed immutable upstream anchors while preserving authority, uncertainty, conflict, and blocker labels.
 
 **Wave 3** *(blocked on Plans 01-46 and 01-47)*
 
@@ -489,7 +489,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 46/48 | In Progress|  |
+| 1. Research and Truth Baseline | 47/48 | In Progress|  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

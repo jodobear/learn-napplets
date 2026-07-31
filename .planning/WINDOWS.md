@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 13
+open_count: 14
 waived_count: 0
 fixed_count: 1
-total_count: 14
-last_updated: 2026-07-30T14:36:24.369Z
+total_count: 15
+last_updated: 2026-07-31T03:42:31.556Z
 ---
 
 # Broken Windows Ledger
@@ -29,6 +29,7 @@ last_updated: 2026-07-30T14:36:24.369Z
 | 12 | 01 | deviation | tests/phase1/test_lesson_evidence.py |  | Compatibility scope fallback corrected the canonical-evidence validator. | open |  | 2026-07-24T12:20:20.107Z |  |
 | 13 | 01 | deviation | .planning/research/lesson-packets |  | Existing lesson packets received required canonical uncertainty entries for full-inventory validation. | open |  | 2026-07-24T12:20:20.176Z |  |
 | 14 | 01 | unrun-verify | .planning/traceability/pack-v3-file-manifest.json |  | Full research validation could not run because the isolated worktree lacks the pre-existing traceability manifest. | open |  | 2026-07-30T14:36:24.369Z |  |
+| 15 | 01 | unmet-truth | .planning/phases/01-research-and-truth-baseline/01-FINAL-VERIFICATION.md |  | PRE118 exact-active-plan-set binding still blocks canonical-root research validation and phase closure. | open |  | 2026-07-31T03:42:31.556Z |  |
 
 ````json
 [
@@ -198,6 +199,18 @@ last_updated: 2026-07-30T14:36:24.369Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-07-30T14:36:24.369Z",
+    "resolved_at": null
+  },
+  {
+    "id": 15,
+    "kind": "unmet-truth",
+    "phase": "01",
+    "file": ".planning/phases/01-research-and-truth-baseline/01-FINAL-VERIFICATION.md",
+    "line": null,
+    "description": "PRE118 exact-active-plan-set binding still blocks canonical-root research validation and phase closure.",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-07-31T03:42:31.556Z",
     "resolved_at": null
   }
 ]

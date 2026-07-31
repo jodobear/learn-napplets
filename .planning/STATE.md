@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: executing
-stopped_at: Completed 01-46-PLAN.md; full suite PRE118 terminal-binding failure deferred
-last_updated: "2026-07-31T03:02:26.075Z"
+stopped_at: "Completed 01-47-PLAN.md; next: execute owner-authorized Plan 01-48 static site while Phase 1 remains gaps_found"
+last_updated: "2026-07-31T03:44:06.936Z"
 last_activity: 2026-07-31
-last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 48
-  completed_plans: 46
+  completed_plans: 47
+last_activity_desc: Phase 01 execution started
 ---
 
 # Project State
@@ -28,17 +28,17 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 2 of 48
+Plan: 48 of 48
 Status: Ready to execute
-Last activity: 2026-07-31 — Phase 01 execution started
+Last activity: 2026-07-31
 
-Progress: [██████████] 96% plan execution; phase goal not re-verified; website not yet built
+Progress: [██████████] 98% plan execution; phase goal not re-verified; website not yet built
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 45
+- Total plans completed: 47
 - Average duration: N/A
 - Total execution time: 0 hours
 
@@ -46,12 +46,12 @@ Progress: [██████████] 96% plan execution; phase goal not re
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 45 | terminal attestation published | N/A |
+| 01 | 47 | owner-authorized recovery Plans 01-46 and 01-47 complete | N/A |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-36 through 01-40 closeout sequence
-- Trend: Phase 1 terminal publication complete
+- Last 5 plans: Phase 1 recovery advanced through Plans 01-46 and 01-47
+- Trend: Immutable truth refresh complete; dependency-free static site is next
 
 **Per-Plan Metrics:**
 
@@ -86,6 +86,7 @@ Progress: [██████████] 96% plan execution; phase goal not re
 | Phase 01 P25 | 434s | 2 tasks | 15 files |
 | Phase 01 P24 | 15m | 3 tasks | 5 files |
 | Phase 01 P46 | 5m 55s | 3 tasks | 9 files |
+| Phase 01 P47 | 1351s | 3 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -198,12 +199,14 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Keep local spike observations blocked and observed-local with normative null; only genuinely distinct pinned sides may represent upstream drift.
 - [Phase ?]: Hold an fcntl advisory lock descriptor for the refresh writer lifetime so abnormal process exit releases future refresh attempts.
 - [Phase ?]: Do not alter historical terminal review-binding machinery while its PRE118 failure remains outside the owner-authorized recovery scope.
+- [Phase ?]: Plan 01-48 may render only stable source, claim, term, and blocker IDs with separate authority, evidence class, maturity, state, uncertainty, and refresh labels.
+- [Phase ?]: OWS-004 mutable PR direction and the 2026-07-28 PR-derived snapshot remain separate from the four 2026-07-31 immutable source blobs.
+- [Phase ?]: Completed spike source-registry evidence must match the current regular registry or exact Git-reachable historical bytes; no digest is silently rebound after refresh.
+- [Phase ?]: Plan 01-47 addresses but does not complete EVID-01, EVID-02, EVID-03, or OPER-01 while direct-authority, compatibility, approval, and PRE118 blockers remain.
 
 ### Pending Todos
 
-- Execute Plan 01-46: repair CR-01 through CR-04 plus WR-01 and WR-03 with focused regressions.
-- Execute Plan 01-47: admit refreshed immutable upstream truth with authority/conflict/status labels intact.
-- Execute Plan 01-48: build and behaviorally verify the dependency-free static Learn Napplets website.
+- Execute Plan 01-48: build and behaviorally verify the owner-authorized dependency-free static Learn Napplets website from evidence-labeled structured records.
 - Keep CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred.
 
 ### Blockers/Concerns
@@ -237,6 +240,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T03:02:26.064Z
-Stopped at: Completed 01-46-PLAN.md; full suite PRE118 terminal-binding failure deferred
-Resume file: .planning/phases/01-research-and-truth-baseline/01-47-PLAN.md
+Last session: 2026-07-31T03:44:06.924Z
+Stopped at: Completed 01-47-PLAN.md; next: execute owner-authorized Plan 01-48 static site while Phase 1 remains gaps_found
+Resume file: .planning/phases/01-research-and-truth-baseline/01-48-PLAN.md
