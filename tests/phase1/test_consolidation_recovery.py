@@ -207,5 +207,54 @@ class ObservedRefreshPublicationTests(unittest.TestCase):
             self.assertFalse(attestation.exists())
 
 
+class CanonicalRecoveryTests(unittest.TestCase):
+    def test_unexpected_transaction_entries_refuse_within_timeout(self) -> None:
+        script = """
+import importlib.util
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+case = sys.argv[2]
+recovery_path = Path(sys.argv[3])
+spec = importlib.util.spec_from_file_location('canonical_recovery_subprocess', recovery_path)
+recovery = importlib.util.module_from_spec(spec)
+assert spec and spec.loader
+spec.loader.exec_module(recovery)
+(root / 'a.yaml').write_bytes(b'old-a')
+recovery.register_canonical_reader('bounded-reader', ('a.yaml',))
+transactions = root / '.canonical-transactions'
+transactions.mkdir()
+if case == 'file':
+    (transactions / 'leftover').write_text('unexpected', encoding='utf-8')
+elif case == 'symlink':
+    (transactions / 'leftover').symlink_to(root / 'a.yaml')
+elif case == 'ambiguous':
+    (transactions / 'first').mkdir()
+    (transactions / 'second').mkdir()
+else:
+    raise AssertionError(case)
+try:
+    recovery.read_canonical_snapshot('bounded-reader', ('a.yaml',), root=root, timeout=0.1)
+except recovery.RecoveryError:
+    raise SystemExit(0)
+raise SystemExit(2)
+"""
+        for case in ("file", "symlink", "ambiguous"):
+            with self.subTest(case=case):
+                with tempfile.TemporaryDirectory() as temp:
+                    try:
+                        result = subprocess.run(
+                            [sys.executable, "-c", script, temp, case, str(ROOT / "tools" / "canonical-recovery.py")],
+                            text=True,
+                            capture_output=True,
+                            timeout=1,
+                            check=False,
+                        )
+                    except subprocess.TimeoutExpired as exc:
+                        self.fail(f"reader did not refuse unexpected transaction state within timeout: {exc}")
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -245,6 +245,72 @@ class SpikeConsolidationTests(unittest.TestCase):
             self.assertIn(conflict_digest, str(conflict_question["history"]))
             self.assertIn(conflict_id, audit.read_text(encoding="utf-8"))
 
+    def test_consolidation_generation_recovers_after_each_publish_interruption(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            self.remove_consolidation_history(planning)
+            audit = planning / "research" / "reports" / "audit.md"
+            targets = (
+                planning / "research" / "compatibility-matrix.yaml",
+                planning / "research" / "drift-register.yaml",
+                planning / "research" / "open-questions.yaml",
+                planning / "research" / "security-egress-findings.md",
+                audit,
+                planning / "spikes" / "replay-manifest.yaml",
+            )
+            old = {target.relative_to(planning).as_posix(): target.read_bytes() if target.exists() else None for target in targets}
+            recovery_path = ROOT / "tools" / "canonical-recovery.py"
+            spec = importlib.util.spec_from_file_location("canonical_recovery_0146", recovery_path)
+            recovery = importlib.util.module_from_spec(spec)
+            assert spec and spec.loader
+            spec.loader.exec_module(recovery)
+            for position in range(len(targets)):
+                with self.subTest(position=position):
+                    result = self.run_consolidation(
+                        planning,
+                        audit,
+                        env=os.environ | {"CONSOLIDATION_INJECT_PUBLISH_INTERRUPTION": str(position)},
+                    )
+                    self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertIn("CONSOLIDATION_PUBLISH_INTERRUPTED", result.stdout)
+                    recovery.recover_canonical_generation(planning)
+                    recovered = {
+                        target.relative_to(planning).as_posix(): target.read_bytes() if target.exists() else None
+                        for target in targets
+                    }
+                    self.assertIn(recovered, (old,))
+
+    def test_consolidation_semantic_failure_does_not_enter_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            planning = self.copy_planning(Path(temp))
+            self.remove_consolidation_history(planning)
+            fragment = yaml.safe_load((planning / "spikes" / "spk-h-browser-egress" / "impact-fragment.yaml").read_text(encoding="utf-8"))
+            proposed_ids = {item["id"] for item in fragment["proposedDriftRecords"]}
+            drift_path = planning / "research" / "drift-register.yaml"
+            drift_document = yaml.safe_load(drift_path.read_text(encoding="utf-8"))
+            drift_document["drift"] = [item for item in drift_document["drift"] if item["id"] not in proposed_ids]
+            drift_path.write_text(yaml.safe_dump(drift_document, sort_keys=False), encoding="utf-8")
+            audit = planning / "research" / "reports" / "audit.md"
+            spec = importlib.util.spec_from_file_location("validate_research_0146", VALIDATOR)
+            validator = importlib.util.module_from_spec(spec)
+            assert spec and spec.loader
+            spec.loader.exec_module(validator)
+            original_new_drift = validator.new_drift_record
+
+            def invalid_new_drift(*args):
+                record = original_new_drift(*args)
+                record["observed"]["classification"] = "not-observed-local"
+                return record
+
+            validator.new_drift_record = invalid_new_drift
+            before = self.canonical_bytes(planning)
+            errors = validator.consolidate_spike_impacts(
+                planning / "spikes", planning / "research", audit, False, 1.0, "normal"
+            )
+            self.assertTrue(any("SEM008" in error for error in errors), errors)
+            self.assertEqual(before, self.canonical_bytes(planning))
+            self.assertFalse((planning / ".canonical-transactions").exists())
+
     def test_contention_and_injected_precommit_failure_preserve_byte_identical_state(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             planning = self.copy_planning(Path(temp))
