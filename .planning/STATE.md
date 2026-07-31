@@ -4,15 +4,15 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: gaps_found
-stopped_at: "Independent Phase 1 verification found evidence-tooling trust-boundary gaps; gap closure required"
-last_updated: "2026-07-30T23:28:50Z"
+status: executing
+stopped_at: Three-plan recovery set validated; Plan 01-46 ready to execute
+last_updated: "2026-07-31T02:23:41.363Z"
 last_activity: 2026-07-31
-last_activity_desc: Independent final verification found 0/6 Phase 1 requirements verified and routed to focused gap closure
+last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 45
+  total_plans: 48
   completed_plans: 45
 ---
 
@@ -27,12 +27,12 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — GAPS FOUND
-Plan: 45 of 45 original plans complete; focused gap plans not yet created
-Status: Independent final verification failed 0/6 owning requirements after current code review reproduced evidence-tooling trust-boundary defects. Phase 2 remains not started and unauthorized.
-Last activity: 2026-07-31 — Independent final verification routed Phase 1 to focused gap closure
+Phase: 01 (research-and-truth-baseline) — EXECUTING
+Plan: 1 of 48
+Status: Executing Phase 01
+Last activity: 2026-07-31 — Phase 01 execution started
 
-Progress: [██████████] 100% original plan execution; phase goal not verified
+Progress: [█████████░] 94% plan execution; phase goal not re-verified; website not yet built
 
 ## Performance Metrics
 
@@ -189,19 +189,25 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Exact detached external Codex review of plan commit `1a9449b` converged with 0 HIGH / 0 actionable, 45 plans, 670650 bytes, aggregate SHA-256 `722b84b2cad83a1901ece8cee986bd2e421dd356c7b743ba66b19b3948404adc`, and six mandatory source Git blobs; committed record `51ce445` is current plan-review authorization.
 - [Phase ?]: GitHub Codex connector submitted exact-head reviews with zero inline findings; this satisfies the supplemental PR guard but does not replace the exact detached plan-review authority.
 - [Phase ?]: Human approved merge-commit integration of PR #4 on 2026-07-29 so reviewed commit identities remain reachable from `master`; squash/rebase integration was not selected.
+- [Phase 1 recovery]: The superseded 01-46 through 01-57 closeout is replaced by exactly three plans: core evidence safety, immutable upstream truth admission, and a dependency-free static website.
+- [Phase 1 recovery]: CR-01 through CR-04 plus WR-01 and WR-03 are active; CR-05 through CR-07/SPK-G and WR-02 are deferred because they do not block the static evidence-labeled website.
+- [Phase 1 recovery]: The static-site exception permits local dependency-free informational/learning pages only after Plans 01-46 and 01-47 pass; no framework, runtime, package, live service, deployment, ADR acceptance, or Phase 2 transition is authorized.
+- [Phase 1 recovery]: One focused plan-checker pass replaces further external plan-byte binding and terminal-review choreography for Plans 01-46 through 01-48.
+- [Phase 1 recovery]: The sole checker pass found one browser-interpreter blocker and one later-phase ownership warning in Plan 01-48; both were corrected directly, and canonical planning validation then passed with zero errors/warnings without a second checker pass.
 
 ### Pending Todos
 
-- Create focused Phase 1 gap-closure plans from `01-FINAL-VERIFICATION.md` via `/gsd-plan-phase 1 --gaps`.
-- Repair and test the seven current blocker/critical evidence-tooling defects plus three warnings recorded in `01-REVIEW.md`.
-- Re-run independent Phase 1 verification after gap execution.
-- Do not begin Phase 2 until Phase 1 passes and a separate Phase 2 transition is authorized.
+- Execute Plan 01-46: repair CR-01 through CR-04 plus WR-01 and WR-03 with focused regressions.
+- Execute Plan 01-47: admit refreshed immutable upstream truth with authority/conflict/status labels intact.
+- Execute Plan 01-48: build and behaviorally verify the dependency-free static Learn Napplets website.
+- Keep CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred.
 
 ### Blockers/Concerns
 
-- Current independent final verification is `gaps_found` with 0/6 owning requirements verified; `01-FINAL-VERIFICATION.md` is canonical for next action.
-- Current code review found seven blocker/critical defects in repository confinement, durable canonical publication/recovery, drift synthesis, and SPK-G sandbox/package/evidence handling, plus three warnings.
-- Earlier terminal, security, and validation passes predate these current findings and do not adjudicate them.
+- Current independent final verification remains `gaps_found`; `01-FINAL-VERIFICATION.md` and `01-REVIEW.md` preserve the full defect baseline.
+- Active recovery scope is CR-01 through CR-04 plus WR-01 and WR-03 because they protect site truth, confinement, atomic publication/recovery, test discovery, and refresh availability.
+- CR-05 through CR-07/SPK-G and WR-02 are explicitly deferred; the static website cannot consume packages or imply package/runtime qualification.
+- Earlier terminal, security, and validation passes predate these findings and do not adjudicate the active six repairs.
 - Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector submitted exact-head reviews with zero inline findings and remains supplemental, not cross-plan authority.
 - Historical review records `341884f`, `9b5794f`, and the superseded cycle-1 record remain audit evidence only; current authorization is the committed exact review record at `51ce445` for plan commit `1a9449b`.
 - Human merge approval is recorded. Execution may begin only from synchronized merged `master`; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
@@ -226,6 +232,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-30T23:28:50Z
-Stopped at: Independent final verification found Phase 1 gaps; next action is focused gap planning.
-Resume file: `.planning/phases/01-research-and-truth-baseline/01-FINAL-VERIFICATION.md`
+Last session: 2026-07-31T02:19:12Z
+Stopped at: Resume completed; Plan 01-46 is the next executable work.
+Resume file: `.planning/phases/01-research-and-truth-baseline/01-46-PLAN.md`

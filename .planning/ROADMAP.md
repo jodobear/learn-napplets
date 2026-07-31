@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Independent final verification on 2026-07-31 found Phase 1 gaps after current code review reproduced evidence-tooling trust-boundary defects. Phase 1 is reopened for focused gap closure; ADR 0001–0011 remain proposed, and no production application scaffold, deployment/release, external action, residual-risk acceptance, package admission, or Phase 2 transition is authorized.
+**Current gate:** Independent verification on 2026-07-31 reopened Phase 1. Owner-authorized recovery now has exactly three plans: core evidence safety, current upstream truth admission, then a dependency-free static Learn Napplets website. Runtime/framework scaffolding, package admission, SPK-G, host/guest execution, portable targets, deployment/release, external action, residual-risk acceptance, ADR acceptance, and Phase 2 transition remain unauthorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -49,7 +49,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
   4. A decision maker can inspect reproducible measurements from each mandatory spike before repository, framework, deployment, content, teaching-host, fixture, and portable-target recommendations are considered.
   5. The project owner can review a source-backed recommendation for the first lab domain and teaching-host profile, or an explicit blocker, while confirming that no production application scaffold was created.
 
-**Required reviews / human approvals**: Deep plan-review convergence is required before any Phase 1 execution. After research, the project owner reviews the evidence baseline, spike results, unresolved upstream questions, and ADR recommendations; ADRs remain unaccepted until Phase 2.
+**Required reviews / human approvals**: The original Phase 1 research plan received deep review convergence. The owner-authorized three-plan recovery set receives one focused plan-checker pass before execution; repeated external byte-binding and terminal-review choreography are not required. ADRs remain unaccepted until a later explicit decision.
 
 **Expected outputs**:
 
@@ -58,8 +58,9 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Mandatory spike evidence for workspace, site framework, boundary harness, verified loader, shared content, portable target, package consumption, egress/CSP, diagrams, code editing, deployment, and source freshness.
 - Evidence-backed ADR recommendations and a research executive/decision summary; all recommendations remain proposals.
 - Phase governance and traceability convention for the remaining roadmap.
+- Owner-authorized dependency-free static website presenting only structured, evidence-labeled content after safety repair and truth refresh pass.
 
-**Plans**: 45/45 original plans executed; 12 focused gap-closeout plans (01-46 through 01-57) pending
+**Plans**: 45/45 original plans executed; 3 owner-authorized recovery plans (01-46 through 01-48) pending
 
 **Verification status**: `gaps_found` — 0/6 owning requirements independently verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
@@ -121,49 +122,21 @@ Gap Closure Plans:
 
 - [x] 01-40-PLAN.md — Freshly verify Phase 1 and synchronize factual status/accounting after human terminal verification and project-owner recheck.
 
-Focused Gap Closeout Plans:
+Owner-Authorized Recovery Plans:
 
 **Wave 1**
 
-- [ ] 01-51-PLAN.md — Obtain deep external exact-plan review convergence before focused implementation.
+- [ ] 01-46-PLAN.md — Repair CR-01 through CR-04 plus WR-01 and WR-03 at the evidence boundaries needed by the website.
 
-**Wave 2** *(blocked on Plan 01-51)*
+**Wave 2** *(blocked on Plan 01-46)*
 
-- [ ] 01-46-PLAN.md — Repair source-ingress confinement and restore its discovered regression.
-- [ ] 01-47-PLAN.md — Repair journaled consolidation and bounded malformed-transaction recovery.
+- [ ] 01-47-PLAN.md — Admit the refreshed immutable upstream anchors while preserving authority, uncertainty, conflict, and blocker labels.
 
-**Wave 3** *(blocked on Plan 01-47)*
+**Wave 3** *(blocked on Plans 01-46 and 01-47)*
 
-- [ ] 01-48-PLAN.md — Repair SPK-G constructed sandbox, scoped package admission, and retained bundle publication.
-- [ ] 01-49-PLAN.md — Repair observed-local drift synthesis, migration ownership, and refresh locking.
+- [ ] 01-48-PLAN.md — Build and behaviorally verify the dependency-free static Learn Napplets website from common structured records.
 
-**Wave 4** *(blocked on Plans 01-46 through 01-49)*
-
-- [ ] 01-50-PLAN.md — Assemble cross-defect regressions and the current repair matrix.
-
-**Wave 5** *(blocked on Plan 01-50)*
-
-- [ ] 01-52-PLAN.md — Prepare exact current finding-register validation and non-decisional repair review evidence.
-
-**Wave 6** *(blocked on Plan 01-52)*
-
-- [ ] 01-53-PLAN.md — Obtain independent current repair code/security review.
-
-**Wave 7** *(blocked on Plan 01-53)*
-
-- [ ] 01-54-PLAN.md — Implement terminal/runner contracts and assemble a candidate awaiting final external review.
-
-**Wave 8** *(blocked on Plan 01-54)*
-
-- [ ] 01-55-PLAN.md — Obtain immutable external exact review of final plans, source/tests, and candidate commit.
-
-**Wave 9** *(blocked on Plan 01-55)*
-
-- [ ] 01-56-PLAN.md — Run clean-worktree independent verification at the exact final-review commit.
-
-**Wave 10** *(blocked on Plan 01-56)*
-
-- [ ] 01-57-PLAN.md — Perform human terminal/project-owner recheck and conditionally publish factual status.
+Deferred from this recovery set: CR-05 through CR-07/SPK-G, WR-02 migration copy semantics, package admission, native-runtime qualification, portable targets, cross-browser runtime labs, external review byte-binding, terminal-publication choreography, deployment, and release.
 
 Plans:
 **Wave 1**
@@ -516,7 +489,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 45/45 original; 12 focused gap-closeout plans pending | Gaps found |  |
+| 1. Research and Truth Baseline | 45/45 original; 3 owner-authorized recovery plans pending | Gaps found — recovery planned |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |
