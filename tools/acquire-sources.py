@@ -188,9 +188,22 @@ class FixtureTransport:
 
 
 def _confined_cache_root(value: Path) -> Path:
-    resolved = value.expanduser().resolve()
-    if resolved.name != "upstreams" or resolved.parent.name != ".research":
-        raise ValueError("cache root must be an ignored .research/upstreams directory")
+    """Admit only the exact repository-owned cache before any transport or writes."""
+    requested = value.expanduser()
+    if any(part in {".", ".."} for part in requested.parts):
+        raise ValueError("cache root must be the exact repository-owned .research/upstreams directory")
+    expected = CACHE_ROOT.absolute()
+    if requested.absolute() != expected:
+        raise ValueError("cache root must be the exact repository-owned .research/upstreams directory")
+    repository = ROOT.resolve(strict=True)
+    current = repository
+    for component in (".research", "upstreams"):
+        current = current / component
+        if current.is_symlink() or not current.is_dir():
+            raise ValueError("repository-owned cache root must use regular non-symlink directories")
+    resolved = current.resolve(strict=True)
+    if resolved != expected or resolved != CACHE_ROOT.resolve(strict=True):
+        raise ValueError("cache root must be the exact repository-owned .research/upstreams directory")
     return resolved
 
 
