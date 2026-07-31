@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: gaps_found
-stopped_at: Gap planning preflight complete; paused before planner spawn due context exhaustion
-last_updated: "2026-07-31T08:51:54.940Z"
+stopped_at: Focused gap plans 01-49 through 01-53 created and revised after one checker pass; exact-commit plan review pending
+last_updated: "2026-07-31T16:34:44+05:30"
 last_activity: 2026-07-31
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 48
+  total_plans: 53
   completed_plans: 48
-last_activity_desc: Phase 1 re-verification gaps_found after recovery execution
+last_activity_desc: Five focused Phase 1 gap plans created; execution blocked on exact-commit plan review
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — GAPS FOUND
-Plan: 48 of 48 complete; focused gap closure required
-Status: Independent re-verification found 3 blocking gaps plus 1 active test warning
+Plan: 48 of 53 complete; Plans 01-49 through 01-53 planned but not executed
+Status: Gaps remain active; focused gap plans await exact-commit review authorization
 Last activity: 2026-07-31
 
-Progress: [██████████] 100% plan execution; phase goal not achieved; Phase 2 transition blocked
+Progress: [█████████░] 91% plan execution; phase goal not achieved; Phase 2 transition blocked
 
 ## Performance Metrics
 
@@ -46,12 +46,12 @@ Progress: [██████████] 100% plan execution; phase goal not a
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 48 | recovery plans complete; independent verification found active gaps | N/A |
+| 01 | 48/53 | five focused gap plans await review and execution | N/A |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 1 recovery completed Plans 01-46 through 01-48; code review and re-verification followed
-- Trend: Static site works locally, but immutable-source validation, retained impact provenance, one tracer fixture, and reduced-motion replay need gap closure
+- Last 5 plans: Plans 01-49 through 01-53 were created for the four active gaps and integrated verification/human judgment
+- Trend: One focused checker pass found 3 blockers and 1 warning; one targeted planner revision addressed all four without a second checker pass
 
 **Per-Plan Metrics:**
 
@@ -207,17 +207,21 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Plan 01-48 generates evidence-labeled HTML, knowledge JSON, and local assets through one stdlib-only static build path.
 - [Phase ?]: Plan 01-48 keeps essential authority, transcript, table, status, and blocker content in static HTML; its resettable reading trace is optional progressive enhancement.
 - [Phase ?]: Plan 01-48 uses approved direct-installed Chromium for local-only browser evidence; the existing Firefox cross-browser blocker remains deferred without a workaround.
+- [Phase 1 gap planning]: Plans 01-49 through 01-53 cover only CR-08 immutable source validation, historical registry provenance for retained impact fragments, WR-04 exact-cache fixture repair, reduced-motion replay, and integrated verification/human judgment.
+- [Phase 1 gap planning]: The sole focused checker pass found three blockers and one warning; targeted revision added generated-asset ownership and serialization, exact PRE118 allowlists, and a literal collision-free cache fixture contract.
+- [Phase 1 gap planning]: Requirements coverage is 6/6, decision coverage is 39/39, and post-planning coverage is 45/45; this does not authorize execution or satisfy the required exact-commit HIGH=0/ACTIONABLE=0 review.
 
 ### Pending Todos
 
-- Create focused Phase 1 gap plans for immutable source-identity validation, Git-reachable historical registry provenance for retained impact fragments, the stale exact-cache tracer fixture, and reduced-motion replay.
-- Re-run focused checks, canonical validation/consolidation, approved Chromium behavior tests, and the full Phase 1 suite after fixes.
+- Obtain exact-commit review of the 53-plan set with `HIGH=0` and `ACTIONABLE=0`, including recomputed plan-byte/hash binding and six mandatory source blobs.
+- Execute Plans 01-49 through 01-53 only after exact-commit review authorization, then re-run focused checks, canonical validation/consolidation, approved Chromium behavior tests, and the full Phase 1 suite.
 - Perform human visual/accessibility judgment only after automated blockers close.
 - Keep PRE118 terminal rebinding, CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred unless separately authorized.
 
 ### Blockers/Concerns
 
 - Current independent final verification is `gaps_found`; `01-FINAL-VERIFICATION.md` records 3/5 roadmap criteria and 4/6 direct requirement capabilities verified.
+- Plans 01-49 through 01-53 are planning artifacts only; none of the four active gaps is fixed until execution and independent re-verification succeed.
 - CR-08 is active: `tools/build-site.py` accepts mutable GitHub branch URLs or malformed identity metadata while the public ledger labels sources immutable.
 - Retained impact fragments still bind the historical source-registry digest, causing IMP011/IMP016 and blocking reconsolidation after the legitimate truth refresh.
 - WR-04 is active: one retained collector tracer uses a forbidden temporary cache root and errors before its intended assertions.
@@ -248,6 +252,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T08:51:54.940Z
-Stopped at: Gap planning preflight complete; paused before planner spawn due context exhaustion
-Resume file: `.planning/phases/01-research-and-truth-baseline/.continue-here.md`
+Last session: 2026-07-31T16:34:44+05:30
+Stopped at: Focused gap plans 01-49 through 01-53 created and revised; exact-commit HIGH=0/ACTIONABLE=0 review is the next gate
+Resume file: None
