@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: executing
-stopped_at: Completed 01-48-PLAN.md; static site ready for phase verification/UAT while Phase 01 remains gaps_found
-last_updated: "2026-07-31T04:09:15.875Z"
+status: gaps_found
+stopped_at: Phase 1 re-verification found active gaps in source identity, impact provenance, retained tracer coverage, and reduced-motion replay
+last_updated: "2026-07-31T04:32:15.853Z"
 last_activity: 2026-07-31
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 48
   completed_plans: 48
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Phase 1 re-verification gaps_found after recovery execution
 ---
 
 # Project State
@@ -27,12 +27,12 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — EXECUTING
-Plan: 48 of 48
-Status: Awaiting phase verification/UAT
+Phase: 01 (research-and-truth-baseline) — GAPS FOUND
+Plan: 48 of 48 complete; focused gap closure required
+Status: Independent re-verification found 3 blocking gaps plus 1 active test warning
 Last activity: 2026-07-31
 
-Progress: [██████████] 100% plan execution; static site built; phase goal not re-verified and phase remains gaps_found
+Progress: [██████████] 100% plan execution; phase goal not achieved; Phase 2 transition blocked
 
 ## Performance Metrics
 
@@ -46,12 +46,12 @@ Progress: [██████████] 100% plan execution; static site buil
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 48 | owner-authorized static-site recovery complete; phase verification pending | N/A |
+| 01 | 48 | recovery plans complete; independent verification found active gaps | N/A |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 1 recovery completed Plans 01-46 through 01-48
-- Trend: Static evidence-labeled site built; phase verification/UAT is next
+- Last 5 plans: Phase 1 recovery completed Plans 01-46 through 01-48; code review and re-verification followed
+- Trend: Static site works locally, but immutable-source validation, retained impact provenance, one tracer fixture, and reduced-motion replay need gap closure
 
 **Per-Plan Metrics:**
 
@@ -210,23 +210,27 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ### Pending Todos
 
-- Execute Plan 01-48: build and behaviorally verify the owner-authorized dependency-free static Learn Napplets website from evidence-labeled structured records.
-- Keep CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred.
+- Create focused Phase 1 gap plans for immutable source-identity validation, Git-reachable historical registry provenance for retained impact fragments, the stale exact-cache tracer fixture, and reduced-motion replay.
+- Re-run focused checks, canonical validation/consolidation, approved Chromium behavior tests, and the full Phase 1 suite after fixes.
+- Perform human visual/accessibility judgment only after automated blockers close.
+- Keep PRE118 terminal rebinding, CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred unless separately authorized.
 
 ### Blockers/Concerns
 
-- Current independent final verification remains `gaps_found`; `01-FINAL-VERIFICATION.md` and `01-REVIEW.md` preserve the full defect baseline.
-- Active recovery scope is CR-01 through CR-04 plus WR-01 and WR-03 because they protect site truth, confinement, atomic publication/recovery, test discovery, and refresh availability.
-- CR-05 through CR-07/SPK-G and WR-02 are explicitly deferred; the static website cannot consume packages or imply package/runtime qualification.
-- Earlier terminal, security, and validation passes predate these findings and do not adjudicate the active six repairs.
+- Current independent final verification is `gaps_found`; `01-FINAL-VERIFICATION.md` records 3/5 roadmap criteria and 4/6 direct requirement capabilities verified.
+- CR-08 is active: `tools/build-site.py` accepts mutable GitHub branch URLs or malformed identity metadata while the public ledger labels sources immutable.
+- Retained impact fragments still bind the historical source-registry digest, causing IMP011/IMP016 and blocking reconsolidation after the legitimate truth refresh.
+- WR-04 is active: one retained collector tracer uses a forbidden temporary cache root and errors before its intended assertions.
+- Reduced-motion replay is active: JavaScript explicitly requests smooth scrolling under `prefers-reduced-motion: reduce`.
+- CR-01 through CR-04 plus WR-01 and WR-03 are verified fixed. CR-05 through CR-07/SPK-G and WR-02 remain explicitly deferred; the static website cannot consume packages or imply package/runtime qualification.
 - Dedicated external Codex plan review converged at exact commit `1a9449b`; GitHub Codex connector submitted exact-head reviews with zero inline findings and remains supplemental, not cross-plan authority.
 - Historical review records `341884f`, `9b5794f`, and the superseded cycle-1 record remain audit evidence only; current authorization is the committed exact review record at `51ce445` for plan commit `1a9449b`.
 - Human merge approval is recorded. Execution may begin only from synchronized merged `master`; any PLAN.md byte change invalidates the current binding and requires fresh exact review.
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
-- Phase 1 terminal re-verification passed with no terminal blockers; `01-VERIFICATION.md` remains the preserved historical initial record.
-- Evidence validation remains fail-open at trust-critical boundaries including citation matching, preflight parsing, replay execution, path confinement, canonical publication, evidence classification, dependency integrity, and duplicate refresh handling.
+- Historical terminal re-verification passed before the recovery plan set expanded; current PRE118 reproduces because its manifest binds 45 plans while 48 are active. `01-VERIFICATION.md` remains the preserved historical initial record.
+- Current active trust gaps are narrowly recorded in `01-FINAL-VERIFICATION.md`: public immutable-source identity validation and retained impact-fragment provenance. Other previously reviewed evidence boundaries now pass focused checks.
 - `01-VALIDATION.md` remains a validation contract; accepted Phase 1 ASVS L1 security review and evidence are recorded in `01-SECURITY.md` and `01-SECURITY-EVIDENCE.md`.
 - Upstream-sensitive terms and protocol behavior must remain labeled as uncertain until immutable-source evidence is reviewed.
 - Do not create a production scaffold before Phase 1 and Phase 2 gates pass.
@@ -244,6 +248,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T04:09:15.864Z
-Stopped at: Completed 01-48-PLAN.md; static site ready for phase verification/UAT while Phase 01 remains gaps_found
-Resume file: None
+Last session: 2026-07-31T04:28:53Z
+Stopped at: Independent Phase 1 re-verification found active gaps; plan focused gap closure next
+Resume file: `.planning/phases/01-research-and-truth-baseline/01-FINAL-VERIFICATION.md`
