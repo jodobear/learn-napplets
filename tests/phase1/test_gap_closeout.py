@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import importlib
 import importlib.util
 import json
 import re
@@ -26,6 +27,14 @@ DIMENSIONS = (
     "currentWork",
     "conformance",
 )
+FOCUSED_RECOVERY_REGRESSIONS = {
+    "CR-01": "test_evidence.BoundedCollectorTests.test_collector_rejects_external_or_symlink_cache_root_before_transport",
+    "CR-02": "test_spike_consolidation.SpikeConsolidationTests.test_consolidation_generation_recovers_after_each_publish_interruption",
+    "CR-03": "test_drift.DriftSchemas.test_consolidated_local_observation_retains_non_normative_provenance",
+    "CR-04": "test_consolidation_recovery.CanonicalRecoveryTests.test_unexpected_transaction_entries_refuse_within_timeout",
+    "WR-01": "test_evidence.BoundedCollectorTests.test_unittest_discovery_includes_non_allowlisted_ingress_once",
+    "WR-03": "test_drift.RefreshComparisonTests.test_refresh_lock_serializes_and_process_termination_releases_it",
+}
 
 
 def load_research_validator():
@@ -455,6 +464,18 @@ def validation_contract_errors(validation_text: str, post_closure_text: str) -> 
             if "canonicalProbeMatrix" in batch or "attempts" in batch:
                 errors.append("POST008: post-closure verification must not change the closed canonical matrix")
     return errors
+
+
+class RecoveryScopeCompositionTests(unittest.TestCase):
+    def test_focused_recovery_composition_covers_only_retained_findings(self) -> None:
+        self.assertEqual(set(FOCUSED_RECOVERY_REGRESSIONS), {"CR-01", "CR-02", "CR-03", "CR-04", "WR-01", "WR-03"})
+        loader = unittest.defaultTestLoader
+        for finding, selector in FOCUSED_RECOVERY_REGRESSIONS.items():
+            with self.subTest(finding=finding):
+                module = importlib.import_module(selector.rsplit(".", 2)[0])
+                self.assertIsNotNone(module)
+                suite = loader.loadTestsFromName(selector)
+                self.assertEqual(suite.countTestCases(), 1, selector)
 
 
 class ValidationLedgerTests(unittest.TestCase):

@@ -3,6 +3,9 @@ import hashlib
 import importlib.util
 import json
 import re
+import subprocess
+import sys
+import time
 import unittest
 from pathlib import Path
 
@@ -237,6 +240,35 @@ class DriftSchemas(unittest.TestCase):
         local['observed'] = {'id': 'OBS-LOCAL-001', 'classification': 'observed-local', 'reportPath': 'report.md', 'reportSha256': SHA, 'measurementPath': 'measurements.yaml', 'measurementSha256': SHA, 'statement': 'Local observation.', 'fallback': 'Use the static fallback.'}
         self.assertFalse(module.validate_drift([local], {'SRC-POLICY-001'}, {'CLM-POLICY-001', 'CLM-UPSTREAM-BASELINE-001'}))
 
+    def test_consolidated_local_observation_retains_non_normative_provenance(self):
+        spec = importlib.util.spec_from_file_location('phase1_validate_research', ROOT / 'tools/validate-research.py')
+        self.assertIsNotNone(spec)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        fragment = {
+            'fragmentId': 'SPK-LOCAL-IMPACT-001',
+            'spikeId': 'SPK-LOCAL-001',
+            'reportPath': 'spikes/spk-local-001/report.md',
+            'reportSha256': SHA,
+            'measurementLinks': [{'path': 'spikes/spk-local-001/measurements.yaml', 'sha256': SHA}],
+            'uncertainty': {'state': 'material', 'reason': 'Only a local fixture observation is available.'},
+            'affectedRequirements': ['EVID-02'],
+            'affectedPhases': ['01'],
+            'proposedImpacts': [{'type': 'adr', 'id': 'ADR-0005'}],
+            '_digest': SHA,
+        }
+        record = module.new_drift_record(fragment, 'DRF-LOCAL-001', {}, {})
+        self.assertIsNone(record['normative'])
+        self.assertEqual(record['observed']['classification'], 'observed-local')
+        self.assertEqual(record['observed']['reportSha256'], SHA)
+        self.assertEqual(record['observed']['measurementSha256'], SHA)
+        self.assertEqual(record['uncertainty'], fragment['uncertainty'])
+        self.assertEqual(record['impacts']['requirements'], ['EVID-02'])
+        self.assertTrue(record['dependentDecisionDisposition']['revisitTrigger'])
+        self.assertFalse(self.validate(DRIFT, record))
+        self.assertEqual(module.validate_drift([record], {'SRC-POLICY-001'}, {'CLM-POLICY-001'}), [])
+
 
 class RefreshComparisonTests(unittest.TestCase):
     script = ROOT / 'tools' / 'refresh-sources.py'
@@ -323,6 +355,42 @@ class RefreshComparisonTests(unittest.TestCase):
             self.assertEqual(len(set(re.findall(r'RFW-[A-F0-9]+', text))), 1)
             for digest in expected_digests:
                 self.assertIn(digest, text)
+
+    def test_refresh_lock_serializes_and_process_termination_releases_it(self):
+        source = yaml.safe_load(SOURCES.read_text())['sources'][0]
+        comparison = [{key: source[key] for key in ('id', 'commitSha', 'path', 'contentSha256')}]
+        holder_code = """
+import importlib.util
+import sys
+import time
+from pathlib import Path
+
+spec = importlib.util.spec_from_file_location('phase1_refresh_lock_holder', Path(sys.argv[1]))
+module = importlib.util.module_from_spec(spec)
+assert spec and spec.loader
+spec.loader.exec_module(module)
+handle = module.acquire_lock(Path(sys.argv[2]), timeout_seconds=2)
+Path(sys.argv[3]).write_text('ready', encoding='utf-8')
+time.sleep(30)
+"""
+        with __import__('tempfile').TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            report = root / 'refresh-review-work.md'
+            ready = root / 'lock-holder-ready'
+            holder = subprocess.Popen([sys.executable, '-c', holder_code, str(self.script), str(report), str(ready)], cwd=ROOT)
+            try:
+                deadline = time.monotonic() + 2
+                while not ready.exists() and holder.poll() is None and time.monotonic() < deadline:
+                    time.sleep(0.01)
+                self.assertTrue(ready.exists(), 'lock holder did not acquire the refresh lock')
+                blocked = self.run_refresh(comparison, report)
+                self.assertNotEqual(blocked.returncode, 0)
+                self.assertIn('lock is busy', blocked.stdout)
+            finally:
+                holder.terminate()
+                holder.wait(timeout=2)
+            recovered = self.run_refresh(comparison, report)
+            self.assertEqual(recovered.returncode, 0, recovered.stderr + recovered.stdout)
 
 
 if __name__ == '__main__':
