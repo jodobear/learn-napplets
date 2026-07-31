@@ -87,3 +87,119 @@ sources:
       owner: research-owner
       status: pending
       requiredRoles: [protocol-technical, content-learning]
+  - id: SRC-NAPS-NAP-INTENT-20260731
+    kind: source
+    collectionStatus: collected
+    rawOrigin: upstream-fact
+    repository: napplet/naps
+    officialUrl: https://github.com/napplet/naps
+    immutableUrl: https://github.com/napplet/naps/blob/5ac0490461ca6fec2f0d2e45b4835cf9bc08de24/naps/NAP-INTENT.md
+    ref: 5ac0490461ca6fec2f0d2e45b4835cf9bc08de24
+    commitSha: 5ac0490461ca6fec2f0d2e45b4835cf9bc08de24
+    path: naps/NAP-INTENT.md
+    locator: commit:5ac0490461ca6fec2f0d2e45b4835cf9bc08de24 path:naps/NAP-INTENT.md blob:3bddd41697d02d825d45191d0122292f7bcaaac6
+    contentSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+    retrievedAt: 2026-07-31T03:08:39Z
+    authorityTier: repository-local-nap-specification
+    evidenceClass: specification
+    maturity: draft
+    uncertainty:
+      state: material
+      reason: The repository-local NAP-INTENT draft names a NIP-5D web binding, but it does not settle unresolved NIP-5D authority, projection, runtime, or browser behavior.
+    impacts:
+      requirements: [EVID-01, EVID-02, OPER-01]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: Re-fetch only if the cited napplet/naps head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, content-learning]
+  - id: SRC-NAPPLET-WEB-20260731
+    kind: source
+    collectionStatus: collected
+    rawOrigin: observed-implementation
+    repository: napplet/web
+    officialUrl: https://github.com/napplet/web
+    immutableUrl: https://github.com/napplet/web/blob/03ad65b66413e5798536ef48695ffc4c2508f2c3/README.md
+    ref: 03ad65b66413e5798536ef48695ffc4c2508f2c3
+    commitSha: 03ad65b66413e5798536ef48695ffc4c2508f2c3
+    path: README.md
+    locator: commit:03ad65b66413e5798536ef48695ffc4c2508f2c3 path:README.md blob:04781fbff0067492f7e1835726c97871983b4036
+    contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    retrievedAt: 2026-07-31T03:08:39Z
+    authorityTier: official-repository-observation
+    evidenceClass: implementation
+    maturity: implementation-specific
+    uncertainty:
+      state: material
+      reason: The alpha repository README is an implementation observation only; its NIP-5D descriptions, migration direction, and package statements do not establish normative NAP/NIP authority, qualification, or compatibility.
+    impacts:
+      requirements: [EVID-02, EVID-03, OPER-01]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: Re-fetch only if the cited napplet/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, security, content-learning]
+  - id: SRC-KEHTO-WEB-PAJA-20260731
+    kind: source
+    collectionStatus: collected
+    rawOrigin: observed-implementation
+    repository: kehto/web
+    officialUrl: https://github.com/kehto/web
+    immutableUrl: https://github.com/kehto/web/blob/d42b3c3da7e0ad3cea233b34458997b09b11960d/packages/paja/README.md
+    ref: d42b3c3da7e0ad3cea233b34458997b09b11960d
+    commitSha: d42b3c3da7e0ad3cea233b34458997b09b11960d
+    path: packages/paja/README.md
+    locator: commit:d42b3c3da7e0ad3cea233b34458997b09b11960d path:packages/paja/README.md blob:1908af0edbb6695950d8a0e7172374c7d68cf513
+    contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    retrievedAt: 2026-07-31T03:08:39Z
+    authorityTier: official-repository-observation
+    evidenceClass: implementation
+    maturity: implementation-specific
+    uncertainty:
+      state: material
+      reason: Paja documentation records an implementation-specific local-authoring runtime, including live-service defaults; it cannot select a teaching host, prove cross-browser behavior, or authorize a runtime dependency.
+    impacts:
+      requirements: [EVID-02, EVID-03, OPER-01]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: Re-fetch only if the cited kehto/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, security, content-learning]
+  - id: SRC-NAMPLETS-NATIVE-20260731
+    kind: source
+    collectionStatus: collected
+    rawOrigin: observed-implementation
+    repository: pablof7z/nampplets
+    officialUrl: https://github.com/pablof7z/nampplets
+    immutableUrl: https://github.com/pablof7z/nampplets/blob/1094f1db23292f966fd65757132678406f7ca28c/README.md
+    ref: 1094f1db23292f966fd65757132678406f7ca28c
+    commitSha: 1094f1db23292f966fd65757132678406f7ca28c
+    path: README.md
+    locator: commit:1094f1db23292f966fd65757132678406f7ca28c path:README.md blob:22981ba1fb54a41286c2b186a37a1ab51d9d4561
+    contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+    retrievedAt: 2026-07-31T03:08:39Z
+    authorityTier: optional-native-reference-observation
+    evidenceClass: implementation
+    maturity: implementation-specific
+    uncertainty:
+      state: material
+      reason: Nampplets is an optional native reference implementation only and is never NAP/NIP authority, web-runtime qualification, or a portable-target decision.
+    impacts:
+      requirements: [EVID-02, EVID-03, OPER-01]
+      phases: ['01']
+    freshness:
+      state: provisional
+      refreshTrigger: Re-fetch only if the cited Nampplets head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.
+    review:
+      owner: research-owner
+      status: pending
+      requiredRoles: [protocol-technical, security, content-learning]

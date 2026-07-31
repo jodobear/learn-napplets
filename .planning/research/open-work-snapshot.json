@@ -308,6 +308,110 @@
         "SRC-NAPPLET-WEB-PR184-20260728"
       ],
       "status": "blocked"
+    },
+    {
+      "classification": "bounded-upstream-refresh",
+      "id": "OWS-004",
+      "items": [
+        {
+          "contentSha256": "d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0",
+          "id": "OW-NAPS-NAP-INTENT-20260731",
+          "immutableReference": "https://github.com/napplet/naps/blob/5ac0490461ca6fec2f0d2e45b4835cf9bc08de24/naps/NAP-INTENT.md",
+          "relatedDriftIds": [
+            "DRF-INTENT-001",
+            "DRF-DISCOVERY-001"
+          ],
+          "retrievalOutcome": "collected-draft-specification",
+          "sourceId": "SRC-NAPS-NAP-INTENT-20260731",
+          "surface": "napplet/naps repository-local NAP-INTENT draft",
+          "uncertainty": "Repository-local NAP draft authority is distinct from unresolved NIP-5D projection and implementation behavior."
+        },
+        {
+          "contentSha256": "f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae",
+          "directionSnapshots": [
+            {
+              "disposition": "merged implementation migration direction only",
+              "mergedCommit": "dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b",
+              "pr": 186,
+              "retrievedResponseSha256": "2214161d9110ece1b678e165a71cfc6b21ad5ea7bf4971a8734fcaf93d3df110",
+              "url": "https://github.com/napplet/web/pull/186"
+            },
+            {
+              "disposition": "merged INC/INTENT contract-alignment direction only",
+              "mergedCommit": "7b675622e13870628ce174833d7b2a33cf32a0ab",
+              "pr": 192,
+              "retrievedResponseSha256": "a2d209996adc89c4796160f83cde4b10a3e23e7b827cc774a61467fd63f89a67",
+              "url": "https://github.com/napplet/web/pull/192"
+            },
+            {
+              "commitResponseSha256": "713d58633940d0fed613a5288e317c466b1c4b5079d9ae3e2bb7e3f5d604bcec",
+              "disposition": "release metadata carrying filesystem-named changesets; not package qualification or a behavior proof",
+              "mergedCommit": "03ad65b66413e5798536ef48695ffc4c2508f2c3",
+              "pr": 194,
+              "retrievedResponseSha256": "5f9e99e5fbb414e994b1a0be9feb0f33f62cbcfa7b6cab415a2cf83d052233b4",
+              "url": "https://github.com/napplet/web/pull/194"
+            }
+          ],
+          "id": "OW-NAPPLET-WEB-DIRECTION-20260731",
+          "immutableReference": "https://github.com/napplet/web/blob/03ad65b66413e5798536ef48695ffc4c2508f2c3/README.md",
+          "relatedDriftIds": [
+            "DRF-INTENT-001",
+            "DRF-MANIFEST-001",
+            "DRF-METADATA-001",
+            "DRF-ARTIFACT-001"
+          ],
+          "retrievalOutcome": "collected-source-plus-mutable-pr-direction",
+          "sourceId": "SRC-NAPPLET-WEB-20260731",
+          "surface": "napplet/web alpha implementation and release direction",
+          "uncertainty": "PR API objects are mutable directional metadata; the immutable README is implementation evidence only. Neither establishes NAP/NIP authority, published-package integrity, or compatibility."
+        },
+        {
+          "contentSha256": "dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33",
+          "directionSnapshots": [
+            {
+              "disposition": "merged Paja social-cache direction only",
+              "mergedCommit": "a8cc3cfc956dfbf11dc733ec051862af5db51fa8",
+              "pr": 217,
+              "retrievedResponseSha256": "95ded228795745ea4089e2e6d95234b02f894345f2fd51b99872e9461f62b1bf",
+              "url": "https://github.com/kehto/web/pull/217"
+            }
+          ],
+          "id": "OW-KEHTO-WEB-PAJA-20260731",
+          "immutableReference": "https://github.com/kehto/web/blob/d42b3c3da7e0ad3cea233b34458997b09b11960d/packages/paja/README.md",
+          "relatedDriftIds": [
+            "DRF-HANDSHAKE-001",
+            "DRF-EGRESS-001",
+            "DRF-CONFORMANCE-001"
+          ],
+          "retrievalOutcome": "collected-source-plus-mutable-pr-direction",
+          "sourceId": "SRC-KEHTO-WEB-PAJA-20260731",
+          "surface": "kehto/web Paja local-authoring runtime",
+          "uncertainty": "Paja documentation includes live relay defaults and an explicit memory fixture mode; it does not select a teaching host or establish runtime, browser, or portability qualification."
+        },
+        {
+          "contentSha256": "3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b",
+          "id": "OW-NAMPLETS-NATIVE-20260731",
+          "immutableReference": "https://github.com/pablof7z/nampplets/blob/1094f1db23292f966fd65757132678406f7ca28c/README.md",
+          "relatedDriftIds": [
+            "DRF-CONFORMANCE-001",
+            "DRF-ARTIFACT-001"
+          ],
+          "retrievalOutcome": "collected-optional-native-reference",
+          "sourceId": "SRC-NAMPLETS-NATIVE-20260731",
+          "surface": "Nampplets native Rust and macOS reference",
+          "uncertainty": "Native-reference behavior is not NAP/NIP authority and cannot qualify web, portable, or package paths."
+        }
+      ],
+      "parentSnapshotId": "OWS-003",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "revisitTrigger": "Re-fetch only when a cited upstream head changes after 2026-07-31, a pinned blob becomes unavailable, or a reviewer requires a different source scope; do not repeat broad discovery.",
+      "sourceRefs": [
+        "SRC-NAPS-NAP-INTENT-20260731",
+        "SRC-NAPPLET-WEB-20260731",
+        "SRC-KEHTO-WEB-PAJA-20260731",
+        "SRC-NAMPLETS-NATIVE-20260731"
+      ],
+      "status": "blocked"
     }
   ],
   "sourceRefs": [
