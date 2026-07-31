@@ -1,0 +1,3 @@
+# Deferred Items
+
+- **2026-07-31 — Plan 01-46 full-suite terminal binding failure:** `tools/phase1-python -m unittest discover -s tests/phase1 -v` ran Task 3 and the full Phase 1 suite, but eight `test_closeout_commands` terminal-validator tests failed before their assertions because the historical Plan 01-29 source-input verifier returned `PRE118: review plan manifest is not the exact active plan set`. The failure is outside the active CR-01–CR-04 / WR-01 / WR-03 repair scope and the recovery boundary explicitly defers terminal-publication and external review-byte-binding machinery. Preserve the failure for a scoped gap plan; do not weaken review-binding validation or restore terminal-review choreography in this recovery plan.

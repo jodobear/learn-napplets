@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
-status: paused
-stopped_at: Wave 7 preflight; resume Plan 01-46 sequentially on main because approved ignored toolchain is unavailable in isolated worktrees
-last_updated: "2026-07-31T02:27:27.714Z"
+status: executing
+stopped_at: Completed 01-46-PLAN.md; full suite PRE118 terminal-binding failure deferred
+last_updated: "2026-07-31T03:02:26.075Z"
 last_activity: 2026-07-31
-last_activity_desc: Plan 01-46 worktree halted with zero changes; main toolchain verification passed
+last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 48
-  completed_plans: 45
+  completed_plans: 46
 ---
 
 # Project State
@@ -27,12 +27,12 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 
 ## Current Position
 
-Phase: 01 (research-and-truth-baseline) — PAUSED DURING WAVE 7 PREFLIGHT
-Plan: 45 of 48 complete; Plan 01-46 remains unstarted
-Status: Isolated executor could not access the gitignored approved Phase 1 interpreter. It made no changes. Resume Plan 01-46 sequentially on the main checkout, where `tools/phase1-python --verify-toolchain` passes.
-Last activity: 2026-07-31 — Plan 01-46 worktree preflight halted safely with zero changes
+Phase: 01 (research-and-truth-baseline) — EXECUTING
+Plan: 2 of 48
+Status: Ready to execute
+Last activity: 2026-07-31 — Phase 01 execution started
 
-Progress: [█████████░] 94% plan execution; phase goal not re-verified; website not yet built
+Progress: [██████████] 96% plan execution; phase goal not re-verified; website not yet built
 
 ## Performance Metrics
 
@@ -85,6 +85,7 @@ Progress: [█████████░] 94% plan execution; phase goal not re
 | Phase 01 P23 | 347s | 2 tasks | 6 files |
 | Phase 01 P25 | 434s | 2 tasks | 15 files |
 | Phase 01 P24 | 15m | 3 tasks | 5 files |
+| Phase 01 P46 | 5m 55s | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -194,6 +195,9 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase 1 recovery]: The static-site exception permits local dependency-free informational/learning pages only after Plans 01-46 and 01-47 pass; no framework, runtime, package, live service, deployment, ADR acceptance, or Phase 2 transition is authorized.
 - [Phase 1 recovery]: One focused plan-checker pass replaces further external plan-byte binding and terminal-review choreography for Plans 01-46 through 01-48.
 - [Phase 1 recovery]: The sole checker pass found one browser-interpreter blocker and one later-phase ownership warning in Plan 01-48; both were corrected directly, and canonical planning validation then passed with zero errors/warnings without a second checker pass.
+- [Phase ?]: Keep local spike observations blocked and observed-local with normative null; only genuinely distinct pinned sides may represent upstream drift.
+- [Phase ?]: Hold an fcntl advisory lock descriptor for the refresh writer lifetime so abnormal process exit releases future refresh attempts.
+- [Phase ?]: Do not alter historical terminal review-binding machinery while its PRE118 failure remains outside the owner-authorized recovery scope.
 
 ### Pending Todos
 
@@ -223,6 +227,7 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - SPK-D verified-loader feasibility is blocked: immutable current manifest/identity source records and reviewed signature/blob/aggregate/loader verifier provenance are unavailable; ADR-0005 and ADR-0008 receive proposed blocked evidence only.
 - SPK-F cross-browser feasibility is blocked: direct-installed Firefox 152.0.4 exited before approved Playwright 1.61.0 attached; preserve SPK-B VitePress accessibility evidence.
 - SPK-I: Direct-installed Firefox 152.0.4 exits before approved Playwright 1.61.0 attaches; Chrome passed five static SVG samples, but ADR-0006 cannot receive a positive cross-browser recommendation.
+- Plan 01-46 full Phase 1 suite has eight historical terminal-validator errors because Plan 01-29 source-input validation returns PRE118: review plan manifest is not the exact active plan set; resolve only through a separately scoped approved gap plan.
 
 ## Deferred Items
 
@@ -232,6 +237,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T02:27:27.682Z
-Stopped at: context exhaustion at 75% (2026-07-31)
-Resume file: `.planning/phases/01-research-and-truth-baseline/01-46-PLAN.md`
+Last session: 2026-07-31T03:02:26.064Z
+Stopped at: Completed 01-46-PLAN.md; full suite PRE118 terminal-binding failure deferred
+Resume file: .planning/phases/01-research-and-truth-baseline/01-47-PLAN.md
