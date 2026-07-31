@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{site_strapline}}">
+  <title>{{page_title}} · {{site_title}}</title>
+</head>
+<body data-page="{{page_key}}">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="site-mark" href="{{home_link}}" aria-label="Learn Napplets home">LN<span aria-hidden="true">/</span></a>
+    <div class="masthead">
+      <p class="edition">{{site_edition}}</p>
+      <p class="site-title">{{site_title}}</p>
+    </div>
+    <nav aria-label="Primary navigation">
+      <ul class="site-nav">
+        {{navigation}}
+      </ul>
+    </nav>
+  </header>
+  <main id="main-content" tabindex="-1">
+    {{page_body}}
+  </main>
+  <footer class="site-footer">
+    <p>{{site_scope_note}}</p>
+    <p><a href="{{sources_link}}">Inspect source and status labels</a> before treating a statement as settled.</p>
+  </footer>
+</body>
+</html>
