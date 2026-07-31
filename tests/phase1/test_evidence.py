@@ -152,6 +152,10 @@ class SourceEvidenceValidationTests(unittest.TestCase):
 
 
 class BoundedCollectorTests(unittest.TestCase):
+    """Exercise the fixture-only source-ingress boundary without live HTTPS."""
+
+    COLLECTOR = ROOT / "tools" / "acquire-sources.py"
+
     def test_collector_rejects_non_allowlisted_url_without_writing(self) -> None:
         collector = ROOT / "tools" / "acquire-sources.py"
         with tempfile.TemporaryDirectory() as temporary:
@@ -167,11 +171,87 @@ class BoundedCollectorTests(unittest.TestCase):
             self.assertIn("not allowlisted", result.stderr)
             self.assertFalse(cache.exists())
 
+    def test_collector_rejects_external_or_symlink_cache_root_before_transport(self) -> None:
+        collector = self.collector()
+        commit = "a" * 40
+        calls: list[str] = []
 
-class BoundedCollectorTests(unittest.TestCase):
-    """Exercise the fixture-only source-ingress boundary without live HTTPS."""
+        class RecordingTransport:
+            def identity(self, url: str) -> dict:
+                calls.append("identity")
+                raise AssertionError("transport must not be reached for an invalid cache root")
 
-    COLLECTOR = ROOT / "tools" / "acquire-sources.py"
+            def commit(self, sha: str) -> dict:
+                calls.append("commit")
+                raise AssertionError("transport must not be reached for an invalid cache root")
+
+            def blob(self, sha: str, path: str) -> bytes:
+                calls.append("blob")
+                raise AssertionError("transport must not be reached for an invalid cache root")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            external = root / ".research" / "upstreams"
+            symlink = root / "symlinked-upstreams"
+            symlink.symlink_to(collector.CACHE_ROOT, target_is_directory=True)
+            for cache_root in (external, symlink):
+                with self.subTest(cache_root=cache_root):
+                    with self.assertRaisesRegex(ValueError, "repository-owned"):
+                        collector.collect_immutable_candidate(
+                            RecordingTransport(),
+                            "https://api.github.com/repos/fixture/collector",
+                            "fixture/collector",
+                            commit,
+                            "fixture.py",
+                            cache_root,
+                            "2026-07-31T00:00:00Z",
+                            "SRC-FIXTURE-COLLECTOR-001",
+                            ["EVID-01"],
+                        )
+                    self.assertEqual(calls, [])
+                    self.assertFalse(external.exists())
+
+    def test_collector_accepts_exact_repository_cache_root(self) -> None:
+        collector = self.collector()
+        commit = "a" * 40
+        content = b"fixture source bytes\n"
+        target = collector.CACHE_ROOT / "fixture" / "collector" / commit / "fixture.py"
+        transport = collector.FixtureTransport(
+            identities={
+                "https://api.github.com/repos/fixture/collector": {
+                    "html_url": "https://github.com/fixture/collector",
+                    "id": 1,
+                    "private": False,
+                    "archived": False,
+                    "default_branch": "main",
+                }
+            },
+            commits={commit: {"sha": commit, "tree": "b" * 40}},
+            blobs={(commit, "fixture.py"): content},
+            packages={},
+        )
+        try:
+            record = collector.collect_immutable_candidate(
+                transport,
+                "https://api.github.com/repos/fixture/collector",
+                "fixture/collector",
+                commit,
+                "fixture.py",
+                collector.CACHE_ROOT,
+                "2026-07-31T00:00:00Z",
+                "SRC-FIXTURE-COLLECTOR-001",
+                ["EVID-01"],
+            )
+            self.assertEqual(target.read_bytes(), content)
+            self.assertEqual(record["contentSha256"], __import__("hashlib").sha256(content).hexdigest())
+        finally:
+            shutil.rmtree(collector.CACHE_ROOT / "fixture", ignore_errors=True)
+
+    def test_unittest_discovery_includes_non_allowlisted_ingress_once(self) -> None:
+        suite = unittest.defaultTestLoader.loadTestsFromName(
+            "test_evidence.BoundedCollectorTests.test_collector_rejects_non_allowlisted_url_without_writing"
+        )
+        self.assertEqual(suite.countTestCases(), 1)
     REPORT_PATHS = (
         ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md",
         ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md",
