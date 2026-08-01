@@ -30,3 +30,27 @@ terms:
     sourceIds: [SRC-POLICY-002]
     state: blocked
     definition: Treat as an unresolved protocol question, not a verified protocol fact.
+  - term: NAP-INTENT
+    classification: draft-nap-specification
+    sourceIds: [SRC-NAPS-NAP-INTENT-20260731]
+    state: provisional
+    definition: A repository-local draft for an archetype intent dispatcher that labels
+      a NIP-5D web binding; it is not a reviewed authoritative NIP-5D definition.
+  - term: napplet/web
+    classification: observed-implementation
+    sourceIds: [SRC-NAPPLET-WEB-20260731]
+    state: provisional
+    definition: An alpha SDK and shell repository observation whose implementation prose
+      does not establish protocol authority, package qualification, or compatibility.
+  - term: Paja
+    classification: observed-implementation
+    sourceIds: [SRC-KEHTO-WEB-PAJA-20260731]
+    state: provisional
+    definition: A Kehto local-authoring/testing runtime observation with live-relay defaults
+      and an explicit memory fixture mode; it is not a selected teaching host.
+  - term: Nampplets native reference
+    classification: optional-native-reference
+    sourceIds: [SRC-NAMPLETS-NATIVE-20260731]
+    state: provisional
+    definition: An in-progress native Rust and macOS reference host; it cannot qualify a
+      web runtime, portable target, package, or NAP/NIP behavior.

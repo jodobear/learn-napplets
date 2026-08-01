@@ -8,12 +8,15 @@ review report whose stable work IDs let a reviewer compare repeated refreshes sa
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
+import importlib.util
 import json
 import os
+import stat
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import yaml
 
@@ -32,6 +35,20 @@ REQUIRED_HEADINGS = (
 )
 PIN_FIELDS = ("commitSha", "path", "contentSha256")
 OUTCOMES = {"unchanged", "changed", "unavailable", "ambiguous"}
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _canonical_source_snapshot() -> Mapping[str, bytes]:
+    spec = importlib.util.spec_from_file_location("canonical_recovery", ROOT / "tools" / "canonical-recovery.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("canonical recovery module is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.read_canonical_snapshot(
+        "source-acquisition",
+        ("research/source-registry.yaml", "research/claims.yaml", "research/drift-register.yaml", "research/open-questions.yaml"),
+        root=ROOT / ".planning",
+    )
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -45,7 +62,63 @@ def load_comparison(path: Path) -> list[dict[str, Any]]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
         raise ValueError("comparison input must be a JSON array of objects")
-    return value
+    return [normalize_observation(item) for item in value]
+
+
+def normalize_observation(observation: dict[str, Any]) -> dict[str, Any]:
+    """Reject unsupported comparison fields and return canonical input bytes."""
+    allowed = {"id", "outcome", *PIN_FIELDS}
+    unknown = sorted(set(observation) - allowed)
+    if unknown:
+        raise ValueError(f"comparison observation has unsupported fields: {', '.join(unknown)}")
+    source_id = observation.get("id")
+    if not isinstance(source_id, str) or not source_id:
+        raise ValueError("comparison observation requires a source id")
+    normalized: dict[str, Any] = {"id": source_id}
+    requested = observation.get("outcome")
+    if requested is not None:
+        if not isinstance(requested, str) or requested not in OUTCOMES - {"unchanged", "changed"}:
+            raise ValueError(f"unsupported explicit comparison outcome: {requested}")
+        normalized["outcome"] = requested
+    for field in PIN_FIELDS:
+        value = observation.get(field)
+        if value is not None:
+            if not isinstance(value, str) or not value:
+                raise ValueError(f"comparison observation {field} must be a nonempty string when supplied")
+            normalized[field] = value
+    if requested is None and any(field not in normalized for field in PIN_FIELDS):
+        raise ValueError("comparison observation without an explicit outcome requires every immutable pin field")
+    return normalized
+
+
+def normalized_observation_bytes(observation: dict[str, Any]) -> bytes:
+    return json.dumps(observation, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def reduce_observations(observations: list[dict[str, Any]], sources: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    """Produce exactly one deterministic review result for each source ID."""
+    grouped: dict[str, dict[bytes, dict[str, Any]]] = {}
+    for observation in observations:
+        grouped.setdefault(observation["id"], {})[normalized_observation_bytes(observation)] = observation
+    results: list[dict[str, Any]] = []
+    for source_id in sorted(grouped):
+        distinct = grouped[source_id]
+        if len(distinct) == 1:
+            results.append(compare(next(iter(distinct.values())), sources))
+            continue
+        observation_bytes = sorted(distinct)
+        digests = [hashlib.sha256(value).hexdigest() for value in observation_bytes]
+        source = sources.get(source_id, {})
+        results.append(
+            {
+                "sourceId": source_id,
+                "outcome": "ambiguous",
+                "old": {field: source.get(field) for field in PIN_FIELDS},
+                "observed": {"normalizedObservationDigests": digests},
+                "normalizedObservationDigests": digests,
+            }
+        )
+    return results
 
 
 def related_ids(source_id: str, claims: list[dict[str, Any]], drift: list[dict[str, Any]], questions: list[dict[str, Any]]) -> list[str]:
@@ -88,18 +161,28 @@ def work_id(result: dict[str, Any]) -> str:
     return "RFW-" + hashlib.sha256(payload).hexdigest()[:16].upper()
 
 
-def acquire_lock(report: Path, timeout_seconds: float = 0.5) -> Path:
+def acquire_lock(report: Path, timeout_seconds: float = 0.5) -> int:
+    """Acquire an advisory lock that the operating system releases on process death."""
     lock = report.with_name(f".{report.name}.lock")
-    deadline = time.monotonic() + timeout_seconds
-    while True:
-        try:
-            descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-            os.close(descriptor)
-            return lock
-        except FileExistsError:
-            if time.monotonic() >= deadline:
-                raise RuntimeError(f"refresh report lock is busy: {lock}")
-            time.sleep(0.05)
+    try:
+        descriptor = os.open(lock, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    except OSError as exc:
+        raise RuntimeError(f"cannot open refresh report lock: {lock}: {exc}") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise RuntimeError(f"refresh report lock must be a regular file: {lock}")
+        deadline = time.monotonic() + timeout_seconds
+        while True:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                return descriptor
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError(f"refresh report lock is busy: {lock}")
+                time.sleep(0.05)
+    except Exception:
+        os.close(descriptor)
+        raise
 
 
 def render(results: list[dict[str, Any]], impact_map: dict[str, list[str]]) -> str:
@@ -111,8 +194,15 @@ def render(results: list[dict[str, Any]], impact_map: dict[str, list[str]]) -> s
         outcome = result["outcome"]
         old = result["old"]
         observed = result["observed"]
+        old_description = f"`{old['commitSha']}:{old['path']}` / `{old['contentSha256']}`"
+        if "normalizedObservationDigests" in result:
+            observed_description = "conflicting normalized-observation digests " + ", ".join(
+                f"`{digest}`" for digest in result["normalizedObservationDigests"]
+            )
+        else:
+            observed_description = f"`{observed['commitSha']}:{observed['path']}` / `{observed['contentSha256']}`"
         content["Sources and immutable revisions"].append(
-            f"- `{source_id}`: outcome `{outcome}`; old pointer/digest `{old['commitSha']}:{old['path']}` / `{old['contentSha256']}`; observed `{observed['commitSha']}:{observed['path']}` / `{observed['contentSha256']}`."
+            f"- `{source_id}`: outcome `{outcome}`; old pointer/digest {old_description}; observed {observed_description}."
         )
         if outcome == "unchanged":
             content["Observations"].append(f"- `{source_id}` is unchanged; no review work is opened.")
@@ -145,25 +235,38 @@ def main() -> int:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     try:
-        registry = load_yaml(args.registry)
+        expected = {
+            "registry": ROOT / ".planning/research/source-registry.yaml",
+            "claims": ROOT / ".planning/research/claims.yaml",
+            "drift": ROOT / ".planning/research/drift-register.yaml",
+            "questions": ROOT / ".planning/research/open-questions.yaml",
+        }
+        if all(getattr(args, key).resolve() == path for key, path in expected.items()):
+            snapshot = _canonical_source_snapshot()
+            registry = yaml.safe_load(snapshot["research/source-registry.yaml"])
+            claims = yaml.safe_load(snapshot["research/claims.yaml"]).get("claims", [])
+            drift = yaml.safe_load(snapshot["research/drift-register.yaml"]).get("drift", [])
+            questions = yaml.safe_load(snapshot["research/open-questions.yaml"]).get("questions", [])
+        else:
+            registry = load_yaml(args.registry)
+            claims = load_yaml(args.claims).get("claims", [])
+            drift = load_yaml(args.drift).get("drift", [])
+            questions = load_yaml(args.questions).get("questions", [])
         sources = {record["id"]: record for record in registry.get("sources", []) if isinstance(record, dict) and isinstance(record.get("id"), str)}
-        claims = load_yaml(args.claims).get("claims", [])
-        drift = load_yaml(args.drift).get("drift", [])
-        questions = load_yaml(args.questions).get("questions", [])
         if not all(isinstance(records, list) for records in (claims, drift, questions)):
             raise ValueError("claims, drift, and questions records must be lists")
-        results = [compare(item, sources) for item in load_comparison(args.comparison)]
-        results.sort(key=lambda item: (item["sourceId"], item["outcome"], json.dumps(item["observed"], sort_keys=True)))
+        results = reduce_observations(load_comparison(args.comparison), sources)
         impact_map = {item["sourceId"]: related_ids(item["sourceId"], claims, drift, questions) for item in results}
         report = render(results, impact_map)
         args.report.parent.mkdir(parents=True, exist_ok=True)
-        lock = acquire_lock(args.report)
+        lock_descriptor = acquire_lock(args.report)
         try:
             temporary = args.report.with_name(f".{args.report.name}.tmp-{os.getpid()}")
             temporary.write_text(report, encoding="utf-8")
             os.replace(temporary, args.report)
         finally:
-            lock.unlink(missing_ok=True)
+            fcntl.flock(lock_descriptor, fcntl.LOCK_UN)
+            os.close(lock_descriptor)
     except (OSError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
         print(f"ERROR: {exc}")
         return 1

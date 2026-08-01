@@ -1,10 +1,9 @@
-schemaVersion: 1
+schemaVersion: 2
 compatibility:
 - id: CMP-BASELINE-001
   kind: compatibility
   status: blocked
-  scope: Immutable release/current-work comparison baseline; public exports only;
-    private monorepo paths are not evidence.
+  scope: Immutable release/current-work comparison baseline; public exports only; private monorepo paths are not evidence.
   sourceBaseline:
   - sourceId: SRC-POLICY-001
     commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
@@ -14,29 +13,33 @@ compatibility:
     commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
     path: .planning/governance/evidence-policy.md
     contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-  packages:
-  - CLM-CMP-PACKAGE-001
-  runtimes:
-  - CLM-CMP-RUNTIME-001
-  examples:
-  - CLM-CMP-EXAMPLE-001
-  fixtures:
-  - CLM-CMP-FIXTURE-001
-  knownDrift:
-  - DRF-ARTIFACT-001
-  - DRF-CONFORMANCE-001
-  - DRF-DISCOVERY-001
-  - DRF-EGRESS-001
-  - DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
-  - DRF-HANDSHAKE-001
-  - DRF-IDENTITY-001
-  - DRF-INTENT-001
-  - DRF-MANIFEST-001
-  - DRF-METADATA-001
-  - DRF-UNKNOWN-MESSAGES-001
-  testEvidence:
-  - CLM-CMP-TEST-001
-  observedAt: '2026-07-24T00:00:00Z'
+  - sourceId: SRC-NAPPLET-WEB-PR184-20260728
+    commitSha: 4916777862ababd09fa13cf155f4b4079c8e8cb1
+    path: packages/cli/src/manifest.ts
+    contentSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
+  - sourceId: SRC-NAPS-NAP-INTENT-20260731
+    commitSha: 5ac0490461ca6fec2f0d2e45b4835cf9bc08de24
+    path: naps/NAP-INTENT.md
+    contentSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+  - sourceId: SRC-NAPPLET-WEB-20260731
+    commitSha: 03ad65b66413e5798536ef48695ffc4c2508f2c3
+    path: README.md
+    contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+  - sourceId: SRC-KEHTO-WEB-PAJA-20260731
+    commitSha: d42b3c3da7e0ad3cea233b34458997b09b11960d
+    path: packages/paja/README.md
+    contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+  - sourceId: SRC-NAMPLETS-NATIVE-20260731
+    commitSha: 1094f1db23292f966fd65757132678406f7ca28c
+    path: README.md
+    contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+  packages: [CLM-CMP-PACKAGE-001]
+  runtimes: [CLM-CMP-RUNTIME-001]
+  examples: [CLM-CMP-EXAMPLE-001]
+  fixtures: [CLM-CMP-FIXTURE-001]
+  knownDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001, DRF-DISCOVERY-001, DRF-EGRESS-001, DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001, DRF-HANDSHAKE-001, DRF-IDENTITY-001, DRF-INTENT-001, DRF-MANIFEST-001, DRF-METADATA-001, DRF-UNKNOWN-MESSAGES-001]
+  testEvidence: [CLM-CMP-TEST-001]
+  observedAt: '2026-07-31T03:08:39Z'
   releaseState:
     sourceId: SRC-POLICY-001
     commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
@@ -47,3 +50,106 @@ compatibility:
     commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
     path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
     contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  dimensions:
+  - name: normativeProtocol
+    status: blocked
+    evidenceClassExpectation: reviewed normative NIP/NAP protocol evidence
+    authorityExpectation: official normative NIP/NAP authority
+    references:
+    - id: SRC-NAPS-NAP-INTENT-20260731
+      relation: candidate
+      locator: commit:5ac0490461ca6fec2f0d2e45b4835cf9bc08de24 path:naps/NAP-INTENT.md
+      contentSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+    missingReason: A repository-local draft NAP source is not reviewed direct NIP-5D authority and does not settle protocol scope.
+  - name: observedImplementation
+    status: blocked
+    evidenceClassExpectation: reviewed observed implementation evidence
+    authorityExpectation: official repository observation with scoped technical review
+    references:
+    - id: SRC-NAPPLET-WEB-20260731
+      relation: observes
+      locator: commit:03ad65b66413e5798536ef48695ffc4c2508f2c3 path:README.md
+      contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    - id: SRC-KEHTO-WEB-PAJA-20260731
+      relation: observes
+      locator: commit:d42b3c3da7e0ad3cea233b34458997b09b11960d path:packages/paja/README.md
+      contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    - id: SRC-NAMPLETS-NATIVE-20260731
+      relation: observes
+      locator: commit:1094f1db23292f966fd65757132678406f7ca28c path:README.md
+      contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+    missingReason: Three implementation/reference observations are pinned but not reviewed or qualified as a common compatibility baseline.
+  - name: publishedPackage
+    status: blocked
+    evidenceClassExpectation: published registry artifact evidence
+    authorityExpectation: independent package registry authority
+    references:
+    - id: SRC-NAPPLET-WEB-20260731
+      relation: candidate
+      locator: README package links and alpha status at commit:03ad65b66413e5798536ef48695ffc4c2508f2c3
+      contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    missingReason: Repository README/package links and mutable PR-194 release direction are not an independently retrieved artifact, root-export proof, integrity record, or admission.
+  - name: runtime
+    status: blocked
+    evidenceClassExpectation: reviewed runtime behavior evidence
+    authorityExpectation: independent runtime measurement authority
+    references:
+    - id: SRC-KEHTO-WEB-PAJA-20260731
+      relation: observes
+      locator: Paja local-authoring/runtime description at commit:d42b3c3da7e0ad3cea233b34458997b09b11960d
+      contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    - id: SRC-NAMPLETS-NATIVE-20260731
+      relation: observes
+      locator: NMP native-reference description at commit:1094f1db23292f966fd65757132678406f7ca28c
+      contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+    missingReason: Paja and Nampplets describe different implementation environments; neither is a cross-browser/runtime qualification or selected teaching host.
+  - name: exampleFixture
+    status: blocked
+    evidenceClassExpectation: example and fixture evidence
+    authorityExpectation: reproducible fixture authority
+    references:
+    - id: SRC-KEHTO-WEB-PAJA-20260731
+      relation: candidate
+      locator: Paja explicit memory fixture mode at commit:d42b3c3da7e0ad3cea233b34458997b09b11960d
+      contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    missingReason: An implementation-described memory mode is not an independently retained public example or reproducible conformance fixture.
+  - name: currentWork
+    status: blocked
+    evidenceClassExpectation: current-work source evidence
+    authorityExpectation: official repository observation with immutable source scope
+    references:
+    - id: SRC-NAPPLET-WEB-20260731
+      relation: observes
+      locator: alpha README at commit:03ad65b66413e5798536ef48695ffc4c2508f2c3
+      contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    - id: SRC-KEHTO-WEB-PAJA-20260731
+      relation: observes
+      locator: Paja README at commit:d42b3c3da7e0ad3cea233b34458997b09b11960d
+      contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    missingReason: Immutable repository observations and separately retained mutable PR direction do not establish reviewed current-work compatibility.
+  - name: conformance
+    status: blocked
+    evidenceClassExpectation: reproducible conformance measurement evidence
+    authorityExpectation: reproducible conformance authority
+    references:
+    - id: SRC-NAPPLET-WEB-20260731
+      relation: candidate
+      locator: README conformance-tool description at commit:03ad65b66413e5798536ef48695ffc4c2508f2c3
+      contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    - id: SRC-NAMPLETS-NATIVE-20260731
+      relation: candidate
+      locator: unratified compatibility-lock description at commit:1094f1db23292f966fd65757132678406f7ca28c
+      contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+    missingReason: No independent conformance target or measured result is retained; repository claims and an unratified native lock are not conformance evidence.
+  baselineEligibility:
+    status: blocked
+    approval: not-approved
+    reasons:
+    - DIMENSION_NORMATIVE_PROTOCOL_BLOCKED
+    - DIMENSION_OBSERVED_IMPLEMENTATION_BLOCKED
+    - DIMENSION_PUBLISHED_PACKAGE_BLOCKED
+    - DIMENSION_RUNTIME_BLOCKED
+    - DIMENSION_EXAMPLE_FIXTURE_BLOCKED
+    - DIMENSION_CURRENT_WORK_BLOCKED
+    - DIMENSION_CONFORMANCE_BLOCKED
+    - APPROVAL_NOT_GRANTED

@@ -6,18 +6,20 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
+import importlib.util
 import json
 import os
 import re
-import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
 import time
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any
+from types import MappingProxyType
+from typing import Any, Mapping, NamedTuple
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
@@ -25,6 +27,319 @@ from jsonschema.exceptions import SchemaError, ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 RELATIONS = {"supports", "contradicts", "measures", "affects", "recommends", "supersedes"}
+
+
+def canonical_recovery_module() -> Any:
+    """Load the Plan 01-42 ownership boundary without reopening canonical paths."""
+    spec = importlib.util.spec_from_file_location("canonical_recovery", ROOT / "tools" / "canonical-recovery.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("canonical recovery module is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def read_registered_snapshot(reader_id: str, targets: tuple[str, ...], planning_root: Path) -> Mapping[str, bytes]:
+    """Acquire a complete in-memory generation before a multi-file route parses it."""
+    try:
+        return canonical_recovery_module().read_canonical_snapshot(reader_id, targets, root=planning_root)
+    except Exception as exc:
+        raise ValueError(f"canonical snapshot refused for {reader_id}: {exc}") from exc
+
+
+COMPATIBILITY_SNAPSHOT_TARGETS = (
+    "research/source-registry.yaml",
+    "research/claims.yaml",
+    "research/compatibility-matrix.yaml",
+    "research/drift-register.yaml",
+    "research/open-questions.yaml",
+    "research/package-evidence.yaml",
+    "research/package-map.md",
+    "research/upstream-acquisition-queue.yaml",
+    "research/reports/upstream-acquisition-20260728.md",
+    "spikes/spk-g-package-conformance/metadata.yaml",
+    "spikes/spk-g-package-conformance/report.md",
+)
+COMPATIBILITY_DIMENSION_ORDER = (
+    "normativeProtocol",
+    "observedImplementation",
+    "publishedPackage",
+    "runtime",
+    "exampleFixture",
+    "currentWork",
+    "conformance",
+)
+
+
+def dimension_reason_token(name: str) -> str:
+    """Return the stable ordered diagnostic token for a closed dimension name."""
+    return re.sub(r"(?<!^)([A-Z])", r"_\1", name).upper()
+
+
+def _freeze(value: Any) -> Any:
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {key: _thaw(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(item) for item in value]
+    return value
+
+
+def _snapshot_yaml(snapshot: Mapping[str, bytes], target: str) -> Mapping[str, Any]:
+    try:
+        value = normalize_yaml(yaml.safe_load(snapshot[target].decode("utf-8")))
+    except (KeyError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise ValueError(f"compatibility snapshot target is unavailable or malformed: {target}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"compatibility snapshot target must be an object: {target}")
+    return value
+
+
+def _snapshot_json(snapshot: Mapping[str, bytes], target: str) -> Mapping[str, Any]:
+    try:
+        value = json.loads(snapshot[target].decode("utf-8"))
+    except (KeyError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"compatibility snapshot target is unavailable or malformed: {target}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"compatibility snapshot target must be an object: {target}")
+    return value
+
+
+def _family_digest(snapshot: Mapping[str, bytes], prefix: str) -> str:
+    digest = hashlib.sha256()
+    for target in sorted(item for item in snapshot if item.startswith(prefix)):
+        digest.update(target.encode("utf-8")); digest.update(b"\0")
+        digest.update(snapshot[target]); digest.update(b"\0")
+    return digest.hexdigest()
+
+
+class CompatibilitySnapshotIndex(NamedTuple):
+    """The sole dependency of compatibility eligibility evaluation.
+
+    Every family is parsed from bytes returned by the registered Plan 01-42 reader.
+    This type intentionally carries no root or path attribute, preventing helpers
+    from reopening mutable canonical records after the snapshot is acquired.
+    """
+
+    sources: Mapping[str, Mapping[str, Any]]
+    claims: Mapping[str, Mapping[str, Any]]
+    compatibility: tuple[Mapping[str, Any], ...]
+    drift: Mapping[str, Mapping[str, Any]]
+    questions: Mapping[str, Mapping[str, Any]]
+    package_evidence: Mapping[str, Any]
+    package_map: str
+    acquisition_queue: Mapping[str, Any]
+    acquisition_receipt: Mapping[str, Any]
+    spk_g_metadata: Mapping[str, Any]
+    spk_g_report: str
+    family_digests: Mapping[str, str]
+    provenance_reasons: tuple[str, ...]
+
+
+def build_compatibility_snapshot_index(snapshot: Mapping[str, bytes]) -> CompatibilitySnapshotIndex:
+    """Parse the exact registered snapshot into immutable source-family indexes."""
+    if tuple(snapshot) != COMPATIBILITY_SNAPSHOT_TARGETS:
+        raise ValueError("compatibility snapshot target set is incomplete or unordered")
+    source_document = _snapshot_yaml(snapshot, "research/source-registry.yaml")
+    claim_document = _snapshot_yaml(snapshot, "research/claims.yaml")
+    matrix_document = _snapshot_yaml(snapshot, "research/compatibility-matrix.yaml")
+    drift_document = _snapshot_yaml(snapshot, "research/drift-register.yaml")
+    question_document = _snapshot_yaml(snapshot, "research/open-questions.yaml")
+    package_evidence = _snapshot_yaml(snapshot, "research/package-evidence.yaml")
+    if matrix_document.get("schemaVersion") != 2:
+        raise ValueError("compatibility-matrix.yaml must use schemaVersion 2; migrate legacy records first")
+    queue = _snapshot_json(snapshot, "research/upstream-acquisition-queue.yaml")
+    receipt = _snapshot_json(snapshot, "research/reports/upstream-acquisition-20260728.md")
+    metadata = _snapshot_yaml(snapshot, "spikes/spk-g-package-conformance/metadata.yaml")
+    try:
+        sources = source_document["sources"]
+        claims = claim_document["claims"]
+        compatibility = matrix_document["compatibility"]
+        drift = drift_document["drift"]
+        questions = question_document["questions"]
+    except KeyError as exc:
+        raise ValueError("compatibility snapshot family lacks its required record list") from exc
+    families = (sources, claims, compatibility, drift, questions)
+    if any(not isinstance(family, list) or not all(isinstance(item, dict) for item in family) for family in families):
+        raise ValueError("compatibility snapshot family contains malformed records")
+    provenance_reasons: list[str] = []
+    try:
+        acquisition = canonical_acquisition_module()
+        acquisition.validate_reviewed_acquisition_documents(queue, receipt)
+    except Exception:
+        provenance_reasons.append("PROVENANCE_REVIEWED_ACQUISITION_INVALID")
+    return CompatibilitySnapshotIndex(
+        sources=_freeze({item["id"]: item for item in sources if isinstance(item.get("id"), str)}),
+        claims=_freeze({item["id"]: item for item in claims if isinstance(item.get("id"), str)}),
+        compatibility=tuple(_freeze(item) for item in compatibility),
+        drift=_freeze({item["id"]: item for item in drift if isinstance(item.get("id"), str)}),
+        questions=_freeze({item["id"]: item for item in questions if isinstance(item.get("id"), str)}),
+        package_evidence=_freeze(package_evidence),
+        package_map=snapshot["research/package-map.md"].decode("utf-8"),
+        acquisition_queue=_freeze(queue),
+        acquisition_receipt=_freeze(receipt),
+        spk_g_metadata=_freeze(metadata),
+        spk_g_report=snapshot["spikes/spk-g-package-conformance/report.md"].decode("utf-8"),
+        family_digests=_freeze({
+            "SRC": _family_digest(snapshot, "research/source-registry.yaml"),
+            "CLM": _family_digest(snapshot, "research/claims.yaml"),
+            "CMP": _family_digest(snapshot, "research/compatibility-matrix.yaml"),
+            "DRF": _family_digest(snapshot, "research/drift-register.yaml"),
+            "OQ": _family_digest(snapshot, "research/open-questions.yaml"),
+            "package": _family_digest(snapshot, "research/package-evidence.yaml") + _family_digest(snapshot, "research/package-map.md"),
+            "SPK": _family_digest(snapshot, "spikes/spk-g-package-conformance/"),
+        }),
+        provenance_reasons=tuple(provenance_reasons),
+    )
+
+
+def canonical_acquisition_module() -> Any:
+    spec = importlib.util.spec_from_file_location("phase1_acquire_sources", ROOT / "tools" / "acquire-sources.py")
+    if spec is None or spec.loader is None:
+        raise ValueError("reviewed acquisition validator is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def compatibility_family_digests(index: CompatibilitySnapshotIndex) -> dict[str, str]:
+    return dict(index.family_digests)
+
+
+def _record_by_id(records: Mapping[str, Mapping[str, Any]], reference_id: Any) -> Mapping[str, Any] | None:
+    return records.get(reference_id) if isinstance(reference_id, str) else None
+
+
+def _qualified_source(source: Mapping[str, Any] | None, *, raw_origin: set[str], authority: set[str]) -> bool:
+    if source is None:
+        return False
+    review = source.get("review")
+    freshness = source.get("freshness")
+    return (
+        source.get("collectionStatus") == "collected"
+        and source.get("rawOrigin") in raw_origin
+        and source.get("authorityTier") in authority
+        and isinstance(review, Mapping) and review.get("status") == "approved"
+        and isinstance(freshness, Mapping) and freshness.get("state") != "stale"
+    )
+
+
+def _dimension_semantic_reason(name: str, dimension: Mapping[str, Any], index: CompatibilitySnapshotIndex) -> str | None:
+    references = dimension.get("references")
+    if not isinstance(references, tuple) or not references:
+        return "MISSING_REFERENCE"
+    ids = [reference.get("id") for reference in references if isinstance(reference, Mapping)]
+    if len(ids) != len(references) or len(set(ids)) != len(ids):
+        return "DUPLICATE_REFERENCE"
+    known = set(index.sources) | set(index.claims) | set(index.drift) | set(index.questions)
+    if any(reference_id not in known for reference_id in ids):
+        return "UNKNOWN_REFERENCE"
+    sources = [_record_by_id(index.sources, reference_id) for reference_id in ids]
+    if any(source is not None and source.get("freshness", {}).get("state") == "stale" for source in sources):
+        return "STALE_EVIDENCE"
+    if name == "normativeProtocol":
+        if not any(_qualified_source(source, raw_origin={"normative-protocol"}, authority={"official-normative", "official-protocol"}) for source in sources):
+            return "WRONG_AUTHORITY"
+    elif name in {"observedImplementation", "currentWork"}:
+        if not any(_qualified_source(source, raw_origin={"observed-implementation"}, authority={"official-repository-observation"}) for source in sources):
+            return "WRONG_AUTHORITY"
+    elif name == "publishedPackage":
+        artifact = index.package_evidence.get("artifactEvidence")
+        if not isinstance(artifact, Mapping) or artifact.get("status") != "qualified" or index.package_evidence.get("approval") != "approved":
+            return "SOURCE_RELEASE_ONLY"
+    elif name == "runtime":
+        if not any(_qualified_source(source, raw_origin={"runtime-measurement"}, authority={"independent-runtime-measurement"}) for source in sources):
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    elif name == "exampleFixture":
+        if not any(_qualified_source(source, raw_origin={"example-fixture"}, authority={"reproducible-fixture"}) for source in sources):
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    elif name == "conformance":
+        if index.spk_g_metadata.get("status") != "complete" or "conformance" not in index.spk_g_report.lower():
+            return "MISSING_INDEPENDENT_EVIDENCE"
+    return None
+
+
+def evaluate_compatibility_baseline(snapshot_index: CompatibilitySnapshotIndex) -> dict[str, Any]:
+    """Return deterministic substantive eligibility from an immutable snapshot only."""
+    if not isinstance(snapshot_index, CompatibilitySnapshotIndex):
+        raise TypeError("evaluate_compatibility_baseline requires CompatibilitySnapshotIndex")
+    if snapshot_index.provenance_reasons:
+        return {
+            "status": "blocked", "approval": "not-approved", "architectureApproved": False,
+            "reasons": list(snapshot_index.provenance_reasons), "familyDigests": compatibility_family_digests(snapshot_index),
+        }
+    baseline = next((record for record in snapshot_index.compatibility if record.get("id") == "CMP-BASELINE-001"), None)
+    if baseline is None:
+        return {"status": "blocked", "approval": "not-approved", "architectureApproved": False, "reasons": ["BASELINE_MISSING"], "familyDigests": compatibility_family_digests(snapshot_index)}
+    dimensions = baseline.get("dimensions")
+    by_name = {item.get("name"): item for item in dimensions if isinstance(item, Mapping)} if isinstance(dimensions, tuple) else {}
+    reasons: list[str] = []
+    for name in COMPATIBILITY_DIMENSION_ORDER:
+        token = dimension_reason_token(name)
+        dimension = by_name.get(name)
+        if dimension is None:
+            reasons.append(f"DIMENSION_{token}_MISSING")
+            continue
+        status = dimension.get("status")
+        if status != "qualified":
+            reasons.append(f"DIMENSION_{token}_{str(status or 'missing').upper().replace('-', '_')}")
+            continue
+        semantic = _dimension_semantic_reason(name, dimension, snapshot_index)
+        if semantic is not None:
+            reasons.append(f"DIMENSION_{token}_{semantic}")
+    eligibility = baseline.get("baselineEligibility")
+    approval = eligibility.get("approval") if isinstance(eligibility, Mapping) else "not-approved"
+    reviewed = (
+        isinstance(eligibility, Mapping)
+        and approval == "approved"
+        and eligibility.get("status") == "eligible"
+        and isinstance(eligibility.get("reviewRecordId"), str)
+        and bool(eligibility.get("reviewRecordId"))
+    )
+    if not reviewed:
+        reasons.append("APPROVAL_NOT_GRANTED")
+    eligible = not reasons
+    return {
+        "status": "eligible" if eligible else "blocked",
+        "approval": approval if reviewed and eligible else "not-approved",
+        "architectureApproved": False,
+        "reasons": reasons,
+        "familyDigests": compatibility_family_digests(snapshot_index),
+    }
+
+
+def evaluate_registered_compatibility(planning_root: Path, *, after_snapshot: Any = None) -> dict[str, Any]:
+    """Acquire the registered reader once, then evaluate only its frozen index."""
+    snapshot = read_registered_snapshot("compatibility-baseline", COMPATIBILITY_SNAPSHOT_TARGETS, planning_root)
+    index = build_compatibility_snapshot_index(snapshot)
+    if after_snapshot is not None:
+        after_snapshot()
+    return evaluate_compatibility_baseline(index)
+
+
+def validated_compatibility_snapshot_index(research_root: Path) -> CompatibilitySnapshotIndex:
+    """Verify Plan 01-45's receipt against Plan 01-29 before snapshot acquisition."""
+    planning_root = research_root.resolve(strict=True).parent
+    review = planning_root / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
+    command = [
+        sys.executable, str(ROOT / "tools/acquire-sources.py"), "validate-reviewed-acquisition",
+        "--queue", str(planning_root / "research/upstream-acquisition-queue.yaml"),
+        "--receipt", str(planning_root / "research/reports/upstream-acquisition-20260728.md"),
+        "--review", str(review),
+    ]
+    result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    if result.returncode:
+        detail = (result.stderr or result.stdout).strip().replace("\n", " | ")
+        raise ValueError(f"reviewed acquisition provenance refused before compatibility snapshot: {detail or 'non-zero exit'}")
+    snapshot = read_registered_snapshot("compatibility-baseline", COMPATIBILITY_SNAPSHOT_TARGETS, planning_root)
+    return build_compatibility_snapshot_index(snapshot)
 
 
 def normalize_yaml(value: Any) -> Any:
@@ -56,6 +371,41 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"JSON root must be an object: {path}")
     return value
+
+
+def resolve_canonical_file(
+    planning_root: Path,
+    supplied_path: Any,
+    expected_relative_path: str | None = None,
+) -> Path:
+    """Resolve one confined, canonical regular file below a planning root."""
+    if not isinstance(supplied_path, str) or not supplied_path or "\x00" in supplied_path:
+        raise ValueError("path must be a nonempty string without NUL")
+    if Path(supplied_path).is_absolute() or "\\" in supplied_path:
+        raise ValueError("path must be a relative POSIX path")
+    parts = supplied_path.split("/")
+    if any(part in {"", ".", ".."} for part in parts) or "/".join(parts) != supplied_path:
+        raise ValueError("path must not contain normalization components")
+    if expected_relative_path is not None and supplied_path != expected_relative_path:
+        raise ValueError(f"path must equal canonical path {expected_relative_path}")
+    try:
+        root = planning_root.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"planning root cannot be resolved: {exc}") from exc
+    candidate = planning_root.joinpath(*parts)
+    current = planning_root
+    try:
+        for part in parts:
+            current = current / part
+            if current.is_symlink():
+                raise ValueError("path must not traverse a symlink")
+        resolved = candidate.resolve(strict=True)
+        mode = candidate.stat(follow_symlinks=False).st_mode
+    except OSError as exc:
+        raise ValueError(f"path cannot be resolved: {exc}") from exc
+    if not resolved.is_relative_to(root) or not stat.S_ISREG(mode):
+        raise ValueError("path must resolve to a confined regular file")
+    return candidate
 
 
 def schema_errors(schema_path: Path, records: list[dict[str, Any]]) -> list[str]:
@@ -162,28 +512,52 @@ def validate_claims(claims: list[dict[str, Any]], source_ids: set[str], sources:
     return errors
 
 
-def load_optional_records(root: Path, filename: str, key: str, schema: str) -> tuple[list[dict[str, Any]], list[str]]:
+def load_optional_records(
+    root: Path,
+    filename: str,
+    key: str,
+    schema: str,
+    expected_schema_version: int | None = None,
+) -> tuple[list[dict[str, Any]], list[str]]:
     path = root / filename
     if not path.exists():
         return [], []
     document = load_yaml(path)
+    errors: list[str] = []
+    if expected_schema_version is not None and document.get("schemaVersion") != expected_schema_version:
+        errors.append(f"ERROR MIG004: {filename} must use schemaVersion {expected_schema_version}; migrate legacy records first")
     records = document.get(key, [])
     if not isinstance(records, list) or not all(isinstance(item, dict) for item in records):
-        return [], [f"ERROR IO002: {filename} {key} must be a list of records"]
-    return records, schema_errors(root / "schemas" / schema, records)
+        return [], [*errors, f"ERROR IO002: {filename} {key} must be a list of records"]
+    return records, [*errors, *schema_errors(root / "schemas" / schema, records)]
 
 
 def validate_drift(records: list[dict[str, Any]], source_ids: set[str], claim_ids: set[str]) -> list[str]:
+    """Keep upstream comparison sides separate from observed-local records."""
     errors: list[str] = []
     for record in records:
         record_id = record.get("id", "<unknown>")
-        for side in (record.get("normative", {}), record.get("observed", {})):
-            if not isinstance(side, dict):
+        normative = record.get("normative")
+        observed = record.get("observed")
+        if normative is None:
+            if record.get("status") != "blocked" or not isinstance(observed, dict) or observed.get("classification") != "observed-local":
+                errors.append(f"ERROR SEM008: {record_id} local evidence requires blocked observed-local form")
                 continue
+            prohibited_authority = {"claimId", "sourceId", "commitSha", "path", "locator", "contentSha256", "authorityTier", "maturity", "evidenceClass"}
+            if prohibited_authority & observed.keys():
+                errors.append(f"ERROR SEM009: {record_id} observed-local evidence must not carry normative authority fields")
+            continue
+        if not isinstance(normative, dict) or not isinstance(observed, dict):
+            errors.append(f"ERROR SEM008: {record_id} requires two complete upstream sides or observed-local form")
+            continue
+        for side in (normative, observed):
             if side.get("sourceId") not in source_ids:
                 errors.append(f"ERROR SEM008: {record_id} references unknown source {side.get('sourceId')}")
             if side.get("claimId") not in claim_ids:
                 errors.append(f"ERROR SEM009: {record_id} references unknown claim {side.get('claimId')}")
+        identity_fields = ("claimId", "sourceId", "commitSha", "path", "contentSha256")
+        if all(normative.get(field) == observed.get(field) for field in identity_fields):
+            errors.append(f"ERROR SEM010: {record_id} upstream normative and observed sides must be distinct")
     return errors
 
 
@@ -265,6 +639,7 @@ def validate_spike(directory: Path, mode: str) -> list[str]:
     for field in required_complete:
         if not metadata.get(field):
             errors.append(f"ERROR SPK003: completed spike requires {field}")
+    errors.extend(validate_complete_spike_evidence(metadata, directory))
     manifest_name = metadata.get("environmentManifest")
     environment: dict[str, Any] = {}
     if isinstance(manifest_name, str):
@@ -461,6 +836,7 @@ def validate_adr(path: Path) -> list[str]:
 
 
 def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
+    """Validate immutable spike links through canonical planning-root paths only."""
     try:
         fragment = load_yaml(path)
     except ValueError as exc:
@@ -468,51 +844,67 @@ def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
     errors = [error.replace("ERROR SCH", "ERROR IMP") for error in schema_errors(ROOT / ".planning/research/schemas/spike-impact-fragment.schema.json", [fragment])]
     spike_id = fragment.get("spikeId")
     expected_directory = str(spike_id).lower()
-    metadata_path = fragment.get("metadataPath")
-    report_path = fragment.get("reportPath")
-    if not isinstance(metadata_path, str) or not isinstance(report_path, str):
-        return errors + ["ERROR IMP002: fragment requires metadata and report paths"]
-    metadata_file = planning_root / metadata_path
-    report_file = planning_root / report_path
-    if metadata_file.parent.name != expected_directory or report_file.parent.name != expected_directory:
-        errors.append("ERROR IMP003: fragment identity must match the SPK metadata and report directory")
-    try:
-        metadata = load_yaml(metadata_file)
-        if metadata.get("id") != spike_id:
-            errors.append("ERROR IMP004: fragment spikeId does not match metadata ID")
-    except ValueError as exc:
-        errors.append(f"ERROR IMP005: metadata link does not resolve: {exc}")
-    if metadata_file.is_file() and fragment.get("metadataSha256") != hashlib.sha256(metadata_file.read_bytes()).hexdigest():
-        errors.append("ERROR IMP006: metadata path has an altered SHA-256")
-    if not report_file.is_file():
-        errors.append("ERROR IMP007: report link does not resolve")
-    elif fragment.get("reportSha256") != hashlib.sha256(report_file.read_bytes()).hexdigest():
+    spike_prefix = f"spikes/{expected_directory}/"
+
+    def resolve_link(value: Any, label: str, expected: str | None = None, spike_local: bool = False) -> Path | None:
+        try:
+            candidate = resolve_canonical_file(planning_root, value, expected)
+        except ValueError as exc:
+            errors.append(f"ERROR IMP002: {label} is not canonical: {exc}")
+            return None
+        if spike_local and not isinstance(value, str):
+            errors.append(f"ERROR IMP003: {label} must be spike-local")
+            return None
+        if spike_local and not value.startswith(spike_prefix):
+            errors.append("ERROR IMP003: fragment identity must match the SPK metadata and report directory")
+            return None
+        return candidate
+
+    metadata_file = resolve_link(fragment.get("metadataPath"), "metadata path", f"{spike_prefix}metadata.yaml")
+    report_file = resolve_link(fragment.get("reportPath"), "report path", f"{spike_prefix}report.md")
+    if metadata_file is not None:
+        try:
+            metadata = load_yaml(metadata_file)
+            if metadata.get("id") != spike_id:
+                errors.append("ERROR IMP004: fragment spikeId does not match metadata ID")
+        except ValueError as exc:
+            errors.append(f"ERROR IMP005: metadata link does not resolve: {exc}")
+        if fragment.get("metadataSha256") != hashlib.sha256(metadata_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP006: metadata path has an altered SHA-256")
+    if report_file is not None and fragment.get("reportSha256") != hashlib.sha256(report_file.read_bytes()).hexdigest():
         errors.append("ERROR IMP008: report path has an altered SHA-256")
-    source_registry = planning_root / "research/source-registry.yaml"
-    try:
-        source_document = load_yaml(source_registry)
-        source_ids = {item.get("id") for item in source_document.get("sources", []) if isinstance(item, dict)}
-    except ValueError as exc:
-        source_ids = set()
-        errors.append(f"ERROR IMP009: source registry does not resolve: {exc}")
+
+    registry_relative = "research/source-registry.yaml"
+    source_registry = resolve_link(registry_relative, "source registry", registry_relative)
+    source_index: dict[str, dict[str, Any]] = {}
+    registry_digest = ""
+    if source_registry is not None:
+        registry_digest = hashlib.sha256(source_registry.read_bytes()).hexdigest()
+        try:
+            source_document = load_yaml(source_registry)
+            source_index = {item.get("id"): item for item in source_document.get("sources", []) if isinstance(item, dict) and isinstance(item.get("id"), str)}
+        except ValueError as exc:
+            errors.append(f"ERROR IMP009: source registry does not resolve: {exc}")
+    immutable_source_fields = ("id", "kind", "collectionStatus", "rawOrigin", "repository", "officialUrl", "immutableUrl", "ref", "commitSha", "path", "locator", "contentSha256", "retrievedAt", "authorityTier", "evidenceClass", "maturity", "uncertainty", "impacts", "freshness", "review")
     for link in fragment.get("sourceLinks", []):
         if not isinstance(link, dict):
             continue
-        source_file = planning_root / str(link.get("path", ""))
-        if link.get("sourceId") not in source_ids:
-            errors.append(f"ERROR IMP010: dangling source link {link.get('sourceId')}")
-        if not source_file.is_file():
-            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
-        elif link.get("sha256") != hashlib.sha256(source_file.read_bytes()).hexdigest():
-            errors.append("ERROR IMP011: source path is missing or has an altered SHA-256")
+        source_file = resolve_link(link.get("path"), "source link", registry_relative)
+        source_id = link.get("sourceId")
+        source = source_index.get(source_id)
+        if source is None:
+            errors.append(f"ERROR IMP010: dangling source link {source_id}")
+        elif any(not source.get(field) for field in immutable_source_fields):
+            errors.append(f"ERROR IMP010: incomplete immutable source record {source_id}")
+        if source_file is not None and link.get("sha256") != registry_digest:
+            errors.append("ERROR IMP011: source registry digest does not match declared link digest")
+
     for link in fragment.get("measurementLinks", []):
         if not isinstance(link, dict):
             continue
-        measurement_file = planning_root / str(link.get("path", ""))
-        if not measurement_file.is_file():
-            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
-        elif link.get("sha256") != hashlib.sha256(measurement_file.read_bytes()).hexdigest():
-            errors.append("ERROR IMP012: measurement path is missing or has an altered SHA-256")
+        measurement_file = resolve_link(link.get("path"), "measurement link", spike_local=True)
+        if measurement_file is not None and link.get("sha256") != hashlib.sha256(measurement_file.read_bytes()).hexdigest():
+            errors.append("ERROR IMP012: measurement path has an altered SHA-256")
     expected_patterns = {"requirement": r"^[A-Z][A-Z0-9]{3,4}-\d{2}$", "adr": r"^ADR-\d{4}$", "phase": r"^\d{2}$", "lesson": r"^LES-\d{3}$"}
     for impact in fragment.get("proposedImpacts", []):
         if isinstance(impact, dict) and not re.fullmatch(expected_patterns.get(impact.get("type"), r"$^"), str(impact.get("id", ""))):
@@ -526,15 +918,17 @@ def validate_impact_fragment(path: Path, planning_root: Path) -> list[str]:
         evidence_kinds = {link.get("kind") for link in fragment.get("evidenceLinks", []) if isinstance(link, dict)}
         if any(kind not in evidence_kinds for kind in ("source", "metadata", "measurement", "report")):
             errors.append("ERROR IMP015: evidenceLinks must include source, metadata, measurement, and report provenance")
+        expected_evidence = {"source": registry_relative, "metadata": f"{spike_prefix}metadata.yaml", "measurement": fragment.get("measurementPath"), "report": f"{spike_prefix}report.md"}
         for link in fragment.get("evidenceLinks", []):
             if not isinstance(link, dict):
                 continue
-            evidence_file = planning_root / str(link.get("path", ""))
-            if not evidence_file.is_file() or link.get("sha256") != hashlib.sha256(evidence_file.read_bytes()).hexdigest():
-                errors.append("ERROR IMP016: evidence link path is missing or has an altered SHA-256")
-
+            kind = link.get("kind")
+            expected = expected_evidence.get(kind)
+            evidence_file = resolve_link(link.get("path"), "evidence link", expected, spike_local=kind in {"metadata", "measurement", "report"})
+            if evidence_file is not None and link.get("sha256") != hashlib.sha256(evidence_file.read_bytes()).hexdigest():
+                errors.append("ERROR IMP016: evidence link path has an altered SHA-256")
         try:
-            claims_document = load_yaml(planning_root / "research/claims.yaml")
+            claims_document = load_yaml(resolve_canonical_file(planning_root, "research/claims.yaml", "research/claims.yaml"))
             claims = {item.get("id"): item for item in claims_document.get("claims", []) if isinstance(item, dict)}
         except ValueError as exc:
             claims = {}
@@ -568,6 +962,134 @@ CONSOLIDATION_AT = "2026-07-24T00:00:00Z"
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_source_registry_digest_is_retained(expected_digest: Any) -> bool:
+    """Accept a current or Git-reachable historical source-registry snapshot only."""
+    if not isinstance(expected_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_digest):
+        return False
+    source_registry = ROOT / ".planning/research/source-registry.yaml"
+    try:
+        if source_registry.is_symlink() or not stat.S_ISREG(source_registry.stat(follow_symlinks=False).st_mode):
+            return False
+        if sha256(source_registry) == expected_digest:
+            return True
+    except OSError:
+        return False
+
+    relative_path = ".planning/research/source-registry.yaml"
+    try:
+        revisions = subprocess.run(
+            ["git", "-C", str(ROOT), "rev-list", "--all", "--", relative_path],
+            capture_output=True,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if revisions.returncode:
+        return False
+    for revision in revisions.stdout.decode("ascii", errors="ignore").splitlines():
+        if not re.fullmatch(r"[0-9a-f]{40,64}", revision):
+            return False
+        try:
+            historical = subprocess.run(
+                ["git", "-C", str(ROOT), "show", f"{revision}:{relative_path}"],
+                capture_output=True,
+                check=False,
+                timeout=5,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return False
+        if historical.returncode == 0 and hashlib.sha256(historical.stdout).hexdigest() == expected_digest:
+            return True
+    return False
+
+
+def resolve_retained_evidence(spike_directory: Path, relative_path: Any, expected_digest: Any) -> tuple[bytes, str]:
+    """Resolve one declared retained output without allowing path authority."""
+    if not isinstance(relative_path, str) or not relative_path or "\x00" in relative_path:
+        raise ValueError("retained evidence path must be a nonempty string without NUL")
+    if not isinstance(expected_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_digest):
+        raise ValueError("retained evidence digest must be an exact lowercase SHA-256")
+    if relative_path.startswith("/") or "\\" in relative_path:
+        raise ValueError("retained evidence path must use a relative POSIX path")
+    parts = relative_path.split("/")
+    if any(part in {"", ".", ".."} for part in parts):
+        raise ValueError("retained evidence path must be normalized and remain below the spike directory")
+    base = spike_directory.resolve(strict=True)
+    candidate = spike_directory.joinpath(*parts)
+    current = spike_directory
+    for part in parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("retained evidence must not traverse a symlink")
+    try:
+        resolved = candidate.resolve(strict=True)
+        mode = candidate.stat(follow_symlinks=False).st_mode
+    except OSError as exc:
+        raise ValueError(f"retained evidence path cannot be resolved: {exc}") from exc
+    if not resolved.is_relative_to(base) or not stat.S_ISREG(mode):
+        raise ValueError("retained evidence must be a confined regular file")
+    content = candidate.read_bytes()
+    observed_digest = hashlib.sha256(content).hexdigest()
+    if observed_digest != expected_digest:
+        raise ValueError("retained evidence SHA-256 does not match declared digest")
+    return content, observed_digest
+
+
+def validate_complete_spike_evidence(metadata: dict[str, Any], spike_directory: Path) -> list[str]:
+    """Bind completed-spike evidence and replay output to retained local bytes."""
+    errors: list[str] = []
+    outputs = metadata.get("rawOutputDigests")
+    if not isinstance(outputs, list) or not outputs:
+        return ["ERROR SPK016: completed spike requires retained raw output declarations"]
+    resolved_outputs: dict[str, str] = {}
+    for output in outputs:
+        if not isinstance(output, dict):
+            errors.append("ERROR SPK017: retained output declaration must be an object")
+            continue
+        path = output.get("path")
+        digest = output.get("sha256")
+        if path in resolved_outputs:
+            errors.append("ERROR SPK018: duplicate normalized retained output path")
+            continue
+        try:
+            _, observed_digest = resolve_retained_evidence(spike_directory, path, digest)
+        except ValueError as exc:
+            errors.append(f"ERROR SPK019: {exc}")
+            continue
+        resolved_outputs[path] = observed_digest
+
+    links = metadata.get("evidenceLinks")
+    if not isinstance(links, list) or not links:
+        errors.append("ERROR SPK020: completed spike requires typed evidence links")
+    else:
+        for link in links:
+            if not isinstance(link, dict):
+                errors.append("ERROR SPK021: typed evidence link must be an object")
+                continue
+            path = link.get("path")
+            digest = link.get("sha256")
+            kind = link.get("kind")
+            if kind == "source" and path == "../../research/source-registry.yaml":
+                # Completed spikes bind a registry generation. Later truth refreshes may
+                # legitimately advance the current file, but only a Git-reachable exact
+                # historical generation may satisfy the retained source digest.
+                if not canonical_source_registry_digest_is_retained(digest):
+                    errors.append("ERROR SPK022: canonical source evidence does not match its declared digest")
+                continue
+            try:
+                _, observed_digest = resolve_retained_evidence(spike_directory, path, digest)
+            except ValueError as exc:
+                errors.append(f"ERROR SPK023: typed evidence link is invalid: {exc}")
+                continue
+
+    replay = metadata.get("replayResult")
+    output_digest = replay.get("outputDigest") if isinstance(replay, dict) else None
+    if output_digest not in set(resolved_outputs.values()):
+        errors.append("ERROR SPK025: replay result digest must bind one validated retained output")
+    return errors
 
 
 def normalized_fragment(fragment: dict[str, Any]) -> str:
@@ -658,20 +1180,18 @@ def merge_fragment_history(document: dict[str, Any], key: str, fragment: dict[st
 
 
 def new_drift_record(fragment: dict[str, Any], drift_id: str, claims: dict[str, dict[str, Any]], sources: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    source_id = fragment["sourceIds"][0]
-    source = sources[source_id]
-    claim_id = next((item.get("id") for item in claims.values() if isinstance(item, dict) and any(isinstance(link, dict) and link.get("sourceId") == source_id for link in item.get("sourceRelations", []))), "CLM-UPSTREAM-BASELINE-001")
-    side = {
-        "claimId": claim_id,
-        "sourceId": source_id,
-        "commitSha": source["commitSha"],
-        "path": source["path"],
-        "locator": source["locator"],
-        "contentSha256": source["contentSha256"],
+    """Retain a spike result as observed-local evidence without minting upstream authority."""
+    del claims, sources
+    measurement = fragment["measurementLinks"][0]
+    observed = {
+        "id": "OBS-" + drift_id.removeprefix("DRF-"),
+        "classification": "observed-local",
+        "reportPath": fragment["reportPath"],
+        "reportSha256": fragment["reportSha256"],
+        "measurementPath": measurement["path"],
+        "measurementSha256": measurement["sha256"],
         "statement": "Consolidated local spike observation is retained as a blocked project-evidence hand-off, not an upstream fact.",
-        "authorityTier": source["authorityTier"],
-        "maturity": source["maturity"],
-        "evidenceClass": source["evidenceClass"],
+        "fallback": "Keep the deterministic static fallback and do not infer upstream behavior.",
     }
     return {
         "id": drift_id,
@@ -679,8 +1199,8 @@ def new_drift_record(fragment: dict[str, Any], drift_id: str, claims: dict[str, 
         "topic": drift_id.removeprefix("DRF-").lower().replace("-", " "),
         "status": "blocked",
         "statusReason": f"Consolidated {fragment['fragmentId']} retains a local blocked or uncertain observation without asserting upstream behavior.",
-        "normative": side,
-        "observed": side.copy(),
+        "normative": None,
+        "observed": observed,
         "impacts": {"content": ["LES-001"], "code": [fragment["spikeId"]], "knowledge": ["spike-consolidation"], "requirements": sorted(fragment["affectedRequirements"]), "phases": sorted(fragment["affectedPhases"])},
         "uncertainty": fragment["uncertainty"],
         "history": [{"at": CONSOLIDATION_AT, "state": "blocked", "reason": f"Consolidated {fragment['fragmentId']} fragment SHA-256 {fragment['_digest']}."}],
@@ -902,6 +1422,16 @@ def consolidation_audit(reports: list[tuple[str, Path, str]], fragments: list[tu
     return "\n".join(lines)
 
 
+def expected_replay_argv(spike_id: str, planning_root: Path) -> list[str]:
+    """Return the only approved replay argv for a stable spike ID."""
+    try:
+        directory = SPIKE_REPORTS[spike_id]
+    except KeyError as exc:
+        raise ValueError(f"unknown replay spike ID {spike_id}") from exc
+    # The wrapper runs from repository root; YAML supplies no executable or arguments.
+    return ["tools/phase1-python", "tools/validate-research.py", "validate-spike", f".planning/spikes/{directory}", "--complete"]
+
+
 def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
     try:
         manifest = load_yaml(path)
@@ -913,24 +1443,46 @@ def validate_replay_manifest(path: Path, planning_root: Path) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
     for entry in entries:
-        if not isinstance(entry, dict) or entry.get("spikeId") in seen:
+        if not isinstance(entry, dict) or not isinstance(entry.get("spikeId"), str) or entry["spikeId"] in seen:
             errors.append("ERROR RPL003: entries require unique stable spike IDs")
             continue
-        seen.add(entry["spikeId"])
-        for evidence in entry.get("fixtureEvidence", []):
-            if not isinstance(evidence, dict):
-                errors.append("ERROR RPL004: invalid fixture evidence")
+        spike_id = entry["spikeId"]
+        seen.add(spike_id)
+        directory = SPIKE_REPORTS.get(spike_id)
+        if directory is None:
+            errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
+            continue
+        expected_paths = {
+            "report": f"spikes/{directory}/report.md",
+            "metadata": f"spikes/{directory}/metadata.yaml",
+            "measurement": f"spikes/{directory}/measurements.yaml",
+        }
+        expected_evidence: list[tuple[str, str]] = []
+        for label, expected_path in expected_paths.items():
+            evidence = entry.get(label)
+            if not isinstance(evidence, dict) or evidence.get("path") != expected_path:
+                errors.append(f"ERROR RPL004: {spike_id} {label} must use its mapped retained path")
                 continue
-            target = planning_root / str(evidence.get("path", ""))
-            if not target.is_file() or evidence.get("sha256") != sha256(target):
-                errors.append("ERROR RPL005: replay manifest digest does not match local input")
+            try:
+                _, digest = resolve_retained_evidence(planning_root, evidence.get("path"), evidence.get("sha256"))
+            except ValueError as exc:
+                errors.append(f"ERROR RPL005: {spike_id} {label} is invalid: {exc}")
+                continue
+            expected_evidence.append((expected_path, digest))
+        fixture_evidence = entry.get("fixtureEvidence")
+        actual_evidence = [(item.get("path"), item.get("sha256")) for item in fixture_evidence] if isinstance(fixture_evidence, list) and all(isinstance(item, dict) for item in fixture_evidence) else []
+        if actual_evidence != expected_evidence:
+            errors.append(f"ERROR RPL007: {spike_id} fixture evidence must exactly bind mapped retained files")
+        legacy_command = entry.get("replayCommand")
+        if legacy_command is not None and legacy_command != " ".join(expected_replay_argv(spike_id, planning_root)):
+            errors.append(f"ERROR RPL008: {spike_id} manifest command text is not the fixed rendered argv")
     if seen != set(SPIKE_REPORTS):
         errors.append("ERROR RPL006: manifest IDs must be SPK-A through SPK-L")
     return errors
 
 
 def replay_spikes(manifest_path: Path, planning_root: Path) -> list[str]:
-    """Validate immutable replay inputs and execute every declared local replay."""
+    """Validate retained replay inputs and execute only stable-ID-derived argv."""
     errors = validate_replay_manifest(manifest_path, planning_root)
     if errors:
         return errors
@@ -941,27 +1493,18 @@ def replay_spikes(manifest_path: Path, planning_root: Path) -> list[str]:
     entries = manifest.get("entries", [])
     for entry in sorted(entries, key=lambda item: str(item.get("spikeId", "")) if isinstance(item, dict) else ""):
         if not isinstance(entry, dict):
-            errors.append("ERROR RPL007: replay manifest entry must be an object")
+            errors.append("ERROR RPL009: replay manifest entry must be an object")
             continue
-        spike_id = entry.get("spikeId", "<unknown>")
-        command = entry.get("replayCommand")
-        if not isinstance(command, str) or not command.strip():
-            errors.append(f"ERROR RPL008: {spike_id} lacks a replay command")
-            continue
+        spike_id = entry.get("spikeId")
         try:
-            result = subprocess.run(
-                shlex.split(command),
-                cwd=ROOT,
-                text=True,
-                capture_output=True,
-                check=False,
-            )
+            argv = expected_replay_argv(spike_id, planning_root)
+            result = subprocess.run(argv, cwd=ROOT, text=True, capture_output=True, check=False)
         except (OSError, ValueError) as exc:
-            errors.append(f"ERROR RPL009: {spike_id} replay could not start: {exc}")
+            errors.append(f"ERROR RPL010: {spike_id} replay could not start: {exc}")
             continue
         if result.returncode:
             detail = (result.stdout or result.stderr).strip().replace("\n", " | ")
-            errors.append(f"ERROR RPL010: {spike_id} replay failed: {detail or 'non-zero exit'}")
+            errors.append(f"ERROR RPL011: {spike_id} replay failed: {detail or 'non-zero exit'}")
     return errors
 
 
@@ -1012,30 +1555,206 @@ def consolidate_spike_impacts(spikes: Path, research: Path, audit: Path, dry_run
         validation_errors = schema_errors(research / "schemas/compatibility.schema.json", staged_documents["compatibility-matrix.yaml"].get("compatibility", []))
         validation_errors += schema_errors(research / "schemas/drift.schema.json", staged_documents["drift-register.yaml"].get("drift", []))
         validation_errors += schema_errors(research / "schemas/open-question.schema.json", staged_documents["open-questions.yaml"].get("questions", []))
+        source_ids = {
+            source.get("id") for source in load_yaml(research / "source-registry.yaml").get("sources", [])
+            if isinstance(source, dict) and isinstance(source.get("id"), str)
+        }
+        claim_ids = {
+            claim.get("id") for claim in load_yaml(research / "claims.yaml").get("claims", [])
+            if isinstance(claim, dict) and isinstance(claim.get("id"), str)
+        }
+        validation_errors += validate_drift(staged_documents["drift-register.yaml"].get("drift", []), source_ids, claim_ids)
         validation_errors += validate_replay_manifest(staged[spikes / "replay-manifest.yaml"], planning_root)
         if validation_errors:
             shutil.rmtree(stage, ignore_errors=True)
             return validation_errors
+        if conflicts:
+            # Conflict review writes only its open-question record; compatibility and
+            # drift documents were not merged and must retain their exact bytes.
+            for target in (research / "compatibility-matrix.yaml", research / "drift-register.yaml"):
+                staged.pop(target)
         if os.environ.get("CONSOLIDATION_INJECT_PRECOMMIT_FAILURE") == "1":
             shutil.rmtree(stage, ignore_errors=True)
             return ["CONSOLIDATION_INJECTED_FAILURE: staged transaction rolled back before publication"]
-        originals = {target: target.read_bytes() if target.exists() else None for target in targets}
+        injected_interruption = os.environ.get("CONSOLIDATION_INJECT_PUBLISH_INTERRUPTION")
         try:
-            for target, staged_path in staged.items():
-                target.parent.mkdir(parents=True, exist_ok=True)
-                os.replace(staged_path, target)
-        except OSError as exc:
-            for target, original in originals.items():
-                if original is None:
-                    target.unlink(missing_ok=True)
-                else:
-                    target.write_bytes(original)
-            return [f"ERROR CONS005: publication failed and prior canonical state was restored: {exc}"]
+            interrupt_after = None if injected_interruption is None else int(injected_interruption)
+            if interrupt_after is not None and interrupt_after < 0:
+                raise ValueError("must be non-negative")
+        except ValueError:
+            shutil.rmtree(stage, ignore_errors=True)
+            return ["ERROR CONS005: injected publication interruption must be a non-negative integer"]
+        try:
+            target_map = {
+                target.relative_to(planning_root).as_posix(): staged_path.read_bytes()
+                for target, staged_path in sorted(staged.items(), key=lambda item: item[0].relative_to(planning_root).as_posix())
+            }
+            canonical_recovery_module().publish_generation(
+                planning_root, target_map, timeout=timeout, interrupt_after=interrupt_after
+            )
+        except Exception as exc:
+            name = type(exc).__name__
+            if name == "PublishInterrupted":
+                return [f"CONSOLIDATION_PUBLISH_INTERRUPTED: {exc}"]
+            return [f"ERROR CONS005: journaled canonical publication refused: {exc}"]
         finally:
             shutil.rmtree(stage, ignore_errors=True)
         return conflict_errors
     finally:
         release_consolidation_lock(lock)
+
+
+OBSERVED_REFRESH_TARGETS = (
+    "claims.yaml",
+    "drift-register.yaml",
+    "open-questions.yaml",
+    "package-map.md",
+    "open-work-snapshot.json",
+)
+OBSERVED_REFRESH_READER_TARGETS = tuple(f"research/{name}" for name in OBSERVED_REFRESH_TARGETS)
+OBSERVED_REFRESH_ATTESTATION = "observed-refresh-validation-attestation.json"
+
+
+def _observed_refresh_planning_root(staged_root: Path, attestation: Path) -> tuple[Path, Path]:
+    """Constrain an observed-refresh candidate to its five-record staging envelope."""
+    staged = staged_root.resolve(strict=True)
+    if staged.is_symlink() or not staged.is_dir() or staged.name != "phase-01" or staged.parent.name != ".observed-refresh-staging":
+        raise ValueError("observed-refresh staged root must be a regular phase-01 profile directory")
+    planning = staged.parent.parent
+    if planning.name != ".planning" or any(parent.is_symlink() for parent in (planning, staged.parent, staged)):
+        raise ValueError("observed-refresh staged root must remain below a regular .planning directory")
+    candidate = attestation.absolute()
+    expected = staged / OBSERVED_REFRESH_ATTESTATION
+    if candidate != expected or candidate.is_symlink() or (candidate.exists() and not candidate.is_file()):
+        raise ValueError("observed-refresh attestation must be the exact regular staging-root attestation path")
+    return planning, expected
+
+
+def _observed_refresh_staged_bytes(staged: Path, attestation: Path) -> dict[str, bytes]:
+    names = sorted(item.name for item in staged.iterdir())
+    expected = [*sorted(OBSERVED_REFRESH_TARGETS), attestation.name]
+    # The attestation is emitted last; an existing one is permitted only while being
+    # revalidated, and is discarded before any validation result is reported.
+    if names not in (sorted(OBSERVED_REFRESH_TARGETS), expected):
+        raise ValueError("observed-refresh staging root must contain exactly five targets and its optional attestation")
+    content: dict[str, bytes] = {}
+    for target in OBSERVED_REFRESH_TARGETS:
+        path = staged / target
+        mode = path.stat(follow_symlinks=False).st_mode if path.exists() else 0
+        if path.is_symlink() or not stat.S_ISREG(mode):
+            raise ValueError("observed-refresh staged target must be a regular non-symlink file")
+        content[target] = path.read_bytes()
+    return content
+
+
+def _validate_observed_refresh_overlay(
+    content: Mapping[str, bytes],
+    source_document: Mapping[str, Any],
+    planning: Path,
+) -> list[str]:
+    """Run the ordinary record validators on the five-file in-memory overlay."""
+    errors: list[str] = []
+    try:
+        claims_document = normalize_yaml(yaml.safe_load(content["claims.yaml"].decode("utf-8")))
+        drift_document = normalize_yaml(yaml.safe_load(content["drift-register.yaml"].decode("utf-8")))
+        questions_document = normalize_yaml(yaml.safe_load(content["open-questions.yaml"].decode("utf-8")))
+        json.loads(content["open-work-snapshot.json"].decode("utf-8"))
+        content["package-map.md"].decode("utf-8")
+    except (UnicodeDecodeError, json.JSONDecodeError, yaml.YAMLError) as exc:
+        return [f"ERROR OBS001: staged observed-refresh record is malformed: {exc}"]
+    if not all(isinstance(document, dict) for document in (claims_document, drift_document, questions_document)):
+        return ["ERROR OBS002: staged observed-refresh YAML roots must be mappings"]
+    claims = claims_document.get("claims")
+    drift = drift_document.get("drift")
+    questions = questions_document.get("questions")
+    sources = source_document.get("sources")
+    if not all(isinstance(records, list) and all(isinstance(record, dict) for record in records) for records in (claims, drift, questions, sources)):
+        return ["ERROR OBS003: staged observed-refresh families must contain record lists"]
+    source_ids, source_id_errors = record_ids(sources, "SRC-")
+    source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
+    claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+    errors.extend(source_id_errors + claim_id_errors)
+    errors.extend(schema_errors(planning / "research/schemas/claim.schema.json", claims))
+    errors.extend(schema_errors(planning / "research/schemas/drift.schema.json", drift))
+    errors.extend(schema_errors(planning / "research/schemas/open-question.schema.json", questions))
+    errors.extend(validate_claims(claims, source_ids, source_index))
+    errors.extend(validate_drift(drift, source_ids, claim_ids))
+    return errors
+
+
+def validate_observed_refresh_staged(staged_root: Path, attestation: Path) -> None:
+    """Validate and attest one exact five-file observed-refresh candidate generation.
+
+    Receipt provenance is revalidated before acquiring the Plan 01-42 shared-lock
+    snapshot. The validator then overlays only staged bytes and never writes a live
+    canonical target; a failed check removes any provisional attestation.
+    """
+    planning, attestation_path = _observed_refresh_planning_root(staged_root, attestation)
+    attestation_path.unlink(missing_ok=True)
+    try:
+        # The Plan 01-29 source-input map is bound to this repository's reviewed Git
+        # blobs. Revalidate that trusted receipt first, then require any copied-root
+        # fixture or actual staging context to have byte-equivalent queue/receipt
+        # bindings. This keeps tests isolated without treating their mutable report
+        # copies as authority.
+        trusted_planning = ROOT / ".planning"
+        trusted_queue_path = trusted_planning / "research/upstream-acquisition-queue.yaml"
+        trusted_receipt_path = trusted_planning / "research/reports/upstream-acquisition-20260728.md"
+        trusted_review_path = trusted_planning / "phases/01-research-and-truth-baseline/01-REVIEWS.md"
+        acquisition_command = [
+            sys.executable, str(ROOT / "tools/acquire-sources.py"), "validate-reviewed-acquisition",
+            "--queue", str(trusted_queue_path), "--receipt", str(trusted_receipt_path), "--review", str(trusted_review_path),
+        ]
+        provenance = subprocess.run(acquisition_command, cwd=ROOT, text=True, capture_output=True, check=False)
+        if provenance.returncode:
+            detail = (provenance.stderr or provenance.stdout).strip().replace("\n", " | ")
+            raise ValueError(f"reviewed acquisition provenance refused before observed-refresh snapshot: {detail or 'non-zero exit'}")
+        acquisition = canonical_acquisition_module()
+        trusted_queue = load_json(trusted_queue_path)
+        trusted_receipt = load_json(trusted_receipt_path)
+        queue = load_json(planning / "research/upstream-acquisition-queue.yaml")
+        receipt = load_json(planning / "research/reports/upstream-acquisition-20260728.md")
+        acquisition.validate_reviewed_acquisition_documents(queue, receipt)
+        if queue.get("reviewedSourceInputBinding") != trusted_queue.get("reviewedSourceInputBinding") or receipt.get("reviewedSourceInputBinding") != trusted_receipt.get("reviewedSourceInputBinding"):
+            raise ValueError("staged validation queue/receipt binding differs from the Plan 01-29-reviewed source-input map")
+        binding = trusted_queue.get("reviewedSourceInputBinding")
+        if not isinstance(binding, Mapping):
+            raise ValueError("reviewed acquisition binding is unavailable after revalidation")
+        source_document = load_yaml(planning / "research/source-registry.yaml")
+        snapshot = read_registered_snapshot("observed-refresh-validation", OBSERVED_REFRESH_READER_TARGETS, planning)
+        staged = staged_root.resolve(strict=True)
+        content = _observed_refresh_staged_bytes(staged, attestation_path)
+        overlay_errors = _validate_observed_refresh_overlay(content, source_document, planning)
+        if overlay_errors:
+            raise ValueError("; ".join(overlay_errors[:10]))
+        spk_directory = planning / "spikes/spk-g-package-conformance"
+        spk_errors = validate_spike(spk_directory, "complete") + validate_impact_fragment(spk_directory / "impact-fragment.yaml", planning)
+        if spk_errors:
+            raise ValueError("validated SPK-G hand-off is unavailable: " + "; ".join(spk_errors[:10]))
+        # Explicitly retain that this overlay was evaluated against a complete locked
+        # generation, not an independently opened collection of live targets.
+        if tuple(snapshot) != OBSERVED_REFRESH_READER_TARGETS:
+            raise ValueError("observed-refresh canonical snapshot is incomplete or unordered")
+        recovery = canonical_recovery_module()
+        target_map = {name: hashlib.sha256(content[name]).hexdigest() for name in sorted(content)}
+        spk_bindings = {
+            "status": load_yaml(spk_directory / "metadata.yaml").get("status"),
+            "metadataSha256": hashlib.sha256((spk_directory / "metadata.yaml").read_bytes()).hexdigest(),
+            "measurementsSha256": hashlib.sha256((spk_directory / "measurements.yaml").read_bytes()).hexdigest(),
+            "reportSha256": hashlib.sha256((spk_directory / "report.md").read_bytes()).hexdigest(),
+            "impactFragmentSha256": hashlib.sha256((spk_directory / "impact-fragment.yaml").read_bytes()).hexdigest(),
+        }
+        document = {
+            "profile": "observed-refresh",
+            "targetMap": target_map,
+            "generationSha256": recovery.generation_sha256({name: content[name] for name in sorted(content)}),
+            "reviewedSourceInputBinding": dict(binding),
+            "spkG": spk_bindings,
+        }
+        attestation_path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    except Exception:
+        attestation_path.unlink(missing_ok=True)
+        raise
 
 
 def main() -> int:
@@ -1075,6 +1794,11 @@ def main() -> int:
     replay = command.add_parser("replay-spikes")
     replay.add_argument("--manifest", type=Path, required=True)
     replay.add_argument("--check", action="store_true")
+    recovery = command.add_parser("recover-consolidation")
+    recovery.add_argument("--research", type=Path, required=True)
+    observed_refresh = command.add_parser("validate-observed-refresh-staged")
+    observed_refresh.add_argument("--staged-root", type=Path, required=True, help="Path to the exact five-file observed-refresh staging root")
+    observed_refresh.add_argument("--attestation", type=Path, required=True, help="Path for the digest-bound observed-refresh attestation")
     args = parser.parse_args()
 
     if args.command == "validate-spike":
@@ -1097,6 +1821,18 @@ def main() -> int:
         errors = consolidate_spike_impacts(args.spikes, args.research, args.audit, args.dry_run, args.lock_timeout, args.input_order)[:100]
     elif args.command == "replay-spikes":
         errors = replay_spikes(args.manifest, args.manifest.parents[1])[:100] if args.check else []
+    elif args.command == "recover-consolidation":
+        try:
+            canonical_recovery_module().recover_canonical_generation(args.research.resolve().parents[1])
+            errors = []
+        except Exception as exc:
+            errors = [f"ERROR REC001: canonical recovery refused: {exc}"]
+    elif args.command == "validate-observed-refresh-staged":
+        try:
+            validate_observed_refresh_staged(args.staged_root, args.attestation)
+            errors = []
+        except Exception as exc:
+            errors = [f"ERROR OBS004: observed-refresh staged validation refused: {exc}"]
     else:
         errors = []
     if args.command != "validate":
@@ -1109,34 +1845,68 @@ def main() -> int:
     sources: list[dict[str, Any]] = []
     claims: list[dict[str, Any]] = []
     try:
-        source_document = load_yaml(root / "source-registry.yaml")
-        sources = source_document.get("sources", [])
-        if not isinstance(sources, list) or not all(isinstance(item, dict) for item in sources):
-            raise ValueError("source-registry.yaml sources must be a list of records")
-        errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
-        source_ids, source_id_errors = record_ids(sources, "SRC-")
-        errors.extend(source_id_errors)
-        source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
-        claims_path = root / "claims.yaml"
-        if claims_path.exists():
-            claims_document = load_yaml(claims_path)
-            claims = claims_document.get("claims", [])
-            if not isinstance(claims, list) or not all(isinstance(item, dict) for item in claims):
-                raise ValueError("claims.yaml claims must be a list of records")
+        if root.resolve() == (ROOT / ".planning/research").resolve():
+            # The reviewed-acquisition check happens before the Plan 01-42 reader. From
+            # this point onward compatibility families are consumed exclusively from one
+            # registered immutable mapping; eligibility receives only its typed index.
+            compatibility_index = validated_compatibility_snapshot_index(root)
+            sources = [_thaw(record) for record in compatibility_index.sources.values()]
+            claims = [_thaw(record) for record in compatibility_index.claims.values()]
+            drift = [_thaw(record) for record in compatibility_index.drift.values()]
+            questions = [_thaw(record) for record in compatibility_index.questions.values()]
+            compatibility = [_thaw(record) for record in compatibility_index.compatibility]
+            errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
+            source_ids, source_id_errors = record_ids(sources, "SRC-")
+            errors.extend(source_id_errors)
+            source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
             errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
             errors.extend(validate_claims(claims, source_ids, source_index))
-        drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json")
-        questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
-        compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json")
-        errors.extend(drift_errors + question_errors + compatibility_errors)
-        claim_ids, claim_id_errors = record_ids(claims, "CLM-")
-        drift_ids, drift_id_errors = record_ids(drift, "DRF-")
-        question_ids, question_id_errors = record_ids(questions, "OQ-")
-        compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
-        errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
-        errors.extend(validate_drift(drift, source_ids, claim_ids))
-        known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
-        errors.extend(validate_compatibility(compatibility, source_index, known_ids))
+            errors.extend(schema_errors(root / "schemas/drift.schema.json", drift))
+            errors.extend(schema_errors(root / "schemas/open-question.schema.json", questions))
+            errors.extend(schema_errors(root / "schemas/compatibility.schema.json", compatibility))
+            claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+            drift_ids, drift_id_errors = record_ids(drift, "DRF-")
+            question_ids, question_id_errors = record_ids(questions, "OQ-")
+            compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
+            errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
+            errors.extend(validate_drift(drift, source_ids, claim_ids))
+            known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
+            errors.extend(validate_compatibility(compatibility, source_index, known_ids))
+            # A blocked substantive result is valid evidence; no approval or ADR state is
+            # synthesized by validation. The returned ordered reasons remain in matrix data.
+            evaluate_compatibility_baseline(compatibility_index)
+        else:
+            # Isolated source/claim fixtures predate the complete canonical snapshot
+            # contract. They validate only their supplied records and never invoke the
+            # repository-confined reviewed-acquisition preflight.
+            source_document = load_yaml(root / "source-registry.yaml")
+            sources = source_document.get("sources", [])
+            if not isinstance(sources, list) or not all(isinstance(item, dict) for item in sources):
+                raise ValueError("source-registry.yaml sources must be a list of records")
+            errors.extend(schema_errors(root / "schemas/source.schema.json", sources))
+            source_ids, source_id_errors = record_ids(sources, "SRC-")
+            errors.extend(source_id_errors)
+            source_index = {record.get("id"): record for record in sources if isinstance(record.get("id"), str)}
+            claims_path = root / "claims.yaml"
+            if claims_path.exists():
+                claims_document = load_yaml(claims_path)
+                claims = claims_document.get("claims", [])
+                if not isinstance(claims, list) or not all(isinstance(item, dict) for item in claims):
+                    raise ValueError("claims.yaml claims must be a list of records")
+                errors.extend(schema_errors(root / "schemas/claim.schema.json", claims))
+                errors.extend(validate_claims(claims, source_ids, source_index))
+            drift, drift_errors = load_optional_records(root, "drift-register.yaml", "drift", "drift.schema.json", expected_schema_version=2)
+            questions, question_errors = load_optional_records(root, "open-questions.yaml", "questions", "open-question.schema.json")
+            compatibility, compatibility_errors = load_optional_records(root, "compatibility-matrix.yaml", "compatibility", "compatibility.schema.json", expected_schema_version=2)
+            errors.extend(drift_errors + question_errors + compatibility_errors)
+            claim_ids, claim_id_errors = record_ids(claims, "CLM-")
+            drift_ids, drift_id_errors = record_ids(drift, "DRF-")
+            question_ids, question_id_errors = record_ids(questions, "OQ-")
+            compatibility_ids, compatibility_id_errors = record_ids(compatibility, "CMP-")
+            errors.extend(claim_id_errors + drift_id_errors + question_id_errors + compatibility_id_errors)
+            errors.extend(validate_drift(drift, source_ids, claim_ids))
+            known_ids = source_ids | claim_ids | drift_ids | question_ids | compatibility_ids
+            errors.extend(validate_compatibility(compatibility, source_index, known_ids))
         errors.extend(validate_reports(root.parent))
         migration_notes = root / "schemas/migration-notes.md"
         if migration_notes.exists():

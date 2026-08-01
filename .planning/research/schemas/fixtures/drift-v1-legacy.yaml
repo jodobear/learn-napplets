@@ -1,0 +1,716 @@
+schemaVersion: 1
+drift:
+- id: DRF-ARTIFACT-001
+  kind: drift
+  topic: exact artifact versus build output
+  status: blocked
+  statusReason: No public package release or exact build-output evidence has been
+    pinned.
+  normative:
+    claimId: CLM-DRF-ARTIFACT-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-ARTIFACT-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      SPK-D retains the existing blocked artifact drift record; synthetic bytes cannot
+      establish release or loader behavior.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
+      Retain the blocked artifact drift record because no public release artifact,
+      integrity value, or implementation baseline was available.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0002
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-CONFORMANCE-001
+  kind: drift
+  topic: conformance/private-or-retired behavior
+  status: blocked
+  statusReason: No public conformance fixture or immutable package/runtime observation
+    has been collected.
+  normative:
+    claimId: CLM-DRF-CONFORMANCE-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-CONFORMANCE-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
+      Retain the blocked conformance drift record because no public fixture or conformance
+      target was available to execute.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0009
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-DISCOVERY-001
+  kind: drift
+  topic: discovery model
+  status: blocked
+  statusReason: No immutable official discovery or registry baseline has been collected.
+  normative:
+    claimId: CLM-DRF-DISCOVERY-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-DISCOVERY-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0001
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-EGRESS-001
+  kind: drift
+  topic: browser egress versus mediated access
+  status: blocked
+  statusReason: No named browser measurement or immutable mediated-access source has
+    been collected.
+  normative:
+    claimId: CLM-DRF-EGRESS-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-EGRESS-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-H-IMPACT-001 fragment SHA-256 40d7f7bfacffd2630bc9884ba717da0d263ef5b092de5abee69fb86d094b8042;
+      The local Chrome fixture outcome and Firefox execution block preserve the browser-egress
+      versus mediated-access question without deciding upstream behavior.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0008
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  kind: drift
+  topic: firefox playwright launch 001
+  status: blocked
+  statusReason: Consolidated SPK-C-IMPACT-001 retains a local blocked or uncertain
+    observation without asserting upstream behavior.
+  normative:
+    claimId: CLM-UPSTREAM-BASELINE-001
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Source and claim record model
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: Consolidated local spike observation is retained as a blocked project-evidence
+      hand-off, not an upstream fact.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-UPSTREAM-BASELINE-001
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Source and claim record model
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: Consolidated local spike observation is retained as a blocked project-evidence
+      hand-off, not an upstream fact.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BOUNDARY-HARNESS
+    knowledge:
+    - spike-consolidation
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+    - '05'
+  uncertainty:
+    state: material
+    reason: The only source bindings are blocked project-policy records, and the Firefox
+      execution surface supplied no fixture observation; SPK-C cannot select or prove
+      a cross-browser teaching-host profile.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-C-IMPACT-001 fragment SHA-256 36e268fd57f36b44b779954758f4b7990e588e9c60b87bc5fa5a3c737c8e2ac4.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-H-IMPACT-001 fragment SHA-256 40d7f7bfacffd2630bc9884ba717da0d263ef5b092de5abee69fb86d094b8042;
+      The approved direct-installed Firefox surface did not produce a clean Playwright
+      context; retain this tooling mismatch without inferring channel support or rejection.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0005
+    disposition: blocked
+    safeFallback: Keep the deterministic static fallback.
+    revisitTrigger: Collect immutable source evidence and obtain required review.
+- id: DRF-HANDSHAKE-001
+  kind: drift
+  topic: NAP-SHELL handshake
+  status: blocked
+  statusReason: No immutable NIP-5D bootstrap baseline or observed runtime baseline
+    has been collected.
+  normative:
+    claimId: CLM-DRF-HANDSHAKE-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-HANDSHAKE-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0005
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-IDENTITY-001
+  kind: drift
+  topic: dTag identity
+  status: blocked
+  statusReason: No immutable manifest or aggregate-identity source has been collected.
+  normative:
+    claimId: CLM-DRF-IDENTITY-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-IDENTITY-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      SPK-D retains the existing blocked identity drift record; no dTag or aggregate
+      identity rule was supplied or inferred.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0006
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-INTENT-001
+  kind: drift
+  topic: NAP-INTENT handler/catalog assumptions
+  status: blocked
+  statusReason: Handler and catalog sources lack immutable released and current-work
+    baselines.
+  normative:
+    claimId: CLM-DRF-INTENT-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-INTENT-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0004
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-MANIFEST-001
+  kind: drift
+  topic: manifest kinds
+  status: blocked
+  statusReason: Current manifest-kind sources are absent from the immutable registry.
+  normative:
+    claimId: CLM-DRF-MANIFEST-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-MANIFEST-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      SPK-D retains the existing blocked manifest-source drift record; local fixture
+      output does not settle manifest kinds or resolution behavior.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0005
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-METADATA-001
+  kind: drift
+  topic: archetype/convention metadata
+  status: blocked
+  statusReason: No immutable registry or projection baseline has been collected.
+  normative:
+    claimId: CLM-DRF-METADATA-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-METADATA-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0003
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.
+- id: DRF-UNKNOWN-MESSAGES-001
+  kind: drift
+  topic: unknown message/source behavior
+  status: blocked
+  statusReason: No immutable protocol or runtime record defines the current behavior.
+  normative:
+    claimId: CLM-DRF-UNKNOWN-NORMATIVE
+    sourceId: SRC-POLICY-002
+    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
+    path: .planning/governance/evidence-policy.md
+    locator: Freshness
+    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+    statement: Project policy requires an immutable source baseline before a protocol
+      conclusion.
+    authorityTier: project-policy
+    maturity: accepted
+    evidenceClass: project-policy
+  observed:
+    claimId: CLM-DRF-UNKNOWN-OBSERVED
+    sourceId: SRC-POLICY-001
+    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
+    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
+    locator: Known high-risk drift to re-verify
+    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+    statement: The preserved research question identifies discovery comparison work
+      but is not current upstream proof.
+    authorityTier: planning-archive
+    maturity: accepted
+    evidenceClass: project-policy
+  impacts:
+    content:
+    - LES-001
+    code:
+    - SPK-C-BROWSER-001
+    knowledge:
+    - protocol-map
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  uncertainty:
+    state: material
+    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  dependentDecisionDisposition:
+    decisionIds:
+    - ADR-0004
+    disposition: blocked
+    safeFallback: Defer dependent architecture and teaching claims.
+    revisitTrigger: Collect and review the official immutable baseline.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-napplets.local/schemas/drift.schema.json",
-  "title": "Parallel drift or conflict record",
+  "title": "Version 2 parallel drift or observed-local record",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "kind", "topic", "status", "statusReason", "normative", "observed", "impacts", "uncertainty", "history", "review"],
@@ -11,8 +11,8 @@
     "topic": {"type": "string", "minLength": 1},
     "status": {"enum": ["verified", "disputed", "provisional", "blocked", "stale"]},
     "statusReason": {"type": "string", "minLength": 1},
-    "normative": {"$ref": "#/$defs/side"},
-    "observed": {"$ref": "#/$defs/side"},
+    "normative": {"oneOf": [{"$ref": "#/$defs/side"}, {"type": "null"}]},
+    "observed": {"oneOf": [{"$ref": "#/$defs/side"}, {"$ref": "#/$defs/observedLocal"}]},
     "impacts": {"$ref": "#/$defs/impacts"},
     "uncertainty": {"$ref": "#/$defs/uncertainty"},
     "history": {
@@ -31,6 +31,10 @@
       }
     }
   },
+  "oneOf": [
+    {"properties": {"normative": {"$ref": "#/$defs/side"}, "observed": {"$ref": "#/$defs/side"}}},
+    {"properties": {"status": {"const": "blocked"}, "normative": {"type": "null"}, "observed": {"$ref": "#/$defs/observedLocal"}}}
+  ],
   "$defs": {
     "side": {
       "type": "object", "additionalProperties": false,
@@ -46,6 +50,20 @@
         "authorityTier": {"type": "string", "minLength": 1},
         "maturity": {"type": "string", "minLength": 1},
         "evidenceClass": {"type": "string", "minLength": 1}
+      }
+    },
+    "observedLocal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "classification", "reportPath", "reportSha256", "measurementPath", "measurementSha256", "statement", "fallback"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^OBS-[A-Z0-9][A-Z0-9-]*$"},
+        "classification": {"const": "observed-local"},
+        "reportPath": {"type": "string", "minLength": 1},
+        "reportSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "measurementPath": {"type": "string", "minLength": 1},
+        "measurementSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "statement": {"type": "string", "minLength": 1},
+        "fallback": {"type": "string", "minLength": 1}
       }
     },
     "impacts": {

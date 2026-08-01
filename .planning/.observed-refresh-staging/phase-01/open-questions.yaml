@@ -1,0 +1,325 @@
+schemaVersion: 1
+questions:
+- id: OQ-EGRESS-NIP-001
+  kind: open-question
+  question: No current immutable upstream NIP statement resolves whether or how the
+    measured channels are constrained or mediated; collect a complete reviewed source/claim
+    pair before teaching a protocol rule.
+  status: blocked
+  sourceRefs:
+  - DRF-EGRESS-001
+  - DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+    - '05'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0014
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-H-IMPACT-001 fragment SHA-256 40d7f7bfacffd2630bc9884ba717da0d263ef5b092de5abee69fb86d094b8042;
+      No current immutable upstream NIP statement resolves whether or how the measured
+      channels are constrained or mediated; collect a complete reviewed source/claim
+      pair before teaching a protocol rule.
+- id: OQ-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  kind: open-question
+  question: Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser
+    fixture behavior exists to assess the required boundary primitives.
+  status: blocked
+  sourceRefs:
+  - DRF-FIREFOX-PLAYWRIGHT-LAUNCH-001
+  - SRC-POLICY-001
+  impacts:
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+    - '05'
+  blockedDecisions:
+  - ADR-0005
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-C-IMPACT-001 fragment SHA-256 36e268fd57f36b44b779954758f4b7990e588e9c60b87bc5fa5a3c737c8e2ac4;
+      Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser fixture
+      behavior exists to assess the required boundary primitives.
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-H-IMPACT-001 fragment SHA-256 40d7f7bfacffd2630bc9884ba717da0d263ef5b092de5abee69fb86d094b8042;
+      Firefox 152.0.4 exited before Playwright 1.61.0 attached, so no browser fixture
+      or CSP result exists for any declared channel group.
+- id: OQ-PUBLIC-CONFORMANCE-001
+  kind: open-question
+  question: Identify a public conformance target and its immutable source baseline;
+    do not infer conformance from private paths, a compile result, or an unpublished
+    build.
+  status: blocked
+  sourceRefs:
+  - DRF-ARTIFACT-001
+  - DRF-CONFORMANCE-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-03
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0008
+  - ADR-0010
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  - Obtain a public fixture, qualified runtime/example measurement, and role-specific
+    conformance review before replacing the blocked SPK-G result.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
+      Identify a public conformance target and its immutable source baseline; do not
+      infer conformance from private paths, a compile result, or an unpublished build.
+- id: OQ-PUBLIC-PACKAGE-BASELINE-001
+  kind: open-question
+  question: Collect and review an exact official public release/version, registry
+    and project provenance, license, integrity, documented root export, and distinct
+    immutable released-package and implementation source records before any SPK-G
+    install is reconsidered.
+  status: blocked
+  sourceRefs:
+  - DRF-ARTIFACT-001
+  - DRF-CONFORMANCE-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-03
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0008
+  - ADR-0010
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  - Independently retrieve a published registry artifact and compare it with observed
+    release/current-work commits before separate package approval.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
+      Collect and review an exact official public release/version, registry and project
+      provenance, license, integrity, documented root export, and distinct immutable
+      released-package and implementation source records before any SPK-G install
+      is reconsidered.
+- id: OQ-UPSTREAM-BASELINE-001
+  kind: open-question
+  question: Which official immutable NIP-5D, NAP, package, and runtime sources resolve
+    the recorded blocked compatibility and drift questions?
+  status: blocked
+  sourceRefs:
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  - CLM-UPSTREAM-BASELINE-001
+  - DRF-DISCOVERY-001
+  - DRF-HANDSHAKE-001
+  - DRF-MANIFEST-001
+  - DRF-IDENTITY-001
+  - DRF-METADATA-001
+  - DRF-INTENT-001
+  - DRF-UNKNOWN-MESSAGES-001
+  - DRF-ARTIFACT-001
+  - DRF-EGRESS-001
+  - DRF-CONFORMANCE-001
+  impacts:
+    requirements:
+    - EVID-02
+    - EVID-03
+    - OPER-01
+    phases:
+    - '01'
+  blockedDecisions:
+  - ADR-0001
+  - ADR-0002
+  - ADR-0003
+  - ADR-0004
+  - ADR-0005
+  - ADR-0006
+  - ADR-0008
+  - ADR-0009
+  resolutionCriteria:
+  - Record official identity, resolved commit, revision:path locator, digest, retrieval
+    time, authority, evidence class, maturity, and review state for each relevant
+    source.
+  - Compare released public export/package/runtime evidence separately from current
+    default-branch or open-work evidence.
+  - Record conflicts as parallel `DRF-*` evidence and obtain the required human review
+    before any claim becomes verified.
+  - For each receipt-bound observation, collect direct authoritative NIP/NAP records
+    and role-specific review; repository observations remain non-normative.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: All relevant candidates remain discovery pointers without immutable current
+      evidence.
+- id: OQ-VERIFIED-LOADER-IDENTITY-001
+  kind: open-question
+  question: Identify and review the current immutable identity mapping, including
+    any dTag or aggregate identity tuple, before presenting or implementing identity
+    behavior.
+  status: blocked
+  sourceRefs:
+  - DRF-ARTIFACT-001
+  - DRF-IDENTITY-001
+  - DRF-MANIFEST-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0008
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  - Collect direct authoritative identity records and a role-specific review; observed
+    repository code is insufficient.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      Identify and review the current immutable identity mapping, including any dTag
+      or aggregate identity tuple, before presenting or implementing identity behavior.
+- id: OQ-VERIFIED-LOADER-MANIFEST-001
+  kind: open-question
+  question: Identify and review the current immutable manifest source and a public
+    reviewed resolver before any manifest-resolution experiment is attempted.
+  status: blocked
+  sourceRefs:
+  - DRF-ARTIFACT-001
+  - DRF-IDENTITY-001
+  - DRF-MANIFEST-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0008
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  - Collect direct authoritative manifest records and a role-specific review; observed
+    repository code is insufficient.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      Identify and review the current immutable manifest source and a public reviewed
+      resolver before any manifest-resolution experiment is attempted.
+- id: OQ-VERIFIED-LOADER-VERIFIER-001
+  kind: open-question
+  question: Identify reviewed public provenance for signature, blob, aggregate, and
+    exact-byte loader verification before re-running SPK-D beyond local digest integrity.
+  status: blocked
+  sourceRefs:
+  - DRF-ARTIFACT-001
+  - DRF-IDENTITY-001
+  - DRF-MANIFEST-001
+  - SRC-POLICY-001
+  - SRC-POLICY-002
+  impacts:
+    requirements:
+    - EVID-04
+    phases:
+    - '01'
+    - '02'
+  blockedDecisions:
+  - ADR-0005
+  - ADR-0008
+  resolutionCriteria:
+  - Collect complete immutable source and claim provenance, then obtain the required
+    review.
+  - Collect qualified public verifier provenance and a role-specific review; failed
+    observation records remain retained.
+  owner: research-owner
+  review:
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - security
+  history:
+  - at: '2026-07-24T00:00:00Z'
+    status: blocked
+    reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
+      Identify reviewed public provenance for signature, blob, aggregate, and exact-byte
+      loader verification before re-running SPK-D beyond local digest integrity.

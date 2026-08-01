@@ -54,7 +54,7 @@ rawOutputDigests:
     sha256: aa24ff4fec4f52c4bcdb7e28c62b0357e386472b36fdc581425e5a546af2a44e
 replayResult:
   status: passed
-  outputDigest: ed0763689e41050886b0624fa0f872fc176950850b88a605e262dc624f24c196
+  outputDigest: aa24ff4fec4f52c4bcdb7e28c62b0357e386472b36fdc581425e5a546af2a44e
 evidenceLinks:
   - kind: measurement
     path: measurements.yaml

@@ -1,0 +1,54 @@
+schemaVersion: 1
+id: PKG-NAPPLET-WEB-REGISTRY-20260728
+kind: package-evidence
+retrievedAt: '2026-07-28T00:00:00Z'
+authority:
+  classification: observed-registry-metadata-or-blocker
+  statement: >-
+    Registry observations are not protocol authority. A fixture receipt proves only
+    collector mechanics, and the unavailable live attempt remains a scoped blocker.
+receiptHistory:
+  - path: reports/package-registry-fixture-receipt-20260728.yaml
+    attemptId: REG-FIXTURE-20260728-001
+    receiptSha256: 4f35050e9ee18864aeec90f88053b27dc209b32301ee82d460755af16241fc80
+    transport: fixture
+    outcome: fixture-mechanism-only
+    responseSha256: 64574c32cc452c2257ab17b77476bb31e60ec1ad41ab1ba299c73b2c807f5c2d
+    classification: mechanism-only-not-published-package-fact
+  - path: reports/package-registry-live-or-blocker-receipt-20260728.yaml
+    attemptId: REG-BLOCKER-20260728-001
+    receiptSha256: 40ebd1c8f1e8b0bcde03f01e936affb815fe2ed375113cce2547020c9c286a26
+    transport: live-or-blocker
+    outcome: impact-scoped-blocker
+    responseSha256: null
+    classification: blocked-no-live-registry-observation
+artifactEvidence:
+  status: blocked
+  repositoryReleaseData: not-an-artifact-substitute
+  selectedArtifact: null
+  requiredFields:
+    version: missing
+    tarballUrl: missing
+    sriIntegrity: missing
+    exposedSha256: missing
+    provenanceOrAttestation: missing
+    license: missing
+    rootExports: missing
+    releasedCommitComparison: missing
+  reason: >-
+    Neither receipt establishes the complete independently retrieved registry
+    artifact metadata required for package admission. Repository release commits,
+    PR data, source heads, and fixture bytes are not an artifact substitute.
+approval: not-approved
+blockedAdmission:
+  candidateId: CAND-NAPPLET-WEB-PACKAGE
+  disposition: blocked
+  affectedRequirements: [EVID-03, EVID-04, OPER-01]
+  affectedPhases: ['01', '02', '03', '05', '11']
+  affectedAdrs: [ADR-0005, ADR-0008, ADR-0010]
+  affectedQuestions: [OQ-PUBLIC-PACKAGE-BASELINE-001, OQ-PUBLIC-CONFORMANCE-001]
+  affectedDrift: [DRF-ARTIFACT-001, DRF-CONFORMANCE-001]
+  safeFallback: Keep the deterministic static learning path dependency-free.
+  refreshTrigger: >-
+    Collect and review a qualifying official registry artifact with all required
+    fields, then separately obtain package-admission approval before SPK-G work.

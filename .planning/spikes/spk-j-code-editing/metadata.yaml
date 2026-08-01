@@ -298,17 +298,13 @@ rawOutputDigests:
     sha256: b1f5908976032e02398e90f524e4f80f3c21f22138d564aa952ff1c0f78d7d00
   - path: measurements.yaml
     sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
-  - path: /tmp/spk-j-code-editing/browser-results.json
-    sha256: e15afaed4626cb924fc44a558eafbba7de4583ea413ab0ee41ee97e45e0ce87e
-  - path: /tmp/spk-j-code-editing/manifest.json
-    sha256: beed1b3e7fb26c7f91f15f6ad3254ec2d94e9a02a611fa9dd9e83443368c3189
 replayResult:
   status: blocked
-  outputDigest: beed1b3e7fb26c7f91f15f6ad3254ec2d94e9a02a611fa9dd9e83443368c3189
+  outputDigest: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
 evidenceLinks:
   - kind: source
     path: ../../research/source-registry.yaml
-    sha256: 59a3146c13939aa900f92cabb5156faf6b2d8612d711a57a35495e9a7d5cacc5
+    sha256: f32d576e3b1c4cabfc1d40815664a5b20e93e624eb19d21a2765f38187568219
   - kind: measurement
     path: measurements.yaml
     sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b

@@ -1,0 +1,359 @@
+# Complete ASVS 5.0.0 Level 1 applicability register.
+# Source text is retained only in the ignored temporary acquisition cache described
+# by asvs-reference-20260728.md; every row pins its source file digest.
+asvs_version: "5.0.0"
+level: L1
+catalog_requirement_ids:
+  - v5.0.0-1.2.1
+  - v5.0.0-1.2.2
+  - v5.0.0-1.2.3
+  - v5.0.0-1.2.4
+  - v5.0.0-1.2.5
+  - v5.0.0-1.3.1
+  - v5.0.0-1.3.2
+  - v5.0.0-1.5.1
+  - v5.0.0-2.1.1
+  - v5.0.0-2.2.1
+  - v5.0.0-2.2.2
+  - v5.0.0-2.3.1
+  - v5.0.0-3.2.1
+  - v5.0.0-3.2.2
+  - v5.0.0-3.3.1
+  - v5.0.0-3.4.1
+  - v5.0.0-3.4.2
+  - v5.0.0-3.5.1
+  - v5.0.0-3.5.2
+  - v5.0.0-3.5.3
+  - v5.0.0-4.1.1
+  - v5.0.0-4.4.1
+  - v5.0.0-5.2.1
+  - v5.0.0-5.2.2
+  - v5.0.0-5.3.1
+  - v5.0.0-5.3.2
+  - v5.0.0-6.1.1
+  - v5.0.0-6.2.1
+  - v5.0.0-6.2.2
+  - v5.0.0-6.2.3
+  - v5.0.0-6.2.4
+  - v5.0.0-6.2.5
+  - v5.0.0-6.2.6
+  - v5.0.0-6.2.7
+  - v5.0.0-6.2.8
+  - v5.0.0-6.3.1
+  - v5.0.0-6.3.2
+  - v5.0.0-6.4.1
+  - v5.0.0-6.4.2
+  - v5.0.0-7.2.1
+  - v5.0.0-7.2.2
+  - v5.0.0-7.2.3
+  - v5.0.0-7.2.4
+  - v5.0.0-7.4.1
+  - v5.0.0-7.4.2
+  - v5.0.0-8.1.1
+  - v5.0.0-8.2.1
+  - v5.0.0-8.2.2
+  - v5.0.0-8.3.1
+  - v5.0.0-9.1.1
+  - v5.0.0-9.1.2
+  - v5.0.0-9.1.3
+  - v5.0.0-9.2.1
+  - v5.0.0-10.4.1
+  - v5.0.0-10.4.2
+  - v5.0.0-10.4.3
+  - v5.0.0-10.4.4
+  - v5.0.0-10.4.5
+  - v5.0.0-11.3.1
+  - v5.0.0-11.3.2
+  - v5.0.0-11.4.1
+  - v5.0.0-12.1.1
+  - v5.0.0-12.2.1
+  - v5.0.0-12.2.2
+  - v5.0.0-13.4.1
+  - v5.0.0-14.2.1
+  - v5.0.0-14.3.1
+  - v5.0.0-15.1.1
+  - v5.0.0-15.2.1
+  - v5.0.0-15.3.1
+sources:
+  v1: &v1
+    path: 5.0/en/0x10-V1-Encoding-and-Sanitization.md
+    sha256: 8c0e36a42c3cbf711e2579eb68e1fea8090f52301cac7c400d7c392207b24ee7
+  v2: &v2
+    path: 5.0/en/0x11-V2-Validation-and-Business-Logic.md
+    sha256: 70ad0f68df22ddd825c2837e74999fa026851e75a3128372307685e2bb526969
+  v3: &v3
+    path: 5.0/en/0x12-V3-Web-Frontend-Security.md
+    sha256: 02de197d5aa55592cfa524e66d4aa15bd3e8955e23e76438ac413c94172488fc
+  v4: &v4
+    path: 5.0/en/0x13-V4-API-and-Web-Service.md
+    sha256: efcadbf5ad78fb977c96d3d30e9a1d02aaafd4d787112a529ac82788a990406b
+  v5: &v5
+    path: 5.0/en/0x14-V5-File-Handling.md
+    sha256: 079a51123e5156a5ffc6329f266d49752cb60f6b780899484c3f1cfde3734ebb
+  v6: &v6
+    path: 5.0/en/0x15-V6-Authentication.md
+    sha256: e1e0aaa15e48f7941560176d28eeb11ad3b9b4f9d323437c0e950b3a16cd2b23
+  v7: &v7
+    path: 5.0/en/0x16-V7-Session-Management.md
+    sha256: 4aec329f2642ae750fbe1abac5da7e8a7bcfec6fc331bb0a46916970f9c88236
+  v8: &v8
+    path: 5.0/en/0x17-V8-Authorization.md
+    sha256: 60c188b1703cab2086841d8f1b4adc0ededf66ed38c676a11bb92347646b5330
+  v9: &v9
+    path: 5.0/en/0x18-V9-Self-contained-Tokens.md
+    sha256: 5f14e09fb67892e805ad386959eb3a8bafca03271dbb502ccf7323e82b3f812c
+  v10: &v10
+    path: 5.0/en/0x19-V10-OAuth-and-OIDC.md
+    sha256: 2da443986ba40987bd0908bbd7da2372ab0d777701cc590f4eb0fdad6ae804ed
+  v11: &v11
+    path: 5.0/en/0x20-V11-Cryptography.md
+    sha256: a64f3f2dc6f53565dfba66e40fd336b50eab6cdb530c2791f62db8b58202bacf
+  v12: &v12
+    path: 5.0/en/0x21-V12-Secure-Communication.md
+    sha256: 62f7737e74172d3d2177bd838c1bc44461d0a70c37cfd09d9e4669252b480775
+  v13: &v13
+    path: 5.0/en/0x22-V13-Configuration.md
+    sha256: f66ef1306eba07e04fcd0f23b52d082747f1b4fba0a19934167fb35507afba6d
+  v14: &v14
+    path: 5.0/en/0x23-V14-Data-Protection.md
+    sha256: a9ba33b7c77379fed0f27fd019945e10fa143c63b8c4e4783b7cf587c9f56039
+  v15: &v15
+    path: 5.0/en/0x24-V15-Secure-Coding-and-Architecture.md
+    sha256: 4c068e82b157159e9ab7099daecb40af4c2642ad791751f791a26785dead6b22
+not_applicable: &not_applicable
+  applicability: not-applicable
+  rationale: No production web application, HTTP endpoint, account system, token issuer, file-upload service, database, or deployed service exists in Phase 1; this control has no scoped implementation target.
+applies: &applies
+  applicability: applicable
+  verification_status: passed
+  command_or_evidence: "Task 1 security regression suite via tools/phase1-python."
+  observed_result: "Focused validator and matrix regression suite passed; linked remediations remain subject to human audit."
+controls:
+  - id: v5.0.0-1.2.1
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.2.2
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.2.3
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.2.4
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.2.5
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.3.1
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-1.3.2
+    source: *v1
+    <<: *applies
+    rationale: Phase 1 replay tooling must not execute dynamic untrusted code.
+    linked_references: [CR-06]
+  - id: v5.0.0-1.5.1
+    source: *v1
+    <<: *not_applicable
+  - id: v5.0.0-2.1.1
+    source: *v2
+    <<: *applies
+    rationale: Planning and validator records define strict input and identifier expectations for security-sensitive evidence.
+    linked_references: [CR-01, WR-03]
+  - id: v5.0.0-2.2.1
+    source: *v2
+    <<: *applies
+    rationale: Validators constrain citations, paths, retained output, canonical source input, and evidence record shape.
+    linked_references: [CR-01, CR-04, CR-05, WR-01, WR-02]
+  - id: v5.0.0-2.2.2
+    source: *v2
+    <<: *applies
+    rationale: Validation occurs in the trusted local toolchain rather than by untrusted fixture declarations or client state.
+    linked_references: [CR-02, CR-03, CR-07, CR-08]
+  - id: v5.0.0-2.3.1
+    source: *v2
+    <<: *applies
+    rationale: The fixed review, replay, recovery, and publication sequence rejects skipped security-critical steps.
+    linked_references: [CR-02, CR-07, CR-08]
+  - id: v5.0.0-3.2.1
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.2.2
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.3.1
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.4.1
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.4.2
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.5.1
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.5.2
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-3.5.3
+    source: *v3
+    <<: *not_applicable
+  - id: v5.0.0-4.1.1
+    source: *v4
+    <<: *not_applicable
+  - id: v5.0.0-4.4.1
+    source: *v4
+    <<: *not_applicable
+  - id: v5.0.0-5.2.1
+    source: *v5
+    <<: *not_applicable
+  - id: v5.0.0-5.2.2
+    source: *v5
+    <<: *not_applicable
+  - id: v5.0.0-5.3.1
+    source: *v5
+    <<: *not_applicable
+  - id: v5.0.0-5.3.2
+    source: *v5
+    <<: *applies
+    rationale: Evidence and replay validators confine locally supplied paths and reject traversal, symlinks, and non-regular files.
+    linked_references: [CR-05, WR-02]
+  - id: v5.0.0-6.1.1
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.1
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.2
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.3
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.4
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.5
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.6
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.7
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.2.8
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.3.1
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.3.2
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.4.1
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-6.4.2
+    source: *v6
+    <<: *not_applicable
+  - id: v5.0.0-7.2.1
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-7.2.2
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-7.2.3
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-7.2.4
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-7.4.1
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-7.4.2
+    source: *v7
+    <<: *not_applicable
+  - id: v5.0.0-8.1.1
+    source: *v8
+    <<: *not_applicable
+  - id: v5.0.0-8.2.1
+    source: *v8
+    <<: *not_applicable
+  - id: v5.0.0-8.2.2
+    source: *v8
+    <<: *not_applicable
+  - id: v5.0.0-8.3.1
+    source: *v8
+    <<: *not_applicable
+  - id: v5.0.0-9.1.1
+    source: *v9
+    <<: *not_applicable
+  - id: v5.0.0-9.1.2
+    source: *v9
+    <<: *not_applicable
+  - id: v5.0.0-9.1.3
+    source: *v9
+    <<: *not_applicable
+  - id: v5.0.0-9.2.1
+    source: *v9
+    <<: *not_applicable
+  - id: v5.0.0-10.4.1
+    source: *v10
+    <<: *not_applicable
+  - id: v5.0.0-10.4.2
+    source: *v10
+    <<: *not_applicable
+  - id: v5.0.0-10.4.3
+    source: *v10
+    <<: *not_applicable
+  - id: v5.0.0-10.4.4
+    source: *v10
+    <<: *not_applicable
+  - id: v5.0.0-10.4.5
+    source: *v10
+    <<: *not_applicable
+  - id: v5.0.0-11.3.1
+    source: *v11
+    <<: *not_applicable
+  - id: v5.0.0-11.3.2
+    source: *v11
+    <<: *not_applicable
+  - id: v5.0.0-11.4.1
+    source: *v11
+    <<: *applies
+    rationale: Immutable source, plan, toolchain, and evidence integrity checks use SHA-256 without treating a custom hash as cryptographic protocol implementation.
+    linked_references: [CR-09]
+  - id: v5.0.0-12.1.1
+    source: *v12
+    <<: *not_applicable
+  - id: v5.0.0-12.2.1
+    source: *v12
+    <<: *not_applicable
+  - id: v5.0.0-12.2.2
+    source: *v12
+    <<: *not_applicable
+  - id: v5.0.0-13.4.1
+    source: *v13
+    <<: *not_applicable
+  - id: v5.0.0-14.2.1
+    source: *v14
+    <<: *not_applicable
+  - id: v5.0.0-14.3.1
+    source: *v14
+    <<: *not_applicable
+  - id: v5.0.0-15.1.1
+    source: *v15
+    <<: *applies
+    rationale: The Phase 1 toolchain policy records dependency integrity and remediation constraints for the approved isolated tools.
+    linked_references: [CR-09, WR-03]
+  - id: v5.0.0-15.2.1
+    source: *v15
+    <<: *applies
+    rationale: The approved wrapper verifies the isolated toolchain before running evidence validators.
+    linked_references: [CR-09]
+  - id: v5.0.0-15.3.1
+    source: *v15
+    <<: *not_applicable

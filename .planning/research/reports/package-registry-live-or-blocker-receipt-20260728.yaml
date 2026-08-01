@@ -1,0 +1,45 @@
+schemaVersion: 1
+kind: registry-collection-receipt
+attemptId: REG-BLOCKER-20260728-001
+transport: live-or-blocker
+outcome: impact-scoped-blocker
+retrievedAt: '2026-07-28T00:00:00Z'
+request:
+  method: GET
+  canonicalUrl: https://registry.npmjs.org/%40napplet%2Fweb
+  allowedHost: registry.npmjs.org
+  redirectPolicy: refuse
+limits:
+  connectTimeoutSeconds: 5
+  readTimeoutSeconds: 5
+  timeoutSeconds: 10
+  maxResponseBytes: 65536
+blocker:
+  reason: Live registry collection was not run because the D-10 public-read and D-24
+    essential sandboxed credential-free predicates were not both explicitly declared;
+    no package command or import was attempted.
+  affectedRequirements:
+  - EVID-03
+  - EVID-04
+  - OPER-01
+  affectedPhases:
+  - '01'
+  affectedAdrs:
+  - ADR-0005
+  - ADR-0008
+  - ADR-0010
+  affectedQuestions:
+  - OQ-PUBLIC-PACKAGE-BASELINE-001
+  - OQ-PUBLIC-CONFORMANCE-001
+  affectedDrift:
+  - DRF-ARTIFACT-001
+  - DRF-CONFORMANCE-001
+  safeFallback: Keep the deterministic static path dependency-free and retain SPK-G
+    package admission as blocked.
+  refreshTrigger: Collect a public read-only registry response only after the exact
+    package scope is essential, sandboxed, credential-free, and separately approved;
+    then revalidate every receipt and eligibility field.
+authority:
+  classification: impact-scoped-blocker
+  statement: No live registry observation was made, and no fixture response may be
+    promoted to a published-package fact.

@@ -1,0 +1,432 @@
+{
+  "blockers": {
+    "CLM-CMP-PACKAGE-001": {
+      "id": "CLM-CMP-PACKAGE-001",
+      "label": "Package and public-artifact qualification",
+      "sourceIds": [
+        "SRC-POLICY-002"
+      ],
+      "state": "blocked",
+      "statement": "No public artifact, integrity/root-export proof, package admission, conformance target, or measurement is available."
+    },
+    "CMP-BASELINE-001": {
+      "id": "CMP-BASELINE-001",
+      "label": "Runtime, browser, and teaching host",
+      "sourceIds": [
+        "SRC-POLICY-002",
+        "SRC-KEHTO-WEB-PAJA-20260731"
+      ],
+      "state": "blocked",
+      "statement": "No common qualified runtime or cross-browser result exists. Implementation observations do not close this gap."
+    },
+    "DRF-CONFORMANCE-001": {
+      "id": "DRF-CONFORMANCE-001",
+      "label": "Conformance and native qualification",
+      "sourceIds": [
+        "SRC-NAMPLETS-NATIVE-20260731",
+        "SRC-POLICY-002"
+      ],
+      "state": "blocked",
+      "statement": "Do not infer conformance from native-reference text or README tooling descriptions."
+    },
+    "OQ-UPSTREAM-BASELINE-001": {
+      "id": "OQ-UPSTREAM-BASELINE-001",
+      "label": "Direct NIP-5D authority, NAP registry, and projection",
+      "sourceIds": [
+        "SRC-NAPS-NAP-INTENT-20260731",
+        "SRC-POLICY-002"
+      ],
+      "state": "blocked",
+      "statement": "Direct authoritative NIP-5D and NAP registry/projection evidence remains missing or unreviewed. Do not state a protocol rule or selected architecture."
+    }
+  },
+  "facts": {
+    "CLM-KEHTO-WEB-PAJA-20260731": {
+      "authorityTier": "official repository observation",
+      "evidenceClass": "implementation",
+      "id": "CLM-KEHTO-WEB-PAJA-20260731",
+      "label": "Paja implementation claim",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited kehto/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "sourceIds": [
+        "SRC-KEHTO-WEB-PAJA-20260731"
+      ],
+      "state": "provisional",
+      "statement": "Paja documents local authoring/testing, live-relay defaults, and a memory fixture mode. This does not select a teaching host or qualify a runtime.",
+      "uncertainty": "material",
+      "uncertaintyReason": "Live-service defaults and a deterministic fixture option do not demonstrate compatibility, a safe teaching-host profile, or NAP/NIP requirements."
+    },
+    "CLM-NAMPLETS-NATIVE-20260731": {
+      "authorityTier": "optional native reference observation",
+      "evidenceClass": "implementation",
+      "id": "CLM-NAMPLETS-NATIVE-20260731",
+      "label": "Nampplets native-reference claim",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited Nampplets head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "sourceIds": [
+        "SRC-NAMPLETS-NATIVE-20260731"
+      ],
+      "state": "provisional",
+      "statement": "Nampplets is an in-progress native reference with an unratified compatibility lock. It does not qualify web, portable, package, or NAP/NIP behavior.",
+      "uncertainty": "material",
+      "uncertaintyReason": "A native reference host cannot establish web-runtime behavior, package admission, portable-target eligibility, or a selected teaching host."
+    },
+    "CLM-NAP-INTENT-20260731": {
+      "authorityTier": "repository-local NAP specification",
+      "evidenceClass": "specification",
+      "id": "CLM-NAP-INTENT-20260731",
+      "label": "NAP-INTENT draft claim",
+      "maturity": "draft",
+      "refreshTrigger": "Re-fetch only if the cited napplet/naps head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "sourceIds": [
+        "SRC-NAPS-NAP-INTENT-20260731"
+      ],
+      "state": "provisional",
+      "statement": "A draft names NAP-INTENT, an archetype intent dispatcher, and a NIP-5D web binding. It does not resolve direct NIP-5D authority or compatibility.",
+      "uncertainty": "material",
+      "uncertaintyReason": "The repository-local draft cannot settle its referenced NIP-5D binding, runtime behavior, or cross-implementation compatibility."
+    },
+    "CLM-NAPPLET-WEB-20260731": {
+      "authorityTier": "official repository observation",
+      "evidenceClass": "implementation",
+      "id": "CLM-NAPPLET-WEB-20260731",
+      "label": "napplet/web alpha claim",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited napplet/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "sourceIds": [
+        "SRC-NAPPLET-WEB-20260731"
+      ],
+      "state": "provisional",
+      "statement": "napplet/web describes its own alpha SDK and shell model. It is not NAP/NIP authority, a package qualification, or runtime/browser proof.",
+      "uncertainty": "material",
+      "uncertaintyReason": "Repository implementation prose and mutable PR direction cannot establish normative behavior, published-artifact integrity, or browser support."
+    },
+    "CLM-UPSTREAM-BASELINE-001": {
+      "authorityTier": "project policy",
+      "evidenceClass": "project policy",
+      "id": "CLM-UPSTREAM-BASELINE-001",
+      "label": "Upstream baseline blocker",
+      "maturity": "accepted",
+      "refreshTrigger": "Refresh only after direct authoritative NIP/NAP records are pinned and the required review changes claim state.",
+      "sourceIds": [
+        "SRC-NAPS-NAP-INTENT-20260731",
+        "SRC-NAPPLET-WEB-20260731",
+        "SRC-KEHTO-WEB-PAJA-20260731",
+        "SRC-NAMPLETS-NATIVE-20260731",
+        "SRC-POLICY-002"
+      ],
+      "state": "blocked",
+      "statement": "The four sources improve traceability but do not establish a reviewed comprehensive NAP/NIP protocol conclusion or first-lab recommendation.",
+      "uncertainty": "material",
+      "uncertaintyReason": "A pinned draft or implementation observation does not establish reviewed protocol behavior or compatibility."
+    },
+    "FACT-HOST-BOUNDARY-001": {
+      "authorityTier": "project policy",
+      "evidenceClass": "project policy",
+      "id": "FACT-HOST-BOUNDARY-001",
+      "label": "Authority boundary teaching model",
+      "maturity": "accepted",
+      "refreshTrigger": "Refresh if the project evidence policy changes or reviewed direct authority changes the teaching boundary.",
+      "sourceIds": [
+        "SRC-POLICY-002"
+      ],
+      "state": "provisional",
+      "statement": "Authority stays with the host; a focused untrusted napplet receives only declared mediated capabilities.",
+      "uncertainty": "limited",
+      "uncertaintyReason": "This is a project-policy mental model for the learning surface, not a verified upstream runtime rule."
+    },
+    "FACT-LEARNING-PATH-001": {
+      "authorityTier": "project policy",
+      "evidenceClass": "project policy",
+      "id": "FACT-LEARNING-PATH-001",
+      "label": "Deterministic reading path",
+      "maturity": "accepted",
+      "refreshTrigger": "Refresh if the site content contract or approved learning scope changes.",
+      "sourceIds": [
+        "SRC-POLICY-002"
+      ],
+      "state": "provisional",
+      "statement": "Follow one note journey as a reading exercise: compose, identify the authority boundary, inspect a mediated request/result model, then inspect the evidence status behind each assertion.",
+      "uncertainty": "limited",
+      "uncertaintyReason": "This is a deterministic learning sequence, not an observation of a selected runtime or protocol flow."
+    },
+    "FACT-STATIC-SCOPE-001": {
+      "authorityTier": "project policy",
+      "evidenceClass": "project policy",
+      "id": "FACT-STATIC-SCOPE-001",
+      "label": "Static-site scope boundary",
+      "maturity": "accepted",
+      "refreshTrigger": "Refresh if the approved static-site scope or evidence policy changes.",
+      "sourceIds": [
+        "SRC-POLICY-002"
+      ],
+      "state": "provisional",
+      "statement": "This site is a static explanation, not a runtime: it does not execute a host or guest, install a package, contact a relay, or hold wallet or signing authority.",
+      "uncertainty": "limited",
+      "uncertaintyReason": "The owner-authorized exception is narrow and does not accept an ADR, runtime, package, deployment, or Phase 2 transition."
+    }
+  },
+  "pages": {
+    "architecture": {
+      "blockerIds": [
+        "OQ-UPSTREAM-BASELINE-001",
+        "CMP-BASELINE-001"
+      ],
+      "eyebrow": "Architecture · conceptual model",
+      "factIds": [
+        "FACT-HOST-BOUNDARY-001",
+        "FACT-STATIC-SCOPE-001"
+      ],
+      "id": "PAGE-ARCHITECTURE",
+      "lead": "A precise boundary is more useful than an imaginary integration. This page is a labeled project-policy teaching model.",
+      "relationshipIds": [
+        "REL-HOST-GUEST-MENTAL-MODEL-001"
+      ],
+      "route": "architecture/index.html",
+      "termIds": [
+        "TERM-NIP-5D"
+      ],
+      "title": "The host keeps authority"
+    },
+    "home": {
+      "blockerIds": [
+        "OQ-UPSTREAM-BASELINE-001"
+      ],
+      "eyebrow": "Learn Napplets · field note 01",
+      "factIds": [
+        "FACT-HOST-BOUNDARY-001",
+        "FACT-STATIC-SCOPE-001"
+      ],
+      "id": "PAGE-HOME",
+      "lead": "Read the authority boundary first. Then inspect the evidence that limits what this site can safely say.",
+      "relationshipIds": [
+        "REL-HOST-GUEST-MENTAL-MODEL-001"
+      ],
+      "route": "index.html",
+      "termIds": [
+        "TERM-NAP-INTENT",
+        "TERM-NIP-5D"
+      ],
+      "title": "Authority, without pretending certainty"
+    },
+    "learn": {
+      "blockerIds": [
+        "CMP-BASELINE-001"
+      ],
+      "eyebrow": "Learning path · deterministic",
+      "factIds": [
+        "FACT-LEARNING-PATH-001",
+        "FACT-HOST-BOUNDARY-001"
+      ],
+      "id": "PAGE-LEARN",
+      "lead": "This route is a static sequence. It makes the authority boundary inspectable without a live service or runtime.",
+      "relationshipIds": [
+        "REL-HOST-GUEST-MENTAL-MODEL-001"
+      ],
+      "route": "learn/index.html",
+      "termIds": [
+        "TERM-NAP-INTENT",
+        "TERM-NAPPLET-WEB",
+        "TERM-PAJA"
+      ],
+      "title": "A note journey, read in order"
+    },
+    "sources": {
+      "blockerIds": [
+        "OQ-UPSTREAM-BASELINE-001",
+        "CLM-CMP-PACKAGE-001",
+        "CMP-BASELINE-001",
+        "DRF-CONFORMANCE-001"
+      ],
+      "eyebrow": "Source ledger · immutable identities",
+      "factIds": [
+        "CLM-NAP-INTENT-20260731",
+        "CLM-NAPPLET-WEB-20260731",
+        "CLM-KEHTO-WEB-PAJA-20260731",
+        "CLM-NAMPLETS-NATIVE-20260731",
+        "CLM-UPSTREAM-BASELINE-001"
+      ],
+      "id": "PAGE-SOURCES",
+      "lead": "Every essential claim retains its authority tier, evidence class, maturity, state, uncertainty, source identity, and refresh trigger.",
+      "relationshipIds": [],
+      "route": "sources/index.html",
+      "termIds": [
+        "TERM-NAP-INTENT",
+        "TERM-NAPPLET-WEB",
+        "TERM-PAJA",
+        "TERM-NAMPLETS-NATIVE",
+        "TERM-NIP-5D"
+      ],
+      "title": "Evidence, with its limits attached"
+    }
+  },
+  "relationships": {
+    "REL-HOST-GUEST-MENTAL-MODEL-001": {
+      "classification": "project-policy teaching model",
+      "id": "REL-HOST-GUEST-MENTAL-MODEL-001",
+      "label": "Conceptual mediated authority path",
+      "refreshTrigger": "Refresh if approved authority-boundary policy or reviewed direct upstream evidence changes the model.",
+      "sourceIds": [
+        "SRC-POLICY-002"
+      ],
+      "state": "provisional",
+      "steps": [
+        {
+          "action": "A note is considered in a conceptual learning scenario; this site does not create or send it.",
+          "actor": "Learner's note",
+          "id": "STEP-01"
+        },
+        {
+          "action": "A focused guest asks for a declared capability rather than possessing host authority.",
+          "actor": "Untrusted napplet",
+          "id": "STEP-02"
+        },
+        {
+          "action": "The host evaluates policy and may mediate the request; no host runs in this static site.",
+          "actor": "Trusted host",
+          "id": "STEP-03"
+        },
+        {
+          "action": "A bounded result returns to the guest model; protocol envelopes and runtime behavior remain unresolved.",
+          "actor": "Result boundary",
+          "id": "STEP-04"
+        }
+      ],
+      "transcript": "Conceptual transcript: a learner considers a note; an untrusted guest requests a declared capability; a trusted host policy boundary mediates or declines; a bounded result is shown. This transcript is a static teaching model, not a runtime capture."
+    }
+  },
+  "schemaVersion": 1,
+  "site": {
+    "edition": "Static evidence edition · 2026-07-31",
+    "scopeNote": "This is a dependency-free conceptual learning surface. It does not run a host, guest napplet, package, relay, wallet, signer, or browser lab.",
+    "strapline": "A field guide to authority boundaries and evidence status",
+    "title": "Learn Napplets"
+  },
+  "sources": {
+    "SRC-KEHTO-WEB-PAJA-20260731": {
+      "authorityTier": "official repository observation",
+      "digest": "dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33",
+      "evidenceClass": "implementation",
+      "id": "SRC-KEHTO-WEB-PAJA-20260731",
+      "immutableUrl": "https://github.com/kehto/web/blob/d42b3c3da7e0ad3cea233b34458997b09b11960d/packages/paja/README.md",
+      "label": "Paja implementation observation",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited kehto/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "sourceIdentity": "kehto/web@d42b3c3da7e0ad3cea233b34458997b09b11960d:packages/paja/README.md",
+      "state": "provisional",
+      "uncertainty": "material",
+      "uncertaintyReason": "Paja documentation records implementation-specific local authoring and live-service defaults; it cannot select a teaching host or prove cross-browser behavior."
+    },
+    "SRC-NAMPLETS-NATIVE-20260731": {
+      "authorityTier": "optional native reference observation",
+      "digest": "3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b",
+      "evidenceClass": "implementation",
+      "id": "SRC-NAMPLETS-NATIVE-20260731",
+      "immutableUrl": "https://github.com/pablof7z/nampplets/blob/1094f1db23292f966fd65757132678406f7ca28c/README.md",
+      "label": "Nampplets native reference observation",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited Nampplets head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "sourceIdentity": "pablof7z/nampplets@1094f1db23292f966fd65757132678406f7ca28c:README.md",
+      "state": "provisional",
+      "uncertainty": "material",
+      "uncertaintyReason": "A native reference cannot qualify web runtime behavior, a portable target, a package, or NAP/NIP behavior."
+    },
+    "SRC-NAPPLET-WEB-20260731": {
+      "authorityTier": "official repository observation",
+      "digest": "f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae",
+      "evidenceClass": "implementation",
+      "id": "SRC-NAPPLET-WEB-20260731",
+      "immutableUrl": "https://github.com/napplet/web/blob/03ad65b66413e5798536ef48695ffc4c2508f2c3/README.md",
+      "label": "napplet/web alpha observation",
+      "maturity": "implementation-specific",
+      "refreshTrigger": "Re-fetch only if the cited napplet/web head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "sourceIdentity": "napplet/web@03ad65b66413e5798536ef48695ffc4c2508f2c3:README.md",
+      "state": "provisional",
+      "uncertainty": "material",
+      "uncertaintyReason": "An alpha implementation description is not NAP/NIP authority, package qualification, or runtime/browser proof."
+    },
+    "SRC-NAPS-NAP-INTENT-20260731": {
+      "authorityTier": "repository-local NAP specification",
+      "digest": "d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0",
+      "evidenceClass": "specification",
+      "id": "SRC-NAPS-NAP-INTENT-20260731",
+      "immutableUrl": "https://github.com/napplet/naps/blob/5ac0490461ca6fec2f0d2e45b4835cf9bc08de24/naps/NAP-INTENT.md",
+      "label": "NAP-INTENT draft",
+      "maturity": "draft",
+      "refreshTrigger": "Re-fetch only if the cited napplet/naps head changes after 2026-07-31, the pinned blob becomes unavailable, or review requires a different source scope.",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "sourceIdentity": "napplet/naps@5ac0490461ca6fec2f0d2e45b4835cf9bc08de24:naps/NAP-INTENT.md",
+      "state": "provisional",
+      "uncertainty": "material",
+      "uncertaintyReason": "The draft names a NIP-5D web binding but does not settle direct NIP-5D authority, projection, runtime, or browser behavior."
+    },
+    "SRC-POLICY-002": {
+      "authorityTier": "project policy",
+      "digest": "9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2",
+      "evidenceClass": "project policy",
+      "id": "SRC-POLICY-002",
+      "immutableUrl": "https://github.com/jodobear/learn-napplets/blob/b534103068be8c07e6869bfb7290fb60fdd87c8c/.planning/governance/evidence-policy.md",
+      "label": "Phase 1 evidence policy",
+      "maturity": "accepted",
+      "refreshTrigger": "Refresh if the policy revision or digest changes.",
+      "retrievedAt": "2026-07-24T00:00:00Z",
+      "sourceIdentity": "jodobear/learn-napplets@b534103068be8c07e6869bfb7290fb60fdd87c8c:.planning/governance/evidence-policy.md",
+      "state": "provisional",
+      "uncertainty": "limited",
+      "uncertaintyReason": "This governs project handling of evidence; it does not prove an upstream protocol fact."
+    }
+  },
+  "terms": {
+    "TERM-NAMPLETS-NATIVE": {
+      "classification": "optional native-reference term",
+      "definition": "An in-progress native Rust and macOS reference host; it cannot qualify a web runtime, portable target, package, or NAP/NIP behavior.",
+      "id": "TERM-NAMPLETS-NATIVE",
+      "label": "Nampplets native reference",
+      "sourceIds": [
+        "SRC-NAMPLETS-NATIVE-20260731"
+      ],
+      "state": "provisional"
+    },
+    "TERM-NAP-INTENT": {
+      "classification": "draft NAP specification term",
+      "definition": "A repository-local draft term for an archetype intent dispatcher that labels a NIP-5D web binding; it is not a reviewed authoritative NIP-5D definition.",
+      "id": "TERM-NAP-INTENT",
+      "label": "NAP-INTENT",
+      "sourceIds": [
+        "SRC-NAPS-NAP-INTENT-20260731"
+      ],
+      "state": "provisional"
+    },
+    "TERM-NAPPLET-WEB": {
+      "classification": "observed implementation term",
+      "definition": "An alpha SDK and shell repository observation whose implementation prose does not establish protocol authority, package qualification, or compatibility.",
+      "id": "TERM-NAPPLET-WEB",
+      "label": "napplet/web",
+      "sourceIds": [
+        "SRC-NAPPLET-WEB-20260731"
+      ],
+      "state": "provisional"
+    },
+    "TERM-NIP-5D": {
+      "classification": "blocked unresolved-upstream term",
+      "definition": "No current authoritative definition is recorded; do not infer scope, transport, sandbox, sender, manifest, or identity behavior.",
+      "id": "TERM-NIP-5D",
+      "label": "NIP-5D",
+      "sourceIds": [],
+      "state": "blocked"
+    },
+    "TERM-PAJA": {
+      "classification": "observed implementation term",
+      "definition": "A Kehto local-authoring/testing runtime observation with live-relay defaults and an explicit memory fixture mode; it is not a selected teaching host.",
+      "id": "TERM-PAJA",
+      "label": "Paja",
+      "sourceIds": [
+        "SRC-KEHTO-WEB-PAJA-20260731"
+      ],
+      "state": "provisional"
+    }
+  }
+}

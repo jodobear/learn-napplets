@@ -5,3 +5,7 @@
 .planning/spikes/*/.experiment/
 __pycache__/
 
+# Runtime lock files used by canonical transaction readers and publishers.
+.canonical-recovery.lock
+.planning/.canonical-recovery.lock
+

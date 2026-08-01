@@ -1,0 +1,562 @@
+schemaVersion: 1
+claims:
+- id: CLM-CMP-EXAMPLE-001
+  kind: claim
+  statement: No immutable example napplet baseline is available for compatibility
+    assessment.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: unknown
+  state: blocked
+  stateReason: Observed repository material does not supply a reproducible example/fixture
+    baseline.
+  uncertainty: &id001
+    state: material
+    reason: A current immutable upstream baseline is absent.
+  impacts: &id002
+    requirements:
+    - EVID-02
+    - EVID-03
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Freshness
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: independent-corroboration
+    locator: Research completion standard
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  review: &id003
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  blocking: true
+  blockedDetails:
+    scope: Example compatibility only.
+    safeFallback: Do not present an example as conformant.
+    approver: project-owner
+    date: 2026-07-24
+    revisitCriterion: Collect public immutable example evidence.
+- id: CLM-CMP-FIXTURE-001
+  kind: claim
+  statement: No immutable conformance fixture baseline is available for compatibility
+    assessment.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: unknown
+  state: blocked
+  stateReason: Observed repository material does not supply a public conformance fixture.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations:
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Freshness
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: independent-corroboration
+    locator: Research completion standard
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  review: *id003
+  blocking: true
+  blockedDetails:
+    scope: Fixture and conformance compatibility only.
+    safeFallback: Do not claim conformance.
+    approver: project-owner
+    date: 2026-07-24
+    revisitCriterion: Collect public immutable fixture evidence.
+- id: CLM-CMP-PACKAGE-001
+  kind: claim
+  statement: No immutable public napplet/web release or export baseline is available
+    for compatibility assessment.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: unknown
+  state: blocked
+  stateReason: Receipt-bound repository release metadata is observed-only and not
+    an independently retrieved registry artifact, root-export proof, compatibility
+    result, or package admission.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations:
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Freshness
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: independent-corroboration
+    locator: Research completion standard
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  review: *id003
+  blocking: true
+  blockedDetails:
+    scope: Package export compatibility only.
+    safeFallback: Do not infer behavior from a private path or unpublished build.
+    approver: project-owner
+    date: 2026-07-24
+    revisitCriterion: Collect a qualified public artifact, release/current-work comparison,
+      seven qualified dimensions, and separate package approval.
+- id: CLM-CMP-RUNTIME-001
+  kind: claim
+  statement: No immutable credible runtime baseline is available for compatibility
+    assessment.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: unknown
+  state: blocked
+  stateReason: Observed repository material does not supply independent runtime measurement.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations:
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Freshness
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: independent-corroboration
+    locator: Research completion standard
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  review: *id003
+  blocking: true
+  blockedDetails:
+    scope: Runtime compatibility only.
+    safeFallback: Do not infer runtime behavior.
+    approver: project-owner
+    date: 2026-07-24
+    revisitCriterion: Collect public immutable runtime evidence.
+- id: CLM-CMP-TEST-001
+  kind: claim
+  statement: Current compatibility status is an explicit blocked baseline, not a successful
+    conformance result.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The validation tool can prove record consistency but cannot establish
+    upstream compatibility.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: &id004
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Freshness
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  review: *id003
+  blocking: false
+- id: CLM-DRF-ARTIFACT-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable public release evidence before artifact
+    behavior is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-ARTIFACT-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names artifact-versus-build comparison
+    as a research question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: &id005
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: primary
+    locator: Known high-risk drift to re-verify
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  review: *id003
+  blocking: false
+- id: CLM-DRF-CONFORMANCE-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable public conformance evidence before
+    retired behavior is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-CONFORMANCE-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names conformance comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-DISCOVERY-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable source evidence before protocol meaning
+    is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-DISCOVERY-OBSERVED
+  kind: claim
+  statement: The preserved planning archive identifies a discovery comparison question
+    but is not current upstream proof.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-EGRESS-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable source and measurement evidence before
+    browser egress behavior is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-EGRESS-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names browser egress comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-HANDSHAKE-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable NIP-5D evidence before bootstrap behavior
+    is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-HANDSHAKE-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names handshake comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-IDENTITY-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable identity evidence before dTag behavior
+    is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-IDENTITY-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names identity comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-INTENT-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable catalog evidence before handler assumptions
+    are concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-INTENT-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names intent-handler comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-MANIFEST-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable manifest evidence before kind behavior
+    is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-MANIFEST-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names manifest-kind comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-METADATA-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable registry evidence before archetype
+    or convention metadata is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-METADATA-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names metadata comparison as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-DRF-UNKNOWN-NORMATIVE
+  kind: claim
+  statement: Project policy requires immutable evidence before unknown-message behavior
+    is concluded.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: This is a governing evidence rule, not an upstream protocol conclusion.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id004
+  review: *id003
+  blocking: false
+- id: CLM-DRF-UNKNOWN-OBSERVED
+  kind: claim
+  statement: The preserved planning archive names unknown-message behavior as a research
+    question, not a protocol fact.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: The archived question is directional planning context only.
+  uncertainty: *id001
+  impacts: *id002
+  sourceRelations: *id005
+  review: *id003
+  blocking: false
+- id: CLM-POLICY-001
+  kind: claim
+  statement: Phase 1 policy requires immutable source identity and human review before
+    a claim can be verified.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: provisional
+  stateReason: Policy is structurally validated; it does not itself approve a protocol-sensitive
+    claim.
+  uncertainty:
+    state: limited
+    reason: This constrains project process and does not prove an upstream protocol
+      fact.
+  impacts:
+    requirements:
+    - EVID-01
+    - OPER-03
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: primary
+    locator: Required fields and verification rule
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+  blocking: false
+- id: CLM-UPSTREAM-BASELINE-001
+  kind: claim
+  statement: No current upstream NAP/NIP protocol conclusion or first-lab recommendation
+    is established until an official immutable source record is collected and reviewed.
+  rawOrigin: project-policy
+  assertionKind: project-policy
+  evidenceClass: project-policy
+  maturity: accepted
+  state: blocked
+  stateReason: The reviewed receipt records bounded immutable repository observations
+    and one zero-result history window, but qualified normative NIP/NAP authority
+    and technical review remain absent.
+  uncertainty:
+    state: material
+    reason: The absence of a pinned source does not establish protocol behavior.
+  impacts:
+    requirements:
+    - EVID-01
+    - EVID-02
+    phases:
+    - '01'
+  sourceRelations:
+  - sourceId: SRC-POLICY-001
+    relation: supports
+    role: primary
+    locator: Source and claim record model
+    excerptSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
+  - sourceId: SRC-POLICY-002
+    relation: supports
+    role: independent-corroboration
+    locator: Required fields and verification rule
+    excerptSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
+  - sourceId: SRC-NAPPLET-WEB-PR184-20260728
+    relation: supports
+    role: primary
+    locator: commit:4916777862ababd09fa13cf155f4b4079c8e8cb1 path:packages/cli/src/manifest.ts
+    excerptSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
+  - sourceId: SRC-NAPPLET-WEB-PR184-20260728
+    relation: affects
+    role: context
+    locator: receipt:.planning/research/reports/upstream-acquisition-20260728.md sha256:9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329;
+      reviewedCommit:1a9449be4d74aa1ceed235d949802266846cf63b; commit:4916777862ababd09fa13cf155f4b4079c8e8cb1
+      path:packages/cli/src/manifest.ts
+    excerptSha256: 74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8
+  review:
+    owner: research-owner
+    status: pending
+    requiredRoles:
+    - protocol-technical
+    - content-learning
+  blocking: true
+  blockedDetails:
+    scope: Current upstream protocol, implementation, and first-lab selection conclusions
+      only; the receipt-bound observed implementation source is non-normative and
+      cannot resolve this blocker.
+    safeFallback: Defer dependent decisions and teach no asserted protocol behavior.
+    approver: project-owner
+    date: 2026-07-24
+    revisitCriterion: Collect direct authoritative NIP/NAP records with immutable
+      locators and required review; receipt-bound observations remain non-normative
+      context only.

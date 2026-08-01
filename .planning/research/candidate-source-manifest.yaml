@@ -88,6 +88,58 @@ candidates:
     role: pedagogy comparison
     discoveryPointer: https://www.theodinproject.com/
     acquisitionState: blocked
+observedCandidates:
+  - id: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    repository: napplet/web
+    collectionResult: collected
+    evidenceClass: observed-implementation
+    authority: observed-only-not-normative
+    immutableLocator: "https://github.com/napplet/web/blob/4916777862ababd09fa13cf155f4b4079c8e8cb1/packages/cli/src/manifest.ts"
+    canonicalSourceId: SRC-NAPPLET-WEB-PR184-20260728
+    authorityIntakeScope: CAND-SRC-NAPPLET-WEB-PR184-20260728
+    refreshTrigger: "NIP-5A/NIP-5D, web release, or default-branch change."
+  - id: CAND-SRC-NAPPLET-WEB-PR186-20260728
+    repository: napplet/web
+    collectionResult: collected
+    evidenceClass: observed-implementation
+    authority: observed-only-not-normative
+    immutableLocator: "https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts"
+    refreshTrigger: "Linked NAP status/revision, web release/default-branch change, or Phase 2 contract review."
+  - id: CAND-SRC-NAPPLET-WEB-PR188-20260728
+    repository: napplet/web
+    collectionResult: collected
+    evidenceClass: release-metadata
+    authority: observed-only-not-normative
+    immutableLocator: "https://github.com/napplet/web/blob/60889f1c2476e063500c7ab6624af6abe0dbcbe5/packages/nap/package.json"
+    refreshTrigger: "Registry/release/integrity/export change or package admission review."
+  - id: CAND-SRC-KEHTO-WEB-PR204-20260728
+    repository: kehto/web
+    collectionResult: collected
+    evidenceClass: observed-implementation
+    authority: observed-only-not-normative
+    immutableLocator: "https://github.com/kehto/web/blob/b85db51db838866de753b275b9d34ec908785bd2/RUNTIME-SPEC.md"
+    refreshTrigger: "Listed runtime source-path or default-branch change."
+  - id: CAND-SRC-KEHTO-WEB-PR209-20260728
+    repository: kehto/web
+    collectionResult: collected
+    evidenceClass: release-metadata
+    authority: observed-only-not-normative
+    immutableLocator: "https://github.com/kehto/web/blob/4eafa058d18cf245b23d49b23bc29dda0b7d7651/packages/runtime/package.json"
+    refreshTrigger: "Registry integrity/current runtime manifest change."
+  - id: CAND-SRC-KEHTO-WEB-PR211-20260728
+    repository: kehto/web
+    collectionResult: failed
+    evidenceClass: observed-implementation
+    authority: observed-only-not-normative
+    immutableLocator: "repository identity/default-branch checkpoint only"
+    refreshTrigger: "Loader/audit path or default-branch change."
+  - id: CAND-SRC-NAPS-WINDOW-20260728
+    repository: napplet/naps
+    collectionResult: observed-zero-result
+    evidenceClass: repository-history-observation
+    authority: observed-only-not-normative
+    immutableLocator: "repository identity/default-branch checkpoint only"
+    refreshTrigger: "Next bounded rolling-window review; this is not an authority or content source."
 blockedDisposition:
   authenticityLimitation: Each discovery pointer is mutable or unverified and cannot serve as immutable evidence.
   affectedClaims: [CLM-UPSTREAM-BASELINE-001]

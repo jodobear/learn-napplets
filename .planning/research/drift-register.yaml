@@ -1,11 +1,12 @@
-schemaVersion: 1
+schemaVersion: 2
 drift:
 - id: DRF-ARTIFACT-001
   kind: drift
   topic: exact artifact versus build output
   status: blocked
-  statusReason: No public package release or exact build-output evidence has been
-    pinned.
+  statusReason: The 2026-07-31 napplet/web source and separately retained PR-194 filesystem-named
+    release direction are implementation metadata only; no public artifact, integrity,
+    root-export, or package-admission evidence is established.
   normative:
     claimId: CLM-DRF-ARTIFACT-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -48,10 +49,6 @@ drift:
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
-    reason: Recorded as a parallel research question without inferring an upstream
-      fact.
-  - at: '2026-07-24T00:00:00Z'
-    state: blocked
     reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
       SPK-D retains the existing blocked artifact drift record; synthetic bytes cannot
       establish release or loader behavior.
@@ -60,6 +57,32 @@ drift:
     reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
       Retain the blocked artifact drift record because no public release artifact,
       integrity value, or implementation baseline was available.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR188-20260728: https://github.com/napplet/web/blob/60889f1c2476e063500c7ab6624af6abe0dbcbe5/packages/nap/package.json;
+      result=collected; contentSha256=dd29100a7fcae6fa007436bc17f5f7440a0ed928710b54d85804fd0675743909;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-KEHTO-WEB-PR209-20260728: https://github.com/kehto/web/blob/4eafa058d18cf245b23d49b23bc29dda0b7d7651/packages/runtime/package.json;
+      result=collected; contentSha256=6d2cde35473df0f64afed674713ec44a9f10e33ae96b9fa57c46f4e46befd432;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-KEHTO-WEB-PR211-20260728: checkpoint:main; result=failed; contentSha256=no-content-digest;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-31T03:08:39Z'
+    state: blocked
+    reason: 'OWS-004 binds SRC-NAPPLET-WEB-20260731 and separately retains PR-194 as
+      filesystem-named release direction only; neither is a public artifact, integrity,
+      root-export, or package-admission proof.'
   review:
     owner: research-owner
     status: pending
@@ -76,8 +99,8 @@ drift:
   kind: drift
   topic: conformance/private-or-retired behavior
   status: blocked
-  statusReason: No public conformance fixture or immutable package/runtime observation
-    has been collected.
+  statusReason: The native-reference source describes an unratified compatibility lock;
+    it is an observed implementation side, not measured public conformance or qualification.
   normative:
     claimId: CLM-DRF-CONFORMANCE-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -91,17 +114,17 @@ drift:
     maturity: accepted
     evidenceClass: project-policy
   observed:
-    claimId: CLM-DRF-CONFORMANCE-OBSERVED
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Known high-risk drift to re-verify
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: The preserved research question identifies discovery comparison work
-      but is not current upstream proof.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    claimId: CLM-NAMPLETS-NATIVE-20260731
+    sourceId: SRC-NAMPLETS-NATIVE-20260731
+    commitSha: 1094f1db23292f966fd65757132678406f7ca28c
+    path: README.md
+    locator: Native reference overview and unratified compatibility lock
+    contentSha256: 3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b
+    statement: The in-progress native reference reports an intentionally unratified
+      compatibility lock; it does not establish web, portable, package, or public conformance.
+    authorityTier: optional-native-reference-observation
+    maturity: implementation-specific
+    evidenceClass: implementation
   impacts:
     content:
     - LES-001
@@ -120,13 +143,24 @@ drift:
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
-    reason: Recorded as a parallel research question without inferring an upstream
-      fact.
-  - at: '2026-07-24T00:00:00Z'
-    state: blocked
     reason: Consolidated SPK-G-IMPACT-001 fragment SHA-256 0814880f4d58a28a7702f40931841b5e151d19aa8a959d779701019e3b19cae1;
       Retain the blocked conformance drift record because no public fixture or conformance
       target was available to execute.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-KEHTO-WEB-PR204-20260728: https://github.com/kehto/web/blob/b85db51db838866de753b275b9d34ec908785bd2/RUNTIME-SPEC.md;
+      result=collected; contentSha256=19e3106519d91bf29f5703989846072f4f223e27a644a2aee4d2c86eb9477fb8;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-31T03:08:39Z'
+    state: blocked
+    reason: 'OWS-004 binds SRC-NAMPLETS-NATIVE-20260731 as an optional native reference
+      whose compatibility lock remains unratified; it retains the public-conformance,
+      package, web-runtime, and approval blockers.'
   review:
     owner: research-owner
     status: pending
@@ -143,7 +177,8 @@ drift:
   kind: drift
   topic: discovery model
   status: blocked
-  statusReason: No immutable official discovery or registry baseline has been collected.
+  statusReason: Receipt-bound observed implementation history is retained without
+    replacing the normative side, discovery history, or pending authority conditions.
   normative:
     claimId: CLM-DRF-DISCOVERY-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -188,6 +223,12 @@ drift:
     state: blocked
     reason: Recorded as a parallel research question without inferring an upstream
       fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPS-WINDOW-20260728: checkpoint:5ac0490461ca6fec2f0d2e45b4835cf9bc08de24;
+      result=observed-zero-result; contentSha256=no-content-digest; authority=observed-only-not-normative;
+      retains all normative and approval blockers.'
   review:
     owner: research-owner
     status: pending
@@ -204,32 +245,20 @@ drift:
   kind: drift
   topic: browser egress versus mediated access
   status: blocked
-  statusReason: No named browser measurement or immutable mediated-access source has
-    been collected.
-  normative:
-    claimId: CLM-DRF-EGRESS-NORMATIVE
-    sourceId: SRC-POLICY-002
-    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
-    path: .planning/governance/evidence-policy.md
-    locator: Freshness
-    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-    statement: Project policy requires an immutable source baseline before a protocol
-      conclusion.
-    authorityTier: project-policy
-    maturity: accepted
-    evidenceClass: project-policy
+  statusReason: Receipt-bound observed implementation history is retained without
+    replacing the normative side, discovery history, or pending authority conditions.
+  normative: null
   observed:
-    claimId: CLM-DRF-EGRESS-OBSERVED
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Known high-risk drift to re-verify
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: The preserved research question identifies discovery comparison work
-      but is not current upstream proof.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    id: OBS-EGRESS-001
+    classification: observed-local
+    reportPath: spikes/spk-h-browser-egress/report.md
+    reportSha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
+    measurementPath: spikes/spk-h-browser-egress/measurements.yaml
+    measurementSha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
+    statement: The bounded local Chrome fixture observed its declared loopback channels
+      while Firefox produced no attached context.
+    fallback: Keep the deterministic static fallback and do not infer upstream egress
+      behavior.
   impacts:
     content:
     - LES-001
@@ -248,13 +277,19 @@ drift:
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
-    reason: Recorded as a parallel research question without inferring an upstream
-      fact.
-  - at: '2026-07-24T00:00:00Z'
-    state: blocked
     reason: Consolidated SPK-H-IMPACT-001 fragment SHA-256 40d7f7bfacffd2630bc9884ba717da0d263ef5b092de5abee69fb86d094b8042;
       The local Chrome fixture outcome and Firefox execution block preserve the browser-egress
       versus mediated-access question without deciding upstream behavior.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-KEHTO-WEB-PR204-20260728: https://github.com/kehto/web/blob/b85db51db838866de753b275b9d34ec908785bd2/RUNTIME-SPEC.md;
+      result=collected; contentSha256=19e3106519d91bf29f5703989846072f4f223e27a644a2aee4d2c86eb9477fb8;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
   review:
     owner: research-owner
     status: pending
@@ -271,32 +306,20 @@ drift:
   kind: drift
   topic: firefox playwright launch 001
   status: blocked
-  statusReason: Consolidated SPK-C-IMPACT-001 retains a local blocked or uncertain
-    observation without asserting upstream behavior.
-  normative:
-    claimId: CLM-UPSTREAM-BASELINE-001
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Source and claim record model
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: Consolidated local spike observation is retained as a blocked project-evidence
-      hand-off, not an upstream fact.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+  statusReason: A retained observed-local fixture result is blocked from normative
+    interpretation pending immutable upstream evidence and review.
+  normative: null
   observed:
-    claimId: CLM-UPSTREAM-BASELINE-001
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Source and claim record model
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: Consolidated local spike observation is retained as a blocked project-evidence
-      hand-off, not an upstream fact.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    id: OBS-FIREFOX-PLAYWRIGHT-LAUNCH-001
+    classification: observed-local
+    reportPath: spikes/spk-c-boundary-harness/report.md
+    reportSha256: ad21b749834d8d4df9382a1b80eb9526f952da1d1c7132fb603561427a31738e
+    measurementPath: spikes/spk-c-boundary-harness/measurements.yaml
+    measurementSha256: 743d2a9f369312c2dd410d4d77a30a658f0ef21204b8f609cb2b8bc4cb5777d3
+    statement: Firefox exited before the approved Playwright toolchain attached to
+      the bounded local fixture.
+    fallback: Keep the deterministic static fallback until attached-context measurements
+      and review exist.
   impacts:
     content:
     - LES-001
@@ -340,8 +363,8 @@ drift:
   kind: drift
   topic: NAP-SHELL handshake
   status: blocked
-  statusReason: No immutable NIP-5D bootstrap baseline or observed runtime baseline
-    has been collected.
+  statusReason: Paja documents a mandatory non-toggleable shell handshake as observed
+    implementation behavior, while direct authoritative NIP/NAP handshake meaning remains unresolved.
   normative:
     claimId: CLM-DRF-HANDSHAKE-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -355,17 +378,17 @@ drift:
     maturity: accepted
     evidenceClass: project-policy
   observed:
-    claimId: CLM-DRF-HANDSHAKE-OBSERVED
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Known high-risk drift to re-verify
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: The preserved research question identifies discovery comparison work
-      but is not current upstream proof.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    claimId: CLM-KEHTO-WEB-PAJA-20260731
+    sourceId: SRC-KEHTO-WEB-PAJA-20260731
+    commitSha: d42b3c3da7e0ad3cea233b34458997b09b11960d
+    path: packages/paja/README.md
+    locator: Paja runtime overview and mandatory shell handshake statement
+    contentSha256: dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33
+    statement: Paja documents shell as a mandatory non-toggleable handshake domain;
+      this is implementation behavior and does not establish a NIP/NAP requirement.
+    authorityTier: official-repository-observation
+    maturity: implementation-specific
+    evidenceClass: implementation
   impacts:
     content:
     - LES-001
@@ -386,6 +409,17 @@ drift:
     state: blocked
     reason: Recorded as a parallel research question without inferring an upstream
       fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-KEHTO-WEB-PR204-20260728: https://github.com/kehto/web/blob/b85db51db838866de753b275b9d34ec908785bd2/RUNTIME-SPEC.md;
+      result=collected; contentSha256=19e3106519d91bf29f5703989846072f4f223e27a644a2aee4d2c86eb9477fb8;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-31T03:08:39Z'
+    state: blocked
+    reason: 'OWS-004 binds SRC-KEHTO-WEB-PAJA-20260731. Its mandatory shell handshake
+      is an observed implementation statement, not NIP/NAP authority or a selected
+      teaching-host contract.'
   review:
     owner: research-owner
     status: pending
@@ -402,7 +436,8 @@ drift:
   kind: drift
   topic: dTag identity
   status: blocked
-  statusReason: No immutable manifest or aggregate-identity source has been collected.
+  statusReason: Receipt-bound observed implementation history is retained without
+    replacing the normative side, discovery history, or pending authority conditions.
   normative:
     claimId: CLM-DRF-IDENTITY-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -445,13 +480,25 @@ drift:
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
-    reason: Recorded as a parallel research question without inferring an upstream
-      fact.
-  - at: '2026-07-24T00:00:00Z'
-    state: blocked
     reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
       SPK-D retains the existing blocked identity drift record; no dTag or aggregate
       identity rule was supplied or inferred.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR184-20260728: https://github.com/napplet/web/blob/4916777862ababd09fa13cf155f4b4079c8e8cb1/packages/cli/src/manifest.ts;
+      result=collected; contentSha256=74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR186-20260728: https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts;
+      result=collected; contentSha256=07f22cb4e7e56f4e062f2534e607bdb97f07a61dbcbb3a74f6485a48d19797b5;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
   review:
     owner: research-owner
     status: pending
@@ -468,32 +515,33 @@ drift:
   kind: drift
   topic: NAP-INTENT handler/catalog assumptions
   status: blocked
-  statusReason: Handler and catalog sources lack immutable released and current-work
-    baselines.
+  statusReason: The NAP-INTENT draft and napplet/web alpha implementation are distinct
+    evidence classes; separately retained mutable PR-192 direction cannot settle their
+    protocol, catalog, or handler implications.
   normative:
-    claimId: CLM-DRF-INTENT-NORMATIVE
-    sourceId: SRC-POLICY-002
-    commitSha: b534103068be8c07e6869bfb7290fb60fdd87c8c
-    path: .planning/governance/evidence-policy.md
-    locator: Freshness
-    contentSha256: 9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2
-    statement: Project policy requires an immutable source baseline before a protocol
-      conclusion.
-    authorityTier: project-policy
-    maturity: accepted
-    evidenceClass: project-policy
+    claimId: CLM-NAP-INTENT-20260731
+    sourceId: SRC-NAPS-NAP-INTENT-20260731
+    commitSha: 5ac0490461ca6fec2f0d2e45b4835cf9bc08de24
+    path: naps/NAP-INTENT.md
+    locator: NAP-INTENT header, archetype dispatcher, and NIP-5D web binding
+    contentSha256: d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0
+    statement: The repository-local NAP-INTENT draft describes an archetype intent
+      dispatcher and labels a NIP-5D web binding, while retaining draft maturity.
+    authorityTier: repository-local-nap-specification
+    maturity: draft
+    evidenceClass: specification
   observed:
-    claimId: CLM-DRF-INTENT-OBSERVED
-    sourceId: SRC-POLICY-001
-    commitSha: c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0
-    path: docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md
-    locator: Known high-risk drift to re-verify
-    contentSha256: df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb
-    statement: The preserved research question identifies discovery comparison work
-      but is not current upstream proof.
-    authorityTier: planning-archive
-    maturity: accepted
-    evidenceClass: project-policy
+    claimId: CLM-NAPPLET-WEB-20260731
+    sourceId: SRC-NAPPLET-WEB-20260731
+    commitSha: 03ad65b66413e5798536ef48695ffc4c2508f2c3
+    path: README.md
+    locator: alpha notice, intent-dispatch section, and NIP-5D/NAP source links
+    contentSha256: f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae
+    statement: The alpha napplet/web README describes implementation-specific intent
+      dispatch; its immutable source and mutable PR-192 direction do not establish protocol behavior.
+    authorityTier: official-repository-observation
+    maturity: implementation-specific
+    evidenceClass: implementation
   impacts:
     content:
     - LES-001
@@ -508,12 +556,25 @@ drift:
     - '01'
   uncertainty:
     state: material
-    reason: Unpinned discovery pointers cannot settle protocol or runtime behavior.
+    reason: The draft NAP source, alpha implementation observation, and mutable PR direction
+      do not establish NIP-5D authority, a compatibility winner, or runtime behavior.
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
     reason: Recorded as a parallel research question without inferring an upstream
       fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR186-20260728: https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts;
+      result=collected; contentSha256=07f22cb4e7e56f4e062f2534e607bdb97f07a61dbcbb3a74f6485a48d19797b5;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
+  - at: '2026-07-31T03:08:39Z'
+    state: blocked
+    reason: 'OWS-004 binds the distinct SRC-NAPS-NAP-INTENT-20260731 draft and
+      SRC-NAPPLET-WEB-20260731 alpha observation. It retains PR-192 only as mutable
+      INTENT-alignment direction; prior project-policy/archive sides remain in
+      CLM-DRF-INTENT-NORMATIVE and CLM-DRF-INTENT-OBSERVED history.'
   review:
     owner: research-owner
     status: pending
@@ -530,7 +591,8 @@ drift:
   kind: drift
   topic: manifest kinds
   status: blocked
-  statusReason: Current manifest-kind sources are absent from the immutable registry.
+  statusReason: Receipt-bound observed implementation history is retained without
+    replacing the normative side, discovery history, or pending authority conditions.
   normative:
     claimId: CLM-DRF-MANIFEST-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -573,13 +635,19 @@ drift:
   history:
   - at: '2026-07-24T00:00:00Z'
     state: blocked
-    reason: Recorded as a parallel research question without inferring an upstream
-      fact.
-  - at: '2026-07-24T00:00:00Z'
-    state: blocked
     reason: Consolidated SPK-D-IMPACT-001 fragment SHA-256 ea1f91f0737b22c8df9655ca2fe56c40c5391c19b40d8d9b2977cfdb1728c893;
       SPK-D retains the existing blocked manifest-source drift record; local fixture
       output does not settle manifest kinds or resolution behavior.
+  - at: '2026-07-24T00:00:00Z'
+    state: blocked
+    reason: Recorded as a parallel research question without inferring an upstream
+      fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR186-20260728: https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts;
+      result=collected; contentSha256=07f22cb4e7e56f4e062f2534e607bdb97f07a61dbcbb3a74f6485a48d19797b5;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
   review:
     owner: research-owner
     status: pending
@@ -596,7 +664,8 @@ drift:
   kind: drift
   topic: archetype/convention metadata
   status: blocked
-  statusReason: No immutable registry or projection baseline has been collected.
+  statusReason: Receipt-bound observed implementation history is retained without
+    replacing the normative side, discovery history, or pending authority conditions.
   normative:
     claimId: CLM-DRF-METADATA-NORMATIVE
     sourceId: SRC-POLICY-002
@@ -641,6 +710,12 @@ drift:
     state: blocked
     reason: Recorded as a parallel research question without inferring an upstream
       fact.
+  - at: '2026-07-30T01:21:33Z'
+    state: blocked
+    reason: 'Observed refresh receipt 9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329
+      binds CAND-SRC-NAPPLET-WEB-PR186-20260728: https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts;
+      result=collected; contentSha256=07f22cb4e7e56f4e062f2534e607bdb97f07a61dbcbb3a74f6485a48d19797b5;
+      authority=observed-only-not-normative; retains all normative and approval blockers.'
   review:
     owner: research-owner
     status: pending

@@ -1,41 +1,39 @@
 #!/bin/sh
-# Run Phase 1 tooling only through its approved, isolated interpreter.
+# Bootstrap and certify the recorded Phase 1 interpreter before forwarding argv.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-INTERPRETER="$ROOT/.research/phase1-tools/bin/python"
 MANIFEST="$ROOT/.planning/spikes/_shared/toolchain-environment.json"
+BOOTSTRAP="$ROOT/tools/phase1-bootstrap.py"
+VERIFIER="$ROOT/tools/verify-phase1-toolchain.py"
+TARGET="$ROOT/.research/phase1-certified-tools-4"
 
+if [ ! -r "$MANIFEST" ] || [ ! -r "$BOOTSTRAP" ] || [ ! -r "$VERIFIER" ]; then
+  printf '%s\n' "phase1-python: bootstrap or toolchain verification inputs are unavailable" >&2
+  exit 1
+fi
+
+INTERPRETER=$(awk -F '"' '/"isolatedInterpreter"[[:space:]]*:/ {print $4; exit}' "$MANIFEST")
+case "$INTERPRETER" in
+  ''|/*|*'..'*)
+    printf '%s\n' "phase1-python: invalid recorded isolated interpreter path" >&2
+    exit 1
+    ;;
+esac
+INTERPRETER="$ROOT/$INTERPRETER"
 if [ ! -x "$INTERPRETER" ]; then
   printf '%s\n' "phase1-python: approved isolated interpreter is unavailable: $INTERPRETER" >&2
   exit 1
 fi
-if [ ! -r "$MANIFEST" ]; then
-  printf '%s\n' "phase1-python: reproducibility manifest is unavailable: $MANIFEST" >&2
+
+"$INTERPRETER" -I -S "$BOOTSTRAP" --environment "$MANIFEST"
+"$INTERPRETER" -I -S "$VERIFIER" --verify-toolchain
+
+if [ "${1-}" = "--verify-toolchain" ] && [ "$#" -eq 1 ]; then
+  exit 0
+fi
+if [ ! -x "$TARGET/bin/python" ]; then
+  printf '%s\n' "phase1-python: fresh certified target is unavailable" >&2
   exit 1
 fi
-
-exec "$INTERPRETER" -c '
-import hashlib
-import json
-import os
-from pathlib import Path
-import sys
-
-manifest_path = Path(sys.argv[1])
-expected_interpreter = Path(sys.argv[2]).absolute()
-manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-python = manifest["python"]
-actual_interpreter = Path(sys.executable).absolute()
-if actual_interpreter != expected_interpreter:
-    raise SystemExit("phase1-python: refusing ambient interpreter")
-if Path(sys.prefix).absolute() != expected_interpreter.parent.parent:
-    raise SystemExit("phase1-python: refusing interpreter outside approved environment")
-if sys.version.split()[0] != python["version"]:
-    raise SystemExit("phase1-python: interpreter version differs from manifest")
-resolved = actual_interpreter.resolve()
-digest = hashlib.sha256(resolved.read_bytes()).hexdigest()
-if str(resolved) != python["resolvedExecutable"] or digest != python["executableSha256"]:
-    raise SystemExit("phase1-python: interpreter hash differs from manifest")
-os.execv(str(actual_interpreter), [str(actual_interpreter), *sys.argv[3:]])
-' "$MANIFEST" "$INTERPRETER" "$@"
+exec "$TARGET/bin/python" "$@"

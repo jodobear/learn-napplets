@@ -7,7 +7,7 @@ entries:
     sha256: 5a3d445a81ceb49c1335abbd6ee5abb33b6027b6327763d20fba273608e90e4b
   metadata: &id002
     path: spikes/spk-a-workspace/metadata.yaml
-    sha256: f93a8a6f9f4e219967a5cb12aca222da352c58054797cb47dffb0ef46cc44573
+    sha256: fe4a2742d3e3c8770cb1dac23ac178d5d25c7c20b6710d575adbc74274c30b4f
   measurement: &id003
     path: spikes/spk-a-workspace/measurements.yaml
     sha256: aa24ff4fec4f52c4bcdb7e28c62b0357e386472b36fdc581425e5a546af2a44e
@@ -15,8 +15,6 @@ entries:
   - *id001
   - *id002
   - *id003
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-a-workspace
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -27,7 +25,7 @@ entries:
     sha256: 3c47d39388afb79f96bbf893eaf5e414cd2267ab8d466ac1428d03a2133e1c10
   metadata: &id005
     path: spikes/spk-b-static-framework/metadata.yaml
-    sha256: 7d2b688cf0b163d6bceac2aef405441abe9ffd625aa6556ea9d39a9c9b423809
+    sha256: 1db11db442ae3be55d1299714029b7d162fb8077fb0c1d90d2f3a787f735237d
   measurement: &id006
     path: spikes/spk-b-static-framework/measurements.yaml
     sha256: 12019091bb5221bea64909f828e89e371626cbb9a4ced8aedf034d8d74725275
@@ -35,8 +33,6 @@ entries:
   - *id004
   - *id005
   - *id006
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-b-static-framework
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -55,8 +51,6 @@ entries:
   - *id007
   - *id008
   - *id009
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-c-boundary-harness
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -67,7 +61,7 @@ entries:
     sha256: 1eb9c8634698a9487078d0a01131f597473a5966e93f679dca30bf8bf5a60b50
   metadata: &id011
     path: spikes/spk-d-verified-loader/metadata.yaml
-    sha256: d4b83bb4d3eb6d49b5ed2ae804170bd1acba19332ec02a05e9f1c1f3a80a5781
+    sha256: 0cbf77e7b1a75f39a2531303e3a2b77f3af419695f23d0b72bfbf0952b8594c5
   measurement: &id012
     path: spikes/spk-d-verified-loader/measurements.yaml
     sha256: 3ddb0748c92d44204647cea6f5261392b239de95c97de1473853dae7644c9143
@@ -75,8 +69,6 @@ entries:
   - *id010
   - *id011
   - *id012
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-d-verified-loader
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -87,7 +79,7 @@ entries:
     sha256: 26503edcec77a0a65b44dfbd5c2a75a987390be3530a2bc18d7fc54e8a425588
   metadata: &id014
     path: spikes/spk-e-content-rendering/metadata.yaml
-    sha256: 623490c15e47fc73478147c4d1a7cddf86fe055de8fa0cf2c33b81da4e1c6d3c
+    sha256: 778a336aa40e188846061ff810603591b605391edffcbbfcc8303443ed29d85c
   measurement: &id015
     path: spikes/spk-e-content-rendering/measurements.yaml
     sha256: ced41b4a399597f131d7a3368bc1122e9bca052c81c1f7e796a267d6314c2cb8
@@ -95,8 +87,6 @@ entries:
   - *id013
   - *id014
   - *id015
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-e-content-rendering
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -107,7 +97,7 @@ entries:
     sha256: 06db24dc5fdb3ab863a80f85c4c85648181c4589a923c99ee1ae3a15a8fd96ef
   metadata: &id017
     path: spikes/spk-f-course-workbench/metadata.yaml
-    sha256: 2bf5d338c11276ac16b42dc1982cb4bf3ad91bef84449fd7daade27c781bf4fd
+    sha256: 9a3d42c55b042d51009c142728ce70fc902b3c91fd50a30420a20ca178a15e79
   measurement: &id018
     path: spikes/spk-f-course-workbench/measurements.yaml
     sha256: d235ca07db2a8cde1444277c5e1689e63086421d1cbc95e6a9cd15e2435f1ce6
@@ -115,8 +105,6 @@ entries:
   - *id016
   - *id017
   - *id018
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-f-course-workbench
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -124,19 +112,17 @@ entries:
 - spikeId: SPK-G
   report: &id019
     path: spikes/spk-g-package-conformance/report.md
-    sha256: 5f1993cbff951b4ae68508806f7b48f841198b31e9fa91b7c4c575c546963e86
+    sha256: 5ef8e127b4c860593d791d1814a6c6da5864f8df5c531b9e8cc8d412f785760f
   metadata: &id020
     path: spikes/spk-g-package-conformance/metadata.yaml
-    sha256: 8a0a91e7a70a77466aa3942cdc2e6c59a5350df98a59606ecd68a3d315f8195c
+    sha256: 8f29f304d276f27994c8bf514b6132123fa796243d99c3503e41cb2f233111e7
   measurement: &id021
     path: spikes/spk-g-package-conformance/measurements.yaml
-    sha256: aba6aa72bfcdf68498c90108314e2464a0e195086412bb090e91917255fed59b
+    sha256: 8508c027f8efc167c211efd2f89e3dd7bca4cadb0ff8d84e85feba18a17f1891
   fixtureEvidence:
   - *id019
   - *id020
   - *id021
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -147,7 +133,7 @@ entries:
     sha256: 715589b73dea61bb8e620c9ef5a54a066c2bbe8b4d4317450188e7a185c0cfb6
   metadata: &id023
     path: spikes/spk-h-browser-egress/metadata.yaml
-    sha256: 1f6e42f81ce9f1ae765d9166eb9b09676f67c366e410feb744626127ba84fbfb
+    sha256: 3f5c3a1a8106d8f26c11efd7ae18cbca1ba96a73e79912573cf2b8a03782e89b
   measurement: &id024
     path: spikes/spk-h-browser-egress/measurements.yaml
     sha256: 5d91d92ea90c98e62d51119da6c5be3aae483501b4d9b6aa604bcb79298680d8
@@ -155,8 +141,6 @@ entries:
   - *id022
   - *id023
   - *id024
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-h-browser-egress
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -167,7 +151,7 @@ entries:
     sha256: eb08fd60641fdbd8e588e212f60b0267f33357c49db04080656ff19336b0dec3
   metadata: &id026
     path: spikes/spk-i-diagram-motion/metadata.yaml
-    sha256: 7815b5b83a07ff3e648db6b00b25fbb9626cd8043692d429967b377edc66b7d4
+    sha256: fb68f41fbb7de16b96783aa4305ff718c568950fffc15d80a0aec75be4d258fa
   measurement: &id027
     path: spikes/spk-i-diagram-motion/measurements.yaml
     sha256: a7955dda9f692d794dd4f07040f6aa3a3f28c10777bb19b699cb675bfd108f61
@@ -175,8 +159,6 @@ entries:
   - *id025
   - *id026
   - *id027
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-i-diagram-motion
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -187,7 +169,7 @@ entries:
     sha256: 48ceace6a76927b2cb4fd7881235bff926a7524621885e1aa98a1c4cf03e3321
   metadata: &id029
     path: spikes/spk-j-code-editing/metadata.yaml
-    sha256: 05a510beee8e88e8a68113d3abe95a21ae74efdeac355daea39512b27bfca1c5
+    sha256: 424bf3e29e7509c3e18835ca44e17e3c20962375f10b407fafe6d3d8ed9665a8
   measurement: &id030
     path: spikes/spk-j-code-editing/measurements.yaml
     sha256: 2407701d1128ad1ac076a9c050f4f7b6bb3e0d0b0658ccc4a52de7114d3b6b1b
@@ -195,8 +177,6 @@ entries:
   - *id028
   - *id029
   - *id030
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-j-code-editing
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -207,7 +187,7 @@ entries:
     sha256: 923d3085c176dbdb83603d283f4f4ddaf0128eab90244ccbd8e20fefd42dd594
   metadata: &id032
     path: spikes/spk-k-deployment/metadata.yaml
-    sha256: 2bfba0fc63e9a775fb7d36b86037f9f5b679cba75a23e267aec25f6ce998b26c
+    sha256: 7d32ea4b9c1a388e9cffc47184b10c2ec1b4159a618c91d91aefc0dc17d5b1a1
   measurement: &id033
     path: spikes/spk-k-deployment/measurements.yaml
     sha256: 8b0f2c8f997427e9677c989c80a78586cf45f0b4d4c8a06b7f740bb6cb1a2b70
@@ -215,8 +195,6 @@ entries:
   - *id031
   - *id032
   - *id033
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-k-deployment
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes
@@ -227,7 +205,7 @@ entries:
     sha256: 452c5f824c15df942deb8630b5eea4cadde27f32598d9bf8a53dfee92f47bd2d
   metadata: &id035
     path: spikes/spk-l-source-freshness/metadata.yaml
-    sha256: 96814da6ab39d241639b2c7ce69f08056cb757dddf3ffe950a82a3a9ffd9df9a
+    sha256: 4614afc07c81d5e890d9daa5c5b1d9b7a65ac5c24f94f1272160a2bad716a29f
   measurement: &id036
     path: spikes/spk-l-source-freshness/measurements.yaml
     sha256: ce7b85a04c9833b197a1e2d6c0c2b2b0f55e4e4e8ebeecb11c57187c82d7588d
@@ -235,8 +213,6 @@ entries:
   - *id034
   - *id035
   - *id036
-  replayCommand: tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-l-source-freshness
-    --complete
   applicability: local-only; retain blocked result when declared browser or upstream
     baseline is unavailable
   freshnessThreshold: recheck when any pinned input digest changes

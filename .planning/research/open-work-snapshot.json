@@ -1,47 +1,422 @@
 {
-  "schemaVersion": 1,
-  "id": "OWS-001",
-  "retrievedAt": "2026-07-24T00:00:00Z",
   "classification": "directional-evidence",
-  "status": "blocked",
-  "sourceRefs": ["SRC-POLICY-001", "SRC-POLICY-002"],
+  "id": "OWS-001",
   "items": [
     {
-      "id": "OW-NIP5D-001",
-      "surface": "NIP-5D",
-      "kind": "issue-pr-discussion-metadata",
       "candidateId": "CAND-NIP-5D",
+      "id": "OW-NIP5D-001",
       "immutableReference": null,
+      "kind": "issue-pr-discussion-metadata",
+      "relatedDriftIds": [
+        "DRF-HANDSHAKE-001",
+        "DRF-MANIFEST-001",
+        "DRF-IDENTITY-001",
+        "DRF-EGRESS-001"
+      ],
       "retrievalOutcome": "unavailable",
-      "relatedDriftIds": ["DRF-HANDSHAKE-001", "DRF-MANIFEST-001", "DRF-IDENTITY-001", "DRF-EGRESS-001"]
+      "surface": "NIP-5D"
     },
     {
-      "id": "OW-NAP-001",
-      "surface": "NAP registry/projection/governance",
-      "kind": "issue-pr-discussion-metadata",
       "candidateId": "CAND-NAP-REGISTRY",
+      "id": "OW-NAP-001",
       "immutableReference": null,
+      "kind": "issue-pr-discussion-metadata",
+      "relatedDriftIds": [
+        "DRF-DISCOVERY-001",
+        "DRF-METADATA-001",
+        "DRF-INTENT-001"
+      ],
       "retrievalOutcome": "unavailable",
-      "relatedDriftIds": ["DRF-DISCOVERY-001", "DRF-METADATA-001", "DRF-INTENT-001"]
+      "surface": "NAP registry/projection/governance"
     },
     {
-      "id": "OW-NAPPLET-WEB-001",
-      "surface": "napplet/web",
-      "kind": "issue-pr-discussion-metadata",
       "candidateId": "CAND-NAPPLET-WEB-PACKAGE",
+      "id": "OW-NAPPLET-WEB-001",
       "immutableReference": null,
+      "kind": "issue-pr-discussion-metadata",
+      "relatedDriftIds": [
+        "DRF-ARTIFACT-001",
+        "DRF-CONFORMANCE-001"
+      ],
       "retrievalOutcome": "unavailable",
-      "relatedDriftIds": ["DRF-ARTIFACT-001", "DRF-CONFORMANCE-001"]
+      "surface": "napplet/web"
     },
     {
-      "id": "OW-RUNTIME-001",
-      "surface": "credible runtime implementation",
-      "kind": "issue-pr-discussion-metadata",
       "candidateId": "CAND-RUNTIME-IMPLEMENTATION",
+      "id": "OW-RUNTIME-001",
       "immutableReference": null,
+      "kind": "issue-pr-discussion-metadata",
+      "relatedDriftIds": [
+        "DRF-UNKNOWN-MESSAGES-001",
+        "DRF-CONFORMANCE-001"
+      ],
       "retrievalOutcome": "unavailable",
-      "relatedDriftIds": ["DRF-UNKNOWN-MESSAGES-001", "DRF-CONFORMANCE-001"]
+      "surface": "credible runtime implementation"
     }
   ],
-  "revisitTrigger": "Run bounded official-source acquisition when immutable references are available; do not treat this snapshot as shipped-behavior proof."
+  "retrievedAt": "2026-07-24T00:00:00Z",
+  "revisitTrigger": "Run bounded official-source acquisition when immutable references are available; do not treat this snapshot as shipped-behavior proof.",
+  "schemaVersion": 1,
+  "snapshotHistory": [
+    {
+      "classification": "directional-evidence",
+      "id": "OWS-002",
+      "items": [
+        {
+          "candidateId": "CAND-NAPPLET-WEB-PACKAGE",
+          "id": "OW-PACKAGE-REGISTRY-20260728-001",
+          "immutableReference": null,
+          "kind": "registry-package-metadata-collection",
+          "receiptHistory": [
+            {
+              "attemptId": "REG-FIXTURE-20260728-001",
+              "classification": "mechanism-only-not-published-package-fact",
+              "outcome": "fixture-mechanism-only",
+              "path": "reports/package-registry-fixture-receipt-20260728.yaml",
+              "receiptSha256": "4f35050e9ee18864aeec90f88053b27dc209b32301ee82d460755af16241fc80",
+              "transport": "fixture"
+            },
+            {
+              "attemptId": "REG-BLOCKER-20260728-001",
+              "classification": "blocked-no-live-registry-observation",
+              "outcome": "impact-scoped-blocker",
+              "path": "reports/package-registry-live-or-blocker-receipt-20260728.yaml",
+              "receiptSha256": "40ebd1c8f1e8b0bcde03f01e936affb815fe2ed375113cce2547020c9c286a26",
+              "transport": "live-or-blocker"
+            }
+          ],
+          "relatedDriftIds": [
+            "DRF-ARTIFACT-001",
+            "DRF-CONFORMANCE-001"
+          ],
+          "retrievalOutcome": "impact-scoped-blocker",
+          "spkGBlockerRouting": {
+            "affectedAdrs": [
+              "ADR-0005",
+              "ADR-0008",
+              "ADR-0010"
+            ],
+            "affectedDrift": [
+              "DRF-ARTIFACT-001",
+              "DRF-CONFORMANCE-001"
+            ],
+            "affectedQuestions": [
+              "OQ-PUBLIC-PACKAGE-BASELINE-001",
+              "OQ-PUBLIC-CONFORMANCE-001"
+            ],
+            "affectedRequirements": [
+              "EVID-03",
+              "EVID-04",
+              "OPER-01"
+            ],
+            "disposition": "blocked",
+            "eligibility": [
+              {
+                "id": "exact-public-release",
+                "status": "incomplete"
+              },
+              {
+                "id": "registry-artifact-metadata",
+                "status": "incomplete"
+              },
+              {
+                "id": "provenance-and-integrity",
+                "status": "incomplete"
+              },
+              {
+                "id": "license-and-root-export",
+                "status": "incomplete"
+              },
+              {
+                "id": "distinct-implemented-source-baseline",
+                "status": "incomplete"
+              },
+              {
+                "id": "compatibility-comparison",
+                "status": "incomplete"
+              },
+              {
+                "id": "separate-package-admission-approval",
+                "status": "incomplete"
+              }
+            ],
+            "refreshTrigger": "Collect and review a qualifying official registry artifact with all required fields, then obtain separate package-admission approval before SPK-G work.",
+            "safeFallback": "Keep the deterministic static learning path dependency-free.",
+            "separateApproval": "required"
+          },
+          "surface": "napplet/web registry collection"
+        }
+      ],
+      "parentSnapshotId": "OWS-001",
+      "retrievedAt": "2026-07-28T00:00:00Z",
+      "revisitTrigger": "Collect and review a qualifying official registry artifact, then separately approve package admission before SPK-G work; do not infer a published-package fact from either retained receipt.",
+      "sourceRefs": [
+        "PKG-NAPPLET-WEB-REGISTRY-20260728"
+      ],
+      "status": "blocked"
+    },
+    {
+      "classification": "observed-repository-history",
+      "id": "OWS-003",
+      "items": [
+        {
+          "candidateId": "CAND-SRC-NAPPLET-WEB-PR184-20260728",
+          "contentSha256": "74b9f5f13079cf451412c30c7ad944e445d31e07a46826792ec0d6b78a30f0a8",
+          "id": "OW-OBSERVED-NAPPLET-WEB-PR184-20260728",
+          "immutableReference": "https://github.com/napplet/web/blob/4916777862ababd09fa13cf155f4b4079c8e8cb1/packages/cli/src/manifest.ts",
+          "relatedDriftIds": [
+            "DRF-IDENTITY-001"
+          ],
+          "repository": "napplet/web",
+          "retrievalOutcome": "collected",
+          "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows."
+        },
+        {
+          "candidateId": "CAND-SRC-NAPPLET-WEB-PR186-20260728",
+          "contentSha256": "07f22cb4e7e56f4e062f2534e607bdb97f07a61dbcbb3a74f6485a48d19797b5",
+          "id": "OW-OBSERVED-NAPPLET-WEB-PR186-20260728",
+          "immutableReference": "https://github.com/napplet/web/blob/dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b/packages/nap/src/convention-uri.ts",
+          "relatedDriftIds": [
+            "DRF-INTENT-001",
+            "DRF-MANIFEST-001",
+            "DRF-METADATA-001",
+            "DRF-IDENTITY-001"
+          ],
+          "repository": "napplet/web",
+          "retrievalOutcome": "collected",
+          "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows."
+        },
+        {
+          "candidateId": "CAND-SRC-NAPPLET-WEB-PR188-20260728",
+          "contentSha256": "dd29100a7fcae6fa007436bc17f5f7440a0ed928710b54d85804fd0675743909",
+          "id": "OW-OBSERVED-NAPPLET-WEB-PR188-20260728",
+          "immutableReference": "https://github.com/napplet/web/blob/60889f1c2476e063500c7ab6624af6abe0dbcbe5/packages/nap/package.json",
+          "relatedDriftIds": [
+            "DRF-ARTIFACT-001"
+          ],
+          "repository": "napplet/web",
+          "retrievalOutcome": "collected",
+          "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows."
+        },
+        {
+          "candidateId": "CAND-SRC-KEHTO-WEB-PR204-20260728",
+          "contentSha256": "19e3106519d91bf29f5703989846072f4f223e27a644a2aee4d2c86eb9477fb8",
+          "id": "OW-OBSERVED-KEHTO-WEB-PR204-20260728",
+          "immutableReference": "https://github.com/kehto/web/blob/b85db51db838866de753b275b9d34ec908785bd2/RUNTIME-SPEC.md",
+          "relatedDriftIds": [
+            "DRF-HANDSHAKE-001",
+            "DRF-EGRESS-001",
+            "DRF-CONFORMANCE-001"
+          ],
+          "repository": "kehto/web",
+          "retrievalOutcome": "collected",
+          "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows."
+        },
+        {
+          "candidateId": "CAND-SRC-KEHTO-WEB-PR209-20260728",
+          "contentSha256": "6d2cde35473df0f64afed674713ec44a9f10e33ae96b9fa57c46f4e46befd432",
+          "id": "OW-OBSERVED-KEHTO-WEB-PR209-20260728",
+          "immutableReference": "https://github.com/kehto/web/blob/4eafa058d18cf245b23d49b23bc29dda0b7d7651/packages/runtime/package.json",
+          "relatedDriftIds": [
+            "DRF-ARTIFACT-001"
+          ],
+          "repository": "kehto/web",
+          "retrievalOutcome": "collected",
+          "uncertainty": "Observed implementation or release metadata only; no normative authority, package admission, or compatibility approval follows."
+        },
+        {
+          "candidateId": "CAND-SRC-KEHTO-WEB-PR211-20260728",
+          "contentSha256": null,
+          "id": "OW-OBSERVED-KEHTO-WEB-PR211-20260728",
+          "immutableReference": null,
+          "relatedDriftIds": [
+            "DRF-ARTIFACT-001"
+          ],
+          "repository": "kehto/web",
+          "retrievalOutcome": "failed",
+          "uncertainty": "Bounded candidate failed before collection; no scope expansion was attempted."
+        },
+        {
+          "candidateId": "CAND-SRC-NAPS-WINDOW-20260728",
+          "contentSha256": null,
+          "id": "OW-OBSERVED-NAPS-WINDOW-20260728",
+          "immutableReference": null,
+          "relatedDriftIds": [
+            "DRF-DISCOVERY-001"
+          ],
+          "repository": "napplet/naps",
+          "retrievalOutcome": "observed-zero-result",
+          "uncertainty": "Bounded zero-result/default-branch observation only; no content was read."
+        }
+      ],
+      "parentSnapshotId": "OWS-002",
+      "receipt": {
+        "path": "reports/upstream-acquisition-20260728.md",
+        "sha256": "9b4c25c55abf6eea280bec2dbb8d4674abda75c05447223907fa62fe6e753329"
+      },
+      "retrievedAt": "2026-07-30T01:21:33Z",
+      "reviewedSourceInputBinding": {
+        "candidates": [
+          {
+            "id": "CAND-SRC-NAPPLET-WEB-PR184-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-NAPPLET-WEB-PR186-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-NAPPLET-WEB-PR188-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-KEHTO-WEB-PR204-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-KEHTO-WEB-PR209-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-KEHTO-WEB-PR211-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          },
+          {
+            "id": "CAND-SRC-NAPS-WINDOW-20260728",
+            "reportPath": ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md"
+          }
+        ],
+        "parsedRecordSha256": "ad9285d264383e3466ceeaea7142f42ed6d55143b5deb0376ead7974d2bb3369",
+        "parserVersion": "reviewed-refresh-v1",
+        "reportDigests": {
+          ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+          ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+          ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+          ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+        },
+        "reviewedCommit": "1a9449be4d74aa1ceed235d949802266846cf63b",
+        "sourceReportDigests": {
+          ".planning/research/reports/upstream-refresh-kehto-web-2026-07-28.md": "959b6101e411e52ad64ce532477974382c15aa4062c2c544868491f944fa3a36",
+          ".planning/research/reports/upstream-refresh-napplet-naps-2026-07-28.md": "94a49792c6fc0f8336803f03c2fb324371618092eccb0cc7a26cf57d319ed4d4",
+          ".planning/research/reports/upstream-refresh-napplet-web-2026-07-28.md": "3219578c3b2eff1eb09f04a48ccc1587de9321ba615d87ffb1e163c5bf58cc28",
+          ".planning/research/reports/upstream-refresh-synthesis-2026-07-28.md": "eba5df04a8ddfa0b5a4d7b1ec60268f3d7bb733623e8ba1ac3482b2f371c6478"
+        },
+        "sourceSnapshotCommit": "1a9449be4d74aa1ceed235d949802266846cf63b"
+      },
+      "revisitTrigger": "On source/package/runtime/example/fixture/conformance or approval change, compare against this receipt-bound observation without replacing OWS-001 or its later history.",
+      "sourceRefs": [
+        "SRC-NAPPLET-WEB-PR184-20260728"
+      ],
+      "status": "blocked"
+    },
+    {
+      "classification": "bounded-upstream-refresh",
+      "id": "OWS-004",
+      "items": [
+        {
+          "contentSha256": "d6a533ea9c132f0196057c177e87452a7c9edda452fea4b89368afc202b709f0",
+          "id": "OW-NAPS-NAP-INTENT-20260731",
+          "immutableReference": "https://github.com/napplet/naps/blob/5ac0490461ca6fec2f0d2e45b4835cf9bc08de24/naps/NAP-INTENT.md",
+          "relatedDriftIds": [
+            "DRF-INTENT-001",
+            "DRF-DISCOVERY-001"
+          ],
+          "retrievalOutcome": "collected-draft-specification",
+          "sourceId": "SRC-NAPS-NAP-INTENT-20260731",
+          "surface": "napplet/naps repository-local NAP-INTENT draft",
+          "uncertainty": "Repository-local NAP draft authority is distinct from unresolved NIP-5D projection and implementation behavior."
+        },
+        {
+          "contentSha256": "f21e5bc41a990e40b72124ca68109b63df40b9850758c4346f151ec328ba7dae",
+          "directionSnapshots": [
+            {
+              "disposition": "merged implementation migration direction only",
+              "mergedCommit": "dd7b3a728eb9c838b7218fcec7bb7bb00e7cc88b",
+              "pr": 186,
+              "retrievedResponseSha256": "2214161d9110ece1b678e165a71cfc6b21ad5ea7bf4971a8734fcaf93d3df110",
+              "url": "https://github.com/napplet/web/pull/186"
+            },
+            {
+              "disposition": "merged INC/INTENT contract-alignment direction only",
+              "mergedCommit": "7b675622e13870628ce174833d7b2a33cf32a0ab",
+              "pr": 192,
+              "retrievedResponseSha256": "a2d209996adc89c4796160f83cde4b10a3e23e7b827cc774a61467fd63f89a67",
+              "url": "https://github.com/napplet/web/pull/192"
+            },
+            {
+              "commitResponseSha256": "713d58633940d0fed613a5288e317c466b1c4b5079d9ae3e2bb7e3f5d604bcec",
+              "disposition": "release metadata carrying filesystem-named changesets; not package qualification or a behavior proof",
+              "mergedCommit": "03ad65b66413e5798536ef48695ffc4c2508f2c3",
+              "pr": 194,
+              "retrievedResponseSha256": "5f9e99e5fbb414e994b1a0be9feb0f33f62cbcfa7b6cab415a2cf83d052233b4",
+              "url": "https://github.com/napplet/web/pull/194"
+            }
+          ],
+          "id": "OW-NAPPLET-WEB-DIRECTION-20260731",
+          "immutableReference": "https://github.com/napplet/web/blob/03ad65b66413e5798536ef48695ffc4c2508f2c3/README.md",
+          "relatedDriftIds": [
+            "DRF-INTENT-001",
+            "DRF-MANIFEST-001",
+            "DRF-METADATA-001",
+            "DRF-ARTIFACT-001"
+          ],
+          "retrievalOutcome": "collected-source-plus-mutable-pr-direction",
+          "sourceId": "SRC-NAPPLET-WEB-20260731",
+          "surface": "napplet/web alpha implementation and release direction",
+          "uncertainty": "PR API objects are mutable directional metadata; the immutable README is implementation evidence only. Neither establishes NAP/NIP authority, published-package integrity, or compatibility."
+        },
+        {
+          "contentSha256": "dcf02f032bafd87be94297a1995025069df7ff44444b9087d6e1e580ef7e4c33",
+          "directionSnapshots": [
+            {
+              "disposition": "merged Paja social-cache direction only",
+              "mergedCommit": "a8cc3cfc956dfbf11dc733ec051862af5db51fa8",
+              "pr": 217,
+              "retrievedResponseSha256": "95ded228795745ea4089e2e6d95234b02f894345f2fd51b99872e9461f62b1bf",
+              "url": "https://github.com/kehto/web/pull/217"
+            }
+          ],
+          "id": "OW-KEHTO-WEB-PAJA-20260731",
+          "immutableReference": "https://github.com/kehto/web/blob/d42b3c3da7e0ad3cea233b34458997b09b11960d/packages/paja/README.md",
+          "relatedDriftIds": [
+            "DRF-HANDSHAKE-001",
+            "DRF-EGRESS-001",
+            "DRF-CONFORMANCE-001"
+          ],
+          "retrievalOutcome": "collected-source-plus-mutable-pr-direction",
+          "sourceId": "SRC-KEHTO-WEB-PAJA-20260731",
+          "surface": "kehto/web Paja local-authoring runtime",
+          "uncertainty": "Paja documentation includes live relay defaults and an explicit memory fixture mode; it does not select a teaching host or establish runtime, browser, or portability qualification."
+        },
+        {
+          "contentSha256": "3d1a5165f97bfdb50d3155bbf04044be6bbe63df91385f8e56f1865de2b8874b",
+          "id": "OW-NAMPLETS-NATIVE-20260731",
+          "immutableReference": "https://github.com/pablof7z/nampplets/blob/1094f1db23292f966fd65757132678406f7ca28c/README.md",
+          "relatedDriftIds": [
+            "DRF-CONFORMANCE-001",
+            "DRF-ARTIFACT-001"
+          ],
+          "retrievalOutcome": "collected-optional-native-reference",
+          "sourceId": "SRC-NAMPLETS-NATIVE-20260731",
+          "surface": "Nampplets native Rust and macOS reference",
+          "uncertainty": "Native-reference behavior is not NAP/NIP authority and cannot qualify web, portable, or package paths."
+        }
+      ],
+      "parentSnapshotId": "OWS-003",
+      "retrievedAt": "2026-07-31T03:08:39Z",
+      "revisitTrigger": "Re-fetch only when a cited upstream head changes after 2026-07-31, a pinned blob becomes unavailable, or a reviewer requires a different source scope; do not repeat broad discovery.",
+      "sourceRefs": [
+        "SRC-NAPS-NAP-INTENT-20260731",
+        "SRC-NAPPLET-WEB-20260731",
+        "SRC-KEHTO-WEB-PAJA-20260731",
+        "SRC-NAMPLETS-NATIVE-20260731"
+      ],
+      "status": "blocked"
+    }
+  ],
+  "sourceRefs": [
+    "SRC-POLICY-001",
+    "SRC-POLICY-002"
+  ],
+  "status": "blocked"
 }

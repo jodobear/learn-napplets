@@ -97,3 +97,22 @@ approvedInstallation:
     - Capture the resolver's complete installed-distribution inventory in the reproducibility manifest.
     - Do not run playwright install or acquire browser binaries.
     - Do not create package.json or any production dependency manifest.
+derivedClosure:
+  status: approved-in-scope-derivation
+  authority: >-
+    The dated human approval above remains authority for exactly PyYAML 6.0.3,
+    jsonschema 4.26.0, and Playwright 1.61.0. The entries below are resolver
+    closure members, not new top-level approvals.
+  resolverSelected:
+    - attrs==26.1.0
+    - greenlet==3.5.4
+    - jsonschema-specifications==2025.9.1
+    - pyee==13.0.1
+    - referencing==0.37.0
+    - rpds-py==2026.6.3
+    - typing_extensions==4.16.0
+  policy:
+    license: inherit-reviewed-top-level-context
+    integrity: require-exact-wheel-hash
+    security: reject-configured-policy-failure
+    escalation: top-level-scope-change-or-policy-failure-only

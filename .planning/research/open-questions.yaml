@@ -99,6 +99,8 @@ questions:
   resolutionCriteria:
   - Collect complete immutable source and claim provenance, then obtain the required
     review.
+  - Obtain a public fixture, qualified runtime/example measurement, and role-specific
+    conformance review before replacing the blocked SPK-G result.
   owner: research-owner
   review:
     status: pending
@@ -137,6 +139,8 @@ questions:
   resolutionCriteria:
   - Collect complete immutable source and claim provenance, then obtain the required
     review.
+  - Independently retrieve a published registry artifact and compare it with observed
+    release/current-work commits before separate package approval.
   owner: research-owner
   review:
     status: pending
@@ -153,13 +157,22 @@ questions:
       is reconsidered.
 - id: OQ-UPSTREAM-BASELINE-001
   kind: open-question
-  question: Which official immutable NIP-5D, NAP, package, and runtime sources resolve
-    the recorded blocked compatibility and drift questions?
+  question: Which reviewed direct NIP-5D, NAP registry/projection, public-package,
+    and runtime sources resolve the blocked compatibility and drift questions after the
+    2026-07-31 draft/implementation/reference baseline?
   status: blocked
   sourceRefs:
   - SRC-POLICY-001
   - SRC-POLICY-002
+  - SRC-NAPS-NAP-INTENT-20260731
+  - SRC-NAPPLET-WEB-20260731
+  - SRC-KEHTO-WEB-PAJA-20260731
+  - SRC-NAMPLETS-NATIVE-20260731
   - CLM-UPSTREAM-BASELINE-001
+  - CLM-NAP-INTENT-20260731
+  - CLM-NAPPLET-WEB-20260731
+  - CLM-KEHTO-WEB-PAJA-20260731
+  - CLM-NAMPLETS-NATIVE-20260731
   - DRF-DISCOVERY-001
   - DRF-HANDSHAKE-001
   - DRF-MANIFEST-001
@@ -187,13 +200,16 @@ questions:
   - ADR-0008
   - ADR-0009
   resolutionCriteria:
-  - Record official identity, resolved commit, revision:path locator, digest, retrieval
-    time, authority, evidence class, maturity, and review state for each relevant
-    source.
-  - Compare released public export/package/runtime evidence separately from current
-    default-branch or open-work evidence.
+  - Retain the four 2026-07-31 source identities, their evidence classes, maturity,
+    uncertainty, and pending review rather than treating draft or implementation material
+    as a resolved protocol baseline.
+  - Collect and review direct authoritative NIP-5D plus NAP registry/projection sources
+    with immutable identity, revision:path locator, digest, retrieval time, authority,
+    evidence class, and maturity.
+  - Compare independently retrieved released public export/package/runtime evidence separately
+    from the dated implementation observations and mutable open-work direction.
   - Record conflicts as parallel `DRF-*` evidence and obtain the required human review
-    before any claim becomes verified.
+    before any claim becomes verified; repository observations and PR metadata remain non-normative.
   owner: research-owner
   review:
     status: pending
@@ -205,6 +221,11 @@ questions:
     status: blocked
     reason: All relevant candidates remain discovery pointers without immutable current
       evidence.
+  - at: '2026-07-31T03:08:39Z'
+    status: blocked
+    reason: Four immutable source blobs are now admitted, but they remain a repository-local
+      draft, two implementation observations, and an optional native reference. Direct NIP-5D,
+      package, runtime, browser, conformance, and required human-review gaps remain blocked.
 - id: OQ-VERIFIED-LOADER-IDENTITY-001
   kind: open-question
   question: Identify and review the current immutable identity mapping, including
@@ -229,6 +250,8 @@ questions:
   resolutionCriteria:
   - Collect complete immutable source and claim provenance, then obtain the required
     review.
+  - Collect direct authoritative identity records and a role-specific review; observed
+    repository code is insufficient.
   owner: research-owner
   review:
     status: pending
@@ -264,6 +287,8 @@ questions:
   resolutionCriteria:
   - Collect complete immutable source and claim provenance, then obtain the required
     review.
+  - Collect direct authoritative manifest records and a role-specific review; observed
+    repository code is insufficient.
   owner: research-owner
   review:
     status: pending
@@ -299,6 +324,8 @@ questions:
   resolutionCriteria:
   - Collect complete immutable source and claim provenance, then obtain the required
     review.
+  - Collect qualified public verifier provenance and a role-specific review; failed
+    observation records remain retained.
   owner: research-owner
   review:
     status: pending

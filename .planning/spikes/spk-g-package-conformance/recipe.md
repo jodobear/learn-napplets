@@ -1,121 +1,69 @@
 # SPK-G — Public package and conformance consumption recipe
 
-SPK-G is a disposable, **non-production** research contract. It has no
-qualified package operation at this time. It does not install a package,
-contact a registry, or infer package behavior from an archive, a private
-monorepo path, an unpublished workspace, or a guessed package name.
+SPK-G is a disposable, **non-production** measurement boundary. The runner does
+not install, import, compile, or execute any package unless one immutable,
+registered canonical snapshot proves a complete public-artifact candidate, a
+separately dated decision approves that exact candidate, and the OS sandbox
+contract is verified before any package-manager argv exists.
 
-## Scope and question
+## Current outcome: deterministic no-operation blocker
 
-Can a cataloged released public package export be consumed in an isolated
-fixture against its recorded released-package and implemented-source baselines?
+`CAND-NAPPLET-WEB-PACKAGE` has no exact released version, tarball integrity,
+provenance, license, documented package-root export, distinct released and
+implementation source baselines, runtime/example/fixture/conformance inputs, or
+approved dated decision. `CMP-BASELINE-001` is blocked across all seven required
+dimensions. The only valid current outcome is a receipt with
+`SPK-G-BLOCKED-ELIGIBILITY` and operation count zero.
 
-**Current answer: blocked.** `package-map.md` records only
-`CAND-NAPPLET-WEB-PACKAGE` and `CAND-NAPPLET-WEB-REPOSITORY` as discovery
-pointers. `CLM-CMP-PACKAGE-001` is blocked because no immutable public
-`napplet/web` release or export baseline is available. `CMP-BASELINE-001`,
-`DRF-ARTIFACT-001`, and `DRF-CONFORMANCE-001` retain the corresponding
-compatibility and drift scope.
+The receipt is based on the Plan 01-42 registered
+`spk-g-package-evidence` reader. It returns a single complete old or new mapping,
+or refuses before YAML parsing, sandbox argument construction, or any package
+operation. The runner must not reopen a canonical file after that mapping is
+acquired.
 
-## Immutable blocking bindings
+## Bounded future operation contract
 
-| Scope | Source / claim | Immutable locator | Classification | Result |
-| --- | --- | --- | --- | --- |
-| Package release/export eligibility | `SRC-POLICY-001` / `CLM-CMP-PACKAGE-001` | `c626d4c9d6e8e325672b71eb4d93dbe0753fe8f0:docs/learn-napplets-codex-pack-v3/docs/02-UPSTREAM-TRUTH-AND-DRIFT.md` at `Source and claim record model`; SHA-256 `df04218b808e3b5925dde0ea2041660f4304d3e92af399a273e34a1c25f4b9bb` | planning archive / project policy / accepted | blocked; archive is not package proof |
-| Supply-chain and source gate | `SRC-POLICY-002` / `CLM-CMP-PACKAGE-001` | `b534103068be8c07e6869bfb7290fb60fdd87c8c:.planning/governance/evidence-policy.md` at `Required fields and verification rule`; SHA-256 `9d3f9697cc7058b8edcb5b2a346ff9de677ca10b5b163d1ba1b7f40d7d01c4b2` | project policy / project policy / accepted | blocked; no qualifying release baseline |
+A future operation is permissible only when all checks below pass in order:
 
-Both source records are complete immutable policy records. Neither is an
-immutable official released-package record or a distinct implemented
-public-export source record; neither can qualify a package candidate.
+1. The registered snapshot returns the exact complete target set.
+2. Every compatibility dimension is `qualified`; baseline eligibility is
+   `eligible`, approved, and has a review record.
+3. The artifact records the exact package name/version, tarball integrity,
+   registry/project provenance, license, documented package-root export, distinct
+   approved and current released/implementation `SRC-*` records, and the required
+   runtime, example, fixture, and conformance inputs.
+4. A separate package decision is `approved` with a non-empty dated review value.
+5. An OS-level rootless sandbox contract proves no network, read-only repository,
+   isolated writable workspace, empty/minimal environment, and wall-clock, CPU,
+   memory, process-count, and file-size limits.
 
-## Candidate inventory and human gate
+Only then may a fixed `npm install --ignore-scripts --package-lock=false
+<exact-name>@<exact-version>` argv be constructed inside the sandboxed workspace.
+The fixture may import only the recorded package-root export. A package operation
+is observed implementation behavior only: it cannot establish protocol authority,
+architecture approval, cross-runtime conformance, or remove the existing Firefox
+pre-attachment blocker.
 
-There are **zero installable candidates**. The sole catalog entry below is a
-blocked discovery pointer retained for acquisition tracking, not a selected
-package release.
+## Prohibited surfaces and deterministic fallback
 
-| Catalog entry | Exact public package / version | Public export locator | Official registry / project provenance | License | Release integrity / source baseline | Browser support | Isolated install command | Conformance command | Eligibility |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `CAND-NAPPLET-WEB-PACKAGE` | unavailable; no released version cataloged | unavailable; no documented public export cataloged | unavailable; no official registry or project release URL cataloged | unavailable | unavailable; no tarball integrity, released-package `SRC-*`, or implemented-source `SRC-*` cataloged | unknown | none — blocked, do not invoke a package manager | none — blocked, do not import or compile | blocked by `CLM-CMP-PACKAGE-001` |
+The runner rejects deep/package-file imports, `src/`, `dist/`, relative upstream
+paths, workspace aliases, private packages, unpublished output, guessed names,
+substitute packages, browser execution, registry access, and external writes.
 
-The human approval field in `metadata.yaml` deliberately remains
-`pending-human-review` with no reviewer or date. It does not authorize an
-install. At Task 2, the reviewer must record an explicit block unless new,
-fully cataloged evidence supplies every unavailable field; Task 2 must not
-substitute a different package.
+If any required evidence, approval, recovery result, or sandbox control is absent,
+the runner retains a specific `SPK-G-BLOCKED-*` receipt with operation count zero.
+It preserves the dependency-free static learning path and the Firefox blocker.
 
-## Public-surface and fixture rules
+## Replays
 
-- The consumer may use only a documented package-root public export recorded
-  in the reviewed candidate row. It must never use a deep import, file path,
-  `src/`, `packages/`, workspace alias, `dist/` file, relative upstream path,
-  git checkout path, or private monorepo path.
-- A candidate is eligible only if all of these are recorded before approval:
-  exact package name and released version; documented root export locator;
-  official registry and project/repository provenance; license; tarball
-  integrity/hash source; browser support claim; distinct complete immutable
-  released-package and implemented-source `SRC-*` records; and a valid `CLM-*`
-  relation.
-- A compile or import result is an **observed implementation behavior**, never
-  upstream protocol authority. Bind it to the source baseline and preserve
-  actual errors without treating a successful import as conformance.
-- Dependencies, locks, logs, generated output, and any temporary fixture
-  state belong only below
-  `.planning/spikes/spk-g-package-conformance/.experiment/`, which remains
-  disposable and ignored.
-
-## Predeclared measurements and thresholds
-
-| Measurement | Replay input and operation | Expected result | Success | Failure | Blocked threshold |
-| --- | --- | --- | --- | --- | --- |
-| qualified exact public releases | candidate inventory + `metadata.yaml` | `0` now | every selected row has every eligibility field and human approval | a qualified approved command returns a recorded import/compile/conformance error | `0` qualifying rows or any missing field; do not run an install |
-| public exports exercised | reviewed fixture import declaration | `0` now | only documented package-root exports are exercised in five replays | an exercised public export mismatches the recorded baseline or command output | no recorded public export locator |
-| import/compile/conformance results | exact approved isolated commands | no command / no output now | five replayable observations bound to source IDs and output digests | preserve exact error and use no substitute | no exact command may exist or run |
-| forbidden import count | `fixture.md` import-policy inspection | `0` | zero deep/private/source/workspace imports | one forbidden path is attempted or declared | N/A; the contract remains blocked without imports |
-
-## Deterministic local replay before approval
-
-Run only the contract validator with the approved wrapper:
+The following commands are deterministic local checks; current canonical evidence
+causes neither command to invoke a package manager:
 
 ```bash
-tools/phase1-python tools/validate-research.py validate-spike .planning/spikes/spk-g-package-conformance --contract
+tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --check
+tools/phase1-python tools/measure-package-conformance.py --spike .planning/spikes/spk-g-package-conformance --run-five
 ```
 
-The expected result is a successful structural validation of a **blocked
-candidate inventory**. It does not retrieve, install, import, compile, or test
-any external package.
-
-## Future operation shape — not an authorized command
-
-No exact install or conformance command can be proposed while the required
-package/version/export fields are unavailable. After a future evidence
-collection and a Task 2 human approval, the record must name the exact
-isolated command in this form, with every placeholder replaced by the reviewed
-catalog value:
-
-```text
-npm --prefix .planning/spikes/spk-g-package-conformance/.experiment/<exact-package>-<exact-version> install --ignore-scripts --package-lock=false <exact-package>@<exact-version>
-node <approved-local-fixture-using-only-the-documented-root-export>
-```
-
-This is an operation shape, not a command to run. It must not be completed
-with a guessed name, version, export, registry URL, or a private/deep import.
-
-## Dispositions and impacts
-
-- **Current disposition:** blocked; there is no consume, wrap, or avoid result
-  based on an implementation experiment.
-- **Compatibility:** retain `CMP-BASELINE-001` as blocked.
-- **Drift:** retain `DRF-ARTIFACT-001` and `DRF-CONFORMANCE-001` as blocked.
-- **ADR impacts:** retain proposed blocked input for `ADR-0005`, `ADR-0008`,
-  and `ADR-0010`; no ADR is accepted or selected by this spike.
-- **Fallback:** do not add an upstream dependency. Preserve the static,
-  deterministic research path until a public immutable release/export baseline
-  is collected and approved.
-
-## Safety boundary
-
-No secrets, private sources, registry write, external mutation, production
-scaffold, package install, browser execution, or live probe is permitted by
-this task. Plan 01-28 alone may validate and consolidate later SPK-G impact
-records.
+A five-run result is retained only after its complete receipt bundle validates.
+Any failure removes candidate workspace material and leaves the prior measurements,
+report, and impact fragment byte-identical.

@@ -1,54 +1,46 @@
-# SPK-G Disposable public-export consumer fixture
+# SPK-G disposable public-export consumer fixture
 
-**Fixture status:** blocked contract; no package is installed or imported.
+**Fixture status:** recovery-guarded blocked contract. No package is installed,
+imported, compiled, or executed in the current evidence state.
 
-## Consumer declaration
+## Current consumer declaration
 
 | Field | Value |
 | --- | --- |
-| Consumer imports | none — no exact reviewed public package/export exists |
-| Selected package/version | none — `CAND-NAPPLET-WEB-PACKAGE` has no released version cataloged |
-| Public export locator | none — no documented package-root export cataloged |
-| Conformance target | none — no public conformance fixture or target cataloged |
-| Fixture location if later eligible | `.planning/spikes/spk-g-package-conformance/.experiment/public-release-if-qualified/` |
-| Current outcome | `SPK-G-BLOCKED-NO-PUBLIC-RELEASE-BASELINE` |
+| Selected package/version | none — no released public package version is cataloged |
+| Public export locator | none — no documented package-root export is cataloged |
+| Conformance target | none — no public conformance fixture is cataloged |
+| Snapshot reader | Plan 01-42 `spk-g-package-evidence` fixed target registration |
+| Current outcome | `SPK-G-BLOCKED-ELIGIBILITY` with operation count `0` |
+| Safe fallback | dependency-free deterministic static learning path |
 
-This absence is intentional: adding a guessed import would make the fixture
-claim a package identity and public surface that the catalog does not contain.
+A reader refusal is `SPK-G-BLOCKED-CANONICAL-SNAPSHOT-REFUSED` and occurs before
+canonical evidence parsing, sandbox argv construction, or a package operation.
+A qualified candidate without verified OS sandbox controls is
+`SPK-G-BLOCKED-SANDBOX-UNAVAILABLE` with operation count `0`.
 
-## Import policy
+## Future root-export fixture contract
 
-A future consumer import is permitted only when it uses the reviewed package
-root and the exact documented public export locator. All of the following are
-explicitly rejected:
-
-- deep/package-file imports such as package subpaths, `dist/`, `src/`, or
-  internal implementation files;
-- relative paths into an upstream checkout, cloned repository, or monorepo;
-- workspace aliases, private packages, unpublished build outputs, and
-  `packages/` paths;
-- fallback packages, package-name guesses, or package versions not recorded in
-  `metadata.yaml` after human approval.
-
-No private monorepo import point exists in this fixture.
-
-## Future conformance fixture contract
-
-After every package eligibility field is cataloged and a human approves the
-exact candidate, the fixture must declare:
+A future fixture can run only after it records and passes all of these exact
+values from the recovered snapshot:
 
 1. package name and exact released version;
-2. documented package-root public export locator;
-3. released-package and implemented-source `SRC-*` IDs plus their `CLM-*`
-   relation;
-4. source-baseline digest, registry integrity, official provenance, license,
-   browser-support claim, and known drift;
-5. a bounded local input and an expected import/compile/conformance output or
-   error; and
-6. five replay observations and output digests, labeled implementation evidence
-   rather than protocol authority.
+2. tarball integrity, official registry/project provenance, license, and
+   documented package-root export equal to the package name;
+3. distinct approved released-package and implementation `SRC-*` records plus
+   their `CLM-*` relation;
+4. runtime, example, local fixture, and public-conformance inputs;
+5. a separately dated approved package decision; and
+6. an audited OS sandbox contract with no network, a read-only repository, an
+   isolated writable workspace, empty/minimal inherited environment, and resource
+   limits.
 
-Until then the deterministic replay input is this document plus
-`metadata.yaml`; the expected result is the blocked outcome above. The only
-allowed command is the non-installing contract validation command recorded in
-`recipe.md`.
+The operation may exercise the documented package-root export only. It must reject
+all deep subpaths, `dist/`, `src/`, internal implementation files, relative
+upstream checkouts, workspace aliases, private packages, unpublished builds,
+substitute packages, and browser execution.
+
+Five retained outputs must classify a result as bounded observed implementation
+behavior. A successful import or compile is never protocol authority,
+architecture approval, or independent cross-runtime conformance. Firefox remains
+blocked before Playwright attachment and the static fallback remains available.
