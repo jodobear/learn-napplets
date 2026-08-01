@@ -6,7 +6,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 
 **Roadmap mode:** Standard / horizontal, source-plan ordered
 
-**Current gate:** Independent verification on 2026-07-31 reopened Phase 1 after owner-authorized recovery Plans 01-46 through 01-48. Focused gap Plans 01-49 through 01-53 are planned for the four active defects and integrated verification/human judgment. Execution remains blocked until an exact-commit plan review records `HIGH=0` and `ACTIONABLE=0`. Runtime/framework scaffolding, package admission, SPK-G, host/guest execution, portable targets, deployment/release, external action, residual-risk acceptance, ADR acceptance, and Phase 2 transition remain unauthorized.
+**Current gate:** Independent verification on 2026-07-31 reopened Phase 1 after owner-authorized recovery Plans 01-46 through 01-48. Focused gap and external-review remediation Plans 01-49 through 01-57 are planned; Plan 01-53 is the Wave 4 integration/human gate after all eight repair dependencies. Execution remains blocked until a fresh exact-head plan review records `HIGH=0` and `ACTIONABLE=0`. Runtime/framework scaffolding, package admission, SPK-G, host/guest execution, portable targets, deployment/release, external action, residual-risk acceptance, ADR acceptance, and Phase 2 transition remain unauthorized.
 
 **Ownership rule:** Each v1 requirement has one owning phase only. Later phases may support or enforce an owned requirement but do not acquire duplicate ownership.
 
@@ -49,7 +49,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
   4. A decision maker can inspect reproducible measurements from each mandatory spike before repository, framework, deployment, content, teaching-host, fixture, and portable-target recommendations are considered.
   5. The project owner can review a source-backed recommendation for the first lab domain and teaching-host profile, or an explicit blocker, while confirming that no production application scaffold was created.
 
-**Required reviews / human approvals**: The original Phase 1 research plan received deep review convergence. The completed owner-authorized 01-46 through 01-48 recovery set received one focused plan-checker pass. The new 01-49 through 01-53 gap set received one focused checker pass plus targeted revision, and requires fresh exact-commit plan review with `HIGH=0` and `ACTIONABLE=0` before execution. Automated review never accepts ADRs, residual risk, external actions, phase transition, or release.
+**Required reviews / human approvals**: The original Phase 1 research plan received deep review convergence. The completed owner-authorized 01-46 through 01-48 recovery set received one focused plan-checker pass. The active 01-49 through 01-57 plan set incorporates focused gap work plus six exact external-review remediations and requires fresh exact-head review with `HIGH=0` and `ACTIONABLE=0` before execution. Automated review never accepts ADRs, residual risk, external actions, phase transition, or release.
 
 **Expected outputs**:
 
@@ -60,7 +60,7 @@ This standard, source-ordered horizontal roadmap preserves the intent and order 
 - Phase governance and traceability convention for the remaining roadmap.
 - Owner-authorized dependency-free static website presenting only structured, evidence-labeled content after safety repair and truth refresh pass.
 
-**Plans**: 48/53 plans executed; Plans 01-49 through 01-53 planned
+**Plans**: 48/57 plans executed; Plans 01-49 through 01-57 planned
 
 **Verification status**: `gaps_found` — 3/5 roadmap criteria and 4/6 direct requirement capabilities verified on 2026-07-31. See `01-FINAL-VERIFICATION.md` and `01-REVIEW.md`.
 
@@ -136,23 +136,30 @@ Owner-Authorized Recovery Plans:
 
 - [x] 01-48-PLAN.md — Build and behaviorally verify the dependency-free static Learn Napplets website from common structured records.
 
-Focused Post-Verification Gap Plans:
+Focused Post-Verification Gap and External-Review Remediation Plans:
 
 **Wave 1**
 
 - [ ] 01-49-PLAN.md — Enforce immutable public source identity and mutation regressions.
 - [ ] 01-50-PLAN.md — Restore exact Git-reachable historical registry provenance for retained impact fragments.
 - [ ] 01-51-PLAN.md — Repair the WR-04 tracer fixture without weakening exact cache confinement.
+- [ ] 01-57-PLAN.md — Enforce one monotonic total deadline across registry connect and every response chunk.
 
-**Wave 2** *(blocked on Plan 01-49)*
+**Wave 2**
 
-- [ ] 01-52-PLAN.md — Make replay honor reduced motion and regenerate/verify the tracked site script.
+- [ ] 01-52-PLAN.md — Make replay honor reduced motion and regenerate/verify the tracked site script (depends on 01-49).
+- [ ] 01-56-PLAN.md — Rehash collected raw bytes as exact Git blobs and publish one recoverable acquisition generation (depends on 01-51).
 
-**Wave 3** *(blocked on Plans 01-49 through 01-52)*
+**Wave 3**
 
-- [ ] 01-53-PLAN.md — Run integrated attribution checks, preserve PRE118 as non-passing, and obtain bounded human accessibility judgment.
+- [ ] 01-54-PLAN.md — Re-attest the current five-file observed-refresh generation with exact Git/source provenance (depends on 01-50 and 01-56).
+- [ ] 01-55-PLAN.md — Make the static builder own, check, and safely clean the complete generated output tree (depends on 01-49 and 01-52).
 
-Deferred from this recovery set: CR-05 through CR-07/SPK-G, WR-02 migration copy semantics, package admission, native-runtime qualification, portable targets, cross-browser runtime labs, external review byte-binding, terminal-publication choreography, deployment, and release.
+**Wave 4** *(blocked on all eight Plans 01-49, 01-50, 01-51, 01-52, 01-54, 01-55, 01-56, and 01-57)*
+
+- [ ] 01-53-PLAN.md — Run creator-owned lifecycle and integrated attribution checks, preserve PRE118 as non-passing, and obtain bounded human accessibility judgment.
+
+Deferred from this recovery set: CR-05 through CR-07/SPK-G, WR-02 migration copy semantics, package admission, native-runtime qualification, portable targets, cross-browser runtime labs, terminal-publication authorization, deployment, and release.
 
 Plans:
 **Wave 1**
@@ -505,7 +512,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research and Truth Baseline | 48/53 | In Progress |  |
+| 1. Research and Truth Baseline | 48/57 | In Progress |  |
 | 2. Product and Content Contract | 0/TBD | Not started | - |
 | 3. Independent Repository Foundation | 0/TBD | Not started | - |
 | 4. Visual and Content Primitives | 0/TBD | Not started | - |

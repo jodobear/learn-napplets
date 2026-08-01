@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: research-and-truth-baseline
 status: gaps_found
-stopped_at: Focused gap plans 01-49 through 01-53 created and revised after one checker pass; exact-commit plan review pending
-last_updated: "2026-07-31T16:34:44+05:30"
-last_activity: 2026-07-31
+stopped_at: Phase 1 Plans 01-49 through 01-57 revised for exact external-review findings; fresh exact-head review pending
+last_updated: "2026-08-01T19:24:22+05:30"
+last_activity: 2026-08-01
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 53
+  total_plans: 57
   completed_plans: 48
-last_activity_desc: Five focused Phase 1 gap plans created; execution blocked on exact-commit plan review
+last_activity_desc: Nine focused Phase 1 gap/review-remediation plans revised; execution blocked on fresh exact-head review
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-23)
 ## Current Position
 
 Phase: 01 (research-and-truth-baseline) — GAPS FOUND
-Plan: 48 of 53 complete; Plans 01-49 through 01-53 planned but not executed
-Status: Gaps remain active; focused gap plans await exact-commit review authorization
-Last activity: 2026-07-31
+Plan: 48 of 57 complete; Plans 01-49 through 01-57 planned but not executed
+Status: Gaps remain active; all nine unexecuted plans await fresh exact-head review authorization
+Last activity: 2026-08-01
 
-Progress: [█████████░] 91% plan execution; phase goal not achieved; Phase 2 transition blocked
+Progress: [████████░░] 84% plan execution; phase goal not achieved; Phase 2 transition blocked
 
 ## Performance Metrics
 
@@ -46,12 +46,12 @@ Progress: [█████████░] 91% plan execution; phase goal not ac
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 48/53 | five focused gap plans await review and execution | N/A |
+| 01 | 48/57 | nine focused gap/review-remediation plans await review and execution | N/A |
 
 **Recent Trend:**
 
-- Last 5 plans: Plans 01-49 through 01-53 were created for the four active gaps and integrated verification/human judgment
-- Trend: One focused checker pass found 3 blockers and 1 warning; one targeted planner revision addressed all four without a second checker pass
+- Latest plan graph: Plans 01-54 through 01-57 add four exact external-review remediations; Plan 01-53 is the Wave 4 eight-dependency integration/human gate
+- Trend: Revision iteration 2 replaced Plan 01-53 cross-process temp handoff with one creator-owned Python lifecycle controller and synchronized canonical plan accounting; fresh exact-head review remains mandatory
 
 **Per-Plan Metrics:**
 
@@ -207,21 +207,23 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - [Phase ?]: Plan 01-48 generates evidence-labeled HTML, knowledge JSON, and local assets through one stdlib-only static build path.
 - [Phase ?]: Plan 01-48 keeps essential authority, transcript, table, status, and blocker content in static HTML; its resettable reading trace is optional progressive enhancement.
 - [Phase ?]: Plan 01-48 uses approved direct-installed Chromium for local-only browser evidence; the existing Firefox cross-browser blocker remains deferred without a workaround.
-- [Phase 1 gap planning]: Plans 01-49 through 01-53 cover only CR-08 immutable source validation, historical registry provenance for retained impact fragments, WR-04 exact-cache fixture repair, reduced-motion replay, and integrated verification/human judgment.
-- [Phase 1 gap planning]: The sole focused checker pass found three blockers and one warning; targeted revision added generated-asset ownership and serialization, exact PRE118 allowlists, and a literal collision-free cache fixture contract.
-- [Phase 1 gap planning]: Requirements coverage is 6/6, decision coverage is 39/39, and post-planning coverage is 45/45; this does not authorize execution or satisfy the required exact-commit HIGH=0/ACTIONABLE=0 review.
+- [Phase 1 gap planning]: Plans 01-49 through 01-57 collectively cover CR-08 immutable source validation, historical registry provenance, WR-04 exact-cache repair, reduced-motion replay, four exact external-review remediations, and integrated verification/human judgment.
+- [Phase 1 external-review remediation]: Plan 01-54 re-attests the five-file live observed-refresh generation after Plan 01-56; Plan 01-55 owns the complete generated static tree; Plan 01-56 binds collected raw bytes to exact Git blobs and publishes one atomic acquisition generation; Plan 01-57 enforces one monotonic registry deadline.
+- [Phase 1 integration gate]: Plan 01-53 is Wave 4 and depends on all eight repair plans: 01-49, 01-50, 01-51, 01-52, 01-54, 01-55, 01-56, and 01-57.
+- [Phase 1 integration gate]: One foreground tools/phase1-python lifecycle controller owns private creation, identity, atomic manifest finalization, subprocess verification, signal handling, and finally cleanup without transferring a live path; deterministic probes cover creation interruption/failure, partial manifest, post-manifest signals, replacement, and foreign paths.
+- [Phase 1 review gate]: All nine unexecuted plans remain planning artifacts. Any changed plan/source byte or reviewed head invalidates prior binding; execution requires fresh exact-head review with HIGH=0 and ACTIONABLE=0.
 
 ### Pending Todos
 
-- Obtain exact-commit review of the 53-plan set with `HIGH=0` and `ACTIONABLE=0`, including recomputed plan-byte/hash binding and six mandatory source blobs.
-- Execute Plans 01-49 through 01-53 only after exact-commit review authorization, then re-run focused checks, canonical validation/consolidation, approved Chromium behavior tests, and the full Phase 1 suite.
+- Obtain fresh exact-head review of the 57-plan set with `HIGH=0` and `ACTIONABLE=0`, including recomputed plan-byte/hash binding and six mandatory source blobs.
+- Execute Plans 01-49 through 01-57 only after that exact-head review authorization; Plan 01-53 runs last in Wave 4 after its eight dependencies and then performs integrated checks plus bounded human judgment.
 - Perform human visual/accessibility judgment only after automated blockers close.
 - Keep PRE118 terminal rebinding, CR-05 through CR-07/SPK-G, WR-02, package admission, portable/runtime/browser labs, deployment, ADR acceptance, and Phase 2 transition deferred unless separately authorized.
 
 ### Blockers/Concerns
 
 - Current independent final verification is `gaps_found`; `01-FINAL-VERIFICATION.md` records 3/5 roadmap criteria and 4/6 direct requirement capabilities verified.
-- Plans 01-49 through 01-53 are planning artifacts only; none of the four active gaps is fixed until execution and independent re-verification succeed.
+- Plans 01-49 through 01-57 are planning artifacts only; none of the active gap or external-review defects is fixed until execution and independent re-verification succeed.
 - CR-08 is active: `tools/build-site.py` accepts mutable GitHub branch URLs or malformed identity metadata while the public ledger labels sources immutable.
 - Retained impact fragments still bind the historical source-registry digest, causing IMP011/IMP016 and blocking reconsolidation after the legitimate truth refresh.
 - WR-04 is active: one retained collector tracer uses a forbidden temporary cache root and errors before its intended assertions.
@@ -233,7 +235,7 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 - Plan 01-29 now fails closed on absent, untracked, non-regular, different-commit, digest-mismatched, or working-tree-mismatched mandatory source inputs; downstream plans cannot reopen mutable refresh reports.
 - Prior ownership/publication corrections remain resolved: receipt CLI ownership, shared publisher CLI ownership, real five-file observed-refresh publication, and Plan 01-36→01-43→01-37 ordering remain explicit in the revised dependency graph.
 - Plans otherwise preserve automated dependency locking, task-local boundary regressions, direct receipt validation, validator ownership, staged atomic publication, extensible ASVS findings, and one-user/multi-role sign-offs.
-- Historical terminal re-verification passed before the recovery plan set expanded; current PRE118 reproduces because its manifest binds 45 plans while 48 are active. `01-VERIFICATION.md` remains the preserved historical initial record.
+- Historical terminal re-verification passed before the recovery plan set expanded; current PRE118 reproduces because its manifest binds 45 plans while 57 are active. `01-VERIFICATION.md` remains the preserved historical initial record.
 - Current active trust gaps are narrowly recorded in `01-FINAL-VERIFICATION.md`: public immutable-source identity validation and retained impact-fragment provenance. Other previously reviewed evidence boundaries now pass focused checks.
 - `01-VALIDATION.md` remains a validation contract; accepted Phase 1 ASVS L1 security review and evidence are recorded in `01-SECURITY.md` and `01-SECURITY-EVIDENCE.md`.
 - Upstream-sensitive terms and protocol behavior must remain labeled as uncertain until immutable-source evidence is reviewed.
@@ -252,6 +254,6 @@ Decisions are logged in `PROJECT.md` Key Decisions table. Current planning const
 
 ## Session Continuity
 
-Last session: 2026-07-31T16:34:44+05:30
-Stopped at: Focused gap plans 01-49 through 01-53 created and revised; exact-commit HIGH=0/ACTIONABLE=0 review is the next gate
+Last session: 2026-08-01T19:24:22+05:30
+Stopped at: Plans 01-49 through 01-57 revised; fresh exact-head HIGH=0/ACTIONABLE=0 review is the next gate
 Resume file: None
